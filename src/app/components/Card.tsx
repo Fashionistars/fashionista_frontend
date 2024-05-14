@@ -1,0 +1,110 @@
+import React from "react";
+import Image from "next/image";
+import data from "../utils/mock";
+
+type dataProps = {
+  data: CardProps;
+};
+
+const Card = ({ data }: dataProps) => {
+  return (
+    <div className="w-[290px]">
+      <div className="relative overflow-hidden ">
+        <Image
+          src={data.image}
+          alt={data.title}
+          className="w-full h-full hover:scale-105 transition-transform duration-200 ease-in-out"
+        />
+        <div className="absolute right-3 top-3">
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 28 28"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="14" cy="14" r="14" fill="#FDA600" fill-opacity="0.2" />
+          </svg>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <p className="font-bon_foyage text-[28px] leading-7 text-black">
+          {data.title}
+        </p>
+        <div className="flex justify-between items-center">
+          <p className="font-satoshi leading-[22px] text-black">
+            {data.vendor}
+          </p>
+          <div className="flex items-center gap-2">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13.7276 3.44418L15.4874 6.99288C15.7274 7.48687 16.3673 7.9607 16.9073 8.05143L20.0969 8.58575C22.1367 8.92853 22.6167 10.4206 21.1468 11.8925L18.6671 14.3927C18.2471 14.8161 18.0172 15.6327 18.1471 16.2175L18.8571 19.3125C19.417 21.7623 18.1271 22.71 15.9774 21.4296L12.9877 19.6452C12.4478 19.3226 11.5579 19.3226 11.0079 19.6452L8.01827 21.4296C5.8785 22.71 4.57865 21.7522 5.13859 19.3125L5.84851 16.2175C5.97849 15.6327 5.74852 14.8161 5.32856 14.3927L2.84884 11.8925C1.389 10.4206 1.85895 8.92853 3.89872 8.58575L7.08837 8.05143C7.61831 7.9607 8.25824 7.48687 8.49821 6.99288L10.258 3.44418C11.2179 1.51861 12.7777 1.51861 13.7276 3.44418Z"
+                fill="#FDA600"
+              />
+            </svg>
+            <span>{data.rating}</span>
+          </div>
+        </div>
+
+        <div className="flex justify-between items-center">
+          <span className="font-satoshi font-bold text-xl text-[#fda600]">
+            ${data.price}.00
+          </span>
+
+          {/* background: rgba(253, 166, 0, 0.12); */}
+
+          <button className="py-2 px-2.5 rounded-[40px] bg-[#fda600]/20 flex gap-[5px]">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5.66667 12.3334H11.7193C15.459 12.3334 16.0278 9.98408 16.7175 6.55765C16.9165 5.56934 17.016 5.07519 16.7768 4.74597C16.5375 4.41675 16.0789 4.41675 15.1618 4.41675H4"
+                stroke="#FDA600"
+                stroke-width="0.8"
+                stroke-linecap="round"
+              />
+              <path
+                d="M5.66683 12.3334L3.48244 1.92919C3.29695 1.18724 2.63031 0.666748 1.86554 0.666748H1.0835"
+                stroke="#FDA600"
+                stroke-width="0.8"
+                stroke-linecap="round"
+              />
+              <path
+                d="M6.4 12.3333H6.05714C4.92102 12.3333 4 13.2927 4 14.4761C4 14.6733 4.1535 14.8333 4.34286 14.8333H13.5833"
+                stroke="#FDA600"
+                stroke-width="0.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M7.75 17.3333C8.44036 17.3333 9 16.7736 9 16.0833C9 15.3929 8.44036 14.8333 7.75 14.8333C7.05964 14.8333 6.5 15.3929 6.5 16.0833C6.5 16.7736 7.05964 17.3333 7.75 17.3333Z"
+                stroke="#FDA600"
+                stroke-width="0.8"
+              />
+              <path
+                d="M13.5835 17.3333C14.2739 17.3333 14.8335 16.7736 14.8335 16.0833C14.8335 15.3929 14.2739 14.8333 13.5835 14.8333C12.8931 14.8333 12.3335 15.3929 12.3335 16.0833C12.3335 16.7736 12.8931 17.3333 13.5835 17.3333Z"
+                stroke="#FDA600"
+                stroke-width="0.8"
+              />
+            </svg>
+
+            <span className="font-satoshi text-sm text-[#fda600]">Add</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Card;
