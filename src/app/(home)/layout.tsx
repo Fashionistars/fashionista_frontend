@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
+import MobileNavBar from "../components/MobileNavBar";
 
 export default function Home({
   children,
@@ -8,8 +9,9 @@ export default function Home({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="flex min-h-screen flex-col  bg-[#F4F3EC]">
-      <header>
+    <main className="flex min-h-screen flex-col px-2 md:px-0  bg-[#F4F3EC]">
+      <MobileNavBar />
+      <header className="hidden md:block">
         <div className="px-24">
           <div className="flex justify-between items-center py-6 border-b-[1.5px] border-[#d9d9d9] ">
             <div className="text-[#141414] text-[15px] font-satoshi leading-5 flex items-center justify-between w-1/3 ">

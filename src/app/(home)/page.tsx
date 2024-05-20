@@ -14,12 +14,23 @@ import woman from "../../../public/woman.svg";
 import woman2 from "../../../public/woman2.svg";
 import arrow from "../../../public/arrow.svg";
 import data from "../utils/mock";
+import { data2 } from "../utils/mock";
 import Card from "../components/Card";
+import Cads from "../components/Cads";
+import Slider from "../components/Carousel";
+import ReviewScroll from "../components/ReviewScroll";
+import CategoryScroll from "../components/CategoryScroll";
+
+import Footer from "../components/Footer";
 
 export default function Home() {
   const collections = data.map((collection) => {
     return <Card data={collection} key={collection.title} />;
   });
+  const deals = data2.map((card) => {
+    return <Cads data={card} key={card.image} />;
+  });
+
   return (
     <div className="flex flex-col  pt-16">
       <section className=" min-h-screen px-28">
@@ -40,7 +51,7 @@ export default function Home() {
           </div>
         </div>
         {/* border border-red-600 */}
-        <div>
+        {/* <div>
           <div className="flex justify-center ">
             <p className="font-bon_foyage text-8xl leading-[95px] text-center text-black  w-1/2 px-10 ">
               Your <span className="text-[#fda600]">Style</span> with the Latest
@@ -52,8 +63,8 @@ export default function Home() {
               <Image src={couple} alt="" />
             </div>
           </div>
-        </div>
-        {/* <Slider /> */}
+        </div> */}
+        <Slider />
         <div className="flex justify-between items-center">
           <div className="flex flex-col w-[233px]">
             <p className="text-black font-satoshi font-medium leading-[22px] pb-20">
@@ -115,61 +126,13 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="mt-[200px] flex flex-col gap-8 px-28">
-        <div className="flex justify-between">
+      <section className="mt-[200px] flex flex-col gap-8 relative">
+        <div className="flex px-28">
           <h3 className="font-bon_foyage text-[90px] leading-[89px] text-black w-[380px]">
             Fashion Categories
           </h3>
-          <div className="flex items-center gap-2">
-            <svg
-              width="50"
-              height="50"
-              viewBox="0 0 50 50"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="25" cy="25" r="24.5" stroke="black" />
-              <path
-                d="M34.3335 35.55V33.0232C34.3335 30.5886 34.3335 29.3715 34.1567 28.353C33.1834 22.7465 28.3638 18.3493 22.2187 17.4614C21.1024 17.3 18.7519 17.3 16.0835 17.3"
-                stroke="black"
-                stroke-width="1.2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M18.5171 13.65C17.7788 14.3677 14.8671 16.2777 14.8671 17.3C14.8671 18.3224 17.7788 20.2324 18.5171 20.95"
-                stroke="black"
-                stroke-width="1.2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <svg
-              width="50"
-              height="50"
-              viewBox="0 0 50 50"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="25" cy="25" r="24.5" stroke="black" />
-              <path
-                d="M14.8667 35.55V33.0232C14.8667 30.5886 14.8667 29.3715 15.0435 28.353C16.0168 22.7465 20.8363 18.3493 26.9815 17.4614C28.0978 17.3 30.4483 17.3 33.1167 17.3"
-                stroke="black"
-                stroke-width="1.2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M30.6831 13.65C31.4214 14.3677 34.3331 16.2777 34.3331 17.3C34.3331 18.3224 31.4214 20.2324 30.6831 20.95"
-                stroke="black"
-                stroke-width="1.2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
         </div>
-        <div>
+        <div className="px-28">
           <ul className="flex items-center gap-6 font-satoshi text-white text-[22px] leading-[30px]">
             <li className="py-[15px] px-[35px] rounded-[50px] bg-[#fda600]">
               Street wear
@@ -190,32 +153,8 @@ export default function Home() {
             </li>
           </ul>
         </div>
-        <div className="flex items-center flex-wrap justify-evenly">
-          <div className="relative">
-            <Image src={minimalist} alt="" className="" />
-            <span className="absolute bottom-6 left-5 text-[32px] font-bon_foyage leading-[32px] text-white">
-              Minimalist
-            </span>
-          </div>
-          <div className="relative">
-            <Image src={vintage} alt="" className="" />
-            <span className="absolute bottom-6 left-5 text-[32px] font-bon_foyage leading-[32px] text-white">
-              Vintage Clothing
-            </span>
-          </div>
-          <div className="relative">
-            <Image src={senator} alt="" className="" />
-            <span className="absolute bottom-6 left-5 text-[32px] font-bon_foyage leading-[32px] text-white">
-              Senator
-            </span>
-          </div>
-          <div className="relative">
-            <Image src={gown} alt="" className="" />
-            <span className="absolute bottom-6 left-5 text-[32px] font-bon_foyage leading-[32px] text-white">
-              Ball Gown
-            </span>
-          </div>
-        </div>
+
+        <CategoryScroll />
       </section>
       <section className="my-[200px] flex flex-col gap-12 px-28">
         <div className="flex justify-between items-end">
@@ -383,6 +322,41 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <section className="px-28 my-[100px] flex flex-col gap-10">
+        <div className="flex justify-between items-center">
+          <h3 className="font-bon_foyage text-[90px] leading-[89px] text-black w[356px] ">
+            Deals of the
+            <br /> day
+          </h3>
+          <p className="flex items-center font-satoshi text-2xl text-[#4e4e4e]">
+            All Deals
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.50004 5C7.50004 5 12.5 8.68242 12.5 10C12.5 11.3177 7.5 15 7.5 15"
+                stroke="#4E4E4E"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </p>
+        </div>
+        <div className="flex justify-evenly gap-y-8 ">{deals}</div>
+      </section>
+      <section className="py-[100px]  flex flex-col gap-10">
+        <h3 className="font-bon_foyage text-[85px] leading-[85px] text-black px-28">
+          {" "}
+          Our customers said
+        </h3>
+        <ReviewScroll />
+      </section>
+      <Footer />
     </div>
   );
 }

@@ -1,13 +1,18 @@
 "use client";
-import { Carousel } from "react-responsive-carousel";
+
 import Image from "next/image";
 import couple from "../../../public/couple_assets.svg";
 import man from "../../../public/asset4.svg";
 import man2 from "../../../public/man2_asset.svg";
+import { useState, useEffect } from "react";
 
 const Slider = () => {
+  const [current, setCurrent] = useState(0);
+  const slides = [1, 2, 3];
+  useEffect(() => {}, []);
+
   return (
-    <Carousel showArrows={false} infiniteLoop={true} autoPlay={true}>
+    <div className="fex">
       <div>
         <div className="flex justify-center ">
           <p className="font-bon_foyage text-8xl leading-[95px] text-center text-black  w-1/2 px-10 ">
@@ -47,7 +52,7 @@ const Slider = () => {
           </div>
         </div>
       </div>
-    </Carousel>
+    </div>
   );
 };
 export default Slider;
