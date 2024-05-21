@@ -16,6 +16,9 @@ const config: Config = {
       fontFamily: {
         satoshi: ['var(--font-satoshi)'],
         bon_foyage: ['var(--font-bon_foyage)']
+      },
+      gridTemplateColumns: {
+        fluid: 'repeat(auto-fit, minmax(339px, 1fr))'
       }
     },
   },

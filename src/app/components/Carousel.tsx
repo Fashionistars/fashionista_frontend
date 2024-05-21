@@ -8,12 +8,68 @@ import { useState, useEffect } from "react";
 
 const Slider = () => {
   const [current, setCurrent] = useState(0);
-  const slides = [1, 2, 3];
-  useEffect(() => {}, []);
+  const slides = [
+    {
+      text: " Your Style with the Latest Fashion Trends.",
+      image: couple,
+    },
+    {
+      text: "  We offer amazing discounts on first order.",
+      image: man,
+    },
+    {
+      text: "Get your exact measurement without stress",
+      image: man2,
+    },
+    // {
+    //   text: " Your Style with the Latest Fashion Trends.",
+    //   image: couple,
+    // },
+  ];
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrent((prevCurrent) =>
+        prevCurrent === slides.length - 1 ? 0 : prevCurrent + 1
+      );
+    }, 5000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [slides.length]);
+  const sliders = slides.map((slide, index) => {
+    return (
+      <div className="w-full flex-shrink-0" key={index}>
+        <div className="flex justify-center ">
+          <p className="font-bon_foyage text-8xl leading-[95px] text-center text-black  w-1/2 px-10 ">
+            {slide.text}
+          </p>
+        </div>
+        <div className="relative flex justify-center">
+          <div className="z-10 absolute -top-16">
+            <Image src={slide.image} alt="" className="w-full h-full" />
+          </div>
+        </div>
+      </div>
+    );
+  });
 
   return (
-    <div className="fex">
-      <div>
+    <div className="overflow-hidden relative">
+      <div
+        className={`flex transition ease-out duration-400 h-screen`}
+        style={{
+          transform: `translateX(-${current * 100}%)`,
+        }}
+      >
+        {sliders}
+      </div>
+    </div>
+  );
+};
+export default Slider;
+
+{
+  /* <div>
         <div className="flex justify-center ">
           <p className="font-bon_foyage text-8xl leading-[95px] text-center text-black  w-1/2 px-10 ">
             Your <span className="text-[#fda600]">Style</span> with the Latest
@@ -51,8 +107,5 @@ const Slider = () => {
             <Image src={man2} alt="" />
           </div>
         </div>
-      </div>
-    </div>
-  );
-};
-export default Slider;
+      </div> */
+}

@@ -32,55 +32,42 @@ export default function Home() {
   });
 
   return (
-    <div className="flex flex-col  pt-16">
-      <section className=" min-h-screen px-28">
-        <div className="flex justify-between items-center relative">
-          <div className="w-[306px] absolute left-1 top-3 h-[89px] bg-black rounded-[50px]">
-            <Image
-              src={hanger}
-              alt=""
-              className="w-full h-full rounded-[50px] object-cover "
-            />
-          </div>
-          <div className="w-[306px] h-[89px] absolute right-1 top-3 bg-black rounded-[50px]">
-            <Image
-              src={hanger2}
-              alt=""
-              className="w-full h-full rounded-[50px] object-cover "
-            />
+    <div className="flex flex-col pt-16">
+      <section className="  md:px-28 relative ">
+        <Slider />
+        <div className=" absolute md:left-28 top-3 h-[89x] bg-black rounded-[50px]">
+          <Image
+            src={hanger}
+            alt=""
+            className="w-full h-full rounded-[50px] object-cover "
+          />
+        </div>
+        <div className="w-[306px] h-[89px] absolute md:right-28 top-3 bg-black rounded-[50px]">
+          <Image
+            src={hanger2}
+            alt=""
+            className="w-full h-auto max-w-full rounded-[50px] object-cover "
+          />
+        </div>
+        <div className="flex flex-col w-[233px] absolute left-28 top-[30%]">
+          <p className="text-black font-satoshi font-medium leading-[22px] pb-20">
+            #2024 Fashion{" "}
+          </p>
+          <p className="font-bon_foyage text-3xl leading-[30px] text-black">
+            Tailored Measurement
+          </p>
+          <p className="font-satoshi text-sm leading-5 text-[#282828]">
+            Get your exact measurements without hassles or stress
+          </p>
+          <div>
+            <Image src={asset1} alt="" />
           </div>
         </div>
+
         {/* border border-red-600 */}
-        {/* <div>
-          <div className="flex justify-center ">
-            <p className="font-bon_foyage text-8xl leading-[95px] text-center text-black  w-1/2 px-10 ">
-              Your <span className="text-[#fda600]">Style</span> with the Latest
-              Fashion Trends.
-            </p>
-          </div>
-          <div className="relative flex justify-center">
-            <div className="z-10 absolute -top-16">
-              <Image src={couple} alt="" />
-            </div>
-          </div>
-        </div> */}
-        <Slider />
-        <div className="flex justify-between items-center">
-          <div className="flex flex-col w-[233px]">
-            <p className="text-black font-satoshi font-medium leading-[22px] pb-20">
-              #2024 Fashion{" "}
-            </p>
-            <p className="font-bon_foyage text-3xl leading-[30px] text-black">
-              Tailored Measurement
-            </p>
-            <p className="font-satoshi text-sm leading-5 text-[#282828]">
-              Get your exact measurements without hassles or stress
-            </p>
-            <div>
-              <Image src={asset1} alt="" />
-            </div>
-          </div>
-          <div className="bg-white w-[306px] h-[333px] rounded-[20px] flex flex-col justify-evenly px-8 relative">
+
+        <div className="flex justify-between items-center absolute right-28 top-[30%]">
+          <div className="bg-white  w-[306px] h-[333px] rounded-[20px] flex flex-col justify-evenly px-8 relative">
             <div className=" absolute -right-2 -top-2 w-[73px] h-[73px] bg-[#fda600] border-[3.65px] border-[#F4F3EC] rounded-full flex justify-center items-center">
               <svg
                 width="31"

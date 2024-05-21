@@ -13,17 +13,16 @@ import girl from "../../../../public/girl.png";
 const page = () => {
   return (
     <div className="bg-[#F4F3EC] flex flex-col gap-6 pb-9">
-      <section className="flex flex-col gap-6 md:flex-row py-5 px-1 md:px-3 max-h-[3/4]">
-        <div className="">
-          <Image src={senator} alt="" className="w-full object-cover" />
+      <section className="flex flex-col gap-6 md:gap-10 md:flex-row py-5 px-1 md:px-20 md:h-[580px] ">
+        <div className="w-full md:w-1/2 md:h-full ">
+          <Image src={senator} alt="" className="w-full h-full object-cover" />
         </div>
-        <div className="space-y-3">
-          <div className="flex flex-col items-center md:items-start gap-3 ">
-            <h3 className="font-bon_foyage text-3xl md:text-5xl leading-[30px] text-black">
-              {" "}
+        <div className="gap-3 w-full md:w-1/2 flex flex-col justify-between">
+          <div className="flex flex-col items-center md:items-start gap-3">
+            <h3 className="font-bon_foyage text-3xl md:text-5xl  leading-tight text-black">
               Welcome to Fashionistar
             </h3>
-            <p className="font-satoshi text-sm md:text-[22px] md:leading-[30px] text-center md:text-left text-[#282828] px-1">
+            <p className="font-satoshi text-sm md:text-[22px] md:leading-[30px] text-center md:text-left text-[#282828] px-1 md:px-0">
               Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
               consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
               mauris elit fames amet. Ac massa sed ante placerat enim sed
@@ -31,22 +30,23 @@ const page = () => {
               lorem.
             </p>
           </div>
-          <div className="grid grid-cols-3 gap-1 h-[150px]">
-            <div className="">
-              <Image src={man} alt="" className="w-full object-cover h-full" />
+          <div className="grid grid-cols-3 gap-1 h-[150px] md:h-auto ">
+            <div className="w-full h-full">
+              <Image src={man} alt="" className="w-full h-full object-cover" />
             </div>
-            <div className="">
-              <Image src={man1} alt="" className="w-full object-cover h-full" />
+            <div className="w-full h-full">
+              <Image src={man1} alt="" className="w-full h-full object-cover" />
             </div>
-            <div className="">
-              <Image src={man2} alt="" className="w-full object-cover h-full" />
+            <div className="w-full h-full">
+              <Image src={man2} alt="" className="w-full h-full object-cover" />
             </div>
           </div>
         </div>
       </section>
+
       <section className="py-[20px]">
-        <div className="relative flex justify-center items-end">
-          <h3 className="font-bon_foyage text-[28px] leading-7 text-black">
+        <div className="relative flex justify-center md:w-1/2 lg:w-1/3 mx-auto items-end">
+          <h3 className="font-bon_foyage text-[28px] md:text-[48px] md:leading-[48px] leading-7 text-black">
             What we offer our clients?
           </h3>
           <span className="absolute right-0 -bottom-1">
@@ -66,10 +66,10 @@ const page = () => {
             </svg>
           </span>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 py-10 px-2 gap-4">
-          <div className="hover:bg-[#fda600] transition-colors max-w-[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] px-4">
+        <div className="grid grid-cols-2 lg:grid-cols-fluid py-10 px-2 md:px-20 gap-4 ">
+          <div className="hover:bg-[#fda600] transition-colors max--[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
             <svg
-              className="text-[#fda600] w-[35px] h-[36px] group-hover:text-black transition-colors duration-300"
+              className="text-[#fda600] w-[35px] h-[36px] md:w-[70px]  md:h-[70px] group-hover:text-black transition-colors duration-300"
               width="35"
               height="36"
               viewBox="0 0 35 36"
@@ -103,18 +103,18 @@ const page = () => {
                 stroke-width="1.5"
               />
             </svg>
-            <h3 className="font-bon_foyage text-black text-center leading-4">
+            <h3 className="font-bon_foyage text-black text-center  md:text-[32px] md:leading-8 leading-4">
               Best Prices and Offers
             </h3>
-            <p className="text-center text-[#282828] text-[9px] leading-3 font-satoshi">
+            <p className="text-center text-[#282828] text-[9px]  md:text-base md:leading-4 leading-3 font-satoshi">
               Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
               consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
               mauris elit fames amet.
             </p>
           </div>
-          <div className="hover:bg-[#fda600] transition-colors max-w-[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] px-4">
+          <div className="hover:bg-[#fda600] transition-colors max--[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
             <svg
-              className="text-[#fda600] w-[35px] h-[36px] group-hover:text-black transition-colors duration-300"
+              className="text-[#fda600] w-[35px] h-[36px] md:w-[70px]  md:h-[70px] group-hover:text-black transition-colors duration-300"
               width="36"
               height="36"
               viewBox="0 0 36 36"
@@ -143,18 +143,18 @@ const page = () => {
               />
             </svg>
 
-            <h3 className="font-bon_foyage text-black text-center leading-4">
+            <h3 className="font-bon_foyage text-black text-center  md:text-[32px] md:leading-8 leading-4">
               Unique Accurate Measurement
             </h3>
-            <p className="text-center text-[#282828] text-[9px] leading-3 font-satoshi">
+            <p className="text-center text-[#282828] text-[9px] md:text-base md:leading-4 leading-3 font-satoshi">
               Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
               consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
               mauris elit fames amet.
             </p>
           </div>
-          <div className="hover:bg-[#fda600] transition-colors max-w-[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] px-4">
+          <div className="hover:bg-[#fda600] transition-colors max--[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
             <svg
-              className="text-[#fda600] w-[35px] h-[36px] group-hover:text-black transition-colors duration-300"
+              className="text-[#fda600] w-[35px] h-[36px] md:w-[70px]  md:h-[70px] group-hover:text-black transition-colors duration-300"
               width="36"
               height="36"
               viewBox="0 0 36 36"
@@ -187,18 +187,18 @@ const page = () => {
               />
             </svg>
 
-            <h3 className="font-bon_foyage text-black text-center leading-4">
+            <h3 className="font-bon_foyage text-black text-center  md:text-[32px] md:leading-8 leading-4">
               Free Delivery
             </h3>
-            <p className="text-center text-[#282828] text-[9px] leading-3 font-satoshi">
+            <p className="text-center text-[#282828] text-[9px] md:text-base md:leading-4 leading-3 font-satoshi">
               Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
               consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
               mauris elit fames amet.
             </p>
           </div>
-          <div className="hover:bg-[#fda600] transition-colors max-w-[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] px-4">
+          <div className="hover:bg-[#fda600] transition-colors max--[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
             <svg
-              className="text-[#fda600] w-[35px] h-[36px] group-hover:text-black transition-colors duration-300"
+              className="text-[#fda600] w-[35px] h-[36px] md:w-[70px]  md:h-[70px] md:w-[70px]  md:h-[70px] group-hover:text-black transition-colors duration-300"
               width="36"
               height="36"
               viewBox="0 0 36 36"
@@ -232,18 +232,18 @@ const page = () => {
               />
             </svg>
 
-            <h3 className="font-bon_foyage text-black text-center leading-4">
+            <h3 className="font-bon_foyage text-black text-center  md:text-[32px] md:left-8 leading-4">
               Easy Returns
             </h3>
-            <p className="text-center text-[#282828] text-[9px] leading-3 font-satoshi">
+            <p className="text-center text-[#282828] text-[9px] leading-3 md:text-base md:leading-4 font-satoshi">
               Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
               consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
               mauris elit fames amet.
             </p>
           </div>
-          <div className="hover:bg-[#fda600] transition-colors max-w-[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] px-4">
+          <div className="hover:bg-[#fda600] transition-colors max--[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
             <svg
-              className="text-[#fda600] w-[35px] h-[36px] group-hover:text-black transition-colors duration-300"
+              className="text-[#fda600] w-[35px] h-[36px] md:w-[70px]  md:h-[70px] group-hover:text-black transition-colors duration-300"
               width="35"
               height="36"
               viewBox="0 0 35 36"
@@ -290,18 +290,18 @@ const page = () => {
               />
             </svg>
 
-            <h3 className="font-bon_foyage text-black text-center leading-4">
+            <h3 className="font-bon_foyage text-black text-center leading-4  md:text-[32px] md:leading-8">
               100% Satiisfaction
             </h3>
-            <p className="text-center text-[#282828] text-[9px] leading-3 font-satoshi">
+            <p className="text-center text-[#282828] text-[9px]  md:text-base md:leading-4 leading-3 font-satoshi">
               Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
               consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
               mauris elit fames amet.
             </p>
           </div>
-          <div className="hover:bg-[#fda600] transition-colors max-w-[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] px-4">
+          <div className="hover:bg-[#fda600]   transition-colors max--[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
             <svg
-              className="text-[#fda600] w-[35px] h-[36px] group-hover:text-black transition-colors duration-300"
+              className="text-[#fda600] w-[35px] h-[36px] md:w-[70px]  md:h-[70px] group-hover:text-black transition-colors duration-300"
               width="36"
               height="36"
               viewBox="0 0 36 36"
@@ -342,10 +342,10 @@ const page = () => {
               />
             </svg>
 
-            <h3 className="font-bon_foyage text-black text-center leading-4">
+            <h3 className="font-bon_foyage text-black text-center md:text-[32px] md:leading-8 leading-4">
               Great Daily Deals
             </h3>
-            <p className="text-center text-[#282828] text-[9px] leading-3 font-satoshi">
+            <p className="text-center text-[#282828] text-[9px] md:text-base md:leading-4 leading-3 font-satoshi">
               Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
               consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
               mauris elit fames amet.
@@ -353,8 +353,8 @@ const page = () => {
           </div>
         </div>
       </section>
-      <section className="flex flex-col gap-4 md:flex-row-reverse px-2 py-6">
-        <div className="flex flex-col gap-3 w-full">
+      <section className="flex flex-col gap-4 md:flex-row-reverse px-2 md:px-20 py-6">
+        <div className="flex flex-col gap-3 md:w-1/2">
           <p className="font-satoshi text-[20px] leading-[27px] text-[#fda600]">
             Our Performance
           </p>
@@ -373,18 +373,18 @@ const page = () => {
             consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
           </span>
         </div>
-        <div className="flex items-center gap-2 w-full">
-          <div className="h-[195px] w">
-            <Image src={woman1} alt="" />
+        <div className="flex items-center gap-2 md:gap-0 md:w-1/2">
+          <div className="md:h-3/4 h-[195px] w-full">
+            <Image src={woman1} alt="" className=" h-full w-full" />
           </div>
-          <div className="h-[336px]">
+          <div className="h-[336px] md:h-full w-full">
             <Image src={woman2} alt="" className="w-full h-full" />
           </div>
         </div>
       </section>
       <section className="relative">
         <div>
-          <Image src={bg} alt="" />
+          <Image src={bg} alt="" className="w-full h-" />
         </div>
         <div className="absolute top-0 left-0 bg-[#fda600]/70 w-full h-full flex items-center justify-around">
           <div className="flex flex-col items-center gap-[2px]">
