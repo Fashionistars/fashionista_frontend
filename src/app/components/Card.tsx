@@ -8,12 +8,12 @@ type dataProps = {
 
 const Card = ({ data }: dataProps) => {
   return (
-    <div className="w-[290px]">
-      <div className="relative overflow-hidden ">
+    <div className="w-[45%] md:w-[30%] lg:w-[290px] flex flex-col">
+      <div className="relative overflow-hidden w-full">
         <Image
           src={data.image}
           alt={data.title}
-          className="w-full h-full hover:scale-105 transition-transform duration-200 ease-in-out"
+          className="w-full h-full object-cover hover:scale-105 transition-transform duration-200 ease-in-out"
         />
         <div className="absolute right-3 top-3">
           <svg
@@ -28,15 +28,15 @@ const Card = ({ data }: dataProps) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
-        <p className="font-bon_foyage text-[28px] leading-7 text-black">
+      <div className="flex flex-col justify-between">
+        <p className="font-bon_foyage md:text-[28px] text-lg leading-[17.82px] md:leading-7 text-black">
           {data.title}
         </p>
         <div className="flex justify-between items-center">
-          <p className="font-satoshi leading-[22px] text-black">
+          <p className="font-satoshi text-[10.26px] leading-[13.86px] md:text-base md:leading-[22px] text-black">
             {data.vendor}
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <svg
               width="24"
               height="24"
@@ -49,12 +49,14 @@ const Card = ({ data }: dataProps) => {
                 fill="#FDA600"
               />
             </svg>
-            <span>{data.rating}</span>
+            <span className="font-satoshi text-[9px] leading-3 md:text-sm md:leading-5 text-[#4e4e4e]">
+              {data.rating}
+            </span>
           </div>
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="font-satoshi font-bold text-xl text-[#fda600]">
+          <span className="font-satoshi font-bold md:text-xl text-[13px] leading-[18px] text-[#fda600]">
             ${data.price}.00
           </span>
 

@@ -8,7 +8,7 @@ type dataProps = {
 
 const Cads = ({ data }: dataProps) => {
   return (
-    <div className="w-[290px] relative ">
+    <div className="w-[45%] md:w-[30%] lg:w-[290px] flex flex-col gap-1  relative">
       <div className="relative">
         <Image src={data.image} alt={data.title} className="w-full h-full" />
         <div className="absolute right-3 top-3">
@@ -24,41 +24,49 @@ const Cads = ({ data }: dataProps) => {
         </div>
         <div className="absolute top-0 left-0 w-full h-full dark pb-4 flex items-center flex-wrap justify-center content-end">
           <p className="flex flex-col items-center w-1/3">
-            <span className="font-satoshi text-[40px] leading-[53px] text-[#fda600] ">
+            <span className="font-satoshi text-[25px] leading-[33.84px] md:text-[40px] md:leading-[53px] text-[#fda600] ">
               {data.timer.split(",")[0]}
             </span>
-            <span className="font-satoshi text-white text-sm ">Days</span>
+            <span className="font-satoshi text-white md:text-sm text-[9.4px]">
+              Days
+            </span>
           </p>
           <p className="flex flex-col items-center w-1/3">
-            <span className="font-satoshi text-[40px] leading-[53px] text-[#fda600]">
+            <span className="font-satoshi text-[25px] leading-[33.84px] md:text-[40px] md:leading-[53px] text-[#fda600]">
               {data.timer.split(",")[1]}
             </span>
-            <span className="font-satoshi text-white text-sm ">Hours</span>
+            <span className="font-satoshi text-white md:text-sm text-[9.4px]">
+              Hours
+            </span>
           </p>
           <p className="flex flex-col items-center w-1/3">
-            <span className="font-satoshi text-[40px] leading-[53px] text-[#fda600]">
+            <span className="font-satoshi text-[25px] leading-[33.84px] md:text-[40px] md:leading-[53px] text-[#fda600]">
               {data.timer.split(",")[2]}
             </span>
-            <span className="font-satoshi text-white text-sm ">Minutes</span>
+            <span className="font-satoshi text-white md:text-sm text-[9.4px] ">
+              Minutes
+            </span>
           </p>
           <p className="flex flex-col items-center w-1/3">
-            <span className="font-satoshi text-[40px] leading-[53px] text-[#fda600]">
+            <span className="font-satoshi text-[25px] leading-[33.84px] md:text-[40px] md:leading-[53px] text-[#fda600]">
               {data.timer.split(",")[3]}
             </span>
-            <span className="font-satoshi text-white text-sm ">Seconds</span>
+            <span className="font-satoshi text-white md:text-sm text-[9.4px] ">
+              Seconds
+            </span>
           </p>
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
-        <p className="font-bon_foyage text-[28px] leading-7 text-black">
+      <div className="flex flex-col justify-between  h-1/2">
+        <p className="font-bon_foyage md:text-[28px] text-lg leading-[17.82px] md:leading-7 text-black">
           {data.title}
         </p>
         <div className="flex justify-between items-center">
-          <p className="font-satoshi leading-[22px] text-black">
+          <p className="font-satoshi text-[10.26px] leading-[13.86px] md:text-base md:leading-[22px] text-black">
             {data.vendor}
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <svg
               width="24"
               height="24"
@@ -71,12 +79,14 @@ const Cads = ({ data }: dataProps) => {
                 fill="#FDA600"
               />
             </svg>
-            <span>{data.rating}</span>
+            <span className="font-satoshi text-[9px] leading-3 md:text-sm md:leading-5 text-[#4e4e4e]">
+              {data.rating}
+            </span>
           </div>
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="font-satoshi font-bold text-xl text-[#fda600]">
+          <span className="font-satoshi font-bold md:text-xl text-[13px] leading-[18px] text-[#000]">
             ${data.price}.00
           </span>
 

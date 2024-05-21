@@ -471,8 +471,8 @@ const page = () => {
             </button>
           </div>
         </div>
-        <div className="absolute -right-4 top-0">
-          <Image src={girl} alt="" className="w-full object-cover" />
+        <div className="absolute right-0 top-0">
+          <Image src={girl} alt="" className="w-full h-full object-contain" />
         </div>
       </section>
     </div>

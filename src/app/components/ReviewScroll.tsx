@@ -30,11 +30,11 @@ const ReviewScroll = () => {
     <div className="flex flex-col gap-10">
       <div
         ref={scrollRef}
-        className="pl-28 hide_scrollbar gap-6 grid grid-flow-col auto-cols-[65%] md:auto-cols-[40%] overflow-x-auto overscroll-contain"
+        className=" px-5 md:px-8 lg:pl-28 hide_scrollbar gap-6 grid grid-flow-col auto-cols-[65%] md:auto-cols-[40%] overflow-x-auto overscroll-contain"
       >
         {review}
       </div>
-      <div className="px-28 flex gap-2 items-center">
+      <div className="px-5 md:px-8 lg:px-28 flex gap-2 items-center">
         <button
           onClick={scrollLeft}
           className=" w-10 h-10 outline-none hover:border-[#fda600] flex justify-center items-center border border-black rounded-full"

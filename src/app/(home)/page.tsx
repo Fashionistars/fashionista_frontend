@@ -22,6 +22,7 @@ import ReviewScroll from "../components/ReviewScroll";
 import CategoryScroll from "../components/CategoryScroll";
 
 import Footer from "../components/Footer";
+import Link from "next/link";
 
 export default function Home() {
   const collections = data.map((collection) => {
@@ -32,24 +33,24 @@ export default function Home() {
   });
 
   return (
-    <div className="flex flex-col pt-16">
-      <section className="  md:px-28 relative ">
+    <div className="flex flex-col  pt-16">
+      <section className=" md:px-28 relative">
         <Slider />
-        <div className=" absolute md:left-28 top-3 h-[89x] bg-black rounded-[50px]">
+        <div className="flex w-[139px] h-[40px] md:w-[260px] md:h-[59px] lg:max-w-[360px] lg:h-[89px] justify-center items-center absolute left-0 md:left-28 md:top-3 -top-12  bg-black rounded-[50px]">
           <Image
             src={hanger}
             alt=""
             className="w-full h-full rounded-[50px] object-cover "
           />
         </div>
-        <div className="w-[306px] h-[89px] absolute md:right-28 top-3 bg-black rounded-[50px]">
+        <div className="flex w-[139px] h-[40px] md:w-[260px] md:h-[59px] lg:max-w-[360px] lg:h-[89px] justify-center items-center  absolute right-0 md:right-28 -top-12 md:top-3 bg-black rounded-[50px]">
           <Image
             src={hanger2}
             alt=""
-            className="w-full h-auto max-w-full rounded-[50px] object-cover "
+            className="w-full h-full rounded-[50px] object-cover "
           />
         </div>
-        <div className="flex flex-col w-[233px] absolute left-28 top-[30%]">
+        <div className="hidden md:flex flex-col w-[233px] absolute left-28 top-[30%]">
           <p className="text-black font-satoshi font-medium leading-[22px] pb-20">
             #2024 Fashion{" "}
           </p>
@@ -66,7 +67,7 @@ export default function Home() {
 
         {/* border border-red-600 */}
 
-        <div className="flex justify-between items-center absolute right-28 top-[30%]">
+        <div className="hidden md:flex justify-between items-center absolute right-28 top-[30%]">
           <div className="bg-white  w-[306px] h-[333px] rounded-[20px] flex flex-col justify-evenly px-8 relative">
             <div className=" absolute -right-2 -top-2 w-[73px] h-[73px] bg-[#fda600] border-[3.65px] border-[#F4F3EC] rounded-full flex justify-center items-center">
               <svg
@@ -113,28 +114,28 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="mt-[200px] flex flex-col gap-8 relative">
-        <div className="flex px-28">
-          <h3 className="font-bon_foyage text-[90px] leading-[89px] text-black w-[380px]">
+      <section className="md:mt-[200px] flex flex-col gap-8 relative ">
+        <div className="flex px-5 md:px-8 lg:px-28">
+          <h3 className="font-bon_foyage w-1/2 text-[40px] leading-[39.68px] md:text-[90px]  md:leading-[89px] text-black md:w-[380px]">
             Fashion Categories
           </h3>
         </div>
-        <div className="px-28">
-          <ul className="flex items-center gap-6 font-satoshi text-white text-[22px] leading-[30px]">
-            <li className="py-[15px] px-[35px] rounded-[50px] bg-[#fda600]">
+        <div className="px-5 md:px-8 lg:px-28">
+          <ul className="flex items-center  justify-between md:justify-start gap-2 md:gap-6 font-satoshi text-white md:text-[22px] text-[8.77px] leading-[11.83px] md:leading-[30px]">
+            <li className="py-[9px] px-[13.95px] md:py-[15px] md:px-[35px] rounded-[15px] md:rounded-[50px]  bg-[#fda600]">
               Street wear
             </li>
 
-            <li className="py-[15px] px-[35px] rounded-[50px] bg-[#fda600]">
+            <li className="py-[9px] px-[13.95px] md:py-[15px] md:px-[35px] rounded-[15px] md:rounded-[50px]  bg-[#fda600]">
               Vintage clothing
             </li>
-            <li className="py-[15px] px-[35px] rounded-[50px] bg-[#fda600]">
+            <li className="py-[9px] px-[13.95px] md:py-[15px] md:px-[35px] rounded-[15px] md:rounded-[50px] bg-[#fda600]">
               Senator
             </li>
-            <li className="py-[15px] px-[35px] rounded-[50px] bg-[#fda600]">
+            <li className="py-[9px] px-[13.95px] md:py-[15px] md:px-[35px] rounded-[15px] md:rounded-[50px] bg-[#fda600]">
               Minimalist
             </li>
-            <li className="py-[15px] px-[35px] rounded-[50px] bg-[#fda600]">
+            <li className="py-[9px] px-[13.95px] md:py-[15px] md:px-[35px] rounded-[15px] md:rounded-[50px] bg-[#fda600]">
               {" "}
               Casual
             </li>
@@ -143,12 +144,12 @@ export default function Home() {
 
         <CategoryScroll />
       </section>
-      <section className="my-[200px] flex flex-col gap-12 px-28">
+      <section className="my-[70px] md:my-[200px] flex flex-col gap-8 px-5 md:px-8 lg:px-28">
         <div className="flex justify-between items-end">
-          <h3 className="font-bon_foyage text-[90px] leading-[89px] text-black w-[380px]">
+          <h3 className="font-bon_foyage w-1/2 text-[40px] leading-[39.68px] md:text-[90px]  md:leading-[89px] text-black md:w-[380px]">
             Recent Collections
           </h3>
-          <div className="flex items-center gap-2 py-10">
+          <div className="hidden md:flex items-center gap-2 py-10">
             <div className="flex items-center gap-2 py-2 px-[14px] rounded-[50px] border-[0.8px] border-[#959595]">
               <span className=" text-[#959595] font-satoshi">Sort by</span>
               <svg
@@ -201,41 +202,41 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div>
-          <ul className="flex items-center gap-6 font-satoshi text-[#fda600] text-[22px] leading-[30px]">
-            <li className="py-[15px] px-[35px] rounded-[50px] bg-[#fda600] text-white">
+        <div className="box-border">
+          <ul className=" flex items-center justify-between gap-1 md:justify-start md:gap-6 font-satoshi text-[#fda600] md:text-[22px] text-[9.6px] leading-[12.96px] md:leading-[30px]">
+            <li className="md:py-[15px] md:px-[35px] py-[9px] px-[14.27px] rounded-[21.81px] md:rounded-[50px] bg-[#fda600] text-white">
               All
             </li>
 
-            <li className="py-[15px] px-[35px] rounded-[50px] text-[#fda600] border border-[#fda600] bg-transparent cursor-pointer transition-colors hover:bg-[#fda600] hover:text-white">
+            <li className="md:py-[15px] md:px-[35px] py-[9px]  px-[14.27px] rounded-[21.81px] md:rounded-[50px] text-[#fda600] border border-[#fda600] bg-transparent cursor-pointer transition-colors hover:bg-[#fda600] hover:text-white">
               Vintage clothing
             </li>
-            <li className="py-[15px] px-[35px] rounded-[50px] text-[#fda600] border border-[#fda600] bg-transparent cursor-pointer transition-colors hover:bg-[#fda600] hover:text-white">
+            <li className="md:py-[15px] md:px-[35px] py-[9px] px-[14.27px] rounded-[21.81px] md:rounded-[50px] text-[#fda600] border border-[#fda600] bg-transparent cursor-pointer transition-colors hover:bg-[#fda600] hover:text-white">
               Senator
             </li>
-            <li className="py-[15px] px-[35px] rounded-[50px] text-[#fda600] border border-[#fda600] bg-transparent cursor-pointer transition-colors hover:bg-[#fda600] hover:text-white">
+            <li className="md:py-[15px] md:px-[35px] py-[9px] px-[14.27px] rounded-[21.81px] md:rounded-[50px] text-[#fda600] border border-[#fda600] bg-transparent cursor-pointer transition-colors hover:bg-[#fda600] hover:text-white">
               Minimalist
             </li>
-            <li className="py-[15px] px-[35px] rounded-[50px] text-[#fda600] border border-[#fda600] bg-transparent cursor-pointer transition-colors hover:bg-[#fda600] hover:text-white">
+            <li className="md:py-[15px] md:px-[35px] py-[9px] px-[14.27px] rounded-[21.81px] md:rounded-[50px] text-[#fda600] border border-[#fda600] bg-transparent cursor-pointer transition-colors hover:bg-[#fda600] hover:text-white">
               {" "}
               Casual
             </li>
           </ul>
         </div>
-        <div className=" flex justify-evenly flex-wrap gap-y-8">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4 lg:gap-8  ">
           {collections}
         </div>
       </section>
-      <section className="bg-[#6E6055] min-h-screen px-28 py-24 flex flex-col gap-10">
+      <section className="bg-[#6E6055] h-[347px] lg:min-h-screen lg:h-full  px-5 md:px-8 lg:px-28 py-8 lg:py-24 flex flex-col gap-10">
         <div className="flex justify-between items-center">
-          <h3 className="font-bon_foyage text-[90px] leading-[89px] text-black w-[316px]">
+          <h3 className="font-bon_foyage w-1/2 text-[40px]  leading-10 md:text-[50px] lg:text-[90px]  lg:leading-[89px] text-black lg:w-[316px]">
             Daily
             <br />
             Best Sales
           </h3>
-          <div className="flex flex-col items-end">
+          <div className="flex flex-col items-end w-1/2">
             <p className="flex items-center gap-2">
-              <span className="font-bon_foyage text-4xl leading-9 text-black">
+              <span className="font-bon_foyage md:text-4xl text-[13.23px] leading-[13.21px] lg:leading-9 text-black">
                 See all
               </span>
               <svg
@@ -261,61 +262,64 @@ export default function Home() {
                 />
               </svg>
             </p>
-            <p className="font-satoshi text-[22px] leading-[30px] text-[#282828] text-right  max-w-[484px]">
+            <p className="font-satoshi md:text-[22px] md:leading-[30px] text-[8px] leading-[10px] text-[#282828] text-right  max-w-[484px]">
               Step into the world of innovation and style as you embark on a
               captivating journey to explore our latest collections.
             </p>
           </div>
         </div>
         <div className="flex justify-between gap-6">
-          <div className="grid grid-cols-2 gap-x-0 gap-y-0 ">
-            <div className="w-[290px]  pr-3 pb-3 border-r-[2px] border-b-[2px] border-[#fda600]  flex items-end">
+          <div className="grid grid-cols-2">
+            <div className="lg:w-[290px]  pr-3 pb-3 border-r-[2px] border-b-[2px] border-[#fda600]  flex items-end">
               <Image src={woman} alt="" />
             </div>
-            <div className="w-[290px]  flex  flex-col justify-center gap-3 px-3">
-              <p className="font-bon_foyage text-2xl leading-6 text-black ">
+            <div className="lg:w-[290px]  flex  flex-col justify-center gap-2 px-3">
+              <p className="font-bon_foyage lg:text-2xl text-xs leading-[8px] lg:leading-6 text-black ">
                 Women’s cable knitted turtle neck sleeve
               </p>
-              <span className="text-[#4E4E4E] text-[15px] leading-5 font-satoshi ">
+              <span className="text-[#4E4E4E] md:text-[15px] text-[8px] leading-[6px] md:leading-5 font-satoshi ">
                 #2024 fashion
               </span>
-              <span className="font-satoshi font-medium text-2xl leading-8 text-black py-5">
+              <span className="font-satoshi font-medium  md:text-2xl text-[10px] leading-[11px] md:leading-8 text-black ">
                 $250.00{" "}
               </span>
             </div>
 
-            <div className="w-[290px]  flex    flex-col justify-center items-end gap-3 px-3">
+            <div className="lg:w-[290px]  flex flex-col justify-center items-end gap-2 px-3">
               {" "}
-              <p className="font-bon_foyage  text-right text-2xl leading-6 text-black">
+              <p className="font-bon_foyage  text-right lg:text-2xl text-xs leading-[8px] lg:leading-6 text-black">
                 Women’s cable knitted turtle neck sleeve
               </p>
-              <span className="text-[#4E4E4E] text-[15px] leading-5 font-satoshi">
+              <span className="text-[#4E4E4E] text-right md:text-[15px] text-[8px] leading-[6px] md:leading-5 font-satoshi">
                 #2024 fashion
               </span>
-              <span className="font-satoshi font-medium text-2xl leading-8 text-black">
+              <span className="font-satoshi text-right font-medium md:text-2xl text-[10px] leading-[11px] md:leading-8 text-black">
                 $250.00{" "}
               </span>
             </div>
-            <div className="pl-3 pt-3 w-[290px]  border-l-[2px] border-t-[2px] -mt-[2px] -ml-[1.5px] border-[#fda600]">
-              <Image src={woman2} alt="" />
+            <div className="pl-3 pt-3 lg:w-[290px]  border-l-[2px] border-t-[2px] -mt-[2px] -ml-[1.5px] border-[#fda600]">
+              <Image src={woman2} alt="" className="w-full" />
             </div>
           </div>
 
           <div className="relative">
-            <div className=" absolute -left-3 -top-3 w-[82px] h-[82px] bg-[#000] border-[5px] border-[#fff] rounded-full flex justify-center items-center">
+            <div className=" absolute md:-left-3 md:-top-3 -top-1 -left-1 w-[24.5px] h-[24.5px] md:w-[82px] md:h-[82px] bg-[#000] border-[1.5px] md:border-[5px] border-[#fff] rounded-full flex justify-center items-center">
               <Image src={arrow} alt="" />
             </div>
             <Image src={man3} alt="" />
           </div>
         </div>
       </section>
-      <section className="px-28 my-[100px] flex flex-col gap-10">
+      <section className="px-5 md:px-8 lg:px-28 flex flex-col gap-10 pt-[70px]">
         <div className="flex justify-between items-center">
-          <h3 className="font-bon_foyage text-[90px] leading-[89px] text-black w[356px] ">
+          <h3 className="font-bon_foyage w-1/2 text-[40px] leading-[39.68px] md:text-[90px]  md:leading-[89px] text-black md:w-[380px]">
             Deals of the
             <br /> day
           </h3>
-          <p className="flex items-center font-satoshi text-2xl text-[#4e4e4e]">
+          <Link
+            href="/"
+            className="flex items-center font-satoshi md:text-2xl text-[13px] text-[#4e4e4e]"
+          >
             All Deals
             <svg
               width="20"
@@ -332,12 +336,14 @@ export default function Home() {
                 stroke-linejoin="round"
               />
             </svg>
-          </p>
+          </Link>
         </div>
-        <div className="flex justify-evenly gap-y-8 ">{deals}</div>
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4 lg:gap-8 ">
+          {deals}
+        </div>
       </section>
       <section className="py-[100px]  flex flex-col gap-10">
-        <h3 className="font-bon_foyage text-[85px] leading-[85px] text-black px-28">
+        <h3 className="font-bon_foyage text-[40px] leading-[39.68px] md:text-[90px]  md:leading-[89px] text-black px-5 md:px-8 lg:px-28">
           {" "}
           Our customers said
         </h3>

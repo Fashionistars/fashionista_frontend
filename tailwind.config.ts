@@ -18,7 +18,9 @@ const config: Config = {
         bon_foyage: ['var(--font-bon_foyage)']
       },
       gridTemplateColumns: {
-        fluid: 'repeat(auto-fit, minmax(339px, 1fr))'
+        fluid: 'repeat(auto-fit, minmax(339px, 1fr))',
+        card_fluid: 'repeat(auto-fit, minmax(170px, 1fr))',
+
       }
     },
   },

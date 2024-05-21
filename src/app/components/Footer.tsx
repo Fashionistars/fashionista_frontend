@@ -5,7 +5,7 @@ import Image from "next/image";
 const Footer = () => {
   const date = new Date().getFullYear();
   return (
-    <footer className="bg-[#141414] w-full md:h-[744px] px-24 pt-16 pb-4 flex flex-col justify-between">
+    <footer className="hidden bg-[#141414] w-full md:h-[744px] px-24 pt-16 pb-4 md:flex flex-col justify-between">
       <div className="flex justify-between  items-start">
         <div className="w-[40%] flex flex-col gap-7 ">
           <h3 className="font-bon_foyage text-[58px] leading-[58px] text-white">

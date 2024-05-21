@@ -31,7 +31,7 @@ const CategoryScroll = () => {
           alt=""
           className="aspect-square object-cover w-full"
         />
-        <span className="absolute bottom-6 left-5 text-[32px] font-bon_foyage leading-[32px] text-white group-hover:text-[#fda600] ">
+        <span className="absolute bottom-3 left-2 md:bottom-6 mb:left-5 text-[15.6px] leading-[15.48px] md:text-[32px] font-bon_foyage md:leading-[32px] text-white group-hover:text-[#fda600] ">
           {cat.title}
         </span>
       </div>
@@ -39,7 +39,7 @@ const CategoryScroll = () => {
   });
   return (
     <>
-      <div className="flex items-center gap-2 absolute top-16 right-0 pr-28">
+      <div className="flex items-center gap-2 absolute top-2 md:top-16 right-5 md:right-0 md:pr-8 lg:pr-28">
         <button
           className="w-[50px] h-[50px] rounded-full "
           onClick={scrollLeft}
@@ -55,7 +55,7 @@ const CategoryScroll = () => {
       </div>
       <div
         ref={categoryScrollRef}
-        className="grid hide_scrollbar grid-flow-col gap-4 auto-cols-[33%] md:auto-cols-[23%] overflow-x-auto overscroll-contain pl-28 "
+        className="grid hide_scrollbar grid-flow-col gap-4 auto-cols-[40%] md:auto-cols-[35%] lg:auto-cols-[23%] overflow-x-auto overscroll-contain pl-5 md:pl-8 lg:pl-28 "
       >
         {categories}
       </div>

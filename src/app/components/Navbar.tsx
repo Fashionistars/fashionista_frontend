@@ -5,9 +5,9 @@ import Link from "next/link";
 
 const Navbar = () => {
   const pathname = usePathname();
-  console.log(pathname);
+
   return (
-    <nav className="hidden md:flex justify-evenly bg-[#fda600] px-4 py-2 font-satoshi">
+    <nav className="flex justify-evenly bg-[#fda600] px-4 py-2 font-satoshi">
       <Link
         href="/"
         className={`text-lg leading-6  hover:text-white ${

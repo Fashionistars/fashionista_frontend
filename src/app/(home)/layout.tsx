@@ -9,7 +9,7 @@ export default function Home({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="flex min-h-screen flex-col px-2 md:px-0  bg-[#F4F3EC]">
+    <main className="flex min-h-screen flex-col gap-4 px-2 md:px-0  bg-[#F4F3EC]">
       <MobileNavBar />
       <header className="hidden md:block">
         <div className="px-24">
