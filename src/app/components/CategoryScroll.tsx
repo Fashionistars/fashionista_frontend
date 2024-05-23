@@ -23,9 +23,9 @@ const CategoryScroll = () => {
       });
     }
   };
-  const categories = category.map((cat) => {
+  const categories = category.map((cat, index) => {
     return (
-      <div className="relative group">
+      <div key={index} className="relative group">
         <Image
           src={cat.image}
           alt=""

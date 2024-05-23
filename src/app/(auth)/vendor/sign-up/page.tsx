@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import google from "../../../../../public/google.svg";
 
-const page = () => {
+const Page = () => {
   const [isEmail, setIsEmail] = useState(true);
   return (
     <div className="font-satoshi flex flex-col items-center justify-evenly h-full bg-white">
@@ -86,4 +86,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
