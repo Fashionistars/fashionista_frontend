@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import menu from "../../../public/menu.svg";
 import Image from "next/image";
-import Navbar from "./Navbar";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -13,120 +13,159 @@ const MobileNavBar = () => {
     setShowNav(false);
   }, [pathname]);
   return (
-    <div className="bg-[#f1d858] flex justify-between items-center rounded-[5px] md:hidden px-1">
+    <div className="flex justify-between items-center bg-[#F1D858] rounded-[5px] md:hidden px-1">
       <div
-        className={`absolute top-0 w-4/5 transition-all ease-in-out duration-150 min-h-screen ${
+        className={`absolute top-0 w-full transition-all ease-in-out duration-150  flex flex-col justify-between min-h-screen bg-[#fff] z-50 ${
           showNav ? "left-0" : "-left-[100%]"
         }`}
       >
-        <nav className="z-50 relative  flex  flex-col justify-between bg-[#fda600] px-4 py-6 font-satoshi w-full h-screen">
+        <div className="flex justify-between items-center py-6 px-5 border-b border-[#d9d9d9]">
+          <div className="flex items-center">
+            <Image src="/logo.svg" alt="logo" width={46} height={45} />
+            <h2 className="font-bon_foyage px-3 text-3xl leading-9 text-black">
+              Fashionistar
+            </h2>
+          </div>
           <button
             onClick={() => setShowNav(false)}
-            className=" absolute right-6 top-6 w-6 h-6 flex justify-center items-center"
+            className=" w-6 h-6 flex justify-center items-center"
           >
             <svg
-              className="w-[50px] h-[50xp] text-[#484848] "
-              width="50"
-              height="50"
-              viewBox="0 0 50 50"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M34.6383 17.1375L32.8633 15.3625L25.0008 23.2375L17.1383 15.3625L15.3633 17.1375L23.2383 25L15.3633 32.8625L17.1383 34.6375L25.0008 26.7625L32.8633 34.6375L34.6383 32.8625L26.7633 25L34.6383 17.1375Z"
-                fill="currentColor"
+                d="M15.8334 4.1665L4.16675 15.8332M4.16675 4.1665L15.8334 15.8332"
+                stroke="#282828"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               />
-              <circle cx="25" cy="25" r="24.5" stroke="currentColor" />
             </svg>
           </button>
+        </div>
+        <div className="px-5">
+          <div className="bg-[#D9D9D9] w-full h-[58px]  px-5 gap-2 font-satoshi flex items-center">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M14.5833 14.5835L18.3333 18.3335"
+                stroke="#282828"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M16.6667 9.1665C16.6667 5.02437 13.3089 1.6665 9.16675 1.6665C5.02461 1.6665 1.66675 5.02437 1.66675 9.1665C1.66675 13.3087 5.02461 16.6665 9.16675 16.6665C13.3089 16.6665 16.6667 13.3087 16.6667 9.1665Z"
+                stroke="#282828"
+                stroke-width="1.5"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <input
+              type="search"
+              placeholder="Search for items..."
+              className="placeholder:text-sm text-[#484848] placeholder:text-[#282828] outline-none w-full h-full bg-inherit"
+            />
+          </div>
+        </div>
+
+        <nav className="z-50 relative flex  flex-col gap-4 justify-between px-4 font-satoshi w-full h-1/2">
           <Link
             href="/"
-            className={`text-lg leading-6  hover:text-white ${
+            className={`text-[#282828] leading-5 ${
               pathname === "/"
-                ? "text-white font-bold"
-                : "text-black font-medium "
+                ? "font-medium text-base"
+                : " font-normal text-sm "
             } `}
           >
             Home
           </Link>
           <Link
             href="/about-us"
-            className={`text-lg leading-6  hover:text-white ${
+            className={`text-[#282828] leading-5 ${
               pathname === "/about-us"
-                ? "text-white font-bold"
-                : "text-black font-medium "
+                ? "text-base font-medium"
+                : "text-sm font-normal "
             } `}
           >
             About
           </Link>
           <Link
             href="/categories"
-            className={`text-lg leading-6  hover:text-white ${
+            className={`text-[#282828] leading-5 ${
               pathname === "/categories"
-                ? "text-white font-bold"
-                : "text-black font-medium "
+                ? "text-base font-medium"
+                : "text-sm font-normal "
             } `}
           >
             Categories
           </Link>
           <Link
             href="/vendor"
-            className={`text-lg leading-6  hover:text-white ${
+            className={`text-[#282828] leading-5 ${
               pathname === "/vendor"
-                ? "text-white font-bold"
-                : "text-black font-medium "
+                ? "text-base font-medium"
+                : "text-sm font-normal "
             } `}
           >
             Vendors
           </Link>
           <Link
             href="/shops"
-            className={`text-lg leading-6  hover:text-white ${
+            className={`text-[#282828] leading-5  ${
               pathname === "/shops"
-                ? "text-white font-bold"
-                : "text-black font-medium "
+                ? "text-base font-medium"
+                : "text-sm font-normal "
             } `}
           >
             Shops
           </Link>
           <Link
             href="/collections"
-            className={`text-lg leading-6  hover:text-white ${
+            className={`text-[#282828] leading-5 ${
               pathname === "/collections"
-                ? "text-white font-bold"
-                : "text-black font-medium "
+                ? "text-base font-medium"
+                : "text-sm font-normal "
             } `}
           >
             Collections
           </Link>
           <Link
             href="/testimonails"
-            className={`text-lg leading-6  hover:text-white ${
+            className={`text-[#282828] leading-5 ${
               pathname === "/testimonails"
-                ? "text-white font-bold"
-                : "text-black font-medium "
+                ? "text-base font-medium"
+                : "text-sm font-normal "
             } `}
           >
             Testimonials
           </Link>
           <Link
             href="/contact-us"
-            className={`text-lg leading-6  hover:text-white ${
+            className={`text-[#282828] leading-5 ${
               pathname === "/contact-us"
-                ? "text-white font-bold"
-                : "text-black font-medium "
+                ? "text-base font-medium"
+                : "text-sm font-normal "
             } `}
           >
             Contact Us
           </Link>
           <Link
-            href="/shops"
-            className={`text-lg leading-6  hover:text-white ${
+            href="/blog"
+            className={`text-[#282828] leading-5 ${
               pathname === "/blog"
-                ? "text-white font-bold"
-                : "text-black font-medium "
+                ? "text-base font-medium"
+                : "text-sm font-normal "
             } `}
           >
             Blog
@@ -171,6 +210,58 @@ const MobileNavBar = () => {
             </div>
           </div> */}
         </nav>
+        <div className="px-4 flex flex-col gap-4 justify-end  h-full">
+          <div className="flex items-center gap-1">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M4.93318 11.6112C3.8721 12.243 1.09002 13.5331 2.7845 15.1475C3.61223 15.936 4.53412 16.5 5.69315 16.5H12.3068C13.4659 16.5 14.3878 15.936 15.2155 15.1475C16.91 13.5331 14.1279 12.243 13.0668 11.6112C10.5786 10.1296 7.42139 10.1296 4.93318 11.6112Z"
+                stroke="#282828"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M12.375 4.875C12.375 6.73896 10.864 8.25 9 8.25C7.13604 8.25 5.625 6.73896 5.625 4.875C5.625 3.01104 7.13604 1.5 9 1.5C10.864 1.5 12.375 3.01104 12.375 4.875Z"
+                stroke="#282828"
+              />
+            </svg>
+            <span className="text-[#282828] text-[15px] font-satoshi">
+              Accounts
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M11.25 9C11.25 8.17155 11.9216 7.5 12.75 7.5C14.4068 7.5 15.75 8.84317 15.75 10.5C15.75 12.1568 14.4068 13.5 12.75 13.5C11.9216 13.5 11.25 12.8284 11.25 12V9Z"
+                stroke="#282828"
+              />
+              <path
+                d="M6.75 9C6.75 8.17155 6.07843 7.5 5.25 7.5C3.59314 7.5 2.25 8.84317 2.25 10.5C2.25 12.1568 3.59314 13.5 5.25 13.5C6.07843 13.5 6.75 12.8284 6.75 12V9Z"
+                stroke="#282828"
+              />
+              <path
+                d="M2.25 10.5V8.25C2.25 4.52208 5.27208 1.5 9 1.5C12.728 1.5 15.75 4.52208 15.75 8.25V11.8846C15.75 13.3909 15.75 14.144 15.4857 14.7313C15.1849 15.3997 14.6497 15.9349 13.9813 16.2357C13.394 16.5 12.6409 16.5 11.1346 16.5H9"
+                stroke="#282828"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span className="text-[#282828] text-[15px] font-satoshi">
+              +23490000000
+            </span>
+          </div>
+        </div>
       </div>
       <button
         onClick={() => setShowNav(true)}
@@ -201,7 +292,10 @@ const MobileNavBar = () => {
           </svg>
         </button>
 
-        <button className="w-[34px] h-[34px] flex justify-center  items-center bg-[#F4F3EC] border-[0.8px] border-black rounded-full">
+        <Link
+          href="/cart"
+          className="w-[34px] h-[34px] flex justify-center  items-center bg-[#F4F3EC] border-[0.8px] border-black rounded-full"
+        >
           <svg
             width="18"
             height="18"
@@ -234,7 +328,7 @@ const MobileNavBar = () => {
               stroke="black"
             />
           </svg>
-        </button>
+        </Link>
       </div>
     </div>
   );

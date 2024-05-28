@@ -1,23 +1,27 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import whatsapp from "../../../public/socials/whatsapp.svg";
+import twitter from "../../../public/socials/twitter.svg";
+import facebook from "../../../public/socials/facebook.svg";
+import instagram from "../../../public/socials/instagram.svg";
 
 const Footer = () => {
   const date = new Date().getFullYear();
   return (
-    <footer className="hidden bg-[#141414] w-full md:h-[744px] px-24 pt-16 pb-4 md:flex flex-col justify-between">
-      <div className="flex justify-between  items-start">
-        <div className="w-[40%] flex flex-col gap-7 ">
-          <h3 className="font-bon_foyage text-[58px] leading-[58px] text-white">
+    <footer className="bg-[#141414] w-full md:h-[744px] px-5 md:px-24 pt-16 pb-4 md:flex flex-col justify-between">
+      <div className="flex flex-wrap gap-8 justify-between items-start ">
+        <div className="w-full md:w-[38%] flex flex-col gap-4 md:gap-7 ">
+          <h3 className="font-bon_foyage text-[35px] leading-[35px] md:text-[58px] md:leading-[58px] text-white">
             <span className="text-[#fda600]"> Join </span> The Largest{" "}
             <span className="text-[#fda600]">Fashion</span> Community
           </h3>
-          <p className="font-satoshi pr-2 text-lg leading-6 text-[#A1A1A1]">
+          <p className="font-satoshi text-[15px] leading-5 md:pr-2 text-lg md:leading-6 text-[#A1A1A1]">
             Step into the world of innovation and style as you embark on
             captivating fashion experience and a journey to explore our
             collections.
           </p>
-          <p className="font-satoshi text-lg leading-6 text-white flex items-center gap-2">
+          <p className="font-satoshi text-[15px]  md:text-lg leading-6 text-white flex items-center gap-2">
             <svg
               width="20"
               height="20"
@@ -32,9 +36,9 @@ const Footer = () => {
                 fill="white"
               />
             </svg>
-            Address: 507a, Festac W, Ikate, Lagos State.
+            <strong>Address:</strong> 507a, Festac W, Ikate, Lagos State.
           </p>
-          <p className="font-satoshi text-lg leading-6 text-white flex items-center gap-2">
+          <p className="font-satoshi text-[15px]  md:text-lg leading-6 text-white flex items-center gap-2">
             <svg
               width="20"
               height="20"
@@ -60,9 +64,9 @@ const Footer = () => {
                 stroke-linejoin="round"
               />
             </svg>
-            Call Us On: +234 90 0000 000
+            <strong>Call Us On:</strong> +234 90 0000 000
           </p>
-          <p className="font-satoshi text-lg leading-6 text-white flex items-center gap-2">
+          <p className="font-satoshi text-[15px]  md:text-lg leading-6 text-white flex items-center gap-2">
             <svg
               width="20"
               height="20"
@@ -78,17 +82,17 @@ const Footer = () => {
                 stroke-linejoin="round"
               />
             </svg>
-            Email: fashionista@gmail.com
+            <strong> Email:</strong> fashionista@gmail.com
           </p>
         </div>
-        <div className=" flex flex-col gap-8 justify-between ">
-          <h3 className="text-white text-[32px] leading-[43px] font-medium font-satoshi  ">
+        <div className=" flex flex-col gap-4 md:gap-8 justify-between ">
+          <h3 className="text-white text-lg leading-6 md:text-[32px] md:leading-[43px] font-medium font-satoshi  ">
             Account
           </h3>
-          <ul className="flex flex-col gap-8 ">
+          <ul className="flex flex-col gap-4 md:gap-8 ">
             <li>
               <Link
-                className="font-satoshi font-medium text-[20px] leading-[27px] text-[#A1A1A1]"
+                className="font-satoshi text-[15px] leading-5 md:font-medium md:text-[20px] md:leading-[27px] text-[#A1A1A1]"
                 href="/login"
               >
                 Sign In
@@ -96,15 +100,15 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                className="font-satoshi font-medium text-[20px] leading-[27px] text-[#A1A1A1]"
-                href="/login"
+                className="font-satoshi text-[15px] leading-5 md:font-medium md:text-[20px] md:leading-[27px] text-[#A1A1A1]"
+                href="/cart"
               >
                 View Cart
               </Link>
             </li>
             <li>
               <Link
-                className="font-satoshi font-medium text-[20px] leading-[27px] text-[#A1A1A1]"
+                className="font-satoshi text-[15px] leading-5 md:font-medium md:text-[20px] md:leading-[27px] text-[#A1A1A1]"
                 href="/login"
               >
                 My Wishlist
@@ -112,7 +116,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                className="font-satoshi font-medium text-[20px] leading-[27px] text-[#A1A1A1]"
+                className="font-satoshi text-[15px] leading-5 md:font-medium md:text-[20px] md:leading-[27px] text-[#A1A1A1]"
                 href="/login"
               >
                 Track My Order
@@ -120,7 +124,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                className="font-satoshi font-medium text-[20px] leading-[27px] text-[#A1A1A1]"
+                className="font-satoshi text-[15px] leading-5 md:font-medium md:text-[20px] md:leading-[27px] text-[#A1A1A1]"
                 href="/login"
               >
                 Contact Us
@@ -128,7 +132,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                className="font-satoshi font-medium text-[20px] leading-[27px] text-[#A1A1A1]"
+                className="font-satoshi text-[15px] leading-5 md:font-medium md:text-[20px] md:leading-[27px] text-[#A1A1A1]"
                 href="/login"
               >
                 Delivery Information
@@ -136,7 +140,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                className="font-satoshi font-medium text-[20px] leading-[27px] text-[#A1A1A1]"
+                className="font-satoshi text-[15px] leading-5 md:font-medium md:text-[20px] md:leading-[27px] text-[#A1A1A1]"
                 href="/login"
               >
                 About Us
@@ -144,12 +148,12 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-        <div className="md:w-[318px] flex flex-col gap-7 justify-between">
-          <h3 className="font-satoshi font-medium text-[32px] leading-[43px] text-white">
+        <div className=" w-1/2 md:w-[318px] flex flex-col gap-3 md:gap-7 justify-between">
+          <h3 className="text-white text-lg leading-6 md:text-[32px] md:leading-[43px] font-medium font-satoshi">
             {" "}
             Install App{" "}
           </h3>
-          <p className="font-satoshi text-lg leading-6 text-[#A1A1A1]">
+          <p className="font-satoshi text-[15px] leading- md:text-lg md:leading-6 text-[#A1A1A1]">
             From Apple store or google play store
           </p>
           <div className="flex items-center gap-2 bg-black p-2">
@@ -169,11 +173,11 @@ const Footer = () => {
             </svg>
 
             <div className="flex flex-col gap-1">
-              <span className="text-lg leading-6 text-[#d9d9d9] font-satoshi">
+              <span className="text-[11px] leading-[15px] md:text-lg md:leading-6 text-[#d9d9d9] font-satoshi">
                 Download on the
               </span>
 
-              <span className="text-white text-3xl leading-10 font-medium font-satoshi">
+              <span className="text-white leading-[21.5px] md:text-3xl md:leading-10 font-medium font-satoshi">
                 AppleStore
               </span>
             </div>
@@ -193,17 +197,17 @@ const Footer = () => {
             </svg>
 
             <div className="flex flex-col gap-1">
-              <span className="text-lg leading-6 text-[#d9d9d9] font-satoshi">
+              <span className="text-[11px] leading-[15px] md:text-lg md:leading-6 text-[#d9d9d9] font-satoshi">
                 Download on the
               </span>
 
-              <span className="text-white text-3xl leading-10 font-medium font-satoshi">
+              <span className="text-white leading-[21.5px] md:text-3xl md:leading-10 font-medium font-satoshi">
                 GooglePlay
               </span>
             </div>
           </div>
           <div>
-            <p className="font-satoshi font-medium text-[20px] leading-[27px] text-white">
+            <p className="font-satoshi font-medium text-[15px] leading-5 md:text-[20px] md:leading-[27px] text-white">
               Secured payment gateways
             </p>
             <div className="flex items-center gap-2">
@@ -433,92 +437,66 @@ const Footer = () => {
       </div>
       <div className="flex border-t-[1.5px] border-[#282828] justify-between items-center pt-6">
         <div className="flex items-center">
-          <Image src="/logo.svg" alt="logo" width={55} height={54} />
-          <h2 className="font-bon_foyage px-3 text-4xl leading-9 text-white">
+          <Image
+            src="/logo.svg"
+            alt="logo"
+            width={55}
+            height={54}
+            className="w-[46px] h-[45px] md:w-full md:h-full"
+          />
+          <h2 className="font-bon_foyage px-3 text-3xl md:text-4xl leading-9 text-white">
             Fashionistar
           </h2>
         </div>
 
-        <p className="text-white font-satoshi text-[15px] text-center leading-5">
+        <p className="text-white font-satoshi hidden md:block text-[15px] text-center leading-5">
           {date} Incoperated. All rights reserved
         </p>
         <div className="flex items-center gap-2">
-          <button className="w-[45px] h-[45px] bg-[#fda600] flex justify-center items-center rounded-full">
-            <svg
-              width="31"
-              height="31"
-              viewBox="0 0 31 31"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g clip-path="url(#clip0_1_3393)">
-                <path
-                  d="M8.27836 26.5504L8.77931 26.8009C10.8666 28.0532 13.2044 28.6377 15.5421 28.6377C22.8894 28.6377 28.9008 22.6263 28.9008 15.279C28.9008 11.7724 27.4814 8.34925 24.9767 5.84451C22.4719 3.33977 19.1323 1.92041 15.5421 1.92041C8.19487 1.92041 2.18348 7.9318 2.26697 15.3625C2.26697 17.8673 3.0184 20.2885 4.27077 22.3758L4.60473 22.8768L3.26887 27.8028L8.27836 26.5504Z"
-                  fill="white"
-                />
-                <path
-                  d="M26.396 4.50854C23.5573 1.58634 19.6332 0 15.6256 0C7.10948 0 0.263179 6.92979 0.34667 15.3624C0.34667 18.0342 1.09809 20.6224 2.35047 22.9602L0.179688 30.8918L8.27836 28.8046C10.5326 30.0569 13.0374 30.6414 15.5421 30.6414C23.9748 30.6414 30.8211 23.7116 30.8211 15.2789C30.8211 11.1879 29.2347 7.34725 26.396 4.50854ZM15.6256 28.0531C13.3713 28.0531 11.1171 27.4687 9.19677 26.2998L8.69582 26.0493L3.85331 27.3017L5.10568 22.5427L4.77172 22.0417C1.09809 16.1139 2.85141 8.26566 8.8628 4.59203C14.8742 0.918406 22.6389 2.67173 26.3125 8.68311C29.9861 14.6945 28.2328 22.4592 22.2214 26.1328C20.3011 27.3852 17.9634 28.0531 15.6256 28.0531ZM22.9729 18.7856L22.0545 18.3681C22.0545 18.3681 20.7186 17.7837 19.8837 17.3662C19.8002 17.3662 19.7167 17.2827 19.6332 17.2827C19.3827 17.2827 19.2157 17.3662 19.0488 17.4497C19.0488 17.4497 18.9653 17.5332 17.7964 18.8691C17.7129 19.0361 17.5459 19.1195 17.3789 19.1195H17.2954C17.2119 19.1195 17.045 19.0361 16.9615 18.9526L16.544 18.7856C15.6256 18.3681 14.7907 17.8672 14.1228 17.1992C13.9558 17.0323 13.7053 16.8653 13.5383 16.6983C12.9539 16.1139 12.3694 15.4459 11.952 14.6945L11.8685 14.5275C11.785 14.444 11.785 14.3605 11.7015 14.1936C11.7015 14.0266 11.7015 13.8596 11.785 13.7761C11.785 13.7761 12.119 13.3586 12.3694 13.1082C12.5364 12.9412 12.6199 12.6907 12.7869 12.5237C12.9539 12.2732 13.0374 11.9393 12.9539 11.6888C12.8704 11.2713 11.8685 9.01708 11.618 8.51613C11.451 8.26566 11.2841 8.18216 11.0336 8.09867H10.7831C10.6161 8.09867 10.3656 8.09867 10.1152 8.09867C9.94819 8.09867 9.78121 8.18216 9.61422 8.18216L9.53073 8.26566C9.36375 8.34915 9.19677 8.51613 9.02978 8.59962C8.8628 8.7666 8.77931 8.93359 8.61233 9.10057C8.02789 9.85199 7.69392 10.7704 7.69392 11.6888C7.69392 12.3567 7.8609 13.0247 8.11138 13.6091L8.19487 13.8596C8.94629 15.4459 9.94819 16.8653 11.2841 18.1176L11.618 18.4516C11.8685 18.7021 12.119 18.8691 12.286 19.1195C14.0393 20.6224 16.0431 21.7078 18.2973 22.2922C18.5478 22.3757 18.8818 22.3757 19.1323 22.4592C19.3827 22.4592 19.7167 22.4592 19.9672 22.4592C20.3846 22.4592 20.8856 22.2922 21.2195 22.1252C21.47 21.9583 21.637 21.9583 21.804 21.7913L21.971 21.6243C22.1379 21.4573 22.3049 21.3738 22.4719 21.2068C22.6389 21.0399 22.8059 20.8729 22.8894 20.7059C23.0564 20.3719 23.1398 19.9545 23.2233 19.537C23.2233 19.37 23.2233 19.1195 23.2233 18.9526C23.2233 18.9526 23.1398 18.8691 22.9729 18.7856Z"
-                  fill="#FDA600"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_1_3393">
-                  <rect width="31" height="31" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
-          </button>
-          <button className="w-[45px] h-[45px] bg-[#fda600] flex justify-center items-center rounded-full">
-            <svg
-              width="35"
-              height="35"
-              viewBox="0 0 35 35"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12.8939 30.625C9.35565 30.625 6.05737 29.5959 3.28125 27.8202C5.63827 27.9728 9.79789 27.6075 12.3852 25.1396C8.49306 24.961 6.73778 21.976 6.50884 20.7003C6.83954 20.8278 8.41673 20.981 9.30709 20.6238C4.82989 19.5011 4.14305 15.572 4.29568 14.373C5.13516 14.9598 6.55971 15.1639 7.11936 15.1128C2.94743 12.1277 4.44831 7.63739 5.18603 6.66788C8.17996 10.8157 12.6669 13.1453 18.2179 13.2748C18.1133 12.8159 18.058 12.3379 18.058 11.8471C18.058 8.32444 20.9053 5.46875 24.4176 5.46875C26.2527 5.46875 27.9064 6.24832 29.0672 7.49529C30.2935 7.20793 32.1391 6.53523 33.0413 5.9535C32.5865 7.58637 31.1707 8.9485 30.3143 9.45337C30.3073 9.43612 30.3214 9.47054 30.3143 9.45337C31.0665 9.33957 33.1021 8.94837 33.9062 8.4028C33.5086 9.32012 32.0075 10.8453 30.7756 11.6992C31.0049 21.8073 23.2712 30.625 12.8939 30.625Z"
-                fill="white"
-              />
-            </svg>
-          </button>
-          <button className="w-[45px] h-[45px] bg-[#fda600] flex justify-center items-center rounded-full">
-            <svg
-              width="35"
-              height="35"
-              viewBox="0 0 35 35"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M17.5 29.5312C14.9202 29.5312 13.0638 29.53 11.6164 29.3896C10.1855 29.2509 9.27026 28.9844 8.53982 28.5254C7.70497 28.0009 6.99903 27.295 6.47445 26.4602C6.01562 25.7297 5.74893 24.8145 5.61039 23.3836C5.47003 21.9363 5.46875 20.0798 5.46875 17.5C5.46875 14.9202 5.47003 13.0638 5.61039 11.6164C5.74893 10.1855 6.01562 9.27026 6.47445 8.53982C6.99901 7.70495 7.70495 6.99901 8.53982 6.47445C9.27026 6.01562 10.1855 5.74893 11.6164 5.61039C13.0636 5.47003 14.92 5.46875 17.5 5.46875C20.0798 5.46875 21.9363 5.47003 23.3836 5.61039C24.8145 5.74893 25.7297 6.01562 26.4602 6.47445C27.295 6.99903 28.0009 7.70497 28.5254 8.53982C28.9844 9.27026 29.2509 10.1855 29.3896 11.6164C29.53 13.0638 29.5312 14.9202 29.5312 17.5C29.5312 20.0798 29.53 21.9363 29.3896 23.3836C29.2509 24.8145 28.9844 25.7297 28.5254 26.4602C28.0008 27.295 27.295 28.0008 26.4602 28.5254C25.7297 28.9844 24.8145 29.2509 23.3836 29.3896C21.9363 29.53 20.0798 29.5312 17.5 29.5312Z"
-                fill="white"
-              />
-              <path
-                d="M17.5 22.9687C20.5203 22.9687 22.9687 20.5203 22.9687 17.5C22.9687 14.4797 20.5203 12.0312 17.5 12.0312C14.4797 12.0312 12.0312 14.4797 12.0312 17.5C12.0312 20.5203 14.4797 22.9687 17.5 22.9687Z"
-                stroke="#FDA600"
-                stroke-width="1.5"
-              />
-              <path
-                d="M24.6094 12.0312C25.5155 12.0312 26.25 11.2967 26.25 10.3906C26.25 9.48453 25.5155 8.75 24.6094 8.75C23.7033 8.75 22.9688 9.48453 22.9688 10.3906C22.9688 11.2967 23.7033 12.0312 24.6094 12.0312Z"
-                fill="#FDA600"
-              />
-            </svg>
-          </button>
-          <button className="w-[45px] h-[45px] bg-[#fda600] flex justify-center items-center rounded-full">
-            <svg
-              width="35"
-              height="35"
-              viewBox="0 0 35 35"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M24.0078 5.4741L20.3919 5.46973C16.8853 5.46973 14.6202 7.79285 14.6202 11.3924V14.1213H10.9922V19.0596H14.6202L14.6158 29.5322H19.6919L19.6962 19.0596H23.8591L23.8558 14.1224H19.6962V11.8069C19.6962 10.6935 19.9598 10.1302 21.4091 10.1302L23.9969 10.1291L24.0078 5.4741Z"
-                fill="white"
-              />
-            </svg>
-          </button>
+          <a
+            href="/"
+            target="_blank"
+            className="w-6 h-6 md:w-[45px] md:h-[45px] bg-[#fda600] flex justify-center items-center rounded-full"
+          >
+            <Image
+              src={whatsapp}
+              alt=""
+              className="w-full h-full object-cover"
+            />
+          </a>
+          <a
+            href="/"
+            target="_blank"
+            className="w-6 h-6 md:w-[45px] md:h-[45px] bg-[#fda600] flex justify-center items-center rounded-full"
+          >
+            <Image
+              src={twitter}
+              alt=""
+              className="w-[80%] h-[80%] max-h-auto object-cover"
+            />
+          </a>
+          <a
+            href="/"
+            target="_blank"
+            className="w-6 h-6 md:w-[45px]  md:h-[45px] bg-[#fda600] flex justify-center items-center rounded-full"
+          >
+            <Image
+              src={instagram}
+              alt=""
+              className="w-full h-full object-cover"
+            />
+          </a>
+          <a
+            href="/"
+            target="_blank"
+            className="w-6 h-6 md:w-[45px] md:h-[45px] bg-[#fda600] flex justify-center items-center rounded-full"
+          >
+            <Image
+              src={facebook}
+              alt=""
+              className="w-full h-full object-cover"
+            />
+          </a>
         </div>
       </div>
     </footer>

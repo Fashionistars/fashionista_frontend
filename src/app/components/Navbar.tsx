@@ -47,7 +47,7 @@ const Navbar = () => {
         Vendors
       </Link>
       <Link
-        href="/blog"
+        href="/shops"
         className={`text-lg leading-6  hover:text-white ${
           pathname === "/shops"
             ? "text-white font-bold"

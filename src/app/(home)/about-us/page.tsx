@@ -198,7 +198,7 @@ const page = () => {
           </div>
           <div className="hover:bg-[#fda600] transition-colors max--[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
             <svg
-              className="text-[#fda600] w-[35px] h-[36px] md:w-[70px]  md:h-[70px] md:w-[70px]  md:h-[70px] group-hover:text-black transition-colors duration-300"
+              className="text-[#fda600] w-[35px] h-[36px] md:w-[70px]  md:h-[70px] group-hover:text-black transition-colors duration-300"
               width="36"
               height="36"
               viewBox="0 0 36 36"
@@ -430,7 +430,7 @@ const page = () => {
         </div>
       </section>
       <section className="space-y-5 py-6 flex flex-col md:flex-row">
-        <div className="flex flex-col gap-2 items-center w-full">
+        <div className="w-full md:w-1/2 flex flex-col gap-2 items-center ">
           <h3 className="font-bon_foyage text-3xl leading-[30px] text-black">
             Meet the CEO
           </h3>
@@ -442,11 +442,11 @@ const page = () => {
             lorem.
           </p>
         </div>
-        <div className="w-full">
+        <div className="w-full md:w-1/2">
           <Image
             src={ceo}
             alt="a picture of the CEO"
-            className="object-cover"
+            className="w-full h-full object-cover"
           />
         </div>
       </section>

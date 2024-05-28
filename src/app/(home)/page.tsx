@@ -20,8 +20,6 @@ import Cads from "../components/Cads";
 import Slider from "../components/Carousel";
 import ReviewScroll from "../components/ReviewScroll";
 import CategoryScroll from "../components/CategoryScroll";
-
-import Footer from "../components/Footer";
 import Link from "next/link";
 
 export default function Home() {
@@ -223,7 +221,7 @@ export default function Home() {
             </li>
           </ul>
         </div>
-        <div className="flex flex-wrap justify-center gap-2 md:gap-4 lg:gap-8  ">
+        <div className="flex flex-wrap justify-center gap-4 gap-y-10 md:gap-4 lg:gap-8  ">
           {collections}
         </div>
       </section>
@@ -349,7 +347,6 @@ export default function Home() {
         </h3>
         <ReviewScroll />
       </section>
-      <Footer />
     </div>
   );
 }
