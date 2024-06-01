@@ -19,7 +19,7 @@ const Navbar = () => {
       <Link
         href="/about-us"
         className={`text-lg leading-6  hover:text-white ${
-          pathname === "/about"
+          pathname === "/about-us"
             ? "text-white font-bold"
             : "text-black font-medium "
         } `}

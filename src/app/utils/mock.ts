@@ -6,6 +6,14 @@ import man from "../../../public/man2_asset.svg"
 import man2 from "../../../public/man3_assets.svg"
 import woman from "../../../public/woman.svg"
 import woman2 from "../../../public/woman2.svg"
+import sapphire from "../../../public/vendor/sapphire.svg"
+import gucci from "../../../public/vendor/gucci.svg"
+import versace from "../../../public/vendor/versace.svg"
+import burberry from "../../../public/vendor/burberry.svg"
+import ralph from "../../../public/vendor/ralph.svg"
+import calvin from "../../../public/vendor/calvin.svg"
+import fashion from "../../../public/vendor/fashion.svg"
+
 const data = [
     {
         image: minimalist,
@@ -167,5 +175,84 @@ export const category = [
     {
         image: minimalist,
         title: 'Minimalist'
+    },
+]
+
+export const blog =[ {
+    image: man,
+    time: "10 - 20 minutes read",
+    title: "How to Wear Senator and Not Look Tragic",
+    author: "ALICE NEWBOLD",
+    content: "Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at mauris elit fames amet."
+    
+},
+{
+    image: senator,
+    time: "5 - 15 minutes read",
+    title: "Why you should wear a senator to your next Owambe",
+    author: "Annalise Keating",
+    content: "Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at mauris elit fames amet."
+    
+    },
+    {
+        image: gown,
+        time: "5 - 10 minutes read",
+        title: "A church girl gown? or not...",
+        author: "Carina Pope",
+        content: "Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at mauris elit fames amet."
+        
+    },
+
+]
+
+export const vendor = [
+    {
+        image: sapphire,
+        name: 'Sapphire',
+        rating: 4.6,
+        address: '512 Alfred Ave. Lagos. Nigeria',
+        mobile: '(+234) 90 0000 000'
+    },
+    {
+        image: fashion,
+        name: 'Fashion Network',
+        rating: 4.6,
+        address: '512 Alfred Ave. Lagos. Nigeria',
+        mobile: '(+234) 90 0000 000'
+    },
+    {
+        image: gucci,
+        name: 'Gucci',
+        rating: 4.6,
+        address: '512 Alfred Ave. Lagos. Nigeria',
+        mobile: '(+234) 90 0000 000'
+    },
+    {
+        image: burberry,
+        name: 'Burberry',
+        rating: 4.6,
+        address: '512 Alfred Ave. Lagos. Nigeria',
+        mobile: '(+234) 90 0000 000'
+    },
+    {
+        image: calvin,
+        name: 'Calvin Klein',
+        rating: 4.6,
+        address: '512 Alfred Ave. Lagos. Nigeria',
+        mobile: '(+234) 90 0000 000'
+    },
+    {
+        image: versace,
+        name: 'Versace',
+        rating: 4.6,
+        address: '512 Alfred Ave. Lagos. Nigeria',
+        mobile: '(+234) 90 0000 000'
+    },
+    {
+        image: ralph,
+        name: 'Ralph and Lauren ',
+        rating: 4.6,
+        address: '512 Alfred Ave. Lagos. Nigeria',
+        mobile: '(+234) 90 0000 000'
     },
 ]

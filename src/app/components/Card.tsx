@@ -29,7 +29,7 @@ const Card = ({ data }: dataProps) => {
       </div>
 
       <div className="flex flex-col justify-between">
-        <p className="font-bon_foyage md:text-[28px] text-lg leading-[17.82px] md:leading-7 text-black">
+        <p className="font-bon_foyage md:text-[28px] text-lg py-3 leading-[17.82px] md:leading-7 text-black">
           {data.title}
         </p>
         <div className="flex justify-between items-center">
