@@ -255,4 +255,11 @@ export const vendor = [
         address: '512 Alfred Ave. Lagos. Nigeria',
         mobile: '(+234) 90 0000 000'
     },
+    {
+        image: burberry,
+        name: 'Burberry',
+        rating: 4.6,
+        address: '512 Alfred Ave. Lagos. Nigeria',
+        mobile: '(+234) 90 0000 000'
+    },
 ]

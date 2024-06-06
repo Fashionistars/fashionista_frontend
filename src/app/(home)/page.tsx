@@ -221,7 +221,7 @@ export default function Home() {
             </li>
           </ul>
         </div>
-        <div className="flex flex-wrap justify-center gap-4 gap-y-10 md:gap-4 lg:gap-8  ">
+        <div className="flex flex-wrap justify-center gap-4 gap-y-10 lg:gap-8  ">
           {collections}
         </div>
       </section>

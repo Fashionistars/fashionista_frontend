@@ -8,8 +8,8 @@ const page = () => {
       <h2 className="font-satoshi font-medium text-[#fda600] md:text-2xl">
         How can we help you ?
       </h2>
-      <div className="md:grid">
-        <div className="flex flex-col gap-3">
+      <div className="flex flex-col md:flex-row md:justify-between ">
+        <div className="flex flex-col gap-3 w-full md:w-[30%]">
           <h2 className="font-bon_foyage text-[32px] md:text-5xl md:leading-[48px] leading-8 text-black">
             Let us know where we can help you
           </h2>
@@ -19,45 +19,47 @@ const page = () => {
             mauris elit fames amet.
           </p>
         </div>
-        <div className="flex flex-col gap-2">
-          <h2 className="font-bon_foyage text-[32px] leading-8 text-black">
-            Visit Feedback
-          </h2>
-          <p className="font-satoshi text-sm md:text-[20px] md:leading-[27px] leading-[19px] text-[#282828]">
-            Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
-            consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
-            mauris elit fames amet.
-          </p>
-        </div>
-        <div className="flex flex-col gap-2">
-          <h2 className="font-bon_foyage text-[32px] leading-8 text-black">
-            Billings Enquiries
-          </h2>
-          <p className="font-satoshi text-sm md:text-[20px] md:leading-[27px] leading-[19px] text-[#282828]">
-            Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
-            consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
-            mauris elit fames amet.
-          </p>
-        </div>
-        <div className="flex flex-col gap-2">
-          <h2 className="font-bon_foyage text-[32px] leading-8 text-black">
-            Employers Services
-          </h2>
-          <p className="font-satoshi text-sm md:text-[20px] md:leading-[27px] leading-[19px] text-[#282828]">
-            Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
-            consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
-            mauris elit fames amet.
-          </p>
-        </div>
-        <div className="flex flex-col gap-2">
-          <h2 className="font-bon_foyage text-[32px] leading-8 text-black">
-            General Enquiries
-          </h2>
-          <p className="font-satoshi text-sm md:text-[20px] md:leading-[27px] leading-[19px] text-[#282828]">
-            Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
-            consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
-            mauris elit fames amet.
-          </p>
+        <div className="flex flex-col md:flex-row md:flex-wrap md:gap-y-5 justify-between w-full md:w-[67%]">
+          <div className="flex flex-col gap-2 md:w-[47%]">
+            <h2 className="font-bon_foyage text-[32px] leading-8 text-black">
+              Visit Feedback
+            </h2>
+            <p className="font-satoshi text-sm md:text-[20px] md:leading-[27px] leading-[19px] text-[#282828]">
+              Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
+              consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
+              mauris elit fames amet.
+            </p>
+          </div>
+          <div className="flex flex-col gap-2 md:w-[47%]">
+            <h2 className="font-bon_foyage text-[32px] leading-8 text-black">
+              Billings Enquiries
+            </h2>
+            <p className="font-satoshi text-sm md:text-[20px] md:leading-[27px] leading-[19px] text-[#282828]">
+              Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
+              consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
+              mauris elit fames amet.
+            </p>
+          </div>
+          <div className="flex flex-col gap-2 md:w-[47%]">
+            <h2 className="font-bon_foyage text-[32px] leading-8 text-black">
+              Employers Services
+            </h2>
+            <p className="font-satoshi text-sm md:text-[20px] md:leading-[27px] leading-[19px] text-[#282828]">
+              Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
+              consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
+              mauris elit fames amet.
+            </p>
+          </div>
+          <div className="flex flex-col gap-2 md:w-[47%]">
+            <h2 className="font-bon_foyage text-[32px] leading-8 text-black">
+              General Enquiries
+            </h2>
+            <p className="font-satoshi text-sm md:text-[20px] md:leading-[27px] leading-[19px] text-[#282828]">
+              Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed
+              consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at
+              mauris elit fames amet.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -97,7 +99,7 @@ const page = () => {
                 placeholder="Phone Number"
               />
             </div>
-            <div className="bg-[#d9d9d9] w-full h-[148px] ">
+            <div className="bg-[#d9d9d9] w-full h-[148px] md:h-[217px] ">
               <textarea
                 className="w-full h-full px-4 py-4 bg-inherit placeholder:text-[#282828] text-[#282828] outline-none"
                 placeholder="Message"

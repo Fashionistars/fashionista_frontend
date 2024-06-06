@@ -14,7 +14,7 @@ interface VendorProp {
 const VendorCard = ({ vendorProp }: VendorProp) => {
   return (
     <div className="w-[48%] md:w-[30%] lg:w-[290px] flex flex-col gap-3">
-      <div className="w-full h-[217px]">
+      <div className="w-full h-[217px] md:h-[320px]">
         <Image
           src={vendorProp.image}
           alt={vendorProp.name}

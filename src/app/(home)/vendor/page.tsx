@@ -7,7 +7,7 @@ const page = () => {
     <VendorCard vendorProp={link} key={index} />
   ));
   return (
-    <div className="p-5">
+    <div className="p-5 md:px-28">
       <h2 className="font-bon_foyage text-[40px]  py-2 leading-10 text-black">
         {" "}
         Fashion Vendors
