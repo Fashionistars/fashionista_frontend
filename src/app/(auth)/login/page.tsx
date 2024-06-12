@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import google from "../../../../public/google.svg";
+import { login } from "@/app/actions/auth";
 
 const Page = () => {
   const [isEmail, setIsEmail] = useState(true);
@@ -19,7 +20,7 @@ const Page = () => {
           </Link>
         </p>
       </div>
-      <form className="w-full flex flex-col items-center gap-6">
+      <form action={login} className="w-full flex flex-col items-center gap-6">
         <div className="w-full flex flex-col items-center">
           <p
             className={`flex items-center justify-between w-full max-w-[423px] gap-4 p-2 ${

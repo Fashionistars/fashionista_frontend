@@ -104,19 +104,19 @@ const page = ({ params }: NameProp) => {
             <path
               d="M12.5 10.0002C12.5 9.07966 13.2462 8.3335 14.1667 8.3335C16.0076 8.3335 17.5 9.82591 17.5 11.6668C17.5 13.5077 16.0076 15.0002 14.1667 15.0002C13.2462 15.0002 12.5 14.254 12.5 13.3335V10.0002Z"
               stroke="#000"
-              stroke-width="1.5"
+              strokeWidth="1.5"
             />
             <path
               d="M7.5 10.0002C7.5 9.07966 6.75381 8.3335 5.83333 8.3335C3.99238 8.3335 2.5 9.82591 2.5 11.6668C2.5 13.5077 3.99238 15.0002 5.83333 15.0002C6.75381 15.0002 7.5 14.254 7.5 13.3335V10.0002Z"
               stroke="#000"
-              stroke-width="1.5"
+              strokeWidth="1.5"
             />
             <path
               d="M2.5 11.6665V9.1665C2.5 5.02437 5.85787 1.6665 10 1.6665C14.1422 1.6665 17.5 5.02437 17.5 9.1665V13.205C17.5 14.8786 17.5 15.7153 17.2063 16.3679C16.8721 17.1106 16.2774 17.7053 15.5348 18.0395C14.8822 18.3332 14.0454 18.3332 12.3718 18.3332H10"
               stroke="#000"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
           Call Us On: +234 90 0000 000
@@ -133,15 +133,15 @@ const page = ({ params }: NameProp) => {
           <path
             d="M14.5833 14.5835L18.3333 18.3335"
             stroke="#282828"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M16.6667 9.1665C16.6667 5.02437 13.3089 1.6665 9.16675 1.6665C5.02461 1.6665 1.66675 5.02437 1.66675 9.1665C1.66675 13.3087 5.02461 16.6665 9.16675 16.6665C13.3089 16.6665 16.6667 13.3087 16.6667 9.1665Z"
             stroke="#282828"
-            stroke-width="1.5"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
           />
         </svg>
 
@@ -180,9 +180,9 @@ const page = ({ params }: NameProp) => {
               <path
                 d="M7.50004 5C7.50004 5 12.5 8.68242 12.5 10C12.5 11.3177 7.5 15 7.5 15"
                 stroke="#4E4E4E"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </Link>

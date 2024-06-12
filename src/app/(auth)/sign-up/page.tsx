@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import google from "../../../../public/google.svg";
+import { signUp } from "@/app/actions/auth";
 
 const Page = () => {
   const [isEmail, setIsEmail] = useState(true);
@@ -19,7 +20,7 @@ const Page = () => {
           </Link>
         </p>
       </div>
-      <form className="w-full flex flex-col items-center gap-6">
+      <form action={signUp} className="w-full flex flex-col items-center gap-6">
         <div className="w-full flex flex-col items-center">
           <p
             className={`flex items-center justify-between w-full max-w-[423px] gap-4 p-2 ${
@@ -51,7 +52,7 @@ const Page = () => {
           </p>
           <input
             type="text"
-            name={isEmail ? "email" : "phone_number"}
+            name={isEmail ? "email" : "phone"}
             className="max-w-[423px] box-border w-full bg-white border-[1.5px] outline-none border-[#D9D9D9] rounded-[70px] px-3 py-4"
             placeholder={
               isEmail ? "eg: mystoreemail@email.com" : "eg: 09012345678"
@@ -61,7 +62,7 @@ const Page = () => {
         <div className="w-full flex flex-col items-center">
           <p className="flex items-center justify-start w-full max-w-[423px] gap-2 p-2">
             <label
-              htmlFor="passwprd"
+              htmlFor="password"
               className="text-[15px] leading-5 text-[#101010] cursor-pointer"
             >
               Password
@@ -86,7 +87,7 @@ const Page = () => {
           </p>
           <input
             type="password"
-            name="confirm_password"
+            name="password2"
             id="confirm_password"
             className="max-w-[423px] box-border bg-white outline-none w-full border-[1.5px] border-[#D9D9D9] rounded-[70px] px-3 py-4"
             placeholder="Enter password "

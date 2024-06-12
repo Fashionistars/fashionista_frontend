@@ -8,8 +8,10 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     <div className="flex">
       <div className="w-full md:w-[40%] flex flex-col gap-10">
         <div className="md:hidden flex items-center p-5">
-          <Image src={logo} alt="logo" className="w-10 h-10" />
-          <h2 className="font-bon_foyage px-3 text-3xl">Fashionistar</h2>
+          <Image src={logo} alt="logo" className="w-[55px] h-[54px]" />
+          <h2 className="font-bon_foyage px-3 text-3xl text-black">
+            Fashionistar
+          </h2>
         </div>
         {children}
       </div>

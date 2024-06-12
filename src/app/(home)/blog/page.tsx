@@ -87,9 +87,9 @@ const page = () => {
               <path
                 d="M8.20186 4.68899C8.20186 4.68899 6.27091 7.31081 5.58001 7.31081C4.88906 7.31081 2.95816 4.68896 2.95816 4.68896"
                 stroke="#282828"
-                stroke-width="0.655462"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="0.655462"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </div>

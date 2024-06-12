@@ -103,31 +103,31 @@ const Cads = ({ data }: dataProps) => {
               <path
                 d="M5.66667 12.3334H11.7193C15.459 12.3334 16.0278 9.98408 16.7175 6.55765C16.9165 5.56934 17.016 5.07519 16.7768 4.74597C16.5375 4.41675 16.0789 4.41675 15.1618 4.41675H4"
                 stroke="#FDA600"
-                stroke-width="0.8"
-                stroke-linecap="round"
+                strokeWidth="0.8"
+                strokeLinecap="round"
               />
               <path
                 d="M5.66683 12.3334L3.48244 1.92919C3.29695 1.18724 2.63031 0.666748 1.86554 0.666748H1.0835"
                 stroke="#FDA600"
-                stroke-width="0.8"
-                stroke-linecap="round"
+                strokeWidth="0.8"
+                strokeLinecap="round"
               />
               <path
                 d="M6.4 12.3333H6.05714C4.92102 12.3333 4 13.2927 4 14.4761C4 14.6733 4.1535 14.8333 4.34286 14.8333H13.5833"
                 stroke="#FDA600"
-                stroke-width="0.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="0.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M7.75 17.3333C8.44036 17.3333 9 16.7736 9 16.0833C9 15.3929 8.44036 14.8333 7.75 14.8333C7.05964 14.8333 6.5 15.3929 6.5 16.0833C6.5 16.7736 7.05964 17.3333 7.75 17.3333Z"
                 stroke="#FDA600"
-                stroke-width="0.8"
+                strokeWidth="0.8"
               />
               <path
                 d="M13.5835 17.3333C14.2739 17.3333 14.8335 16.7736 14.8335 16.0833C14.8335 15.3929 14.2739 14.8333 13.5835 14.8333C12.8931 14.8333 12.3335 15.3929 12.3335 16.0833C12.3335 16.7736 12.8931 17.3333 13.5835 17.3333Z"
                 stroke="#FDA600"
-                stroke-width="0.8"
+                strokeWidth="0.8"
               />
             </svg>
 

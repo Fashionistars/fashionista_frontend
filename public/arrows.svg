@@ -9,15 +9,15 @@
                 <path
                   d="M34.3335 35.55V33.0232C34.3335 30.5886 34.3335 29.3715 34.1567 28.353C33.1834 22.7465 28.3638 18.3493 22.2187 17.4614C21.1024 17.3 18.7519 17.3 16.0835 17.3"
                   stroke="black"
-                  stroke-width="1.2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M18.5171 13.65C17.7788 14.3677 14.8671 16.2777 14.8671 17.3C14.8671 18.3224 17.7788 20.2324 18.5171 20.95"
                   stroke="black"
-                  stroke-width="1.2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
