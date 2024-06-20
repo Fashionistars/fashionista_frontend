@@ -13,13 +13,25 @@ const Cads = ({ data }: dataProps) => {
         <Image src={data.image} alt={data.title} className="w-full h-full" />
         <div className="absolute right-3 top-3">
           <svg
-            width="28"
-            height="28"
-            viewBox="0 0 28 28"
+            width="19"
+            height="19"
+            viewBox="0 0 19 19"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <circle cx="14" cy="14" r="14" fill="#FDA600" fill-opacity="0.2" />
+            <circle
+              cx="9.78951"
+              cy="9.62252"
+              r="8.95724"
+              fill="#FDA600"
+              fillOpacity="0.15"
+            />
+            <path
+              d="M12.9589 6.63454C11.8913 5.9797 10.9596 6.24359 10.3999 6.66394C10.1703 6.8363 10.0556 6.92248 9.98807 6.92248C9.92056 6.92248 9.80582 6.8363 9.57628 6.66394C9.01656 6.24359 8.0848 5.9797 7.01723 6.63454C5.61617 7.49395 5.29915 10.3292 8.53084 12.7212C9.14638 13.1768 9.45414 13.4046 9.98807 13.4046C10.522 13.4046 10.8298 13.1768 11.4453 12.7212C14.677 10.3292 14.36 7.49395 12.9589 6.63454Z"
+              stroke="#FDA600"
+              strokeWidth="0.767763"
+              strokeLinecap="round"
+            />
           </svg>
         </div>
         <div className="absolute top-0 left-0 w-full h-full dark pb-4 flex items-center flex-wrap justify-center content-end">

@@ -195,7 +195,9 @@ const layout = ({ children }: { children: React.ReactNode }) => {
             <Link
               href="/products"
               className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
-                pathname == "/products" ? "text-[#fda600]" : "text-[#bbb]"
+                pathname.includes("/products")
+                  ? "text-[#fda600]"
+                  : "text-[#bbb]"
               }`}
             >
               <svg

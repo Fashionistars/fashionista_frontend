@@ -12,19 +12,18 @@ const Slider = () => {
     {
       text: " Your Style with the Latest Fashion Trends.",
       image: couple,
+      highlight: "Style",
     },
     {
       text: "  We offer amazing discounts on first order.",
       image: man,
+      highlight: "discounts",
     },
     {
       text: "Get your exact measurement without stress",
       image: man2,
+      highlight: "measurement",
     },
-    // {
-    //   text: " Your Style with the Latest Fashion Trends.",
-    //   image: couple,
-    // },
   ];
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -36,12 +35,24 @@ const Slider = () => {
     // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
   }, [slides.length]);
+  function highlightText(text: string, highlight: string) {
+    const parts = text.split(new RegExp(`(${highlight})`, "gi"));
+    return parts.map((part, index) =>
+      part.toLowerCase() === highlight.toLowerCase() ? (
+        <span key={index} className="text-[#fda600]">
+          {part}
+        </span>
+      ) : (
+        part
+      )
+    );
+  }
   const sliders = slides.map((slide, index) => {
     return (
       <div className="w-full flex-shrink-0" key={index}>
         <div className="flex justify-center bg-[#EDE7D9]  md:bg-transparent">
           <p className="font-bon_foyage text-5xl px-6 py-2 leading-[47.62px] md:text-8xl md:leading-[95px] text-center text-black  md:w-1/2 md:px-10 ">
-            {slide.text}
+            {highlightText(slide.text, slide.highlight)}
           </p>
         </div>
         <div className="relative flex justify-center">

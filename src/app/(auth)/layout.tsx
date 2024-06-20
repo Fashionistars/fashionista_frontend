@@ -21,10 +21,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
           <Image src={logo} alt="logo" />
           <h2 className="font-bon_foyage px-3 text-[50px]">Fashionistar</h2>
         </div>
-        {/* //   <div */}
-        {/* // className="w-full h-full bg-[url('/bg-auth.svg')] bg-center bg-cover
-        bg-no-repeat" */}
-        {/* > */}
+      
         <Image
           src={bg_auth}
           alt=""
