@@ -7,7 +7,7 @@ const Navbar = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="flex justify-evenly bg-[#fda600] px-4 py-2 font-satoshi">
+    <nav className="flex justify-evenly bg-[#fda600] px-4 py-2 font-satoshi sticky top-0 z-50 ">
       <Link
         href="/"
         className={`text-lg leading-6  hover:text-white ${

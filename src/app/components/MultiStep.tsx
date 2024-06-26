@@ -7,6 +7,9 @@ import Gallery from "./AddProduct/Gallery";
 import { newProduct } from "../actions/vendor";
 import validator from "../utils/validator";
 import { ProductSchema } from "@/types";
+import Specification from "./AddProduct/Specification";
+import Sizes from "./AddProduct/Sizes";
+import Color from "./AddProduct/Color";
 
 const MultiStep = () => {
   const initialValue = {
@@ -40,6 +43,9 @@ const MultiStep = () => {
     <Prices formData={data} update={update} />,
     <Category />,
     <Gallery formData={data} update={update} />,
+    <Specification formData={data} update={update} />,
+    <Sizes formData={data} update={update} />,
+    <Color formData={data} update={update} />,
   ];
   const formPartSchema = [];
   const delta = 1;
@@ -48,7 +54,6 @@ const MultiStep = () => {
 
   const next = () => {
     if (isLastElement) return;
-    console.log(current);
     setCurrent((prev) => prev + 1);
     setArrIndex((prev) => prev + 1);
   };
@@ -65,25 +70,56 @@ const MultiStep = () => {
   };
 
   return (
-    <div className="p-5 pt-12 md:p-6 md:pb-20 w-full md:w-[75%] h-[680px] bg-transparent hide_scrollbar overflow-auto relative top-[16%] md:fixed md:top-[16%] right-0 flex flex-col gap-8">
+    <div className="p-5 pt-12 md:p-6 md:pb-20 w-full md:w-[75%] h-[680px] bg-transparent hide_scrollbar overflow-auto relative top-[16%] md:fixed md:top-[16%] right-0 flex flex-col gap-8 z-10">
       <div className="bg-[#fff] rounded-[10px] p-[15px] md:p-6  w-full h-fit relative pb-10 ">
         <ul className="flex items-center justify-between md:justify-end left-0 absolute -top-12 md:top-6 md:right-6 md:gap-5 font-satoshi">
-          <li className="font-medium text-[11px] md:text-sm text-black px-1 md:px-2 py-3 bg-[#fda600]">
+          <li
+            className={`font-medium text-[11px] md:text-sm text-black px-1 md:px-2 py-3 ${
+              current == 0 ? "bg-[#fda600]" : ""
+            } `}
+          >
             Basic Information
           </li>
-          <li className="font-medium text-[11px] md:text-sm text-black px-1.5 md:px-2 py-3">
+          <li
+            className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
+              current == 1 && "bg-[#fda600]"
+            }`}
+          >
+            Prices
+          </li>
+          <li
+            className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
+              current == 2 && "bg-[#fda600]"
+            }`}
+          >
             Category
           </li>
-          <li className="font-medium text-[11px] md:text-sm text-black px-1.5 md:px-2 py-3">
+          <li
+            className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
+              current == 3 && "bg-[#fda600]"
+            }`}
+          >
             Gallery
           </li>
-          <li className="font-medium text-[11px] md:text-sm text-black px-1.5 md:px-2 py-3">
+          <li
+            className={`font-medium text-[11px]  md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
+              current == 4 && "bg-[#fda600]"
+            }`}
+          >
             Specification
           </li>
-          <li className="font-medium text-[11px] md:text-sm text-black px-1.5 md:px-2 py-3">
+          <li
+            className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
+              current == 5 && "bg-[#fda600]"
+            }`}
+          >
             Size
           </li>
-          <li className="font-medium text-[11px] md:text-sm text-black px-1.5 md:px-2 py-3">
+          <li
+            className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
+              current == 6 && "bg-[#fda600]"
+            }`}
+          >
             Color
           </li>
         </ul>
@@ -122,6 +158,33 @@ const MultiStep = () => {
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
               <Gallery formData={data} update={update} />
+            </motion.div>
+          )}
+          {current == 4 && (
+            <motion.div
+              initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              <Specification formData={data} update={update} />
+            </motion.div>
+          )}
+          {current == 5 && (
+            <motion.div
+              initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              <Sizes formData={data} update={update} />
+            </motion.div>
+          )}
+          {current == 6 && (
+            <motion.div
+              initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              <Color formData={data} update={update} />
             </motion.div>
           )}
         </form>

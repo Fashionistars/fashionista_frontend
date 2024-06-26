@@ -142,6 +142,7 @@ export default function Home({
               </div>
             </div>
           </div>
+
           <Navbar />
         </header>
         <section>{children}</section>

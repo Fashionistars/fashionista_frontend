@@ -14,7 +14,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
   }, [pathname]);
   return (
     <div className="flex flex-col">
-      <div className="px-[11px] w-full">
+      <div className="p-[11px] w-full bg-[#F4F3EC]">
         <div className="flex items-center justify-between px-2.5 bg-[#EDE7D9] rounded-[5px] h-[50px] lg:hidden">
           <button
             onClick={() => setIsOpen(true)}
@@ -83,7 +83,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
       </div>
 
       <div
-        className={`w-full lg:left-0 md:w-[40%] lg:w-[25%] h-screen bg-[#141414] fixed top-0 transition-all duration-300 ${
+        className={`w-full lg:left-0 md:w-[40%] lg:w-[25%] z-50 h-screen bg-[#141414] fixed top-0 transition-all duration-300 ${
           isOpen ? "left-0" : "left-[-100%]"
         }`}
       >

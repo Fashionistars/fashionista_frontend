@@ -1,4 +1,4 @@
-// components/BasicInformation.js
+"use client";
 import { ProductSchema } from "@/types";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
@@ -28,7 +28,7 @@ const BasicInformation = ({
   });
 
   return (
-    <div className="flex flex-col gap-10 w-full">
+    <div className="flex flex-col gap-8 w-full">
       <div className="space-y-2 ">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           Upload Image
