@@ -15,6 +15,9 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      boxShadow: {
+        card_shadow: "0px 0px 12px 0px #D9D9D930"
+      },
       fontFamily: {
         satoshi: ['var(--font-satoshi)'],
         bon_foyage: ['var(--font-bon_foyage)']

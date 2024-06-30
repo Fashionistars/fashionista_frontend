@@ -2,7 +2,7 @@ import React from "react";
 
 const TopBanner = ({ title }: { title: string }) => {
   return (
-    <div className="hidden lg:flex items-center justify-between w-full h-[122px] px-10 bg-white">
+    <div className="hidden lg:flex items-center justify-between  h-[122px] px-10 bg-white fixed top-0 right-0 w-[75%]">
       <h2 className="font-satoshi font-medium text-2xl text-black ">{title}</h2>
       <div className="flex items-center  md:w-[55%] lg:w-[574px] h-[60px] bg-[#d9d9d9] px-4 gap-6">
         <span className="block transition-all peer-focus:hidden">

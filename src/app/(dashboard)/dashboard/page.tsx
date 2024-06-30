@@ -4,7 +4,7 @@ import TopBanner from "@/app/components/TopBanner";
 
 const page = () => {
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-10 mt-[125px]">
       <TopBanner title="Dashboard" />
 
       <div className="px-5 md:px-10">
