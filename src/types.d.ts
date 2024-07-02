@@ -1,12 +1,12 @@
-import { z } from "zod"
-import { FormSchema } from "./app/utils/schema"
+import { z } from "zod";
+import { FormSchema } from "./app/utils/schema";
 
-interface CardProps{
-    image: string,
-    title: string,
-    vendor: string,
-    rating: number,
-    price: number
+interface CardProps {
+  image: string;
+  title: string;
+  vendor: string;
+  rating: number;
+  price: number;
 }
 
 // interface ProductSchema{
@@ -22,6 +22,21 @@ interface CardProps{
 //     category: string,
 //     brands: string,
 //     image_2: File,
-//     image_3: File,    
+//     image_3: File,
 // }
-type ProductSchema = z.infer<typeof FormSchema>
+type ProductSchema = z.infer<typeof FormSchema>;
+
+interface OrderProp {
+  id: number;
+  date: string;
+  customer_name: string;
+  address: string;
+  payment_status: "Paid" | "pending" | "failed";
+  order_status:
+    | "pending"
+    | "fulfilled"
+    | "ready-to-deliver"
+    | "delivered"
+    | "returned";
+  items: number;
+}

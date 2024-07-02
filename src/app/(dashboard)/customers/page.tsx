@@ -65,7 +65,7 @@ const page = () => {
               customer.status == "customer"
                 ? "bg-[#EDFAF3] text-[#25784A] "
                 : "bg-[#FDFAE4] text-[#F1D858]"
-            } px-2 py-[5px] rounded-[40px] gap-2.5 flex items-center justify-center`}
+            } px-3 py-[5px] w-fit text-center mx-auto rounded-[40px] gap-2.5 flex items-center justify-center`}
           >
             <div
               className={`${

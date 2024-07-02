@@ -2,6 +2,7 @@ import React from "react";
 import TopBanner from "@/app/components/TopBanner";
 import Link from "next/link";
 import BarChart from "@/app/components/Charts";
+import { ChartOptions, ChartData } from "chart.js";
 interface CustomerProp {
   ranking: string;
   name: string;
@@ -10,6 +11,55 @@ interface CustomerProp {
   total_order: number;
 }
 const page = () => {
+  const data: ChartData<"bar", number[], string> = {
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "April",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sept",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    datasets: [
+      {
+        label: "Sales by month",
+        data: [2, 5, 8, 10, 24, 12, 18, 20, 25, 15, 26, 31],
+        borderWidth: 1,
+        backgroundColor: "#fda600",
+        barThickness: 15,
+        barPercentage: 0.8,
+        categoryPercentage: 0.5,
+      },
+    ],
+  };
+  const options: ChartOptions<"bar"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: "top" },
+      title: {
+        display: true,
+        text: "",
+      },
+    },
+    scales: {
+      x: {
+        stacked: false,
+      },
+      y: {
+        stacked: false,
+        ticks: {
+          stepSize: 5,
+        },
+      },
+    },
+  };
   const customers: CustomerProp[] = [
     {
       ranking: "#001",
@@ -40,7 +90,7 @@ const page = () => {
     </tr>
   ));
   return (
-    <div className="mt-[125px] space-y-6 px-6">
+    <div className="mt-[125px] space-y-6 px-6 pb-10">
       <TopBanner title="Sales Analytics" />
       <div className="flex items-center justify-between flex-wrap font-satoshi ">
         <div className="w-[32%] h-[170px] rounded-[10px] bg-[#fff] shadow-card_shadow p-5 flex flex-col justify-between">
@@ -172,10 +222,10 @@ const page = () => {
       </div>
       <div className="w-full flex items-center justify-between">
         <div className="w-[47%]">
-          <BarChart />
+          <BarChart options={options} data={data} />
         </div>
         <div className="w-[47%]">
-          <BarChart />
+          <BarChart options={options} data={data} />
         </div>
       </div>
       <div className="p-8 bg-white rounded-[10px]">

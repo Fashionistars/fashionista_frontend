@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import OnlyDigitsInput from "./NumberInput";
 import Collapsible from "./Collapsible";
+
 interface WithdrawalProp {
   order: string;
   date_and_time: string;
@@ -14,7 +15,7 @@ interface WithdrawalProp {
   amount: number;
 }
 const Transactions = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<number | null>(null);
   const withdrawal_history: WithdrawalProp[] = [
     {
       order: "50899065",
@@ -47,6 +48,38 @@ const Transactions = () => {
       transaction_type: "withdrawal",
       status: "paid",
       amount: 10059,
+    },
+  ];
+  const faq = [
+    {
+      title: "How to withdraw money from the account?",
+      text: " Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde  consequatur molestiae illo libero possimus blanditiis doloribus consectetur alias id exercitationem dolorum, mollitia inventore assumenda nostrum error natus ab! Placeat, facere.",
+    },
+    {
+      title: "How long does it take to withdraw money from the wallet?",
+      text: " Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde  consequatur molestiae illo libero possimus blanditiis doloribus consectetur alias id exercitationem dolorum, mollitia inventore assumenda nostrum error natus ab! Placeat, facere.",
+    },
+    {
+      title: "What’s the minimum withdrawable amount?",
+      text: " Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde  consequatur molestiae illo libero possimus blanditiis doloribus consectetur alias id exercitationem dolorum, mollitia inventore assumenda nostrum error natus ab! Placeat, facere.",
+    },
+    {
+      title:
+        "Is their any fees for withdrawing from the wallet into my bank account?",
+      text: " Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde  consequatur molestiae illo libero possimus blanditiis doloribus consectetur alias id exercitationem dolorum, mollitia inventore assumenda nostrum error natus ab! Placeat, facere.",
+    },
+    {
+      title:
+        "Do i need to provide any documents to make a withdrawal from the wallet?",
+      text: " Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde  consequatur molestiae illo libero possimus blanditiis doloribus consectetur alias id exercitationem dolorum, mollitia inventore assumenda nostrum error natus ab! Placeat, facere.",
+    },
+    {
+      title: "How long does it take to withdraw money from the wallet?",
+      text: " Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde  consequatur molestiae illo libero possimus blanditiis doloribus consectetur alias id exercitationem dolorum, mollitia inventore assumenda nostrum error natus ab! Placeat, facere.",
+    },
+    {
+      title: "What’s the minimum withdrawable amount?",
+      text: " Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde  consequatur molestiae illo libero possimus blanditiis doloribus consectetur alias id exercitationem dolorum, mollitia inventore assumenda nostrum error natus ab! Placeat, facere.",
     },
   ];
   const withdrawalList = withdrawal_history.map((withdrawal) => {
@@ -91,6 +124,19 @@ const Transactions = () => {
           {withdrawal.amount}
         </td>
       </tr>
+    );
+  });
+
+  const faqList = faq.map((question, index) => {
+    return (
+      <div key={index} className="w-1/2">
+        <Collapsible
+          text={question.text}
+          title={question.title}
+          isOpen={isOpen == index}
+          onClick={() => setIsOpen(isOpen === index ? null : index)}
+        />
+      </div>
     );
   });
   const searchParams = useSearchParams();
@@ -263,9 +309,7 @@ const Transactions = () => {
             <div className="shadow-card_shadow rounded-[10px] bg-[#fff] p-[30px] space-y-4">
               <h2 className="font-satoshi font-medium text-xl text-black">
                 Frequently Asked Questions
-                <div>
-                  {/* <Collapsible isOpen={isOpen} setIsOpen={}  title="How to withdraw money from the account?" /> */}
-                </div>
+                <div className="flex flex-wrap items-center">{faqList}</div>
               </h2>
             </div>
           </motion.div>

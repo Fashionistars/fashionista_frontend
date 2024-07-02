@@ -63,11 +63,11 @@ const Page = () => {
       <td className="py-2">{item.address.substring(0, 10)}</td>
       <td className="py-2 px-2 text-[5px] md:text-xs ">
         <div
-          className={`flex justify-center items-center gap-1 md:gap-2.5 py-[5px] md:px-3 px-1 rounded-[40px] ${
+          className={`w-fit mx-auto flex justify-center items-center gap-1 md:gap-2.5 py-[5px] md:px-3 px-1 rounded-[40px] ${
             item.payment_status == "Paid"
               ? "bg-[#EDFAF3] text-[#25784A] "
               : "bg-[#FDFAE4] text-[#F1D858]"
-          }`}
+          } `}
         >
           <span
             className={`w-1 h-1 md:w-2.5 md:h-2.5 rounded-full ${
@@ -138,7 +138,7 @@ const Page = () => {
                   : "bg-[#d9d9d9] text-[#9d9d9d]"
               }`}
             >
-              All(5)
+              All({orders.length})
             </Link>
             <Link
               href="/orders?order-status=pending"

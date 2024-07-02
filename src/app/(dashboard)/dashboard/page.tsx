@@ -1,13 +1,64 @@
 import Link from "next/link";
 import React from "react";
 import TopBanner from "@/app/components/TopBanner";
+import BarChart from "@/app/components/Charts";
+import { ChartOptions, ChartData } from "chart.js";
 
 const page = () => {
+  const data: ChartData<"bar", number[], string> = {
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "April",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sept",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    datasets: [
+      {
+        label: "Sales by month",
+        data: [2, 5, 8, 10, 24, 12, 18, 20, 25, 15, 26, 31],
+        borderWidth: 1,
+        backgroundColor: "#fda600",
+        barThickness: 15,
+        barPercentage: 0.8,
+        categoryPercentage: 0.5,
+      },
+    ],
+  };
+  const options: ChartOptions<"bar"> = {
+    maintainAspectRatio: false,
+    responsive: true,
+    plugins: {
+      legend: { position: "top" },
+      title: {
+        display: true,
+        text: "",
+      },
+    },
+    scales: {
+      x: {
+        stacked: false,
+      },
+      y: {
+        stacked: false,
+        ticks: {
+          stepSize: 5,
+        },
+      },
+    },
+  };
   return (
-    <div className="flex flex-col gap-10 mt-[125px]">
+    <div className="flex flex-col gap-10 mt-[125px] px-5 md:px-10 pb-10">
       <TopBanner title="Dashboard" />
 
-      <div className="px-5 md:px-10">
+      <div className="">
         <h2 className="font-bon_foyage text-5xl leading-[48px] text-black py-6">
           Overview
         </h2>
@@ -263,7 +314,14 @@ const page = () => {
         </div>
       </div>
       {/* Charts */}
-      <div></div>
+      <div className="w-full flex items-center justify-between">
+        <div className="w-[47%]">
+          <BarChart options={options} data={data} />
+        </div>
+        <div className="w-[47%]">
+          <BarChart options={options} data={data} />
+        </div>
+      </div>
     </div>
   );
 };

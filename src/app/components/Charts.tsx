@@ -9,6 +9,8 @@ import {
   LinearScale,
   Title,
   Tooltip,
+  ChartOptions,
+  ChartData,
 } from "chart.js";
 ChartJS.register(
   CategoryScale,
@@ -18,44 +20,15 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-const data = {
-  labels: [
-    "Jan",
-    "Feb",
-    "Mar",
-    "April",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sept",
-    "Oct",
-    "Nov",
-    "Dec",
-  ],
-  datasets: [
-    {
-      label: "Sales by month",
-      data: [2, 5, 8, 10, 24, 12, 18, 20, 25, 15, 26, 31],
-      borderWith: 1,
-      backgroundColor: "#fda600",
-    },
-  ],
-};
-const options = {
-  responsive: true,
-  plugins: {
-    legend: { position: "top" },
-    title: {
-      display: true,
-      text: "",
-    },
-  },
-};
-const BarChart = () => {
+
+interface BarChartProps {
+  data: ChartData<"bar", number[], string>;
+  options?: ChartOptions<"bar">;
+}
+const BarChart: React.FC<BarChartProps> = ({ data, options }) => {
   return (
-    <div className="rounded-[10px] bg-[#fff] w-full min-h-[366px] p-4 ">
-      <Bar data={data} options={options} className="h-full w-full" />
+    <div className="rounded-[10px] bg-[#fff] w-full h-[366px] p-4 ">
+      <Bar data={data} options={options} />
     </div>
   );
 };

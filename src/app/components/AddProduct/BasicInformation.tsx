@@ -113,7 +113,7 @@ const BasicInformation = ({
                 required
                 name="image"
                 onChange={(e) =>
-                  update({ ...formData, image_1: e.target.files[0] })
+                  update({ ...formData, image_1: e.target?.files[0] })
                 }
               />
               <input

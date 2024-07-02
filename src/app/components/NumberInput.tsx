@@ -14,7 +14,7 @@ function OnlyDigitsInput({ title, name }: { title: string; name: string }) {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-2">
       <label className="font-satoshi text-[15px] leading-5 text-[#000]">
         {title}
       </label>
