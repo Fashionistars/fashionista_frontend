@@ -24,7 +24,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb)); */
-  background: white;
+  background: #f4f3ec;
 }
 .dark {
   background: linear-gradient(

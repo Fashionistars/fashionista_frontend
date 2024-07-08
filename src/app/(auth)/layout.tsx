@@ -5,30 +5,23 @@ import logo from "../../../public/logo.svg";
 
 const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (
-    <div className="flex">
-      <div className="w-full md:w-[40%] flex flex-col gap-10">
-        <div className="md:hidden flex items-center p-5">
-          <Image src={logo} alt="logo" className="w-[55px] h-[54px]" />
-          <h2 className="font-bon_foyage px-3 text-3xl text-black">
+    <div className=" bg-[#F4F3EC] pb-10">
+      <div className="w-full px-10 z-30 h-[100px] bg-white shadow-md flex items-center fixed top-0 left-0">
+        <div className=" flex items-center">
+          <Image
+            src="/logo.svg"
+            width={55}
+            height={54}
+            alt="logo"
+            className=""
+          />
+          <h2 className="font-bon_foyage px-3 text-4xl text-black">
             Fashionistar
           </h2>
         </div>
-        {children}
       </div>
-
-      <div className="hidden md:block w-full md:w-[60%] h-screen relative">
-        <div className="absolute top-[81px] left-4 flex items-center">
-          <Image src={logo} alt="logo" />
-          <h2 className="font-bon_foyage px-3 text-[50px]">Fashionistar</h2>
-        </div>
-      
-        <Image
-          src={bg_auth}
-          alt=""
-          priority
-          className="w-full h-full object-cover  "
-        />
-        {/* </div> */}
+      <div className="mt-[120px] w-full max-w-[675px] min-h-[500px] rounded-[10px] border border-[#d9d9d9] font-satoshi p-10 justify-evenly mx-auto bg-white shadow-md">
+        {children}
       </div>
     </div>
   );

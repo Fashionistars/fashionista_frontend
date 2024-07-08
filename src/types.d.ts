@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { FormSchema } from "./app/utils/schema";
+import { signupSchema } from "./app/utils/schemas/auth_shema";
 
 interface CardProps {
   image: string;
@@ -25,6 +26,8 @@ interface CardProps {
 //     image_3: File,
 // }
 type ProductSchema = z.infer<typeof FormSchema>;
+
+type SignUpProps = z.infer<typeof signupSchema>;
 
 interface OrderProp {
   id: number;

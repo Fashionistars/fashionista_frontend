@@ -3,16 +3,25 @@
 import { redirect } from "next/navigation";
 import { axiosInstance } from "../utils/axiosInstance";
 import { cookies } from "next/headers";
+import { signupSchema } from "../utils/schemas/auth_shema";
+import { emit } from "process";
 
-export const signUp = async (formdata: FormData) => {
+export const signUp = async (prev: any, formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
-  data.role = "Vendor";
   console.log(data);
+  const validated = signupSchema.safeParse(data);
+  if (!validated.success) {
+    return {
+      errors: validated.error.flatten().fieldErrors,
+    };
+  }
+
   try {
     const signin = await axiosInstance.post("/auth/sign-up", data);
     console.log(signin);
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    console.log(error?.response?.data.mesage);
+    return { call_error: error?.response?.data.mesage };
   }
 
   redirect("/verify");
@@ -54,4 +63,12 @@ export const login = async (formdata: FormData) => {
     console.log(error);
   }
   redirect("/dashboard");
+};
+
+export const forget_password = async (formdata: FormData) => {
+  const data = {
+    email: formdata.get("email"),
+  };
+  try {
+  } catch (error) {}
 };
