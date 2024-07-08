@@ -32,7 +32,7 @@ const Prices = ({
           <input
             type="text"
             name="sales_price"
-            className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-none text-[#000]"
+            className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-black text-[#000]"
             value={formData.sales_prices || ""}
             onChange={handleChange}
           />

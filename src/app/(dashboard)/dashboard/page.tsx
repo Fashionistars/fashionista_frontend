@@ -3,8 +3,11 @@ import React from "react";
 import TopBanner from "@/app/components/TopBanner";
 import BarChart from "@/app/components/Charts";
 import { ChartOptions, ChartData } from "chart.js";
+import { fetchWithAuth } from "../../utils/fetchAuth";
 
-const page = () => {
+const page = async () => {
+  const vendorStat = await fetchWithAuth("/vendor/stats");
+  console.log(vendorStat);
   const data: ChartData<"bar", number[], string> = {
     labels: [
       "Jan",

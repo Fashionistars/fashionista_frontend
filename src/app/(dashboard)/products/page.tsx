@@ -3,8 +3,10 @@ import Link from "next/link";
 import man from "../../../../public/man3_assets.svg";
 import man2 from "../../../../public/man4_asset.svg";
 import Image from "next/image";
+import { deleteProduct } from "@/app/actions/vendor";
+import { fetchWithAuth } from "@/app/utils/fetchAuth";
 
-const page = () => {
+const page = async () => {
   const products = [
     {
       id: 1,
@@ -23,6 +25,10 @@ const page = () => {
       sizes: "$1200",
     },
   ];
+  const vendor_id = "123abc";
+  const product_id = "cba321";
+  const fetchedData = await fetchWithAuth(`/vendor/product/${vendor_id}`);
+
   const cartList = products.map((product) => (
     <tr
       key={product.id}
@@ -45,7 +51,10 @@ const page = () => {
       <td className="py-3 md:py-5 px-3">{product.category}</td>
       <td className="py-3 md:py-5 px-3">{product.sizes}</td>
       <td>
-        <button className="text-black hover:text-[#ED141D]">
+        <button
+          // onClick={() => deleteProduct(vendor_id, product_id)}
+          className="text-black hover:text-[#ED141D]"
+        >
           <svg
             width="20"
             height="20"

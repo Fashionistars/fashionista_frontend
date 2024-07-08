@@ -1,8 +1,9 @@
-"use server"
-import { z } from "zod"
-import { FormSchema } from "../utils/schema"
+"use server";
+import { z } from "zod";
+import { FormSchema } from "../utils/schema";
+import { fetchWithAuth } from "../utils/fetchAuth";
 const schema = z.object({
-    image_1: z
+  image_1: z
     .instanceof(File, {
       message: "Image is required and should be a file",
     })
@@ -16,18 +17,37 @@ const schema = z.object({
         ),
       { message: "Image must be a JPEG, PNG, or GIF" }
     ),
-    title: z.string().min(3, "Product title is required "),
-    discription: z.string().min(10, 'Product description is required')
-})
+  title: z.string().min(3, "Product title is required "),
+  discription: z.string().min(10, "Product description is required"),
+});
 
-export const newProduct = async (formdata:FormData) => {
-    const data = Object.fromEntries(formdata.entries())
-  console.log("form data info",data)
-  const validatedForm = FormSchema.safeParse(data)
+export const newProduct = async (formdata: FormData) => {
+  const data = Object.fromEntries(formdata.entries());
+  console.log("form data info", data);
+  const validatedForm = FormSchema.safeParse(data);
   if (!validatedForm.success) {
     return {
-      errors: validatedForm.error.flatten().fieldErrors
-    }
+      errors: validatedForm.error.flatten().fieldErrors,
+    };
   }
   console.log("validated data:", data)
+  try {
+    const res = await fetchWithAuth("/vendor/product-create", "post", formdata, "multipart/formdata");
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+  }
+  
+};
+export const deleteProduct = async (vendor_id: string, product_id: string) => {
+  try {
+    const res = await fetchWithAuth(`/vendor/product-delete/${vendor_id}/${product_id}`, "delete",)
+    console.log(res)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const editProduct = async() => {
+
 }
