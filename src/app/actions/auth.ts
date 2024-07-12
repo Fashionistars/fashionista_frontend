@@ -42,11 +42,12 @@ export const verify = async (formdata: FormData) => {
 };
 export const login = async (formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
+  let user_role;
   try {
     const res = await axiosInstance.post("/auth/login", data);
     console.log(res.data);
-    const { access, refresh } = res.data;
-
+    const { access, refresh, role } = res.data;
+    user_role = role;
     cookies().set("access_token", access, {
       maxAge: 60 * 60 * 24,
       httpOnly: true,
@@ -62,7 +63,8 @@ export const login = async (formdata: FormData) => {
   } catch (error) {
     console.log(error);
   }
-  redirect("/dashboard");
+
+  redirect(user_role == "Vendor" ? "/dashboard" : "/client/dashboard");
 };
 
 export const forget_password = async (formdata: FormData) => {

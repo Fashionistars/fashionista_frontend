@@ -4,10 +4,21 @@ import TopBanner from "@/app/components/TopBanner";
 import BarChart from "@/app/components/Charts";
 import { ChartOptions, ChartData } from "chart.js";
 import { fetchWithAuth } from "../../utils/fetchAuth";
+import { getVendor } from "@/app/utils/libs";
 
 const page = async () => {
-  const vendorStat = await fetchWithAuth("/vendor/stats");
-  console.log(vendorStat);
+  const getVendorStats = async () => {
+    try {
+      const vendorStat = await fetchWithAuth("/vendor/dashboard");
+      return vendorStat;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // const vendorStat = await getVendorStats();
+  // console.log(vendorStat);
+  const vendor = await getVendor()
+
   const data: ChartData<"bar", number[], string> = {
     labels: [
       "Jan",

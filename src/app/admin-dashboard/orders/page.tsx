@@ -63,7 +63,7 @@ const page = () => {
     </tr>
   ));
   return (
-    <div className="p-[30px] mt-[100px] bg-inherit space-y-10">
+    <div className="bg-inherit space-y-10">
       <h2 className="font-satoshi font-medium text-3xl leading-10 text-black">
         Orders
       </h2>
@@ -99,6 +99,28 @@ const page = () => {
         />
       </div>
       <div className="p-2.5 bg-white shadow-card_shadow rounded min-h-[200px] py-5">
+        <div className="flex items-center justify-end py-5 gap-3">
+          <div className="py-2.5 px-5 rounded-[10px] border-[0.8px] border-[#D9D9D9] text-black bg-[#fff]">
+            <select
+              id="categories"
+              className="w-full outline-none bg-inherit"
+              defaultValue="status"
+            >
+              <option disabled className="">
+                status
+              </option>
+              <option defaultValue="" className="">
+                Agbada
+              </option>
+            </select>
+          </div>
+          <div className="py-2.5 px-5 rounded-[10px] border-[0.8px] border-[#D9D9D9] text-black bg-[#fff]">
+            <select defaultValue="Show 4" className="bg-inherit">
+              <option>Show 4</option>
+              <option>1</option>
+            </select>
+          </div>
+        </div>
         <table className="min-w-full divide-y divide-gray-200 table-fixed text-black font-satoshi">
           <thead>
             <tr className="font-satoshi font-medium text-[8.5px] md:text-lg md:leading-6 leading-[11px] text-black bg-[#f7f7f7] rounded-sm">

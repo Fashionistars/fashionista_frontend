@@ -247,7 +247,7 @@ const page = () => {
     );
   });
   return (
-    <div className="p-[30px] mt-[100px] bg-inherit space-y-10">
+    <div className="space-y-10">
       <div>
         <h2 className="font-satoshi font-medium text-3xl text-black">
           Dashboard

@@ -1,37 +1,18 @@
 import Link from "next/link";
 import React from "react";
-import man from "../../../../../public/man2_asset.svg";
 import Image from "next/image";
+import { getSingleOrder, orderAcceptReject } from "@/app/utils/libs";
 
 interface OrderProp {
   params: {
-    id: string;
+    order_oid: string;
   };
 }
-const page = ({ params }: OrderProp) => {
-  const products = [
-    {
-      id: 1,
-      image: man,
-      title: "Men Senator",
-      price: "$1200",
-      quantity: "2",
-      total: "$1200",
-    },
-  ];
-  const cartList = products.map((product) => (
-    <tr key={product.id} className=" border-b-[1.2px] border-[#d9d9d9]">
-      <td className="py-5 px-1">
-        <div className="flex items-center gap-1">
-          <Image src={product.image} alt="" className="w-[88px] h-[67px]" />
-          <p>{product.title}</p>
-        </div>
-      </td>
-      <td className="py-5 px-3">{product.price}</td>
-      <td className="py-5 px-3">{product.quantity}</td>
-      <td className="py-5 px-3">{product.total}</td>
-    </tr>
-  ));
+const page = async ({ params }: OrderProp) => {
+  const { order_oid } = params;
+
+  const order = await getSingleOrder(order_oid);
+
   return (
     <div className="space-y-8 pb-20">
       <div className="w-full h-[122px] px-6 flex justify-between mb-20 items-center bg-white">
@@ -263,7 +244,23 @@ const page = ({ params }: OrderProp) => {
                 <th className="py-4 px-2 text-left">Total</th>
               </tr>
             </thead>
-            <tbody>{cartList}</tbody>
+            <tbody>
+              <tr key={order.id} className=" border-b-[1.2px] border-[#d9d9d9]">
+                <td className="py-5 px-1">
+                  <div className="flex items-center gap-1">
+                    <Image
+                      src={order.image}
+                      alt=""
+                      className="w-[88px] h-[67px]"
+                    />
+                    <p>{order.title}</p>
+                  </div>
+                </td>
+                <td className="py-5 px-3">{order.price}</td>
+                <td className="py-5 px-3">{order.quantity}</td>
+                <td className="py-5 px-3">{order.total}</td>
+              </tr>
+            </tbody>
           </table>
         </div>
         <div className="flex flex-col items-end">
@@ -282,11 +279,25 @@ const page = ({ params }: OrderProp) => {
         </div>
       </div>
       <div className="flex items-center justify-end gap-8 w-9/12 mx-auto">
-        <button className="font-medium text-lg leading-6 text-[#ED141D]">
+        <button
+          onClick={async () =>
+            await orderAcceptReject(order_oid, {
+              notification_type: "order-rejected",
+            })
+          }
+          className="font-medium text-lg leading-6 text-[#ED141D]"
+        >
           Cancel Order
         </button>
 
-        <button className="py-2 px-5 bg-[#fda600] outline-none font-medium text-black grow-0">
+        <button
+          onClick={async () =>
+            await orderAcceptReject(order_oid, {
+              notification_type: "order-accepted",
+            })
+          }
+          className="py-2 px-5 bg-[#fda600] outline-none font-medium text-black grow-0"
+        >
           Accept Order
         </button>
       </div>

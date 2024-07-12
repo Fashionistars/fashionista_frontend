@@ -198,7 +198,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
               Orders
             </Link>
             <Link
-              href="/products"
+              href="/admin-dashboard/products"
               className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
                 pathname.includes("/products")
                   ? "text-[#fda600]"
@@ -242,9 +242,11 @@ const layout = ({ children }: { children: React.ReactNode }) => {
               Products
             </Link>
             <Link
-              href="/transaction"
+              href="/admin-dashboard/transactions"
               className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
-                pathname == "/transaction" ? "text-[#fda600]" : "text-[#bbb]"
+                pathname.includes("/transactions")
+                  ? "text-[#fda600]"
+                  : "text-[#bbb]"
               }`}
             >
               <svg
@@ -282,9 +284,9 @@ const layout = ({ children }: { children: React.ReactNode }) => {
               Transaction
             </Link>
             <Link
-              href="/sellers"
+              href="/admin-dashboard/sellers"
               className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
-                pathname == "/sellers" ? "text-[#fda600]" : "text-[#bbb]"
+                pathname.includes("/sellers") ? "text-[#fda600]" : "text-[#bbb]"
               }`}
             >
               <svg
@@ -338,7 +340,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
               Sellers
             </Link>
             <Link
-              href="/account"
+              href="account"
               className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
                 pathname == "/account" ? "text-[#fda600]" : "text-[#bbb]"
               }`}
@@ -370,7 +372,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
               Account
             </Link>
             <Link
-              href="/reviews"
+              href="reviews"
               className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
                 pathname == "/reviews" ? "text-[#fda600]" : "text-[#bbb]"
               }`}
@@ -398,7 +400,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
               Reviews
             </Link>
             <Link
-              href="/brand"
+              href="brand"
               className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
                 pathname == "/brand" ? "text-[#fda600]" : "text-[#bbb]"
               }`}
@@ -428,7 +430,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
           </div>
 
           <Link
-            href="/settings"
+            href="settings"
             className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4  ${
               pathname == "/settings" ? "text-[#fda600]" : "text-[#fff]"
             }`}
@@ -458,7 +460,9 @@ const layout = ({ children }: { children: React.ReactNode }) => {
       </div>
       <div className="lg:ml-[25%] bg-[#F4F3EC] min-h-screen flex flex-col">
         <AdminTopBanner title="Jennifer" pathname={pathname} />
-        {children}
+        <div className="p-3 md:p-[30px] mt-1 lg:mt-[100px] bg-inherit space-y-10">
+          {children}
+        </div>
       </div>
     </div>
   );

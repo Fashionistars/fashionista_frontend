@@ -53,6 +53,10 @@ body {
     text-wrap: balance;
   }
 }
+.custom-checkbox {
+  appearance: none;
+  background-color: #fff;
+}
 
 progress {
   appearance: none;
