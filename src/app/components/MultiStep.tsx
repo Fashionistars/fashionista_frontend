@@ -1,3 +1,4 @@
+"use client";
 import React, { FormEvent, useState } from "react";
 import { motion } from "framer-motion";
 import BasicInformation from "./AddProduct/BasicInformation";
@@ -18,7 +19,7 @@ const MultiStep = () => {
     description: "",
     sales_prices: "",
     regular_prices: "",
-    shipping_amount: "",
+    shipping_amount: "1000",
     stock_qty: "",
     tag: "",
     total_price: "",
@@ -33,11 +34,12 @@ const MultiStep = () => {
   const [arrIndex, setArrIndex] = useState(0);
   const [data, setData] = useState<ProductSchema>(initialValue);
 
-  const update = (fields: ProductSchema) => {
+  const update = (fields: Partial<ProductSchema>) => {
     setData((prev) => {
       return { ...prev, ...fields };
     });
   };
+
   const formParts = [
     <BasicInformation formData={data} update={update} />,
     <Prices formData={data} update={update} />,
@@ -49,13 +51,19 @@ const MultiStep = () => {
   ];
   const formPartSchema = [];
   const delta = 1;
-  const isLastElement = arrIndex >= formParts.length - 1;
+  const isLastElement = arrIndex == formParts.length - 1;
   const isFirstElement = arrIndex == 0;
 
+  // const next = () => {
+
+  //   setCurrent((prev) => prev + 1);
+  //   setArrIndex((prev) => prev + 1);
+  // };
   const next = () => {
-    if (isLastElement) return;
+    if (arrIndex >= formParts.length - 1) return arrIndex;
     setCurrent((prev) => prev + 1);
     setArrIndex((prev) => prev + 1);
+    console.log(data);
   };
   const back = () => {
     if (arrIndex !== 0) {
@@ -64,10 +72,15 @@ const MultiStep = () => {
     }
     return arrIndex;
   };
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    console.log(data);
-  };
+  // const handleFormData = async () => {
+  //   const formInfo = new FormData();
+  //   newProduct(data);
+  // };
+  // const handleSubmit = async (e: FormEvent) => {
+  //   e.preventDefault();
+  //   console.log("hello world");
+  //   !isLastElement ? next() : await newProduct();
+  // };
 
   return (
     <div className="p-5 pt-12 md:p-6 md:pb-20 w-full md:w-[75%] h-[680px] bg-transparent hide_scrollbar overflow-auto relative top-[16%] md:fixed md:top-[16%] right-0 flex flex-col gap-8 z-10">
@@ -202,7 +215,7 @@ const MultiStep = () => {
         <button
           onClick={next}
           form="form"
-          type="submit"
+          type={isLastElement ? "submit" : "button"}
           className="py-2.5 px-[30px] bg-[#fda600] outline-none font-medium text-black hover:text-white grow-0"
         >
           Continue

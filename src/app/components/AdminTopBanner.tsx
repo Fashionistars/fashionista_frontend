@@ -10,7 +10,7 @@ const AdminTopBanner = ({
   pathname: string;
 }) => {
   return (
-    <div className="hidden lg:flex items-center justify-between  h-[122px] px-10 bg-white fixed top-0 right-0 w-[75%]">
+    <div className="hidden lg:flex items-center justify-between  h-[122px] px-10 bg-white fixed top-0 right-0 w-[75%] z-50">
       <div className="flex items-center gap-2">
         <Image
           src="/woman3.svg"

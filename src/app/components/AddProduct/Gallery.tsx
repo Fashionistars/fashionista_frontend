@@ -8,14 +8,13 @@ const Gallery = ({
   update,
 }: {
   formData: ProductSchema;
-  update: (fields: ProductSchema) => void;
+  update: (fields: Partial<ProductSchema>) => void;
 }) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
     if (files && files.length > 0) {
-      update({ ...formData, [name]: files[0] });
+      update({ [name]: files[0] });
     }
-    console.log(formData);
   };
 
   const createDropzone = (name: string) => {
@@ -24,7 +23,7 @@ const Gallery = ({
       onDrop: useCallback(
         (acceptedFiles: any) => {
           if (acceptedFiles.length > 0) {
-            update({ ...formData, [name]: acceptedFiles[0] });
+            update({ [name]: acceptedFiles[0] });
           }
         },
         [update, name]
@@ -108,35 +107,108 @@ const Gallery = ({
           <label className="font-satoshi text-[15px] leading-5 text-black ">
             Product Image*
           </label>
-          {["image_2", "image_3", "image_4"].map((imageName: any) => (
-            <div key={imageName} className="flex flex-col gap-4 pb-4">
-              <div className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full">
+          <div className="flex flex-col gap-4">
+            <div className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full gap-4">
+              <label
+                htmlFor="image_2"
+                className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555]"
+              >
+                Choose file
+              </label>
+              <input
+                id="image_2"
+                type="file"
+                className="hidden"
+                name="image_2"
+                onChange={handleFileChange}
+              />
+              <input
+                type="text"
+                placeholder={
+                  formData.image_2 ? formData.image_2.name : "No file chosen"
+                }
+                disabled
+                className="h-full bg-transparent px-2 font-medium text-[15px] leading-5 text-[#555555]"
+              />
+            </div>
+            <div className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full gap-4">
+              <label
+                htmlFor="image_3"
+                className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555]"
+              >
+                Choose file
+              </label>
+              <input
+                id="image_3"
+                type="file"
+                className="hidden"
+                name="image_3"
+                onChange={handleFileChange}
+              />
+              <input
+                type="text"
+                placeholder={
+                  formData.image_3 ? formData.image_3.name : "No file chosen"
+                }
+                disabled
+                className="h-full bg-transparent px-2 font-medium text-[15px] leading-5 text-[#555555]"
+              />
+            </div>
+            <div className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full gap-4">
+              <label
+                htmlFor="image_4"
+                className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555]"
+              >
+                Choose file
+              </label>
+              <input
+                id="image_4"
+                type="file"
+                className="hidden"
+                name="image_4"
+                onChange={handleFileChange}
+              />
+              <input
+                type="text"
+                placeholder={
+                  formData.image_4 ? formData.image_4.name : "No file chosen"
+                }
+                disabled
+                className="h-full bg-transparent px-2 font-medium text-[15px] leading-5 text-[#555555]"
+              />
+            </div>
+          </div>
+          {/* {[formData.image_2, formData.image_3, formData.image_4].map(
+            (imageName, index) => (
+              <div
+                key={index}
+                className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full gap-4"
+              >
                 <label
-                  htmlFor={imageName}
+                  htmlFor={imageName.name}
                   className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555]"
                 >
                   Choose file
                 </label>
                 <input
-                  id={imageName}
+                  id={imageName.name}
                   type="file"
                   className="hidden"
-                  name={imageName}
+                  name={imageName.name}
                   onChange={handleFileChange}
                 />
                 <input
                   type="text"
+                  //   formData.image_1 ? formData.image_1.name : "No file chosen"
                   placeholder={
-                    formData[imageName]
-                      ? (formData[imageName] as File).name
-                      : "No file chosen"
+                    imageName ? (imageName as File).name : "No file chosen"
                   }
                   disabled
                   className="h-full bg-transparent px-2 font-medium text-[15px] leading-5 text-[#555555]"
                 />
               </div>
-            </div>
-          ))}
+            )
+          )} */}
           <div className="grid grid-cols-2 grid-rows-2 gap-2 h-[270px]">
             {createDropzone("image_2")}
             {createDropzone("image_3")}

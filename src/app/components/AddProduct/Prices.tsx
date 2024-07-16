@@ -7,11 +7,11 @@ const Prices = ({
   update,
 }: {
   formData: ProductSchema;
-  update: (fields: ProductSchema) => void;
+  update: (fields: Partial<ProductSchema>) => void;
 }) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    update({ ...formData, [name]: value });
+    update({ [name]: value });
   };
 
   return (
@@ -31,7 +31,7 @@ const Prices = ({
           </label>
           <input
             type="text"
-            name="sales_price"
+            name="sales_prices"
             className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-black text-[#000]"
             value={formData.sales_prices || ""}
             onChange={handleChange}
@@ -43,7 +43,7 @@ const Prices = ({
           </label>
           <input
             type="text"
-            name="regular_price"
+            name="regular_prices"
             className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-none text-[#000]"
             value={formData.regular_prices || ""}
             onChange={handleChange}
@@ -57,8 +57,9 @@ const Prices = ({
             type="text"
             name="shipping_amount"
             className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-none text-[#000]"
-            value={formData.shipping_amount || ""}
-            onChange={handleChange}
+            value={formData.shipping_amount}
+            // onChange={handleChange}
+            readOnly
           />
           <span className="font-satoshi font-medium text-xs text-[#555555]">
             Note: it’s automatic 1000 for people living in lagos state

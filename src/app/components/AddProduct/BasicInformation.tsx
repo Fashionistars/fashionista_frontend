@@ -1,6 +1,7 @@
 "use client";
 import { ProductSchema } from "@/types";
-import React, { useCallback } from "react";
+import Image from "next/image";
+import React, { ChangeEvent, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
 const BasicInformation = ({
@@ -8,7 +9,7 @@ const BasicInformation = ({
   update,
 }: {
   formData: ProductSchema;
-  update: (fields: ProductSchema) => void;
+  update: (fields: Partial<ProductSchema>) => void;
 }) => {
   const onDrop = useCallback(
     (acceptedFiles: any) => {
@@ -26,6 +27,10 @@ const BasicInformation = ({
     onDrop,
     onError: (err) => console.log(err),
   });
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files ? e.target.files[0] : undefined;
+    update({ image_1: files });
+  };
 
   return (
     <div className="flex flex-col gap-8 w-full">
@@ -44,11 +49,15 @@ const BasicInformation = ({
         >
           <input {...getInputProps()} />
           {formData.image_1 ? (
-            <img
-              src={URL.createObjectURL(formData.image_1)}
-              alt="Preview"
-              className="w-full h-full object-cover"
-            />
+            <div className="max-h-full h-full w-full">
+              <Image
+                src={URL.createObjectURL(formData.image_1)}
+                alt="Preview"
+                width={200}
+                height={200}
+                className="w-full h-full object-cover"
+              />
+            </div>
           ) : (
             <>
               <svg
@@ -112,9 +121,7 @@ const BasicInformation = ({
                 className="hidden"
                 required
                 name="image"
-                onChange={(e) =>
-                  update({ ...formData, image_1: e.target?.files[0] })
-                }
+                onChange={handleImageChange}
               />
               <input
                 type="text"
@@ -135,7 +142,7 @@ const BasicInformation = ({
               aria-required
               className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] outline-none p-3 w-full"
               value={formData.title || ""}
-              onChange={(e) => update({ ...formData, title: e.target.value })}
+              onChange={(e) => update({ title: e.target.value })}
             />
           </div>
           <div className="flex flex-col gap-4 text-black">
@@ -148,9 +155,7 @@ const BasicInformation = ({
               aria-required
               className="rounded-[10px] h-[196px] border-[1.5px] border-[#D9D9D9] p-3 outline-none w-full"
               value={formData.description || ""}
-              onChange={(e) =>
-                update({ ...formData, description: e.target.value })
-              }
+              onChange={(e) => update({ description: e.target.value })}
             />
           </div>
         </div>

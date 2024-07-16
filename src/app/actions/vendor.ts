@@ -23,31 +23,31 @@ const schema = z.object({
 
 export const newProduct = async (formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
-  console.log("form data info", data);
-  const validatedForm = FormSchema.safeParse(data);
-  if (!validatedForm.success) {
-    return {
-      errors: validatedForm.error.flatten().fieldErrors,
-    };
-  }
-  console.log("validated data:", data)
+  console.log("form information", data);
+  // const validatedForm = FormSchema.safeParse(data);
+  // if (!validatedForm.success) {
+  //   return {
+  //     errors: validatedForm.error.flatten().fieldErrors,
+  //   };
+  // }
+  // console.log("validated data:", data)
+  // try {
+  //   const res = await fetchWithAuth("/vendor/product-create", "post", formdata, "multipart/formdata");
+  //   console.log(res);
+  // } catch (error) {
+  //   console.log(error);
+  // }
+};
+export const deleteProduct = async (vendor_id: string, product_id: string) => {
   try {
-    const res = await fetchWithAuth("/vendor/product-create", "post", formdata, "multipart/formdata");
+    const res = await fetchWithAuth(
+      `/vendor/product-delete/${vendor_id}/${product_id}`,
+      "delete"
+    );
     console.log(res);
   } catch (error) {
     console.log(error);
   }
-  
 };
-export const deleteProduct = async (vendor_id: string, product_id: string) => {
-  try {
-    const res = await fetchWithAuth(`/vendor/product-delete/${vendor_id}/${product_id}`, "delete",)
-    console.log(res)
-  } catch (error) {
-    console.log(error)
-  }
-}
 
-export const editProduct = async() => {
-
-}
+export const editProduct = async () => {};
