@@ -197,7 +197,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
               </svg>
               Orders
             </Link>
-            <Link
+            {/* <Link
               href="/admin-dashboard/products"
               className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
                 pathname == "/admin-dashboard/products"
@@ -238,6 +238,48 @@ const layout = ({ children }: { children: React.ReactNode }) => {
                 />
               </svg>
               Products
+            </Link> */}
+            <Link
+              href="/admin-dashboard/collections"
+              className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
+                pathname == "/admin-dashboard/collections"
+                  ? "text-[#fda600]"
+                  : "text-[#bbb]"
+              }`}
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M6.80298 17.1676V13.3428"
+                  stroke="currentColor"
+                  strokeWidth="1.43431"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M11.584 17.1675V7.60547"
+                  stroke="currentColor"
+                  strokeWidth="1.43431"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M16.365 17.1679V11.4307"
+                  stroke="currentColor"
+                  strokeWidth="1.43431"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M2.5 12.3867C2.5 8.10447 2.5 5.96336 3.83031 4.63304C5.16063 3.30273 7.30173 3.30273 11.5839 3.30273C15.8661 3.30273 18.0072 3.30273 19.3376 4.63304C20.6679 5.96336 20.6679 8.10447 20.6679 12.3867C20.6679 16.6688 20.6679 18.81 19.3376 20.1403C18.0072 21.4706 15.8661 21.4706 11.5839 21.4706C7.30173 21.4706 5.16063 21.4706 3.83031 20.1403C2.5 18.81 2.5 16.6688 2.5 12.3867Z"
+                  stroke="currentColor"
+                  strokeWidth="1.43431"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              Collections
             </Link>
             <Link
               href="/admin-dashboard/transactions"

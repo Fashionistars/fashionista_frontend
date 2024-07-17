@@ -11,6 +11,7 @@ import { ProductSchema } from "@/types";
 import Specification from "./AddProduct/Specification";
 import Sizes from "./AddProduct/Sizes";
 import Color from "./AddProduct/Color";
+import { createNewProduct } from "../utils/libs";
 
 const MultiStep = () => {
   const initialValue = {
@@ -76,11 +77,20 @@ const MultiStep = () => {
   //   const formInfo = new FormData();
   //   newProduct(data);
   // };
-  // const handleSubmit = async (e: FormEvent) => {
-  //   e.preventDefault();
-  //   console.log("hello world");
-  //   !isLastElement ? next() : await newProduct();
-  // };
+  // const newProduct = async (formdata: object | FormData) => {
+  //   try {
+
+  //   } catch (error) {
+
+  //   }
+
+  // }
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    console.log("hello world");
+    // createNewProduct
+    !isLastElement ? next() : "";
+  };
 
   return (
     <div className="p-5 pt-12 md:p-6 md:pb-20 w-full md:w-[75%] h-[680px] bg-transparent hide_scrollbar overflow-auto relative top-[16%] md:fixed md:top-[16%] right-0 flex flex-col gap-8 z-10">
@@ -136,7 +146,7 @@ const MultiStep = () => {
             Color
           </li>
         </ul>
-        <form id="form" action={newProduct}>
+        <form id="form" onSubmit={handleSubmit}>
           {current == 0 && (
             <motion.div
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}

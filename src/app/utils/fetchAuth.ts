@@ -3,8 +3,8 @@ import { axiosInstance } from "./axiosInstance";
 
 export const fetchWithAuth = async (
   url: string,
-  method = "get",
-  data = null,
+  method: "get" | "post" | "put" | "delete" | "patch" = "get",
+  data: null | object | FormData = null,
   content = "application/json"
 ) => {
   const accessToken = cookies().get("access_token")?.value;
@@ -22,7 +22,7 @@ export const fetchWithAuth = async (
       data,
     });
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     if (error.response && error.response.status === 401) {
       try {
         const refreshResponse = await axiosInstance.post("/auth/refresh", {

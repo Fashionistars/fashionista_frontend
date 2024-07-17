@@ -14,9 +14,9 @@ export default function Home({
       <main className="flex min-h-screen flex-col gap-4 px-2 md:px-0  bg-[#F4F3EC]">
         <MobileNavBar />
         <header className="hidden md:block">
-          <div className="px-24">
+          <div className="md:px-5 lg:px-24">
             <div className="flex justify-between items-center py-6 border-b-[1.5px] border-[#d9d9d9] ">
-              <div className="text-[#141414] text-[15px] font-satoshi leading-5 flex items-center justify-between w-1/3 ">
+              <div className="text-[#141414] text-[15px] font-satoshi leading-5 flex flex-wrap items-center justify-between w-1/3">
                 <Link href="/about-us">About us</Link>
                 <Link href="/accounts">My Accounts</Link>
                 <Link href="/wishlist">Wishlist</Link>
@@ -33,14 +33,14 @@ export default function Home({
               </div>
             </div>
           </div>
-          <div className="px-24 flex justify-between py-8">
-            <div className="flex items-center">
+          <div className="md:px-4 lg:px-24 flex justify-between py-8">
+            <div className="flex items-center w-1/3">
               <Image src="/logo.svg" alt="logo" width={55} height={54} />
               <h2 className="font-bon_foyage px-3 text-4xl leading-9 text-black">
                 Fashionistar
               </h2>
             </div>
-            <div className="flex items-center w-[740px] bg-[#d9d9d9] px-4 gap-6">
+            <div className="flex items-center md:w-1/2 lg:w-[740px] bg-[#d9d9d9] px-4 gap-6">
               <span className="block transition-all peer-focus:hidden">
                 <svg
                   width="18"
@@ -70,7 +70,7 @@ export default function Home({
               />
             </div>
             <div className="flex justify-evenly items-center">
-              <div className="px-4 border-r border-[#d9d9d9]">
+              <div className="px-2 lg:px-4 border-r border-[#d9d9d9]">
                 <svg
                   width="18"
                   height="18"
@@ -85,7 +85,7 @@ export default function Home({
                   />
                 </svg>
               </div>
-              <div className="px-4 border-r border-[#d9d9d9]">
+              <div className="lg:px-4 px-2 border-r border-[#d9d9d9]">
                 <svg
                   width="18"
                   height="18"
@@ -119,7 +119,7 @@ export default function Home({
                   />
                 </svg>
               </div>
-              <div className="flex items-center px-4">
+              <div className="flex items-center px-2 lg:px-4 ">
                 <svg
                   width="18"
                   height="18"

@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { axiosInstance } from "../utils/axiosInstance";
 import { cookies } from "next/headers";
 import { signupSchema } from "../utils/schemas/auth_shema";
-import { emit } from "process";
 
 export const signUp = async (prev: any, formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
@@ -45,9 +44,10 @@ export const login = async (formdata: FormData) => {
   let user_role;
   try {
     const res = await axiosInstance.post("/auth/login", data);
-    console.log(res.data);
+    // console.log(res.data);
     const { access, refresh, role } = res.data;
     user_role = role;
+
     cookies().set("access_token", access, {
       maxAge: 60 * 60 * 24,
       httpOnly: true,
@@ -60,11 +60,18 @@ export const login = async (formdata: FormData) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
+
+    cookies().set("role", role, {
+      maxAge: 60 * 60 * 24 * 7 * 365,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
   } catch (error) {
     console.log(error);
   }
 
-  redirect(user_role == "Vendor" ? "/dashboard" : "/client/dashboard");
+  redirect("/dashboard");
 };
 
 export const forget_password = async (formdata: FormData) => {

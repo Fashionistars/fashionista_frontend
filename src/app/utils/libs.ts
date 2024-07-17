@@ -32,7 +32,7 @@ export const orderAcceptReject = async (
   data: { notification_type: string }
 ) => {
   try {
-    const res = await fetchWithAuth(`/vendor/orders/${order_oid}`, data);
+    const res = await fetchWithAuth(`/vendor/orders/${order_oid}`, "get", data);
   } catch (error) {
     console.log(error);
   }
@@ -42,6 +42,14 @@ export const getAllProducts = async () => {
   try {
     const products = await fetchWithAuth("/vendor/products");
     return products;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const createNewProduct = async (formdata: object | FormData) => {
+  try {
+    const res = await fetchWithAuth("/vendor/product-create", "post", formdata);
+    console.log(res);
   } catch (error) {
     console.log(error);
   }

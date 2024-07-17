@@ -4,46 +4,46 @@ import TopBanner from "./TopBanner";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-// const orders = [
-//   {
-//     id: 1,
-//     date: "April 2, 2024",
-//     customer_name: "Adam Smith",
-//     address: "some where on earth",
-//     payment_status: "Payment pending",
-//     order_status: "pending",
-//     items: 4,
-//   },
-//   {
-//     id: 2,
-//     date: "April 20, 2024",
-//     customer_name: "Adam Smith",
-//     address: "some where on earth",
-//     payment_status: "Paid",
-//     order_status: "delivered",
-//     items: 7,
-//   },
-//   {
-//     id: 3,
-//     date: "April 2, 2024",
-//     customer_name: "Adam Smith",
-//     address: "some where on earth",
-//     payment_status: "Payment pending",
-//     order_status: "returned",
-//     items: 1,
-//   },
-//   {
-//     id: 4,
-//     date: "May 12, 2024",
-//     customer_name: "Michael Atafor",
-//     address: "some where on earth",
-//     payment_status: "Paid",
-//     order_status: "pending",
-//     items: 10,
-//   },
-// ];
+const orders = [
+  {
+    id: 1,
+    date: "April 2, 2024",
+    customer_name: "Adam Smith",
+    address: "some where on earth",
+    payment_status: "Payment pending",
+    order_status: "pending",
+    items: 4,
+  },
+  {
+    id: 2,
+    date: "April 20, 2024",
+    customer_name: "Adam Smith",
+    address: "some where on earth",
+    payment_status: "Paid",
+    order_status: "delivered",
+    items: 7,
+  },
+  {
+    id: 3,
+    date: "April 2, 2024",
+    customer_name: "Adam Smith",
+    address: "some where on earth",
+    payment_status: "Payment pending",
+    order_status: "returned",
+    items: 1,
+  },
+  {
+    id: 4,
+    date: "May 12, 2024",
+    customer_name: "Michael Atafor",
+    address: "some where on earth",
+    payment_status: "Paid",
+    order_status: "pending",
+    items: 10,
+  },
+];
 
-const OrderTable = ({ orders }) => {
+const OrderTable = () => {
   const searchParams = useSearchParams();
   const order_status = searchParams.get("order-status");
   const filteredOrders = order_status
