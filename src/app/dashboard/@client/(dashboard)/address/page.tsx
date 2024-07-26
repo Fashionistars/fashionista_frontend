@@ -1,6 +1,8 @@
+import { fetchWithAuth } from "@/app/utils/fetchAuth";
 import React from "react";
 
-const page = () => {
+const page = async () => {
+  const getAddress = await fetchWithAuth("/client/shipping-address");
   return (
     <div className="space-y-10 pb-10">
       <div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { trackOrder } from "@/app/actions/client";
 
 const page = () => {
   return (
@@ -13,14 +14,17 @@ const page = () => {
           the confirmation mail you should have received.
         </p>
       </div>
-      <form action="" className="flex items-center justify-between flex-wrap">
+      <form
+        action={trackOrder}
+        className="flex items-center justify-between flex-wrap"
+      >
         <div className="flex flex-col w-full md:w-[48%] gap-2">
           <label htmlFor="order_id" className="text-xl text-black">
             Order ID
           </label>
           <input
             type="text"
-            name=""
+            name="order_id"
             id="order_id"
             className="w-full rounded-[70px] h-[70px] border-[1.5px] border-[#D9D9D9] bg-inherit outline-none px-3 text-black"
           />

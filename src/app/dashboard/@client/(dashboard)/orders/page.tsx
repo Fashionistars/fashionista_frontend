@@ -1,6 +1,6 @@
 import React from "react";
-
-const page = () => {
+// import { getClientOrders } from "@/app/actions/client";
+const page = async () => {
   const order_history = [
     {
       items: "5",
@@ -31,6 +31,7 @@ const page = () => {
       total_amount: 12500,
     },
   ];
+  // const orders = await getClientOrders();
   const orderList = order_history.map((order, index) => {
     return (
       <tr

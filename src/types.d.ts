@@ -43,3 +43,15 @@ interface OrderProp {
     | "returned";
   items: number;
 }
+type PageProps = {
+  params: { [key: string]: string | string[] | undefined };
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
+
+interface CollectionsProps {
+  id: string;
+  image: string;
+  rating: number;
+  title: string;
+  price: string;
+}

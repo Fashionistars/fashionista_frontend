@@ -8,6 +8,7 @@ export default async function Layout({
   vendor: React.ReactNode;
 }) {
   const role = await checkUserRole();
+  // console.log(role);
 
   return <>{role == "Vendor" ? vendor : client}</>;
 }

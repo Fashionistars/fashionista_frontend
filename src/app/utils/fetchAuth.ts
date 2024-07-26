@@ -9,7 +9,7 @@ export const fetchWithAuth = async (
 ) => {
   const accessToken = cookies().get("access_token")?.value;
   const refreshToken = cookies().get("refresh_token")?.value;
-
+  console.log(accessToken);
   try {
     const response = await axiosInstance({
       url,

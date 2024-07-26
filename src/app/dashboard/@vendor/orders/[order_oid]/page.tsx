@@ -12,6 +12,7 @@ const page = async ({ params }: OrderProp) => {
   const { order_oid } = params;
 
   const order = await getSingleOrder(order_oid);
+  console.log(order);
 
   return (
     <div className="space-y-8 pb-20">

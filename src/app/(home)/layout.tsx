@@ -3,6 +3,7 @@ import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import MobileNavBar from "../components/MobileNavBar";
 import Footer from "../components/Footer";
+import NewNavbar from "../components/NewNavbar";
 
 export default function Home({
   children,
@@ -11,29 +12,58 @@ export default function Home({
 }>) {
   return (
     <>
-      <main className="flex min-h-screen flex-col gap-4 px-2 md:px-0  bg-[#F4F3EC]">
-        <MobileNavBar />
-        <header className="hidden md:block">
-          <div className="md:px-5 lg:px-24">
-            <div className="flex justify-between items-center py-6 border-b-[1.5px] border-[#d9d9d9] ">
-              <div className="text-[#141414] text-[15px] font-satoshi leading-5 flex flex-wrap items-center justify-between w-1/3">
-                <Link href="/about-us">About us</Link>
-                <Link href="/accounts">My Accounts</Link>
-                <Link href="/wishlist">Wishlist</Link>
-                <Link href="/tracking">Tracking Order</Link>
+      <main className="flex min-h-screen flex-col px-2 md:px-0  bg-[#FFF]">
+        <header className="">
+          <div className="bg-[#01454a] text-white relative py-4 md:py-6 md:px-5  lg:px-20  md:flex justify-between items-center text-sm ">
+            <div className="hidden md:flex justify-between items-center gap-3  font-raleway font-bold md:w-fit lg:w-[25%]">
+              <Link href="/about-us">About Us</Link>
+              <Link href="#">Wishlist</Link>
+              <Link href="#">Tracking Order</Link>
+            </div>
+            <div className="font-bon_foyage text-2xl lg:text-3xl text-white  lg:w-1/2 text-center">
+              Superb value deals on your choice clothings
+            </div>
+            <div className="hidden md:flex justify-end lg:w-[30%] gap-4 ">
+              <div className="flex items-center gap-2 text-[#BBBBBB]">
+                <svg
+                  width="30"
+                  height="30"
+                  viewBox="0 0 30 30"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M18.75 15C18.75 13.6193 19.8693 12.5 21.25 12.5C24.0114 12.5 26.25 14.7386 26.25 17.5C26.25 20.2614 24.0114 22.5 21.25 22.5C19.8693 22.5 18.75 21.3807 18.75 20V15Z"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                  <path
+                    d="M11.25 15C11.25 13.6193 10.1307 12.5 8.75 12.5C5.98857 12.5 3.75 14.7386 3.75 17.5C3.75 20.2614 5.98857 22.5 8.75 22.5C10.1307 22.5 11.25 21.3807 11.25 20V15Z"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                  <path
+                    d="M3.75 17.5V13.75C3.75 7.5368 8.7868 2.5 15 2.5C21.2133 2.5 26.25 7.5368 26.25 13.75V19.8077C26.25 22.3181 26.25 23.5733 25.8095 24.5521C25.3081 25.6661 24.4161 26.5581 23.3021 27.0595C22.3233 27.5 21.0681 27.5 18.5577 27.5H15"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <div className="flex flex-col">
+                  <span className="font-medium md:text-sm leading-[27px] text-[#BBBBBB]">
+                    +234 90 0000 000
+                  </span>
+                  <span className="text-[#BBBBBB] leading-4 text-xs font-medium ">
+                    24/7 support center
+                  </span>
+                </div>
               </div>
-              <p className=" w-1/3 font-bon_foyage text-[22px] text-center leading-[22px] text-black">
-                Superb value deals on your choice clothings
-              </p>
-
-              <div className=" w-1/4  flex justify-end gap-8">
-                {/* Dropdown of languages */}
-                <p>English</p>
-                <p>USD</p>
-              </div>
+              <p>ENG</p> <p>USD</p>{" "}
             </div>
           </div>
-          <div className="md:px-4 lg:px-24 flex justify-between py-8">
+
+          {/* <div className="md:px-4 lg:px-24 flex justify-between py-8">
             <div className="flex items-center w-1/3">
               <Image src="/logo.svg" alt="logo" width={55} height={54} />
               <h2 className="font-bon_foyage px-3 text-4xl leading-9 text-black">
@@ -141,9 +171,10 @@ export default function Home({
                 <span>Account</span>
               </div>
             </div>
-          </div>
-
-          <Navbar />
+          </div> */}
+          {/* <MobileNavBar /> */}
+          {/* <Navbar /> */}
+          <NewNavbar />
         </header>
         <section>{children}</section>
       </main>
