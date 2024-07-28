@@ -184,6 +184,22 @@
             "new_price": "165000"
         }
         
+    ],
+    "reviews": [
+        {
+            "id": "1",
+            "image": "/dp.png",
+            "text": "Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at mauris elit fames amet. ",
+            "rating": 5,
+            "name": "Jennifer Osato"
+        },
+        {
+            "id": "2",
+            "image": "/p15.png",
+            "text": "Lorem ipsum dolor sit amet consectetur. Turpis sed fames sed consectetur nec arcu laoreet ipsum. Eget vulputate pharetra at mauris elit fames amet. ",
+            "rating": 5,
+            "name": "John Doe"
+        }
     ]
 }
 

@@ -44,7 +44,7 @@ const LatestCollection = async ({
           width={500}
           height={500}
         />
-        <span className="absolute bottom-8 md:bottom-4 right-3">
+        <span className="absolute bottom-8 md:bottom-12 lg:bottom-4 right-3">
           <svg
             width="25"
             height="25"
@@ -71,11 +71,11 @@ const LatestCollection = async ({
     </div>
   ));
   return (
-    <div className="px-5 py-10 lg:p-20 space-y-5 md:space-y-10">
+    <div className="px-5 py-10 md:p-10 lg:p-20 space-y-5 md:space-y-10">
       <h2 className="font-bon_foyage text-[30px] text-center md:text-left md:text-5xl text-[#333333]">
         Latest Collections
       </h2>
-      <nav className="flex items-center justify-center md:justify-normal gap-5">
+      <nav className="flex items-center justify-center md:justify-normal gap-2 lg:gap-5">
         <Link
           href="/"
           scroll={false}

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Search, AlignJustify, UserRound, ShoppingCart } from "lucide-react";
 import logo from "../../../public/logo.svg";
 import { usePathname } from "next/navigation";
@@ -7,15 +7,16 @@ import Image from "next/image";
 import Link from "next/link";
 
 const NewNavbar = () => {
+  const [showOptions, setShowOptions] = useState(false);
   const pathname = usePathname();
   return (
     <div
-      className="flex justify-between bg-white items-center py-5 px-2 lg:px-20 sticky top-0 z-40 "
+      className="hidden md:flex md:flex-wrap lg:flex-nowrap justify-between bg-white items-center py-5 px-2 lg:px-20 sticky top-0 z-40 "
       style={{
         boxShadow: "0px 4px 25px 0px #0000001A",
       }}
     >
-      <div className="flex items-center gap-2 w-1/2 md:w-fit">
+      <div className="flex items-center gap-2 w-1/2 md:w-full lg:w-fit">
         <Image
           src={logo}
           alt="Fashionistar Logo"
@@ -26,7 +27,7 @@ const NewNavbar = () => {
         </h2>
       </div>
 
-      <nav className="hidden md:flex items-center justify-between  w-1/2">
+      <nav className="flex items-center justify-between  w-1/2">
         <ul className="flex w-full items-center justify-between">
           <li className="flex grow-0 order-1 flex-none ">
             <Link
@@ -102,15 +103,28 @@ const NewNavbar = () => {
         </div>
 
         <div className="flex items-center space-x-2 md:space-x-4">
-          <button className="md:hidden ">
-            <AlignJustify />
-          </button>
-          <button className="md:hidden">
-            <Search />
-          </button>
-          <button className="">
-            <UserRound />
-          </button>
+          <div className="relative">
+            <button
+              className=""
+              onClick={() => setShowOptions((prev) => !prev)}
+            >
+              <UserRound />
+            </button>
+            <div
+              style={{ boxShadow: "0px 4px 25px 0px #0000001A" }}
+              className={`w-[284px] min-h-[200px] p-5 rounded-[5px] bg-white absolute right-0 ${
+                showOptions ? "flex flex-col gap-3" : "hidden"
+              }`}
+            >
+              <Link
+                href=""
+                className="text-black font-raleway font-semibold text-xl flex items-center gap-2"
+              >
+                <UserRound />
+                My Account
+              </Link>
+            </div>
+          </div>
 
           <div className="relative flex">
             <Link href="/cart" className="">
