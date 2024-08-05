@@ -44,7 +44,7 @@ export const login = async (formdata: FormData) => {
   let user_role;
   try {
     const res = await axiosInstance.post("/auth/login", data);
-    // console.log(res.data);
+    console.log(res.data);
     const { access, refresh, role } = res.data;
     user_role = role;
 

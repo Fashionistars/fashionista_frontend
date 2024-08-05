@@ -1,14 +1,16 @@
 import React from "react";
 import VendorCard from "@/app/components/VendorCard";
-import { vendor } from "@/app/utils/mock";
+// import { vendor } from "@/app/utils/mock";
+import { getAllVendors } from "@/app/utils/libs";
 
-const page = () => {
-  const vendor_list = vendor.map((link, index) => (
-    <VendorCard vendorProp={link} key={index} />
+const page = async () => {
+  const vendors = (await getAllVendors()) || [];
+  const vendor_list = vendors.map((vendor) => (
+    <VendorCard vendorProp={vendor} key={vendor.id} />
   ));
   return (
     <div className="py-5 px-2 md:px-8 lg:px-28 ">
-      <h2 className="font-bon_foyage text-[40px]  py-2 leading-10 text-black">
+      <h2 className="text-[60px] font-bon_foyage  py-2 leading-10 text-black">
         {" "}
         Fashion Vendors
       </h2>
@@ -45,7 +47,7 @@ const page = () => {
       <div className=" relative flex justify-center items-center py-10  w-full">
         <div className="absolute left-0 font-satoshi font-medium text-sm leading-[19px] text-[#4e4e4e]">
           {" "}
-          We have 40 Vendors for you
+          We have {vendors.length} Vendor(s) for you
         </div>
         <div className="absolute right-0 flex items-center gap-2 md:py-10 ">
           <div className="flex items-center gap-1  md:gap-2 py-1 px-1 md:py-2  md:px-[14px] rounded-[50px] border-[0.8px] border-[#959595]">
@@ -104,7 +106,7 @@ const page = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap justify-center gap-3 gap-y-10 lg:gap-8 pb-10 ">
+      <div className="flex flex-wrap justify-between gap-3 gap-y-10 lg:gap-8 pb-10 ">
         {vendor_list}
       </div>
     </div>

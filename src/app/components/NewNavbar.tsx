@@ -43,7 +43,7 @@ const NewNavbar = () => {
           </li>
           <li className="flex grow-0 order-1 flex-none  ">
             <Link
-              href="/catgories"
+              href="/categories"
               className={`font-raleway text-lg text-[#333] hover:text-[#fda600] ${
                 pathname == "/category"
                   ? "font-bold text-[#fda600]"
@@ -55,9 +55,9 @@ const NewNavbar = () => {
           </li>
           <li className="flex grow-0 order-1 flex-none  ">
             <Link
-              href="/vendor"
+              href="/vendors"
               className={`font-raleway text-lg text-[#333] hover:text-[#fda600] ${
-                pathname == "/vendor"
+                pathname == "/vendors"
                   ? "font-bold text-[#fda600]"
                   : "font-medium text-[#333]"
               } grow-0`}

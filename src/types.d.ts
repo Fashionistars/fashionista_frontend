@@ -55,3 +55,26 @@ interface CollectionsProps {
   title: string;
   price: string;
 }
+// interface VendorProps {
+//   id: number;
+//   image: string;
+//   name: string;
+//   email: string;
+//   description: string;
+//   mobile: string;
+//   verified?: boolean;
+//   active?: boolean;
+//   balance?: string;
+//   vid?: string;
+//   date?: string;
+//   slug: string;
+// }
+interface VendorProp {
+  id: string;
+  image: string;
+  name: string;
+  rating: number;
+  address: string;
+  mobile: string;
+  slug: string;
+}

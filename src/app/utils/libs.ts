@@ -1,5 +1,7 @@
 import { fetchWithAuth } from "./fetchAuth";
 import { vendor } from "./mock";
+import { axiosInstance } from "./axiosInstance";
+import { VendorProp } from "@/types";
 
 export const getVendor = async () => {
   try {
@@ -37,7 +39,7 @@ export const orderAcceptReject = async (
     console.log(error);
   }
 };
-
+// Unprotected list of vendors
 export const getAllProducts = async () => {
   try {
     const products = await fetchWithAuth("/vendor/products");
@@ -50,6 +52,15 @@ export const createNewProduct = async (formdata: object | FormData) => {
   try {
     const res = await fetchWithAuth("/vendor/product-create", "post", formdata);
     console.log(res);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getAllVendors = async () => {
+  try {
+    const vendors = await axiosInstance("/vendors/");
+    return vendors.data as VendorProp[];
+    // console.log(vendors);
   } catch (error) {
     console.log(error);
   }
