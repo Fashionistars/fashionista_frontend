@@ -1,13 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import { Search, AlignJustify, UserRound, ShoppingCart } from "lucide-react";
+import { Search, UserRound, ShoppingCart } from "lucide-react";
 import logo from "../../../public/logo.svg";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import AccountOptions from "./AccountOptions";
+import CartItems from "./CartItems";
 
 const NewNavbar = () => {
   const [showOptions, setShowOptions] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showCart, setShowCart] = useState(false);
   const pathname = usePathname();
   return (
     <div
@@ -110,29 +114,21 @@ const NewNavbar = () => {
             >
               <UserRound />
             </button>
-            <div
-              style={{ boxShadow: "0px 4px 25px 0px #0000001A" }}
-              className={`w-[284px] min-h-[200px] p-5 rounded-[5px] bg-white absolute right-0 ${
-                showOptions ? "flex flex-col gap-3" : "hidden"
-              }`}
-            >
-              <Link
-                href=""
-                className="text-black font-raleway font-semibold text-xl flex items-center gap-2"
-              >
-                <UserRound />
-                My Account
-              </Link>
-            </div>
+            <AccountOptions showOptions={showOptions} />
           </div>
 
           <div className="relative flex">
-            <Link href="/cart" className="">
+            <button
+              type="button"
+              className=""
+              onClick={() => setShowCart(true)}
+            >
               <ShoppingCart />
-            </Link>
+            </button>
             <sub className="bg-[#fda600] absolute -top-3 -right-3 font-bold flex justify-center items-center w-5 h-5 rounded-full">
               0
             </sub>
+            <CartItems isOpen={showCart} onClose={() => setShowCart(false)} />
           </div>
         </div>
       </div>

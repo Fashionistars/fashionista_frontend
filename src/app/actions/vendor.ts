@@ -1,5 +1,5 @@
 "use server";
-import { z } from "zod";
+import { object, z } from "zod";
 import { FormSchema } from "../utils/schema";
 import { fetchWithAuth } from "../utils/fetchAuth";
 const schema = z.object({
@@ -21,8 +21,8 @@ const schema = z.object({
   discription: z.string().min(10, "Product description is required"),
 });
 
-export const newProduct = async (formdata: FormData) => {
-  const data = Object.fromEntries(formdata.entries());
+export const newProduct = async (data: object) => {
+  // const data = typeof formdata == FormData ? Object.fromEntries(formdata.entries()): formdata
   console.log("form information", data);
   // const validatedForm = FormSchema.safeParse(data);
   // if (!validatedForm.success) {
@@ -32,7 +32,12 @@ export const newProduct = async (formdata: FormData) => {
   // }
   // console.log("validated data:", data)
   // try {
-  //   const res = await fetchWithAuth("/vendor/product-create", "post", formdata, "multipart/formdata");
+  //   const res = await fetchWithAuth(
+  //     "/vendor/product-create",
+  //     "post",
+  //     data,
+  //     "multipart/formdata"
+  //   );
   //   console.log(res);
   // } catch (error) {
   //   console.log(error);

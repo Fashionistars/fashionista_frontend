@@ -21,7 +21,7 @@ import ShopByCategory from "../components/ShopByCategory";
 import LatestCollection from "../components/LatestCollection";
 import { CollectionsProps, PageProps } from "@/types";
 import { formatCurrency } from "../utils/formatCurrency";
-import { Germania_One } from "next/font/google";
+
 type DealsProp = CollectionsProps & {
   status: "sold out" | "sales";
   new_price: string;

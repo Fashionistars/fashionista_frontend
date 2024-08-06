@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import heroImg from "../../../public/heroimg.png";
 import Image from "next/image";
+import Link from "next/link";
 
 const Hero = () => {
   return (
     <div className="flex flex-col lg:flex-row items-center relative">
       <div className="h-full min-h-[430px] md:h-[686px] w-full lg:min-w-[90%]   bg-[#fda600] lg:rounded-br-[80px] flex flex-col justify-center items-center relative overflow-hidden">
-        <button
-          type="button"
-          className="w-[144px]  absolute top-6 right-6 h-[43px] font-semibold font-raleway rounded-[100px] bg-[#01454a] text-white shrink-0"
+        <Link
+          // type="button"
+          href="/get-measured"
+          className="w-[144px] flex justify-center items-center absolute top-6 right-6 h-[43px] font-semibold font-raleway rounded-[100px] bg-[#01454a] text-white shrink-0"
         >
           Get Measured
-        </button>
+        </Link>
         <div className="w-full pl-5 md:pl-10 lg:pl-24 flex flex-col gap-5 justify-center ">
           <h2 className="font-bon_foyage lg:whitespace-nowrap text-[35px] leading-[44px] md:text-[75px] md:leading-[86px] text-black inline-block">
             {" "}

@@ -7,13 +7,21 @@ interface CategoryProp {
   title: string;
 }
 const ShopByCategory = async () => {
-  const categoryList = await fetch("http://localhost:4000/category", {
-    headers: { "Content-Type": "application/json" },
-    cache: "no-cache",
-  });
-  const data = ((await categoryList.json()) as CategoryProp[]) || [];
-  //   const data2 = JSON.parse(data);
-  // console.log(data);
+  const getCategories = async () => {
+    try {
+      const categoryList = await fetch("http://localhost:4000/category", {
+        headers: { "Content-Type": "application/json" },
+        // cache: "no-cache",
+      });
+      const data = ((await categoryList.json()) as CategoryProp[]) || [];
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const data = (await getCategories()) || [];
+
   const list = data.map((item) => (
     <div
       key={item.id}

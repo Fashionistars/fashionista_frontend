@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import logo from "../../../public/logo.svg";
 import Image from "next/image";
+import AccountOptions from "./AccountOptions";
+import CartItems from "./CartItems";
 import {
   Search,
   AlignJustify,
@@ -20,6 +22,8 @@ import Link from "next/link";
 const NewMobileNav = () => {
   const pathname = usePathname();
   const [showNav, setShowNav] = useState<boolean>(false);
+  const [showOptions, setShowOptions] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     setShowNav(false);
   }, [pathname]);
@@ -41,17 +45,21 @@ const NewMobileNav = () => {
         <button className="">
           <Search />
         </button>
-        <button className="">
-          <UserRound />
-        </button>
+        <div className="relative">
+          <button type="button" onClick={() => setShowOptions((prev) => !prev)}>
+            <UserRound />
+          </button>
+          <AccountOptions showOptions={showOptions} />
+        </div>
 
         <div className="relative flex">
-          <Link href="/cart" className="">
+          <button onClick={() => setIsOpen(true)} className="">
             <ShoppingCart />
-          </Link>
+          </button>
           <sub className="bg-[#fda600] absolute -top-3 -right-3 font-bold flex justify-center items-center w-5 h-5 rounded-full">
             0
           </sub>
+          <CartItems isOpen={isOpen} onClose={() => setIsOpen(false)} />
         </div>
       </div>
       <div

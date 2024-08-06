@@ -119,7 +119,6 @@ const BasicInformation = ({
                 id="image"
                 type="file"
                 className="hidden"
-                required
                 name="image"
                 onChange={handleImageChange}
               />

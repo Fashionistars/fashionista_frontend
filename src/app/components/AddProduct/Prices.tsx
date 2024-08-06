@@ -35,6 +35,7 @@ const Prices = ({
             className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-black text-[#000]"
             value={formData.sales_prices || ""}
             onChange={handleChange}
+            required
           />
         </div>
         <div className="flex flex-col gap-2 w-full md:w-[47%]">
