@@ -12,7 +12,7 @@ const SignUpForm = ({ role }: { role: "Vendor" | "Client" }) => {
   const [isPassword, setIsPassword] = useState(false);
   const initialState = { errors: {} };
   const [state, formAction] = useFormState(signUp, initialState);
-  console.log(state);
+  console.log("Sign up state", state);
   return (
     <>
       <form

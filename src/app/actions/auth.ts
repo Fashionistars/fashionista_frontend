@@ -19,7 +19,8 @@ export const signUp = async (prev: any, formdata: FormData) => {
     const signin = await axiosInstance.post("/auth/sign-up", data);
     console.log(signin);
   } catch (error: any) {
-    console.log(error?.response?.data.mesage);
+    // console.log(error?.response?.data.mesage);
+    console.log(error);
     return { call_error: error?.response?.data.mesage };
   }
 

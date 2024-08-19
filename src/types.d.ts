@@ -10,12 +10,12 @@ interface CardProps {
   price: number;
 }
 
-// interface ProductSchema{
+// interface NewProductType{
 //     image_1: File,
 //     title: string,
 //     description: string,
-//     sales_prices: string,
-//     regular_prices: string,
+//     sales_price: string,
+//     regular_price: string,
 //     shipping_amount: string,
 //     stock_qty: string,
 //     tag: string,
@@ -25,7 +25,7 @@ interface CardProps {
 //     image_2: File,
 //     image_3: File,
 // }
-type ProductSchema = z.infer<typeof FormSchema>;
+type NewProductType = z.infer<typeof FormSchema>;
 
 type SignUpProps = z.infer<typeof signupSchema>;
 
@@ -45,7 +45,7 @@ interface OrderProp {
 }
 type PageProps = {
   params: { [key: string]: string | string[] | undefined };
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams: { [key: string]: string | string[] | undefined };
 };
 
 interface CollectionsProps {

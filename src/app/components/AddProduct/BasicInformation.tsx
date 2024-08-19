@@ -1,25 +1,62 @@
 "use client";
-import { ProductSchema } from "@/types";
+import { NewProductType } from "@/types";
 import Image from "next/image";
-import React, { ChangeEvent, useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { BasicInformationAction } from "@/app/actions/vendor";
+import { NewProductFieldTypes } from "@/app/utils/schemas/addProduct";
+// import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 
 const BasicInformation = ({
-  formData,
-  update,
+  newProductFields,
+  updateNewProductField,
 }: {
-  formData: ProductSchema;
-  update: (fields: Partial<ProductSchema>) => void;
+  newProductFields: NewProductType;
+  updateNewProductField: (fields: Partial<NewProductFieldTypes>) => void;
 }) => {
-  const onDrop = useCallback(
-    (acceptedFiles: any) => {
-      const file = acceptedFiles[0];
-      update({ ...formData, image_1: file });
-    },
-    [formData]
-  );
+  const [preview, setPreview] = useState<string | undefined>(undefined);
+  const [fileName, setFileName] = useState<string>("");
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setPreview(reader.result as string);
+
+      console.log(URL.createObjectURL(file));
+
+      updateNewProductField({ image_1: file });
+      setFileName(newProductFields?.image_1.name);
+    };
+
+    reader.readAsDataURL(file);
+  }, []);
+
+  // const { getRootProps, getInputProps } = useDropzone({
+  //   accept: {
+  //     "image/*": [".jpeg", ".jpg", ".png"],
+  //   },
+  //   useFsAccessApi: false,
+  //   onDrop,
+  //   onError: (err) => console.log(err),
+  // });
+  // const onDrop = useCallback((acceptedFiles: any) => {
+  //   const file = new FileReader();
+
+  //   file.onload = function () {
+  //     setPreview(file.result as string);
+  //     setFileName(file?.name);
+  //     // const img = decoder.decode(file.result);
+  //     console.log(file);
+
+  //     updateNewProductField({ image_1: file.result as File });
+  //   };
+
+  //   file.readAsDataURL(acceptedFiles[0]);
+  // }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
       "image/*": [".jpeg", ".jpg", ".png"],
     },
@@ -27,19 +64,25 @@ const BasicInformation = ({
     onDrop,
     onError: (err) => console.log(err),
   });
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files ? e.target.files[0] : undefined;
-    update({ image_1: files });
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    updateNewProductField({ [e.target.name]: e.target.value });
   };
 
   return (
-    <div className="flex flex-col gap-8 w-full">
-      <div className="space-y-2 ">
+    <form
+      action={BasicInformationAction}
+      id="basic"
+      className="flex flex-col gap-8 w-full shrink-0"
+    >
+      <div className="space-y-2">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           Upload Image
         </h2>
         <p className="font-satoshi text-[13px] leading-[18px] text-[#4E4E4E]">
-          Upload captivating and clear images to make your product standout
+          Upload captivating and clear images to make your product stand out
         </p>
       </div>
       <div className="flex flex-col md:flex-row gap-6">
@@ -47,11 +90,11 @@ const BasicInformation = ({
           className="w-full md:w-1/2 bg-[#F5F5F5] shadow flex flex-col justify-center items-center gap-2 min-h-[471px]"
           {...getRootProps()}
         >
-          <input {...getInputProps()} />
-          {formData.image_1 ? (
+          <input {...getInputProps()} name="image_1" id="image_1" />
+          {newProductFields.image_1 ? (
             <div className="max-h-full h-full w-full">
               <Image
-                src={URL.createObjectURL(formData.image_1)}
+                src={URL.createObjectURL(newProductFields.image_1)}
                 alt="Preview"
                 width={200}
                 height={200}
@@ -91,9 +134,14 @@ const BasicInformation = ({
                   strokeLinejoin="round"
                 />
               </svg>
-              <p className="font-satoshi font-medium text-black">
-                Click to upload or drag and drop
-              </p>
+              {isDragActive ? (
+                <p>Drop the file here ...</p>
+              ) : (
+                <p className="font-satoshi font-medium text-black">
+                  Click to upload or drag and drop
+                </p>
+              )}
+
               <span className="font-satoshi text-[13px] leading-[18px] text-[#4E4E4E]">
                 SVG, PNG, JPEG or GIF
               </span>
@@ -104,32 +152,48 @@ const BasicInformation = ({
           )}
         </div>
         <div className="w-full md:w-1/2 space-y-6">
-          <div className="flex flex-col gap-4 ">
+          <div className="flex flex-col gap-4">
             <label className="font-satoshi text-[15px] leading-5 text-black">
               Product Image*
             </label>
             <div className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full">
               <label
-                htmlFor="image"
-                className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555]"
+                htmlFor="image_1"
+                className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555] cursor-pointer"
+                // onClick={handleLabelClick}
               >
                 Choose file
               </label>
-              <input
-                id="image"
+              {/* <input
+                id="image_1"
                 type="file"
                 className="hidden"
-                name="image"
-                onChange={handleImageChange}
-              />
+                ref={fileInputRef}
+                {...register("image_1")}
+                onChange={(e) => {
+                  const file = e.target.files ? e.target.files[0] : undefined;
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setPreview(reader.result as string);
+                      setFileName(file.name);
+                      setValue("image_1", file);
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              /> */}
               <input
                 type="text"
-                placeholder={
-                  formData.image_1 ? formData.image_1.name : "No file chosen"
-                }
                 disabled
+                value={fileName}
                 className="h-full bg-transparent px-2 font-medium text-[15px] leading-5 text-[#555555]"
               />
+              {/* {errors.image_1?.message && (
+                <p className="mt-2 text-sm text-red-400">
+                  {errors.image_1.message}
+                </p>
+              )} */}
             </div>
           </div>
           <div className="flex flex-col gap-4 text-black">
@@ -137,12 +201,17 @@ const BasicInformation = ({
             <input
               type="text"
               required
+              onChange={handleInputChange}
               name="title"
+              defaultValue={newProductFields["title"]}
               aria-required
               className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] outline-none p-3 w-full"
-              value={formData.title || ""}
-              onChange={(e) => update({ title: e.target.value })}
             />
+            {/* {errors.title?.message && (
+              <p className="mt-2 text-sm text-red-400">
+                {errors.title.message}
+              </p>
+            )} */}
           </div>
           <div className="flex flex-col gap-4 text-black">
             <label className="font-satoshi text-[15px] leading-5">
@@ -151,16 +220,54 @@ const BasicInformation = ({
             <textarea
               required
               name="description"
+              onChange={handleInputChange}
               aria-required
+              defaultValue={newProductFields["description"]}
               className="rounded-[10px] h-[196px] border-[1.5px] border-[#D9D9D9] p-3 outline-none w-full"
-              value={formData.description || ""}
-              onChange={(e) => update({ description: e.target.value })}
             />
+            {/* {errors.description?.message && (
+              <p className="mt-2 text-sm text-red-400">
+                {errors.description.message}
+              </p>
+            )} */}
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
 export default BasicInformation;
+// const BasicInformation = () => {
+//   return (
+//     <form action={BasicInformationAction}>
+//       <div>
+//         <input type="file" name="image_1" />
+//       </div>
+//       <div className="flex flex-col gap-4 text-black">
+//         <label className="font-satoshi text-[15px] leading-5">Title</label>
+//         <input
+//           type="text"
+//           required
+//           name="title"
+//           aria-required
+//           className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] outline-none p-3 w-full"
+//         />
+//       </div>
+//       <div className="flex flex-col gap-4 text-black">
+//         <label className="font-satoshi text-[15px] leading-5">
+//           Description
+//         </label>
+//         <input
+//           type="text"
+//           required
+//           name="description"
+//           aria-required
+//           className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] outline-none p-3 w-full"
+//         />
+//       </div>
+//       <button className="px-10 py-5 bg-[#fda600] text-white">Continue</button>
+//     </form>
+//   );
+// };
+// export default BasicInformation;

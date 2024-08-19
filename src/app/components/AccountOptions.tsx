@@ -49,10 +49,10 @@ const AccountOptions = ({ showOptions }: { showOptions: boolean }) => {
         <UserRoundCheck /> Register as a vendor
       </Link>
       <Link
-        href="/"
+        href="/login"
         className="text-black font-raleway font-semibold text-xl flex items-center gap-2 hover:text-[#01454A]"
       >
-        <LogOut /> Sign out
+        <LogOut /> Sign in
       </Link>
     </div>
   );
