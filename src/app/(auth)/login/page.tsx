@@ -15,11 +15,11 @@ const Page = () => {
           Login
         </h2>
         <p className="font-satoshi py-3 text-[15px] leading-5 text-[#282828]">
-          Don't have an account?{" "}
-          <Link href="/signup" className="font-bold ">
-            Sign Up{" "}
-          </Link>
-        </p>
+        Don&#39;t have an account?{" "}
+        <Link href="/signup" className="font-bold ">
+          Sign Up{" "}
+        </Link>
+      </p>
       </div>
       <form action={login} className="w-full flex flex-col items-center gap-6">
         <div className="w-full flex flex-col items-center">
