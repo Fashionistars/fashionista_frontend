@@ -24,7 +24,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb)); */
-  background: white;
+  background: #f4f3ec;
 }
 .dark {
   background: linear-gradient(
@@ -51,5 +51,33 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+.custom-checkbox {
+  appearance: none;
+  background-color: #fff;
+}
+
+progress {
+  appearance: none;
+  height: 18px;
+  width: 300px;
+  border-radius: 100px;
+
+  /* Chrome and Safari */
+  &::-webkit-progress-bar {
+    background: #d9d9d9;
+    border-radius: 100px;
+  }
+
+  &::-webkit-progress-value {
+    background-color: #fda600;
+    border-radius: 100px;
+  }
+
+  /* Firefox */
+  &::-moz-progress-bar {
+    background-color: #fda600;
+    border-radius: 100px;
   }
 }

@@ -8,8 +8,8 @@ import { signUp } from "@/app/actions/auth";
 const Page = () => {
   const [isEmail, setIsEmail] = useState(true);
   return (
-    <div className="font-satoshi flex flex-col items-center px-5 justify-evenly h-full bg-white">
-      <div className="flex flex-col place-items-center">
+    <>
+      <div className="">
         <h2 className="font-satoshi font-medium text-3xl leading-10 text-black">
           Sign Up
         </h2>
@@ -23,7 +23,7 @@ const Page = () => {
       <form action={signUp} className="w-full flex flex-col items-center gap-6">
         <div className="w-full flex flex-col items-center">
           <p
-            className={`flex items-center justify-between w-full max-w-[423px] gap-4 p-2 ${
+            className={`flex items-center justify-between w-full gap-4 p-2 ${
               !isEmail ? "flex-row-reverse" : "flex-row"
             }`}
           >
@@ -53,14 +53,14 @@ const Page = () => {
           <input
             type="text"
             name={isEmail ? "email" : "phone"}
-            className="max-w-[423px] box-border w-full bg-white border-[1.5px] outline-none border-[#D9D9D9] rounded-[70px] px-3 py-4"
+            className="box-border w-full bg-white border-[1.5px] outline-none border-[#D9D9D9] rounded-[70px] px-3 py-4"
             placeholder={
               isEmail ? "eg: mystoreemail@email.com" : "eg: 09012345678"
             }
           />
         </div>
         <div className="w-full flex flex-col items-center">
-          <p className="flex items-center justify-start w-full max-w-[423px] gap-2 p-2">
+          <p className="flex items-center justify-start w-full gap-2 p-2">
             <label
               htmlFor="password"
               className="text-[15px] leading-5 text-[#101010] cursor-pointer"
@@ -72,12 +72,12 @@ const Page = () => {
             type="password"
             name="password"
             id="password"
-            className="max-w-[423px] box-border bg-white outline-none w-full border-[1.5px] border-[#D9D9D9] rounded-[70px] px-3 py-4"
+            className="box-border bg-white outline-none w-full border-[1.5px] border-[#D9D9D9] rounded-[70px] px-3 py-4"
             placeholder="Enter password "
           />
         </div>
         <div className="w-full flex flex-col items-center">
-          <p className="flex items-center justify-start w-full max-w-[423px] gap-2 p-2">
+          <p className="flex items-center justify-start w-full  gap-2 p-2">
             <label
               htmlFor="confirm_password"
               className="text-[15px] leading-5 text-[#101010] cursor-pointer"
@@ -89,11 +89,11 @@ const Page = () => {
             type="password"
             name="password2"
             id="confirm_password"
-            className="max-w-[423px] box-border bg-white outline-none w-full border-[1.5px] border-[#D9D9D9] rounded-[70px] px-3 py-4"
+            className="box-border bg-white outline-none w-full border-[1.5px] border-[#D9D9D9] rounded-[70px] px-3 py-4"
             placeholder="Enter password "
           />
         </div>
-        <button className="bg-[#FDA600] shd w-full outline-none max-w-[423px] py-[17px] text-white text-lg font-bold rounded-[70px]">
+        <button className="bg-[#FDA600] shd w-full outline-none  py-[17px] text-white text-lg font-bold rounded-[70px]">
           Sign Up
         </button>
         <div className="w-full max-w-[423px] flex items-center gap-3 ">
@@ -103,12 +103,12 @@ const Page = () => {
           </span>
           <span className="w-1/2 h-[1px] bg-[#D9D9D9]" />
         </div>
-        <button className="bg-[#fff] w-full max-w-[423px] outline-none border-[1.2px] border-[#D9D9D9] shd  flex items-center justify-center gap-3 py-[17px] text-[#282828] text-lg font-medium leading-6 rounded-[70px]">
+        <button className="bg-[#fff] w-full outline-none border-[1.2px] border-[#D9D9D9] shd  flex items-center justify-center gap-3 py-[17px] text-[#282828] text-lg font-medium leading-6 rounded-[70px]">
           <Image src={google} alt="google" />
           Sign Up with Google
         </button>
       </form>
-    </div>
+    </>
   );
 };
 

@@ -7,7 +7,7 @@ const Navbar = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="flex justify-evenly bg-[#fda600] px-4 py-2 font-satoshi sticky top-0 z-50 ">
+    <nav className="flex justify-evenly bg-[#fda600] px-2 lg:px-4 md:py-5 lg:py-2 font-satoshi sticky top-0 z-50 ">
       <Link
         href="/"
         className={`text-lg leading-6  hover:text-white ${
@@ -97,7 +97,7 @@ const Navbar = () => {
         Blog
       </Link>
 
-      <div className="flex flex-col">
+      <div className="hidden lg:flex flex-col">
         <div className="flex items-center">
           <svg
             width="30"
@@ -124,7 +124,7 @@ const Navbar = () => {
               strokeLinejoin="round"
             />
           </svg>
-          <span className="font-medium text-xl px-2 leading-[27px] text-black w-[127px]">
+          <span className="font-medium md:text-sm lg:text-xl px-2 leading-[27px] text-black w-[127px]">
             +234 90 0000 000
           </span>
         </div>

@@ -1,17 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-
-interface VendorProp {
-  vendorProp: {
-    image: string;
-    name: string;
-    rating: number;
-    address: string;
-    mobile: string;
-  };
+import { VendorProp } from "@/types";
+interface VendorCardProp {
+  vendorProp: VendorProp;
 }
-const VendorCard = ({ vendorProp }: VendorProp) => {
+const VendorCard = ({ vendorProp }: VendorCardProp) => {
   return (
     <div className="w-[48%] md:w-[30%] lg:w-[290px] flex flex-col gap-3">
       <div className="w-full h-[217px] md:h-[320px]">
@@ -19,6 +13,8 @@ const VendorCard = ({ vendorProp }: VendorProp) => {
           src={vendorProp.image}
           alt={vendorProp.name}
           className="w-full h-full object-cover"
+          width={500}
+          height={500}
         />
       </div>
       <p className="font-bon_foyage text-[19px] leading-5 text-black">
@@ -50,7 +46,7 @@ const VendorCard = ({ vendorProp }: VendorProp) => {
         {vendorProp.mobile}
       </p>
       <Link
-        href={`/vendor/${vendorProp.name}`}
+        href={`/vendor/${vendorProp.slug}`}
         className="w-[106.5px] h-[37px] flex justify-center items-center text-white bg-[#fda600] font-medium  text-xs leading-4"
       >
         View Store

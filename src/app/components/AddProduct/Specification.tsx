@@ -1,44 +1,46 @@
 "use client";
-import { ProductSchema } from "@/types";
+import { NewProductType } from "@/types";
 import React, { useState } from "react";
+import { NewProductFieldTypes } from "@/app/utils/schemas/addProduct";
 
 const Specification = ({
-  formData,
-  update,
+  newProductFields,
+  updateNewProductField,
 }: {
-  formData: ProductSchema;
-  update: (fields: ProductSchema) => void;
+  newProductFields: NewProductType;
+  updateNewProductField: (fields: Partial<NewProductFieldTypes>) => void;
 }) => {
-  const fields = [
-    { id: crypto.randomUUID(), title: "title" },
-    { id: crypto.randomUUID(), title: "content" },
-  ];
-  const [allFields, setAllFields] = useState(fields);
-  const [isField, setIsField] = useState(false);
-  const [newField, setNewField] = useState({ id: "", title: "" });
-  const handleChange = (newField: { id: string; title: string }) => {
-    setAllFields((prev) => [...prev, newField]);
-    setIsField(false);
+  // const fields = [
+  //   { id: crypto.randomUUID(), title: "title" },
+  //   { id: crypto.randomUUID(), title: "content" },
+  // ];
+  // const [allFields, setAllFields] = useState(fields);
+  // const [isField, setIsField] = useState(false);
+  // const [newField, setNewField] = useState({ id: "", title: "" });
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    updateNewProductField({ [e.target.name]: e.target.value });
   };
 
-  const inputFields = allFields.map((field: { id: string; title: string }) => {
-    return (
-      <div key={field.id} className="flex flex-col w-full md:w-[47%]">
-        <label className="capitalize text-[15px] leading-5 text-[#000]">
-          {field.title}
-        </label>
-        <input
-          type="text"
-          name={field.title}
-          value={formData.title || ""}
-          onChange={(e) => update({ ...formData, title: e.target.value })}
-          className="rounded-[70px] text-black border-[#D9D9D9] border-[1.5px] w-full h-[60px] outline-none px-3"
-        />
-      </div>
-    );
-  });
+  // const inputFields = allFields.map((field: { id: string; title: string }) => {
+  //   return (
+  //     <div key={field.id} className="flex flex-col w-full md:w-[47%]">
+  //       <label className="capitalize text-[15px] leading-5 text-[#000]">
+  //         {field.title}
+  //       </label>
+  //       <input
+  //         type="text"
+  //         name={field.title}
+  //         value={formData.title || ""}
+  //         onChange={(e) => update({ ...formData, title: e.target.value })}
+  //         className="rounded-[70px] text-black border-[#D9D9D9] border-[1.5px] w-full h-[60px] outline-none px-3"
+  //       />
+  //     </div>
+  //   );
+  // });
   return (
-    <div className="flex flex-col gap-8 w-full">
+    <form className="flex flex-col gap-8 w-full" id="specification">
       <div className="space-y-2 ">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           Specification
@@ -48,8 +50,33 @@ const Specification = ({
         </p>
       </div>
       <div className="min-h-[300px] flex flex-col justify-between">
-        <div className="flex flex-wrap gap-6">{inputFields}</div>
-        {isField && (
+        <div className="flex flex-wrap gap-6">
+          <div className="flex flex-col w-full md:w-[47%]">
+            <label className="capitalize text-[15px] leading-5 text-[#000]">
+              Title
+            </label>
+            <input
+              type="text"
+              name="title"
+              defaultValue={newProductFields?.specification.title}
+              onChange={handleInputChange}
+              className="rounded-[70px] text-black border-[#D9D9D9] border-[1.5px] w-full h-[60px] outline-none px-3"
+            />
+          </div>
+          <div className="flex flex-col w-full md:w-[47%]">
+            <label className="capitalize text-[15px] leading-5 text-[#000]">
+              Content
+            </label>
+            <input
+              type="text"
+              name="content"
+              onChange={handleInputChange}
+              defaultValue={newProductFields.specification.content}
+              className="rounded-[70px] text-black border-[#D9D9D9] border-[1.5px] w-full h-[60px] outline-none px-3"
+            />
+          </div>
+        </div>
+        {/* {isField && (
           <div className="w-full md:w-[60%] p-5  rounded-md mx-auto space-y-2 h-fit shadow-md">
             <h2 className="text-black text-center font-medium text-lg">
               Add Specification
@@ -85,17 +112,18 @@ const Specification = ({
               </button>
             </div>
           </div>
-        )}
+        )} */}
         <div className="py-6">
           <button
-            onClick={() => setIsField(true)}
+            // onClick={() => setIsField(true)}
+            type="button"
             className="text-black text-lg leading-6 font-medium font-satoshi px-4 py-4 bg-[#fda600]"
           >
             + Add more specifications
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

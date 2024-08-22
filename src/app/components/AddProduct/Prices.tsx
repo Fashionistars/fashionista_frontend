@@ -1,21 +1,24 @@
-// components/Prices.js
-import { ProductSchema } from "@/types";
-import React, { ChangeEvent } from "react";
+"use client";
+import { NewProductType } from "@/types";
+import React from "react";
+import { NewProductFieldTypes } from "@/app/utils/schemas/addProduct";
+import { PricesAction } from "@/app/actions/vendor";
 
 const Prices = ({
-  formData,
-  update,
+  newProductFields,
+  updateNewProductField,
 }: {
-  formData: ProductSchema;
-  update: (fields: ProductSchema) => void;
+  newProductFields: NewProductType;
+  updateNewProductField: (fields: Partial<NewProductFieldTypes>) => void;
 }) => {
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    update({ ...formData, [name]: value });
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    updateNewProductField({ [e.target.name]: e.target.value });
   };
-
+  console.log("New Product details", newProductFields);
   return (
-    <div className="space-y-10 w-full">
+    <form id="prices" action={PricesAction} className="space-y-10 w-full">
       <div className="space-y-2">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           Prices
@@ -32,9 +35,9 @@ const Prices = ({
           <input
             type="text"
             name="sales_price"
-            className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-none text-[#000]"
-            value={formData.sales_prices || ""}
-            onChange={handleChange}
+            onChange={handleInputChange}
+            defaultValue={newProductFields["sales_price"]}
+            className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-black text-[#000]"
           />
         </div>
         <div className="flex flex-col gap-2 w-full md:w-[47%]">
@@ -44,9 +47,9 @@ const Prices = ({
           <input
             type="text"
             name="regular_price"
+            onChange={handleInputChange}
+            defaultValue={newProductFields["regular_price"]}
             className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-none text-[#000]"
-            value={formData.regular_prices || ""}
-            onChange={handleChange}
           />
         </div>
         <div className="flex flex-col gap-2 w-full md:w-[47%]">
@@ -57,8 +60,8 @@ const Prices = ({
             type="text"
             name="shipping_amount"
             className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-none text-[#000]"
-            value={formData.shipping_amount || ""}
-            onChange={handleChange}
+            value={1000}
+            readOnly
           />
           <span className="font-satoshi font-medium text-xs text-[#555555]">
             Note: it’s automatic 1000 for people living in lagos state
@@ -71,9 +74,9 @@ const Prices = ({
           <input
             type="text"
             name="stock_qty"
+            defaultValue={newProductFields["stock_qty"]}
+            onChange={handleInputChange}
             className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-none text-[#000]"
-            value={formData.stock_qty || ""}
-            onChange={handleChange}
           />
         </div>
         <div className="flex flex-col gap-2 w-full">
@@ -84,8 +87,8 @@ const Prices = ({
             type="text"
             name="tag"
             className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-none text-[#000]"
-            value={formData.tag || ""}
-            onChange={handleChange}
+            defaultValue={newProductFields["tag"]}
+            onChange={handleInputChange}
           />
           <span className="font-satoshi font-medium text-xs text-[#555555]">
             Note: Separate tags with commas
@@ -99,12 +102,15 @@ const Prices = ({
             type="text"
             name="total_price"
             className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-none text-[#000]"
-            value={formData.total_price || ""}
-            onChange={handleChange}
+            onChange={handleInputChange}
+            defaultValue={newProductFields["total_price"]}
           />
         </div>
       </div>
-    </div>
+      {/* <button className="py-2.5 px-[30px] bg-[#fda600] outline-none font-medium text-black hover:text-white grow-0">
+        Continue
+      </button> */}
+    </form>
   );
 };
 

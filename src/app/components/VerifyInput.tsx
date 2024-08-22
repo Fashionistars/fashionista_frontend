@@ -56,13 +56,13 @@ const VerificationInput: React.FC = () => {
   const combinedValue = values.join("");
 
   return (
-    <div className="flex space-x-2">
+    <div className="flex justify-between space-x-2 w-full">
       {boxRefs.map((boxRef, index) => (
         <input
           key={index}
           type="text"
           maxLength={1}
-          className="w-[86px] h-[70px] text-center text-[32px] font-bold font-satoshi border-[1.5px] border-[#d9d9d9] rounded-[15px]"
+          className="w-[120px] h-[80px] text-center text-[32px] font-bold font-satoshi border-[1.5px] border-[#d9d9d9] outline-none rounded-[15px]"
           ref={boxRef}
           value={values[index] || ""}
           onInput={(e) => handleInput(e, index, index + 1, index - 1)}

@@ -1,175 +1,230 @@
-import React, { FormEvent, useState } from "react";
+"use client";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import BasicInformation from "./AddProduct/BasicInformation";
+import { createNewProduct } from "../utils/libs";
+import { z } from "zod";
+// import { FormDataSchema } from "../utils/schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { FormSchema } from "../utils/schema";
+import { newProduct } from "../actions/vendor";
 import Prices from "./AddProduct/Prices";
+import BasicInformation from "./AddProduct/BasicInformation";
 import Category from "./AddProduct/Category";
 import Gallery from "./AddProduct/Gallery";
-import { newProduct } from "../actions/vendor";
-import validator from "../utils/validator";
-import { ProductSchema } from "@/types";
 import Specification from "./AddProduct/Specification";
 import Sizes from "./AddProduct/Sizes";
 import Color from "./AddProduct/Color";
+import { useAddProductContext } from "../context/addProductContext";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
-const MultiStep = () => {
-  const initialValue = {
-    image_1: undefined as unknown as File,
-    title: "",
-    description: "",
-    sales_prices: "",
-    regular_prices: "",
-    shipping_amount: "",
-    stock_qty: "",
-    tag: "",
-    total_price: "",
-    category: "",
-    brands: "",
-    image_2: undefined as unknown as File,
-    image_3: undefined as unknown as File,
-    image_4: undefined as unknown as File,
-    video: undefined as unknown as File,
-  };
-  const [current, setCurrent] = useState(0);
-  const [arrIndex, setArrIndex] = useState(0);
-  const [data, setData] = useState<ProductSchema>(initialValue);
+type Inputs = z.infer<typeof FormSchema>;
 
-  const update = (fields: ProductSchema) => {
-    setData((prev) => {
-      return { ...prev, ...fields };
-    });
-  };
-  const formParts = [
-    <BasicInformation formData={data} update={update} />,
-    <Prices formData={data} update={update} />,
-    <Category />,
-    <Gallery formData={data} update={update} />,
-    <Specification formData={data} update={update} />,
-    <Sizes formData={data} update={update} />,
-    <Color formData={data} update={update} />,
-  ];
-  const formPartSchema = [];
-  const delta = 1;
-  const isLastElement = arrIndex >= formParts.length - 1;
-  const isFirstElement = arrIndex == 0;
+const steps = [
+  {
+    id: 1,
+    title: "Basic Information",
+    fields: ["title", "description", "image_1"],
+  },
+  {
+    id: 2,
+    title: "Prices",
+    fields: [
+      "sales_price",
+      "regular_price",
+      "shipping_amount",
+      "stock_qty",
+      "tag",
+      "total_price",
+    ],
+  },
+  {
+    id: 3,
+    title: "Category",
+    fields: ["category", "brands"],
+  },
+  {
+    id: 4,
+    title: "Gallery",
+    fields: ["image_2", "image_3", "image_4", "video"],
+  },
+];
 
-  const next = () => {
-    if (isLastElement) return;
-    setCurrent((prev) => prev + 1);
-    setArrIndex((prev) => prev + 1);
+export default function Form() {
+  const searchParams = useSearchParams();
+  const step = searchParams.get("step");
+  const { newProductFields, updateNewProductField } = useAddProductContext();
+  const [previousStep, setPreviousStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
+  const delta = currentStep - previousStep;
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    trigger,
+    setValue,
+    formState: { errors },
+  } = useForm<Inputs>({
+    resolver: zodResolver(FormSchema),
+  });
+
+  const processForm: SubmitHandler<Inputs> = async (data) => {
+    await newProduct(data);
+    // await createNewProduct(data);
+    reset();
   };
-  const back = () => {
-    if (arrIndex !== 0) {
-      setCurrent((prev) => prev - 1);
-      return setArrIndex((prev) => prev - 1);
+
+  type FieldName = keyof Inputs;
+
+  const next = async () => {
+    // console.log(errors);
+    const fields = steps[currentStep].fields;
+    const output = await trigger(fields as FieldName[], { shouldFocus: true });
+
+    if (!output) return;
+
+    if (currentStep < steps.length - 1) {
+      if (currentStep === steps.length - 1) {
+        await handleSubmit(processForm)();
+      }
+      setPreviousStep(currentStep);
+      setCurrentStep((step) => step + 1);
     }
-    return arrIndex;
   };
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    console.log(data);
+
+  const back = () => {
+    if (currentStep > 0) {
+      setPreviousStep(currentStep);
+      setCurrentStep((step) => step - 1);
+    }
   };
 
   return (
     <div className="p-5 pt-12 md:p-6 md:pb-20 w-full md:w-[75%] h-[680px] bg-transparent hide_scrollbar overflow-auto relative top-[16%] md:fixed md:top-[16%] right-0 flex flex-col gap-8 z-10">
       <div className="bg-[#fff] rounded-[10px] p-[15px] md:p-6  w-full h-fit relative pb-10 ">
         <ul className="flex items-center justify-between md:justify-end left-0 absolute -top-12 md:top-6 md:right-6 md:gap-5 font-satoshi">
-          <li
+          <Link
+            href="/dashboard/products"
             className={`font-medium text-[11px] md:text-sm text-black px-1 md:px-2 py-3 ${
-              current == 0 ? "bg-[#fda600]" : ""
+              !step ? "bg-[#fda600]" : ""
             } `}
           >
             Basic Information
-          </li>
-          <li
+          </Link>
+          <Link
+            href="/dashboard/products?step=prices"
             className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
-              current == 1 && "bg-[#fda600]"
+              step == "prices" && "bg-[#fda600]"
             }`}
           >
             Prices
-          </li>
-          <li
+          </Link>
+          <Link
+            href="/dashboard/products?step=category"
             className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
-              current == 2 && "bg-[#fda600]"
+              step == "category" && "bg-[#fda600]"
             }`}
           >
             Category
-          </li>
-          <li
+          </Link>
+          <Link
+            href="/dashboard/products?step=gallery"
             className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
-              current == 3 && "bg-[#fda600]"
+              step == "gallery" && "bg-[#fda600]"
             }`}
           >
             Gallery
-          </li>
-          <li
+          </Link>
+          <Link
+            href="/dashboard/products?step=specification"
             className={`font-medium text-[11px]  md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
-              current == 4 && "bg-[#fda600]"
+              step == "specification" && "bg-[#fda600]"
             }`}
           >
             Specification
-          </li>
-          <li
+          </Link>
+          <Link
+            href="/dashboard/products?step=sizes"
             className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
-              current == 5 && "bg-[#fda600]"
+              step == "sizes" && "bg-[#fda600]"
             }`}
           >
             Size
-          </li>
-          <li
+          </Link>
+          <Link
+            href="/dashboard/products?step=color"
             className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
-              current == 6 && "bg-[#fda600]"
+              step == "color" && "bg-[#fda600]"
             }`}
           >
             Color
-          </li>
+          </Link>
         </ul>
-        <form id="form" action={newProduct}>
-          {current == 0 && (
+        <>
+          {!step && (
             <motion.div
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <BasicInformation formData={data} update={update} />
+              <BasicInformation
+                newProductFields={newProductFields}
+                updateNewProductField={updateNewProductField}
+              />
             </motion.div>
           )}
-          {current == 1 && (
+          {step == "prices" && (
             <motion.div
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <Prices formData={data} update={update} />
+              <Prices
+                newProductFields={newProductFields}
+                updateNewProductField={updateNewProductField}
+              />
             </motion.div>
           )}
-          {current == 2 && (
+          {step == "category" && (
             <motion.div
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <Category />
+              <Category
+                newProductFields={newProductFields}
+                updateNewProductField={updateNewProductField}
+              />
             </motion.div>
           )}
-          {current == 3 && (
+          {step == "gallery" && (
             <motion.div
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <Gallery formData={data} update={update} />
+              <Gallery
+                newProductFields={newProductFields}
+                updateNewProductField={updateNewProductField}
+              />
             </motion.div>
           )}
-          {current == 4 && (
+          {step == "specification" && (
             <motion.div
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <Specification formData={data} update={update} />
+              <Specification
+                newProductFields={newProductFields}
+                updateNewProductField={updateNewProductField}
+              />
             </motion.div>
           )}
-          {current == 5 && (
+          {/* {currentStep == 5 && (
             <motion.div
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -177,23 +232,34 @@ const MultiStep = () => {
             >
               <Sizes formData={data} update={update} />
             </motion.div>
-          )}
-          {current == 6 && (
+          )} */}
+          {/* {currentStep == 6 && (
             <motion.div
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <Color formData={data} update={update} />
+              <Color register={register} />
             </motion.div>
-          )}
-        </form>
+          )} */}
+
+          {/* {currentStep === 2 && (
+            <>
+              <h2 className="text-base font-semibold leading-7 text-gray-900">
+                Complete
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600">
+                Thank you for your submission.
+              </p>
+            </>
+          )} */}
+        </>
       </div>
       <div className="flex items-center justify-end gap-8 w-full py-6">
         <button
           onClick={back}
           type="button"
-          disabled={isFirstElement}
+          form={!step ? "basic-information" : step}
           className={`py-2.5 px-[30px] bg-transparent outline-none font-medium text-lg leading-6 text-[#4E4E4E] hover:text-black disabled:cursor-not-allowed disabled:text-[#d9d9d9]`}
         >
           Back
@@ -201,7 +267,7 @@ const MultiStep = () => {
 
         <button
           onClick={next}
-          form="form"
+          form={!step ? "basic" : step}
           type="submit"
           className="py-2.5 px-[30px] bg-[#fda600] outline-none font-medium text-black hover:text-white grow-0"
         >
@@ -210,6 +276,4 @@ const MultiStep = () => {
       </div>
     </div>
   );
-};
-
-export default MultiStep;
+}

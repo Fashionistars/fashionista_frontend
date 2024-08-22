@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import menu from "../../../public/menu.svg";
 import Image from "next/image";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

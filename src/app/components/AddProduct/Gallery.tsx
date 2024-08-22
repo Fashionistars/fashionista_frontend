@@ -1,33 +1,87 @@
 "use client";
-import { ProductSchema } from "@/types";
-import React, { useCallback } from "react";
+import { NewProductType } from "@/types";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-
+// import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
+import { NewProductFieldTypes } from "@/app/utils/schemas/addProduct";
+import Image from "next/image";
+import { GalleryAction } from "@/app/actions/vendor";
 const Gallery = ({
-  formData,
-  update,
+  newProductFields,
+  updateNewProductField,
 }: {
-  formData: ProductSchema;
-  update: (fields: ProductSchema) => void;
+  newProductFields: NewProductType;
+  updateNewProductField: (fields: Partial<NewProductFieldTypes>) => void;
 }) => {
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
-    if (files && files.length > 0) {
-      update({ ...formData, [name]: files[0] });
-    }
-    console.log(formData);
-  };
+  const [preview, setPreview] = useState({
+    image_2: "",
+    image_3: "",
+    image_4: "",
+  });
+  const [fileName, setFileName] = useState({
+    image_2: "",
+    image_3: "",
+    image_4: "",
+    video: null,
+  });
 
-  const createDropzone = (name: string) => {
-    console.log(name);
+  // const onDrop = useCallback((acceptedFiles: File[]) => {
+  //   const file = acceptedFiles[0];
+  //   const reader = new FileReader();
+
+  //   reader.onloadend = () => {
+  //     updateNewProductField({ video: file });
+  //     console.log(URL.createObjectURL(file));
+
+  //     reader.readAsDataURL(acceptedFiles[0]);
+  //   };
+  // }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: {
+      "image/*": [".jpeg", ".jpg", ".png", ".mp4"],
+    },
+    useFsAccessApi: false,
+    onDrop: useCallback(
+      (acceptedFiles: File[]) => {
+        const file = acceptedFiles[0];
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          // setPreview((prev) => ({
+          //   ...prev,
+          //   [name]: reader.result as string,
+          // }));
+          // setFileName((prev) => ({ ...prev, [name]: file.name }));
+          updateNewProductField({ video: file });
+        };
+
+        reader.readAsDataURL(file);
+      },
+      [newProductFields]
+    ),
+    onError: (err) => console.log(err),
+  });
+
+  const createDropzone = (name: "image_2" | "image_3" | "image_4") => {
     const { getRootProps, getInputProps } = useDropzone({
       onDrop: useCallback(
-        (acceptedFiles: any) => {
-          if (acceptedFiles.length > 0) {
-            update({ ...formData, [name]: acceptedFiles[0] });
-          }
+        (acceptedFiles: File[]) => {
+          const file = acceptedFiles[0];
+          const reader = new FileReader();
+
+          reader.onloadend = () => {
+            setPreview((prev) => ({
+              ...prev,
+              [name]: reader.result as string,
+            }));
+            setFileName((prev) => ({ ...prev, [name]: file.name }));
+            updateNewProductField({ [name]: file });
+          };
+
+          reader.readAsDataURL(file);
         },
-        [update, name]
+        [updateNewProductField]
       ),
       accept: { "image/*": [".jpeg", ".jpg", ".png"] },
     });
@@ -37,13 +91,17 @@ const Gallery = ({
         className="w-full max-h-[270px] bg-[#F5F5F5] shadow flex flex-col justify-center items-center gap-2"
         {...getRootProps()}
       >
-        <input {...getInputProps()} name={name} />
-        {formData[name] ? (
-          <img
-            src={URL.createObjectURL(formData[name] as File)}
-            alt="Preview"
-            className="w-full h-full object-cover"
-          />
+        <input {...getInputProps()} name={name} id={name} />
+        {newProductFields[name] ? (
+          <div className="max-h-full h-full w-full">
+            <Image
+              src={URL.createObjectURL(newProductFields[name])}
+              alt="Preview"
+              width={200}
+              height={200}
+              className="w-full h-full object-cover"
+            />
+          </div>
         ) : (
           <>
             <svg
@@ -93,7 +151,7 @@ const Gallery = ({
   };
 
   return (
-    <div className="w-full space-y-10">
+    <form action={GalleryAction} id="gallery" className="w-full space-y-10">
       <div className="space-y-2">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           Gallery
@@ -108,35 +166,102 @@ const Gallery = ({
           <label className="font-satoshi text-[15px] leading-5 text-black ">
             Product Image*
           </label>
-          {["image_2", "image_3", "image_4"].map((imageName: any) => (
-            <div key={imageName} className="flex flex-col gap-4 pb-4">
-              <div className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full">
+          <div className="flex flex-col gap-4">
+            <div className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full gap-4">
+              <label
+                htmlFor="image_2"
+                className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555]"
+              >
+                Choose file
+              </label>
+              {/* <input
+                id="image_2"
+                type="file"
+                className="hidden"
+                name="image_2"
+                onChange={handleFileChange}
+              /> */}
+              <input
+                type="text"
+                value={fileName?.image_2}
+                disabled
+                className="h-full bg-transparent px-2 font-medium text-[15px] leading-5 text-[#555555]"
+              />
+            </div>
+            <div className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full gap-4">
+              <label
+                htmlFor="image_3"
+                className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555]"
+              >
+                Choose file
+              </label>
+              {/* <input
+                id="image_3"
+                type="file"
+                className="hidden"
+                name="image_3"
+                onChange={handleFileChange}
+              /> */}
+              <input
+                type="text"
+                value={fileName?.image_3}
+                disabled
+                className="h-full bg-transparent px-2 font-medium text-[15px] leading-5 text-[#555555]"
+              />
+            </div>
+            <div className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full gap-4">
+              <label
+                htmlFor="image_4"
+                className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555]"
+              >
+                Choose file
+              </label>
+              {/* <input
+                id="image_4"
+                type="file"
+                className="hidden"
+                name="image_4"
+                onChange={handleFileChange}
+              /> */}
+              <input
+                type="text"
+                value={fileName?.image_4}
+                disabled
+                className="h-full bg-transparent px-2 font-medium text-[15px] leading-5 text-[#555555]"
+              />
+            </div>
+          </div>
+          {/* {[formData.image_2, formData.image_3, formData.image_4].map(
+            (imageName, index) => (
+              <div
+                key={index}
+                className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full gap-4"
+              >
                 <label
-                  htmlFor={imageName}
+                  htmlFor={imageName.name}
                   className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555]"
                 >
                   Choose file
                 </label>
                 <input
-                  id={imageName}
+                  id={imageName.name}
                   type="file"
                   className="hidden"
-                  name={imageName}
+                  name={imageName.name}
                   onChange={handleFileChange}
                 />
                 <input
                   type="text"
+                  //   formData.image_1 ? formData.image_1.name : "No file chosen"
                   placeholder={
-                    formData[imageName]
-                      ? (formData[imageName] as File).name
-                      : "No file chosen"
+                    imageName ? (imageName as File).name : "No file chosen"
                   }
                   disabled
                   className="h-full bg-transparent px-2 font-medium text-[15px] leading-5 text-[#555555]"
                 />
               </div>
-            </div>
-          ))}
+            )
+          )} */}
           <div className="grid grid-cols-2 grid-rows-2 gap-2 h-[270px]">
             {createDropzone("image_2")}
             {createDropzone("image_3")}
@@ -144,44 +269,23 @@ const Gallery = ({
           </div>
         </div>
         {/* Video section */}
-        <div className="w-full md:w-[47%] space-y-6">
-          <div className="flex flex-col gap-4">
-            <label className="font-satoshi text-[15px] leading-5 text-black">
-              Product Video*
-            </label>
-            <div className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full">
-              <label
-                htmlFor="video"
-                className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555]"
-              >
-                Choose file
-              </label>
-              <input
-                id="video"
-                type="file"
-                className="hidden"
-                name="video"
-                onChange={handleFileChange}
-              />
-              <input
-                type="text"
-                placeholder={
-                  formData.video
-                    ? (formData.video as File).name
-                    : "No file chosen"
-                }
-                disabled
-                className="h-full bg-transparent px-2 font-medium text-[15px] leading-5 text-[#555555]"
-              />
-            </div>
-          </div>
-          <div className="w-full h-[270px] rounded-[10px] bg-[#F5F5F5] shadow flex flex-col justify-center items-center gap-2">
-            {formData.video ? (
-              <video
-                src={URL.createObjectURL(formData.video as File)}
-                controls
-                className="w-full h-full object-cover"
-              />
+        <div className="w-full md:w-[47%] space-y-6  ">
+          <div
+            className="w-full order-1 md:order-2 h-[270px]  rounded-[10px] bg-[#F5F5F5] shadow flex flex-col justify-center items-center gap-2"
+            // className="w-full max-h-[270px] bg-[#F5F5F5] shadow flex flex-col justify-center items-center gap-2"
+            {...getRootProps()}
+          >
+            <input {...getInputProps()} name="video" id="video" />
+            {newProductFields.video ? (
+              <div className="max-h-full h-full w-full">
+                <video
+                  src={URL.createObjectURL(newProductFields?.video)}
+                  width={200}
+                  height={200}
+                  controls
+                  className="w-full h-full object-cover"
+                />
+              </div>
             ) : (
               <>
                 <svg
@@ -219,7 +323,7 @@ const Gallery = ({
                   Click to upload or drag and drop
                 </p>
                 <span className="font-satoshi text-[7.5px] leading-[10px] text-[#4E4E4E]">
-                  MP4 or AVI
+                  SVG, PNG, JPEG or GIF
                 </span>
                 <span className="font-satoshi text-[7.5px] leading-[10px] text-[#4E4E4E]">
                   Recommended sizes (300px / 475px)
@@ -227,10 +331,86 @@ const Gallery = ({
               </>
             )}
           </div>
+          <div className="order-2 md:order-1 w-full">
+            <span className="font-satoshi text-[15px] leading-5 text-black ">
+              Product Video*
+            </span>
+            <div className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full gap-4">
+              <label
+                htmlFor="video"
+                className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555]"
+              >
+                Choose file
+              </label>
+
+              <input
+                type="text"
+                value={newProductFields?.video?.name || ""}
+                disabled
+                className="h-full bg-transparent px-2 font-medium text-[15px] leading-5 text-[#555555]"
+              />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
 export default Gallery;
+{
+  /* <div className="flex flex-col gap-4">
+<label className="font-satoshi text-[15px] leading-5 text-black">
+  Product Video*
+</label>
+<label
+    htmlFor="video"
+    className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555]"
+  >
+    Choose file
+  </label>
+
+  <input
+    type="text"
+    value={newProductFields?.video?.name || ""}
+    disabled
+    className="h-full bg-transparent px-2 font-medium text-[15px] leading-5 text-[#555555]"
+  />
+<div
+  {...getRootProps}
+  className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full"
+>
+  <input {...getInputProps} name="video" id="video" />
+  <div className="w-full h-[270px] rounded-[10px] bg-[#F5F5F5] shadow flex flex-col justify-center items-center gap-2">
+    {newProductFields.video ? (
+      <video
+        src={URL.createObjectURL(newProductFields.video as File)}
+        controls
+        className="w-full h-full object-cover"
+      />
+    ) : (
+      <>
+        <svg
+          width="37"
+          height="38"
+          viewBox="0 0 37 38"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+         
+        </svg>
+        <p className="font-satoshi font-medium text-black text-[9px] leading-3">
+          Click to upload or drag and drop
+        </p>
+        <span className="font-satoshi text-[7.5px] leading-[10px] text-[#4E4E4E]">
+          MP4 or AVI
+        </span>
+        <span className="font-satoshi text-[7.5px] leading-[10px] text-[#4E4E4E]">
+          Recommended sizes (300px / 475px)
+        </span>
+      </>
+    )}
+  </div>
+</div>
+</div> */
+}

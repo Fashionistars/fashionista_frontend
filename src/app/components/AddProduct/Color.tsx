@@ -1,5 +1,5 @@
 "use client";
-import { ProductSchema } from "@/types";
+import { NewProductType } from "@/types";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
@@ -7,8 +7,8 @@ const Color = ({
   formData,
   update,
 }: {
-  formData: ProductSchema;
-  update: (fields: ProductSchema) => void;
+  formData: NewProductType;
+  update: (fields: NewProductType) => void;
 }) => {
   const onDrop = useCallback(
     (acceptedFiles: any) => {
@@ -49,7 +49,6 @@ const Color = ({
             <input
               type="text"
               name="color"
-              value={formData.title || ""}
               onChange={(e) => update({ ...formData, title: e.target.value })}
               className="rounded-[70px] text-black border-[#D9D9D9] border-[1.5px] w-full h-[60px] outline-none px-3"
             />
@@ -61,7 +60,6 @@ const Color = ({
             <input
               type="text"
               name="code"
-              value={formData.title || ""}
               onChange={(e) => update({ ...formData, title: e.target.value })}
               className="rounded-[70px] text-black border-[#D9D9D9] border-[1.5px] w-full h-[60px] outline-none px-3"
             />
