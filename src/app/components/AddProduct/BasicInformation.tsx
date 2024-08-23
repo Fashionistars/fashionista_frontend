@@ -17,21 +17,24 @@ const BasicInformation = ({
   const [preview, setPreview] = useState<string | undefined>(undefined);
   const [fileName, setFileName] = useState<string>("");
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    const reader = new FileReader();
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      const reader = new FileReader();
 
-    reader.onloadend = () => {
-      setPreview(reader.result as string);
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
 
-      console.log(URL.createObjectURL(file));
+        console.log(URL.createObjectURL(file));
 
-      updateNewProductField({ image_1: file });
-      setFileName(newProductFields?.image_1.name);
-    };
+        updateNewProductField({ image_1: file });
+        setFileName(newProductFields?.image_1.name);
+      };
 
-    reader.readAsDataURL(file);
-  }, []);
+      reader.readAsDataURL(file);
+    },
+    [newProductFields?.image_1.name, updateNewProductField]
+  );
 
   // const { getRootProps, getInputProps } = useDropzone({
   //   accept: {

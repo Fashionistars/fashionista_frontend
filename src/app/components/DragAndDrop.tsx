@@ -33,8 +33,8 @@ const DragAndDrop = () => {
     >
       <input {...getInputProps()} />
       {preview ? (
-        <img
-          src={preview}
+        <Image
+          src={preview as string}
           alt="Preview"
           className="w-full h-full object-cover"
         />

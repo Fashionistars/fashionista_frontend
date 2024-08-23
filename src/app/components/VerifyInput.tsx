@@ -1,5 +1,11 @@
 "use client";
-import React, { useState, useRef, useCallback, KeyboardEvent } from "react";
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  KeyboardEvent,
+  useMemo,
+} from "react";
 
 const VerificationInput: React.FC = () => {
   const [values, setValues] = useState<string[]>([]);
@@ -31,7 +37,7 @@ const VerificationInput: React.FC = () => {
         return newValues;
       });
     },
-    []
+    [boxRefs]
   );
 
   const handleKeyDown = useCallback(
@@ -50,7 +56,7 @@ const VerificationInput: React.FC = () => {
         boxRefs[prevIndex]?.current?.focus();
       }
     },
-    []
+    [boxRefs]
   );
 
   const combinedValue = values.join("");

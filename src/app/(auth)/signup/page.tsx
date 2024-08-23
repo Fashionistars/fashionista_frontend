@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import SignUpForm from "@/app/components/SignUpForm";
 
-const page = () => {
+const Page = () => {
   const [role, setRole] = useState<"Vendor" | "Client" | undefined>();
   return (
     <>
@@ -64,4 +64,4 @@ const page = () => {
     </>
   );
 };
-export default page;
+export default Page;

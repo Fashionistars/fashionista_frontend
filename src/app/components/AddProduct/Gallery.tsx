@@ -58,12 +58,12 @@ const Gallery = ({
 
         reader.readAsDataURL(file);
       },
-      [newProductFields]
+      [updateNewProductField]
     ),
     onError: (err) => console.log(err),
   });
 
-  const createDropzone = (name: "image_2" | "image_3" | "image_4") => {
+  const CreateDropzone = (name: "image_2" | "image_3" | "image_4") => {
     const { getRootProps, getInputProps } = useDropzone({
       onDrop: useCallback(
         (acceptedFiles: File[]) => {
@@ -81,7 +81,7 @@ const Gallery = ({
 
           reader.readAsDataURL(file);
         },
-        [updateNewProductField]
+        [name]
       ),
       accept: { "image/*": [".jpeg", ".jpg", ".png"] },
     });
@@ -263,9 +263,9 @@ const Gallery = ({
             )
           )} */}
           <div className="grid grid-cols-2 grid-rows-2 gap-2 h-[270px]">
-            {createDropzone("image_2")}
-            {createDropzone("image_3")}
-            {createDropzone("image_4")}
+            {CreateDropzone("image_2")}
+            {CreateDropzone("image_3")}
+            {CreateDropzone("image_4")}
           </div>
         </div>
         {/* Video section */}
@@ -358,59 +358,3 @@ const Gallery = ({
 };
 
 export default Gallery;
-{
-  /* <div className="flex flex-col gap-4">
-<label className="font-satoshi text-[15px] leading-5 text-black">
-  Product Video*
-</label>
-<label
-    htmlFor="video"
-    className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555]"
-  >
-    Choose file
-  </label>
-
-  <input
-    type="text"
-    value={newProductFields?.video?.name || ""}
-    disabled
-    className="h-full bg-transparent px-2 font-medium text-[15px] leading-5 text-[#555555]"
-  />
-<div
-  {...getRootProps}
-  className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full"
->
-  <input {...getInputProps} name="video" id="video" />
-  <div className="w-full h-[270px] rounded-[10px] bg-[#F5F5F5] shadow flex flex-col justify-center items-center gap-2">
-    {newProductFields.video ? (
-      <video
-        src={URL.createObjectURL(newProductFields.video as File)}
-        controls
-        className="w-full h-full object-cover"
-      />
-    ) : (
-      <>
-        <svg
-          width="37"
-          height="38"
-          viewBox="0 0 37 38"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-         
-        </svg>
-        <p className="font-satoshi font-medium text-black text-[9px] leading-3">
-          Click to upload or drag and drop
-        </p>
-        <span className="font-satoshi text-[7.5px] leading-[10px] text-[#4E4E4E]">
-          MP4 or AVI
-        </span>
-        <span className="font-satoshi text-[7.5px] leading-[10px] text-[#4E4E4E]">
-          Recommended sizes (300px / 475px)
-        </span>
-      </>
-    )}
-  </div>
-</div>
-</div> */
-}

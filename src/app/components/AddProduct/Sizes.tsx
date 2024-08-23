@@ -2,6 +2,8 @@
 import { NewProductType } from "@/types";
 import React, { useState } from "react";
 import { NewProductFieldTypes } from "@/app/utils/schemas/addProduct";
+import { SizesAction } from "@/app/actions/vendor";
+import { useFormState } from "react-dom";
 
 const Sizes = ({
   newProductFields,
@@ -22,6 +24,8 @@ const Sizes = ({
   const [allFields, setAllFields] = useState(fields);
   const [isField, setIsField] = useState(false);
   const [newField, setNewField] = useState({ id: "", title: "" });
+  const [state, formAction] = useFormState(SizesAction, null);
+  console.log(state);
 
   // const inputFields = allFields.map((field: { id: string; title: string }) => {
   //   return (
@@ -40,7 +44,7 @@ const Sizes = ({
   //   );
   // });
   return (
-    <form id="sizes" className="flex flex-col gap-8 w-full">
+    <form id="sizes" className="flex flex-col gap-8 w-full" action={formAction}>
       <div className="space-y-2 ">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           Sizes
@@ -59,7 +63,15 @@ const Sizes = ({
               type="text"
               name="size"
               defaultValue={newProductFields.sizes.size}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                updateNewProductField({
+                  ...newProductFields,
+                  sizes: {
+                    ...newProductFields.sizes,
+                    size: e.target.value,
+                  },
+                })
+              }
               className="rounded-[70px] text-black border-[#D9D9D9] border-[1.5px] w-full h-[60px] outline-none px-3"
             />
           </div>
@@ -71,7 +83,15 @@ const Sizes = ({
               type="text"
               name="size_price"
               defaultValue={newProductFields.sizes.price}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                updateNewProductField({
+                  ...newProductFields,
+                  sizes: {
+                    ...newProductFields.sizes,
+                    price: e.target.value,
+                  },
+                })
+              }
               className="rounded-[70px] text-black border-[#D9D9D9] border-[1.5px] w-full h-[60px] outline-none px-3"
             />
           </div>

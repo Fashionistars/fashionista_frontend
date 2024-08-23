@@ -51,7 +51,7 @@ export const getAllProducts = async () => {
 export const createNewProduct = async (formdata: object | FormData) => {
   try {
     const res = await fetchWithAuth("/vendor/product-create", "post", formdata);
-    console.log(res);
+    // console.log(res);
   } catch (error) {
     console.log(error);
   }

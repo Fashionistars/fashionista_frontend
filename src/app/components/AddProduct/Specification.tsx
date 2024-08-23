@@ -2,6 +2,8 @@
 import { NewProductType } from "@/types";
 import React, { useState } from "react";
 import { NewProductFieldTypes } from "@/app/utils/schemas/addProduct";
+import { useFormState } from "react-dom";
+import { SpecificationAction } from "@/app/actions/vendor";
 
 const Specification = ({
   newProductFields,
@@ -10,6 +12,7 @@ const Specification = ({
   newProductFields: NewProductType;
   updateNewProductField: (fields: Partial<NewProductFieldTypes>) => void;
 }) => {
+  const [state, formAction] = useFormState(SpecificationAction, null);
   // const fields = [
   //   { id: crypto.randomUUID(), title: "title" },
   //   { id: crypto.randomUUID(), title: "content" },
@@ -17,11 +20,6 @@ const Specification = ({
   // const [allFields, setAllFields] = useState(fields);
   // const [isField, setIsField] = useState(false);
   // const [newField, setNewField] = useState({ id: "", title: "" });
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    updateNewProductField({ [e.target.name]: e.target.value });
-  };
 
   // const inputFields = allFields.map((field: { id: string; title: string }) => {
   //   return (
@@ -39,8 +37,13 @@ const Specification = ({
   //     </div>
   //   );
   // });
+  console.log(state);
   return (
-    <form className="flex flex-col gap-8 w-full" id="specification">
+    <form
+      className="flex flex-col gap-8 w-full"
+      id="specification"
+      action={formAction}
+    >
       <div className="space-y-2 ">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           Specification
@@ -58,8 +61,16 @@ const Specification = ({
             <input
               type="text"
               name="title"
-              defaultValue={newProductFields?.specification.title}
-              onChange={handleInputChange}
+              defaultValue={newProductFields?.specification?.title}
+              onChange={(e) =>
+                updateNewProductField({
+                  ...newProductFields,
+                  specification: {
+                    ...newProductFields.specification,
+                    title: e.target.value,
+                  },
+                })
+              }
               className="rounded-[70px] text-black border-[#D9D9D9] border-[1.5px] w-full h-[60px] outline-none px-3"
             />
           </div>
@@ -70,7 +81,15 @@ const Specification = ({
             <input
               type="text"
               name="content"
-              onChange={handleInputChange}
+              onChange={(e) =>
+                updateNewProductField({
+                  ...newProductFields,
+                  specification: {
+                    ...newProductFields.specification,
+                    content: e.target.value,
+                  },
+                })
+              }
               defaultValue={newProductFields.specification.content}
               className="rounded-[70px] text-black border-[#D9D9D9] border-[1.5px] w-full h-[60px] outline-none px-3"
             />
@@ -113,7 +132,7 @@ const Specification = ({
             </div>
           </div>
         )} */}
-        <div className="py-6">
+        {/* <div className="py-6">
           <button
             // onClick={() => setIsField(true)}
             type="button"
@@ -121,7 +140,7 @@ const Specification = ({
           >
             + Add more specifications
           </button>
-        </div>
+        </div> */}
       </div>
     </form>
   );

@@ -1,5 +1,4 @@
 import { z } from "zod";
-// import { PricesSchema } from "../schema";
 
 export const BasicInformationSchema = z.object({
   image_1: z
@@ -96,8 +95,25 @@ export const SpecificationSchema = z.object({
   }),
 });
 export const SizesSchema = z.object({
-  size: z.string(),
-  price: z.string(),
+  sizes: z.object({
+    size: z.string(),
+    price: z.string(),
+  }),
+});
+export const ColorSchema = z.object({
+  colors: z.object({
+    name: z.string(),
+    code: z.string(),
+    image: z
+      .instanceof(File)
+      .refine(
+        (file) =>
+          ["image/jpeg", "image/jpg", "image/png", "image/gif"].includes(
+            file.type
+          ),
+        { message: "Image must be a JPEG, PNG, or GIF" }
+      ),
+  }),
 });
 
 const NewProductSchema = z.object({
@@ -107,5 +123,6 @@ const NewProductSchema = z.object({
   ...GallerySchema.shape,
   ...SpecificationSchema.shape,
   ...SizesSchema.shape,
+  ...ColorSchema.shape,
 });
 export type NewProductFieldTypes = z.infer<typeof NewProductSchema>;

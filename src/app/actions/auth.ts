@@ -7,7 +7,7 @@ import { signupSchema } from "../utils/schemas/auth_shema";
 
 export const signUp = async (prev: any, formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
-  console.log(data);
+
   const validated = signupSchema.safeParse(data);
   if (!validated.success) {
     return {
@@ -40,14 +40,14 @@ export const verify = async (formdata: FormData) => {
   }
   redirect("/login");
 };
-export const login = async (formdata: FormData) => {
+export const login = async (prev: any, formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
   let user_role;
   try {
     const res = await axiosInstance.post("/auth/login", data);
     console.log(res.data);
     const { access, refresh, role } = res.data;
-    user_role = role;
+    // user_role = role;
 
     cookies().set("access_token", access, {
       maxAge: 60 * 60 * 24,
@@ -68,11 +68,11 @@ export const login = async (formdata: FormData) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    return { call_errors: error?.response?.data?.detail };
   }
 
-  redirect("/dashboard");
+  // redirect("/dashboard");
 };
 
 export const forget_password = async (formdata: FormData) => {
