@@ -34,7 +34,7 @@ const Category = () => {
             name="brands"
             className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-none text-[#000]"
           >
-            <option>Men's Senator</option>
+            <option>Mens Senator</option>
             <option>Agbada</option>
             <option>Kaftan</option>
           </select>

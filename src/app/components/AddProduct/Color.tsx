@@ -1,24 +1,61 @@
 "use client";
 import { NewProductType } from "@/types";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { NewProductFieldTypes } from "@/app/utils/schemas/addProduct";
+import Image from "next/image";
 
 const Color = ({
-  formData,
-  update,
+  newProductFields,
+  updateNewProductField,
 }: {
-  formData: NewProductType;
-  update: (fields: NewProductType) => void;
+  newProductFields: NewProductType;
+  updateNewProductField: (fields: Partial<NewProductFieldTypes>) => void;
 }) => {
+  const [preview, setPreview] = useState<string | undefined>(undefined);
+  const [fileName, setFileName] = useState<string>("");
+
+  // Load the image preview from local storage on initial render
+  useEffect(() => {
+    const storedImageData = localStorage.getItem("image_1");
+    const parsedImageData = storedImageData
+      ? JSON.parse(storedImageData)
+      : null;
+    if (parsedImageData?.path) {
+      setPreview(parsedImageData.path);
+      setFileName(parsedImageData.path.split("/").pop() || "No file chosen");
+    }
+  }, []);
+
   const onDrop = useCallback(
-    (acceptedFiles: any) => {
+    (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
-      update({ ...formData, image_1: file });
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+
+        updateNewProductField({
+          ...newProductFields,
+          colors: {
+            ...newProductFields.colors,
+            image: file,
+          },
+        });
+        setFileName(file.name);
+
+        localStorage.setItem(
+          "image_1",
+          JSON.stringify({ path: reader.result })
+        );
+      };
+
+      reader.readAsDataURL(file);
     },
-    [formData]
+    [newProductFields, updateNewProductField]
   );
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
       "image/*": [".jpeg", ".jpg", ".png"],
     },
@@ -26,13 +63,6 @@ const Color = ({
     onDrop,
     onError: (err) => console.log(err),
   });
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
-    if (files && files.length > 0) {
-      update({ ...formData, [name]: files[0] });
-    }
-    console.log(formData);
-  };
 
   return (
     <div className="flex flex-col gap-8 w-full">
@@ -40,16 +70,25 @@ const Color = ({
         Colors
       </h2>
 
-      <div className="flex flex-col md:flex-row gap-6">
+      {/* <div className="flex flex-col md:flex-row gap-6">
         <div className="flex w-full md:w-[47%] gap-4">
-          <div className="flex flex-col w-full  ">
+          <div className="flex flex-col w-full">
             <label className="capitalize text-[15px] leading-5 text-[#000]">
               Color
             </label>
             <input
               type="text"
-              name="color"
-              onChange={(e) => update({ ...formData, title: e.target.value })}
+              name="name"
+              defaultValue={newProductFields.colors.name}
+              onChange={(e) =>
+                updateNewProductField({
+                  ...newProductFields,
+                  colors: {
+                    ...newProductFields.colors,
+                    name: e.target.value,
+                  },
+                })
+              }
               className="rounded-[70px] text-black border-[#D9D9D9] border-[1.5px] w-full h-[60px] outline-none px-3"
             />
           </div>
@@ -60,7 +99,16 @@ const Color = ({
             <input
               type="text"
               name="code"
-              onChange={(e) => update({ ...formData, title: e.target.value })}
+              defaultValue={newProductFields.colors.code}
+              onChange={(e) =>
+                updateNewProductField({
+                  ...newProductFields,
+                  colors: {
+                    ...newProductFields.colors,
+                    code: e.target.value,
+                  },
+                })
+              }
               className="rounded-[70px] text-black border-[#D9D9D9] border-[1.5px] w-full h-[60px] outline-none px-3"
             />
           </div>
@@ -68,41 +116,42 @@ const Color = ({
         <div className="w-full md:w-[47%] space-y-6">
           <div className="flex flex-col gap-4">
             <label className="font-satoshi text-[15px] leading-5 text-black">
-              Product Video*
+              Image
             </label>
             <div className="rounded-[10px] h-[60px] border-[1.5px] border-[#D9D9D9] flex items-center w-full">
               <label
-                htmlFor="video"
+                htmlFor="image"
                 className="bg-[#d9d9d9] px-2 py-2.5 rounded-s-[10px] h-full grid place-content-center font-medium text-[15px] leading-5 text-[#555555]"
               >
                 Choose file
               </label>
-              <input
-                id="video"
-                type="file"
-                className="hidden"
-                name="video"
-                onChange={handleFileChange}
-              />
+
               <input
                 type="text"
-                placeholder={
-                  formData.video
-                    ? (formData.video as File).name
-                    : "No file chosen"
-                }
                 disabled
+                value={fileName ? fileName : "No file chosen"}
                 className="h-full bg-transparent px-2 font-medium text-[15px] leading-5 text-[#555555]"
               />
             </div>
           </div>
-          <div className="w-full h-[270px] rounded-[10px] bg-[#F5F5F5] shadow flex flex-col justify-center items-center gap-2">
-            {formData.video ? (
-              <video
-                src={URL.createObjectURL(formData.video as File)}
-                controls
-                className="w-full h-full object-cover"
-              />
+
+          <div
+            className="w-full md:w-1/2 bg-[#F5F5F5] shadow flex flex-col justify-center items-center gap-2 min-h-[471px]"
+            {...getRootProps()}
+          >
+            <input {...getInputProps()} name="image" id="image" />
+
+            {newProductFields.colors.image ? (
+              // <div className="max-h-full h-full w-full">
+              //   <Image
+              //     src={newProductFields.colors.image}
+              //     alt="Preview"
+              //     width={200}
+              //     height={200}
+              //     className="w-full h-full object-cover"
+              //   />
+              // </div>
+            <h2>j</h2>
             ) : (
               <>
                 <svg
@@ -136,20 +185,25 @@ const Color = ({
                     strokeLinejoin="round"
                   />
                 </svg>
-                <p className="font-satoshi font-medium text-black text-[9px] leading-3">
-                  Click to upload or drag and drop
-                </p>
-                <span className="font-satoshi text-[7.5px] leading-[10px] text-[#4E4E4E]">
-                  MP4 or AVI
+                {isDragActive ? (
+                  <p>Drop the file here ...</p>
+                ) : (
+                  <p className="font-satoshi font-medium text-black">
+                    Click to upload or drag and drop
+                  </p>
+                )}
+
+                <span className="font-satoshi text-[13px] leading-[18px] text-[#4E4E4E]">
+                  SVG, PNG, JPEG, or GIF
                 </span>
-                <span className="font-satoshi text-[7.5px] leading-[10px] text-[#4E4E4E]">
+                <span className="font-satoshi text-[13px] leading-[18px] text-[#4E4E4E]">
                   Recommended sizes (300px / 475px)
                 </span>
               </>
             )}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

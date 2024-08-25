@@ -3,7 +3,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { createNewProduct } from "../utils/libs";
 import { z } from "zod";
-// import { FormDataSchema } from "../utils/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FormSchema } from "../utils/schema";
@@ -18,6 +17,7 @@ import Color from "./AddProduct/Color";
 import { useAddProductContext } from "../context/addProductContext";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type Inputs = z.infer<typeof FormSchema>;
 
@@ -71,6 +71,7 @@ export default function Form() {
     resolver: zodResolver(FormSchema),
   });
 
+  const { back } = useRouter();
   const processForm: SubmitHandler<Inputs> = async (data) => {
     await newProduct(data);
     // await createNewProduct(data);
@@ -80,7 +81,6 @@ export default function Form() {
   type FieldName = keyof Inputs;
 
   const next = async () => {
-    // console.log(errors);
     const fields = steps[currentStep].fields;
     const output = await trigger(fields as FieldName[], { shouldFocus: true });
 
@@ -95,12 +95,12 @@ export default function Form() {
     }
   };
 
-  const back = () => {
-    if (currentStep > 0) {
-      setPreviousStep(currentStep);
-      setCurrentStep((step) => step - 1);
-    }
-  };
+  // const back = () => {
+  //   if (currentStep > 0) {
+  //     setPreviousStep(currentStep);
+  //     setCurrentStep((step) => step - 1);
+  //   }
+  // };
 
   return (
     <div className="p-5 pt-12 md:p-6 md:pb-20 w-full md:w-[75%] h-[680px] bg-transparent hide_scrollbar overflow-auto relative top-[16%] md:fixed md:top-[16%] right-0 flex flex-col gap-8 z-10">
@@ -224,35 +224,30 @@ export default function Form() {
               />
             </motion.div>
           )}
-          {/* {currentStep == 5 && (
+          {step == "sizes" && (
             <motion.div
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <Sizes formData={data} update={update} />
+              <Sizes
+                newProductFields={newProductFields}
+                updateNewProductField={updateNewProductField}
+              />
             </motion.div>
-          )} */}
-          {/* {currentStep == 6 && (
+          )}
+          {step == "color" && (
             <motion.div
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <Color register={register} />
+              <Color
+                newProductFields={newProductFields}
+                updateNewProductField={updateNewProductField}
+              />
             </motion.div>
-          )} */}
-
-          {/* {currentStep === 2 && (
-            <>
-              <h2 className="text-base font-semibold leading-7 text-gray-900">
-                Complete
-              </h2>
-              <p className="mt-1 text-sm leading-6 text-gray-600">
-                Thank you for your submission.
-              </p>
-            </>
-          )} */}
+          )}
         </>
       </div>
       <div className="flex items-center justify-end gap-8 w-full py-6">

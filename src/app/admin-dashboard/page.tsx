@@ -2,6 +2,7 @@ import React from "react";
 import BarChart from "../components/Charts";
 import { ChartOptions, ChartData } from "chart.js";
 import Image from "next/image";
+import { Suspense } from "react";
 
 import OrderList from "../components/OrderList";
 import { OrderProp } from "@/types";
@@ -380,7 +381,9 @@ const page = () => {
         <h2 className="font-satoshi font-medium text-2xl text-black">
           Latest Orders
         </h2>
-        <OrderList orders={orders} />
+        <Suspense fallback={<div>Loading ...</div>}>
+          <OrderList orders={orders} />
+        </Suspense>
       </div>
     </div>
   );

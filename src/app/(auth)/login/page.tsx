@@ -5,23 +5,33 @@ import Image from "next/image";
 import google from "../../../../public/google.svg";
 import { login } from "@/app/actions/auth";
 import Button from "@/app/components/Button";
+import { useFormState } from "react-dom";
 
 const Page = () => {
   const [isEmail, setIsEmail] = useState(true);
+  const [state, formAction] = useFormState(login, null);
   return (
     <>
-      <div>
+      <div className=" relative">
+        {state?.call_errors && (
+          <span className="absolute right-0 py-3 px-1.5 text-right border-r-4 border-red-600 bg-red-400/10 text-red-500">
+            {state.call_errors}
+          </span>
+        )}
         <h2 className="font-satoshi font-medium text-3xl leading-10 text-black">
           Login
         </h2>
         <p className="font-satoshi py-3 text-[15px] leading-5 text-[#282828]">
-        Don&#39;t have an account?{" "}
-        <Link href="/signup" className="font-bold ">
-          Sign Up{" "}
-        </Link>
-      </p>
+          Don&apos;t have an account?{" "}
+          <Link href="/signup" className="font-bold ">
+            Sign Up{" "}
+          </Link>
+        </p>
       </div>
-      <form action={login} className="w-full flex flex-col items-center gap-6">
+      <form
+        action={formAction}
+        className="w-full flex flex-col items-center gap-6"
+      >
         <div className="w-full flex flex-col items-center">
           <p
             className={`flex items-center justify-between w-full gap-4 p-2 ${

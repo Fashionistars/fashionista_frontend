@@ -69,9 +69,11 @@ export const GalleryAction = async (formdata: FormData) => {
   }
   redirect("/dashboard/products?step=specification");
 };
-export const SpecificationAction = async (formdata: FormData) => {
+export const SpecificationAction = async (prev: any, formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
-  const validated = SpecificationSchema.safeParse(data);
+
+  const specData = { specification: data };
+  const validated = SpecificationSchema.safeParse(specData);
   if (!validated.success) {
     return {
       errors: validated.error.flatten().fieldErrors,
@@ -79,9 +81,15 @@ export const SpecificationAction = async (formdata: FormData) => {
   }
   redirect("/dashboard/products?step=sizes");
 };
-export const SizesAction = async (formdata: FormData) => {
-  const data = Object.fromEntries(formdata.entries());
-  const validated = SizesSchema.safeParse(data);
+export const SizesAction = async (prev: any, formdata: FormData) => {
+  const newData = {
+    sizes: {
+      size: formdata.get("size"),
+      price: formdata.get("size_price"),
+    },
+  };
+  console.log(newData);
+  const validated = SizesSchema.safeParse(newData);
   if (!validated.success) {
     return {
       errors: validated.error.flatten().fieldErrors,
@@ -90,7 +98,7 @@ export const SizesAction = async (formdata: FormData) => {
   redirect("/dashboard/products?step=color");
 };
 
-export const newProduct = async (data: object) => {
+export const newProduct = async (formdata: FormData | object) => {
   // const data = Object.fromEntries(formdata.entries());
   // console.log("form information", data);
   // const validatedForm = FormSchema.safeParse(data);
@@ -99,7 +107,6 @@ export const newProduct = async (data: object) => {
   //     errors: validatedForm.error.flatten().fieldErrors,
   //   };
   // }
-  console.log("validated data:", data);
   // try {
   //   const res = await fetchWithAuth(
   //     "/vendor/product-create",

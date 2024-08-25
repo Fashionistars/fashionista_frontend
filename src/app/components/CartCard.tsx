@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import { CardProps } from "@/types";
 
 interface CartProp {
   data: CardProps & { quantity: number };

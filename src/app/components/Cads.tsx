@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import data from "../utils/mock";
-
+import { CardProps } from "@/types";
 type dataProps = {
   data: CardProps & { timer: string };
 };

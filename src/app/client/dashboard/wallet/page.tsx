@@ -2,6 +2,7 @@ import TopBanner from "@/app/components/TopBanner";
 import Link from "next/link";
 import React from "react";
 import Transactions from "@/app/components/Transactions";
+import { Suspense } from "react";
 
 const page = () => {
   return (
@@ -155,7 +156,9 @@ const page = () => {
           </div>
         </div>
       </div>
-      <Transactions />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Transactions />
+      </Suspense>
     </div>
   );
 };
