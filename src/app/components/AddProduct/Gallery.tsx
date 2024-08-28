@@ -2,7 +2,7 @@
 import { NewProductType } from "@/types";
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-// import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
+import { useFormState } from "react-dom";
 import { NewProductFieldTypes } from "@/app/utils/schemas/addProduct";
 import Image from "next/image";
 import { GalleryAction } from "@/app/actions/vendor";
@@ -150,8 +150,10 @@ const Gallery = ({
     );
   };
 
+  const [state, formAction] = useFormState(GalleryAction, null);
+
   return (
-    <form action={GalleryAction} id="gallery" className="w-full space-y-10">
+    <form action={formAction} id="gallery" className="w-full space-y-10">
       <div className="space-y-2">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           Gallery

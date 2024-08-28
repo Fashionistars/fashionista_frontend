@@ -4,17 +4,36 @@ import Image from "next/image";
 import girl from "../../../../../public/girl.png";
 
 const page = () => {
+  const date = new Date();
+
   return (
     <div className="space-y-10">
-      <div>
-        <h3 className="font-satoshi font-medium text-3xl leading-10 text-black">
+      <div className="flex justify-between items-center">
+        <h3 className="font-satoshi font-medium text-2xl leading-10 text-[#1D2329]">
           Dashboard
         </h3>
-        <p className="font-satoshi text-xl text-black pr-10">
-          From your account dashboard, you can check and view your recent
-          orders, manage your shipping address and also edit youpassword and
-          account creation
-        </p>
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-full bg-[#F0F2F5] flex justify-center items-center">
+            <svg
+              width="18"
+              height="19"
+              viewBox="0 0 18 19"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M5.66666 0.833252C6.1269 0.833252 6.5 1.20635 6.5 1.66659V2.49992H11.5V1.66659C11.5 1.20635 11.8731 0.833252 12.3333 0.833252C12.7936 0.833252 13.1667 1.20635 13.1667 1.66659V2.49992H14C15.8409 2.49992 17.3333 3.9923 17.3333 5.83325V14.9999C17.3333 16.8409 15.8409 18.3333 14 18.3333H4C2.15905 18.3333 0.666664 16.8409 0.666664 14.9999V5.83325C0.666664 3.9923 2.15905 2.49992 4 2.49992H4.83333V1.66659C4.83333 1.20635 5.20643 0.833252 5.66666 0.833252ZM11.5 4.16659C11.5 4.62682 11.8731 4.99992 12.3333 4.99992C12.7936 4.99992 13.1667 4.62682 13.1667 4.16659H14C14.9205 4.16659 15.6667 4.91278 15.6667 5.83325V6.24992H2.33333V5.83325C2.33333 4.91278 3.07952 4.16659 4 4.16659H4.83333C4.83333 4.62682 5.20643 4.99992 5.66666 4.99992C6.1269 4.99992 6.5 4.62682 6.5 4.16659H11.5ZM15.6667 7.91658H2.33333V14.9999C2.33333 15.9204 3.07952 16.6666 4 16.6666H14C14.9205 16.6666 15.6667 15.9204 15.6667 14.9999V7.91658Z"
+                fill="#344054"
+              />
+            </svg>
+          </div>
+          <div>
+            <p>Today's date</p>
+            <span>{date.toLocaleString()}</span>
+          </div>
+        </div>
       </div>
       <div className="flex flex-wrap gap-4">
         <div className="w-full md:w-[48%] lg:w-[32%] h-[170px] bg-[#fff] rounded-[10px] shadow p-5 flex flex-col justify-between">

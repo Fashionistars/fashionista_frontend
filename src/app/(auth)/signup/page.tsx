@@ -6,6 +6,7 @@ import SignUpForm from "@/app/components/SignUpForm";
 
 const Page = () => {
   const [role, setRole] = useState<"Vendor" | "Client" | undefined>();
+
   return (
     <>
       <div className=" ">

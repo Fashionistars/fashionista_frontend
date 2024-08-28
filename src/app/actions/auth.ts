@@ -21,7 +21,7 @@ export const signUp = async (prev: any, formdata: FormData) => {
   } catch (error: any) {
     // console.log(error?.response?.data.mesage);
     console.log(error);
-    return { call_error: error?.response?.data.mesage };
+    return { call_error: error?.response?.data.message };
   }
 
   redirect("/verify");
@@ -42,12 +42,11 @@ export const verify = async (formdata: FormData) => {
 };
 export const login = async (prev: any, formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
-  let user_role;
+
   try {
     const res = await axiosInstance.post("/auth/login", data);
     console.log(res.data);
     const { access, refresh, role } = res.data;
-    // user_role = role;
 
     cookies().set("access_token", access, {
       maxAge: 60 * 60 * 24,
@@ -72,7 +71,7 @@ export const login = async (prev: any, formdata: FormData) => {
     return { call_errors: error?.response?.data?.detail };
   }
 
-  // redirect("/dashboard");
+  redirect("/dashboard");
 };
 
 export const forget_password = async (formdata: FormData) => {

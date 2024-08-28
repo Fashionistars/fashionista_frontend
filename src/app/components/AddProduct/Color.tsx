@@ -1,9 +1,11 @@
 "use client";
 import { NewProductType } from "@/types";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { NewProductFieldTypes } from "@/app/utils/schemas/addProduct";
 import Image from "next/image";
+import { ColorAction, newProduct } from "@/app/actions/vendor";
+import { useFormState } from "react-dom";
 
 const Color = ({
   newProductFields,
@@ -44,6 +46,7 @@ const Color = ({
         });
         setFileName(file.name);
 
+        // Save the image path in local storage
         localStorage.setItem(
           "image_1",
           JSON.stringify({ path: reader.result })
@@ -63,14 +66,24 @@ const Color = ({
     onDrop,
     onError: (err) => console.log(err),
   });
+  const color_action = ColorAction.bind(null, newProductFields);
+  // const [state, formAction] = useFormState(color_action, null);
 
+  // const handleSubmit = async (formdata: FormData) => {
+  //   const data = await ColorAction(newProductFields);
+  //   console.log(data);
+  // };
   return (
     <div className="flex flex-col gap-8 w-full">
       <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
         Colors
       </h2>
 
-      {/* <div className="flex flex-col md:flex-row gap-6">
+      <form
+        action={color_action}
+        id="color"
+        className="flex flex-col md:flex-row gap-6"
+      >
         <div className="flex w-full md:w-[47%] gap-4">
           <div className="flex flex-col w-full">
             <label className="capitalize text-[15px] leading-5 text-[#000]">
@@ -78,8 +91,8 @@ const Color = ({
             </label>
             <input
               type="text"
-              name="name"
-              defaultValue={newProductFields.colors.name}
+              name="color"
+              defaultValue={newProductFields?.colors?.name}
               onChange={(e) =>
                 updateNewProductField({
                   ...newProductFields,
@@ -99,7 +112,7 @@ const Color = ({
             <input
               type="text"
               name="code"
-              defaultValue={newProductFields.colors.code}
+              defaultValue={newProductFields?.colors?.code}
               onChange={(e) =>
                 updateNewProductField({
                   ...newProductFields,
@@ -141,17 +154,16 @@ const Color = ({
           >
             <input {...getInputProps()} name="image" id="image" />
 
-            {newProductFields.colors.image ? (
-              // <div className="max-h-full h-full w-full">
-              //   <Image
-              //     src={newProductFields.colors.image}
-              //     alt="Preview"
-              //     width={200}
-              //     height={200}
-              //     className="w-full h-full object-cover"
-              //   />
-              // </div>
-            <h2>j</h2>
+            {preview ? (
+              <div className="max-h-full h-full w-full">
+                <Image
+                  src={preview}
+                  alt="Preview"
+                  width={200}
+                  height={200}
+                  className="w-full h-full object-cover"
+                />
+              </div>
             ) : (
               <>
                 <svg
@@ -203,7 +215,7 @@ const Color = ({
             )}
           </div>
         </div>
-      </div> */}
+      </form>
     </div>
   );
 };

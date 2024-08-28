@@ -1,7 +1,7 @@
 "use client";
 import { NewProductType } from "@/types";
 import Image from "next/image";
-import React, { useCallback, useState } from "react";
+import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { BasicInformationAction } from "@/app/actions/vendor";
 import { NewProductFieldTypes } from "@/app/utils/schemas/addProduct";
@@ -26,15 +26,17 @@ const BasicInformation = ({
         setPreview(reader.result as string);
 
         console.log(URL.createObjectURL(file));
+        // console.log(reader.result);
 
         updateNewProductField({ image_1: file });
-        setFileName(newProductFields?.image_1.name);
+        setFileName(newProductFields?.image_1?.name);
       };
 
       reader.readAsDataURL(file);
     },
-    [newProductFields?.image_1.name, updateNewProductField]
+    [newProductFields?.image_1?.name, updateNewProductField]
   );
+  console.log("Image type", typeof newProductFields?.image_1);
 
   // const { getRootProps, getInputProps } = useDropzone({
   //   accept: {
@@ -74,6 +76,21 @@ const BasicInformation = ({
     updateNewProductField({ [e.target.name]: e.target.value });
   };
 
+  useEffect(() => {
+    if (newProductFields?.image_1) {
+      // Ensure the file is correctly recognized as a File object
+      if (newProductFields?.image_1 instanceof File) {
+        const objectUrl = URL.createObjectURL(newProductFields?.image_1);
+        setPreview(objectUrl);
+
+        // Clean up the URL object when the component unmounts
+        return () => URL.revokeObjectURL(objectUrl);
+      } else {
+        console.error("Invalid file object:", newProductFields?.image_1);
+      }
+    }
+  }, [newProductFields?.image_1]);
+
   return (
     <form
       action={BasicInformationAction}
@@ -97,7 +114,7 @@ const BasicInformation = ({
           {newProductFields.image_1 ? (
             <div className="max-h-full h-full w-full">
               <Image
-                src={URL.createObjectURL(newProductFields.image_1)}
+                src={preview}
                 alt="Preview"
                 width={200}
                 height={200}

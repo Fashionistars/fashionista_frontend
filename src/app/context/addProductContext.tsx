@@ -20,7 +20,7 @@ const initialValue: NewProductType = {
   shipping_amount: "1000",
   stock_qty: "",
   tag: "",
-  total_price: "2000",
+  total_price: "",
   category: "",
   brands: "",
   image_2: undefined as unknown as File,

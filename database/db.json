@@ -200,6 +200,43 @@
             "rating": 5,
             "name": "John Doe"
         }
+    ],
+    "wishlist": [
+        {
+            "id": 1,
+            "image": "/p12.png",
+            "title": "Pink Knitted Sweat Shirt",
+            "status": "Out of stock",
+            "price": "180000"
+        },
+        {
+            "id": 2,
+            "image": "/p13.png",
+            "title":"Female Clothings",
+            "status": "In stock",
+            "price" : "24000"
+        },
+        {
+            "id": 3,
+            "image": "/p14.png",
+            "title": "Senator Outfit",
+            "status":"In stock",
+            "price": "32000"
+        },
+        {
+            "id": 4,
+            "image": "/p15.png",
+            "title": "Agbada Outfit",
+            "status":"Out of stock",
+            "price": "12000"  
+        },
+        {
+            "id": 5,
+            "image": "/p16.png",
+            "title": "Vintage Sleeves",
+            "status":"In stock",
+            "price": "17000"  
+        }
     ]
 }
 

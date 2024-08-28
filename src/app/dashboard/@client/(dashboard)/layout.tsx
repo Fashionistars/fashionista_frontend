@@ -117,84 +117,124 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </div>
 
         <nav className="px-10 py-[30px] flex flex-col justify-between h-[86%]">
-          <ul className="flex flex-col gap-10">
+          <ul className="flex flex-col gap-8">
             <li>
               {" "}
               <Link
                 href="/dashboard"
-                className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
+                className={`font-medium font-satoshi  flex items-center gap-4 ${
                   pathname == "/dashboard" ? "text-[#fda600]" : "text-[#bbb]"
                 }`}
               >
                 <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
+                  width="16"
+                  height="17"
+                  viewBox="0 0 16 17"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M16 5C16 4.06812 16 3.60218 16.1522 3.23463C16.3552 2.74458 16.7446 2.35523 17.2346 2.15224C17.6022 2 18.0681 2 19 2C19.9319 2 20.3978 2 20.7654 2.15224C21.2554 2.35523 21.6448 2.74458 21.8478 3.23463C22 3.60218 22 4.06812 22 5V9C22 9.93188 22 10.3978 21.8478 10.7654C21.6448 11.2554 21.2554 11.6448 20.7654 11.8478C20.3978 12 19.9319 12 19 12C18.0681 12 17.6022 12 17.2346 11.8478C16.7446 11.6448 16.3552 11.2554 16.1522 10.7654C16 10.3978 16 9.93188 16 9V5Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
+                    d="M6.01398 2.26909L2.42065 5.06909C1.82065 5.53576 1.33398 6.52909 1.33398 7.28243V12.2224C1.33398 13.7691 2.59398 15.0358 4.14065 15.0358H11.8607C13.4073 15.0358 14.6673 13.7691 14.6673 12.2291V7.37576C14.6673 6.56909 14.1273 5.53576 13.4673 5.07576L9.34732 2.18909C8.41398 1.53576 6.91398 1.56909 6.01398 2.26909Z"
+                    stroke="#FDA600"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   />
                   <path
-                    d="M16 19C16 18.0681 16 17.6022 16.1522 17.2346C16.3552 16.7446 16.7446 16.3552 17.2346 16.1522C17.6022 16 18.0681 16 19 16C19.9319 16 20.3978 16 20.7654 16.1522C21.2554 16.3552 21.6448 16.7446 21.8478 17.2346C22 17.6022 22 18.0681 22 19C22 19.9319 22 20.3978 21.8478 20.7654C21.6448 21.2554 21.2554 21.6448 20.7654 21.8478C20.3978 22 19.9319 22 19 22C18.0681 22 17.6022 22 17.2346 21.8478C16.7446 21.6448 16.3552 21.2554 16.1522 20.7654C16 20.3978 16 19.9319 16 19Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  />
-                  <path
-                    d="M2 16C2 14.1144 2 13.1716 2.58579 12.5858C3.17157 12 4.11438 12 6 12H8C9.88562 12 10.8284 12 11.4142 12.5858C12 13.1716 12 14.1144 12 16V18C12 19.8856 12 20.8284 11.4142 21.4142C10.8284 22 9.88562 22 8 22H6C4.11438 22 3.17157 22 2.58579 21.4142C2 20.8284 2 19.8856 2 18V16Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  />
-                  <path
-                    d="M2 5C2 4.06812 2 3.60218 2.15224 3.23463C2.35523 2.74458 2.74458 2.35523 3.23463 2.15224C3.60218 2 4.06812 2 5 2H9C9.93188 2 10.3978 2 10.7654 2.15224C11.2554 2.35523 11.6448 2.74458 11.8478 3.23463C12 3.60218 12 4.06812 12 5C12 5.93188 12 6.39782 11.8478 6.76537C11.6448 7.25542 11.2554 7.64477 10.7654 7.84776C10.3978 8 9.93188 8 9 8H5C4.06812 8 3.60218 8 3.23463 7.84776C2.74458 7.64477 2.35523 7.25542 2.15224 6.76537C2 6.39782 2 5.93188 2 5Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
+                    d="M8 12.3691V10.3691"
+                    stroke="#FDA600"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   />
                 </svg>
                 Dashboard
               </Link>
             </li>
             <li>
+              {" "}
+              <Link
+                href="/dashboard/get-measured"
+                className={` font-medium font-satoshi  flex items-center gap-4 ${
+                  pathname == "/dashboard/get-measured"
+                    ? "text-[#fda600]"
+                    : "text-[#bbb]"
+                }`}
+              >
+                <svg
+                  width="16"
+                  height="17"
+                  viewBox="0 0 16 17"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8.00004 15.5416C4.04671 15.5416 0.833374 12.3283 0.833374 8.37492C0.833374 4.42159 4.04671 1.20825 8.00004 1.20825C11.9534 1.20825 15.1667 4.42159 15.1667 8.37492C15.1667 12.3283 11.9534 15.5416 8.00004 15.5416ZM8.00004 2.20825C4.60004 2.20825 1.83337 4.97492 1.83337 8.37492C1.83337 11.7749 4.60004 14.5416 8.00004 14.5416C11.4 14.5416 14.1667 11.7749 14.1667 8.37492C14.1667 4.97492 11.4 2.20825 8.00004 2.20825Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M8.00004 11.5416C6.25337 11.5416 4.83337 10.1216 4.83337 8.37492C4.83337 6.62825 6.25337 5.20825 8.00004 5.20825C9.74671 5.20825 11.1667 6.62825 11.1667 8.37492C11.1667 10.1216 9.74671 11.5416 8.00004 11.5416ZM8.00004 6.20825C6.80671 6.20825 5.83337 7.18159 5.83337 8.37492C5.83337 9.56825 6.80671 10.5416 8.00004 10.5416C9.19337 10.5416 10.1667 9.56825 10.1667 8.37492C10.1667 7.18159 9.19337 6.20825 8.00004 6.20825Z"
+                    fill="#BBBBBB"
+                  />
+                  <path
+                    d="M14.1134 6.20838C14.08 6.20838 14.04 6.20171 14.0067 6.19504C12.0467 5.76838 10.0667 5.76838 8.10669 6.19504C7.83335 6.25504 7.57335 6.08171 7.51335 5.81504C7.45335 5.54171 7.62669 5.28171 7.89335 5.22171C9.99335 4.76171 12.12 4.76171 14.22 5.22171C14.4867 5.28171 14.66 5.54838 14.6 5.81504C14.5534 6.04838 14.3467 6.20838 14.1134 6.20838Z"
+                    fill="#BBBBBB"
+                  />
+                  <path
+                    d="M5.69334 10.2082C5.55334 10.2082 5.41334 10.1482 5.31334 10.0349C3.92667 8.44155 2.87334 6.62155 2.17334 4.62155L2.63334 4.41488L3.10667 4.25488L3.12001 4.29488C3.77334 6.16822 4.76667 7.88155 6.07334 9.38155C6.25334 9.58822 6.23334 9.90822 6.02667 10.0882C5.92667 10.1682 5.80667 10.2082 5.69334 10.2082Z"
+                    fill="#BBBBBB"
+                  />
+                  <path
+                    d="M7.25339 15.5017C7.13339 15.5017 7.01339 15.4617 6.92006 15.3751C6.71339 15.1884 6.70006 14.8751 6.88672 14.6684C8.22006 13.2017 9.20672 11.5017 9.82006 9.61506C9.90672 9.35506 10.2001 9.18173 10.4601 9.26839C10.7201 9.35506 10.8734 9.60839 10.7934 9.86839C10.1201 11.9484 9.06006 13.7751 7.63339 15.3484C7.52672 15.4484 7.38672 15.5017 7.25339 15.5017Z"
+                    fill="#BBBBBB"
+                  />
+                </svg>
+                Measurement
+              </Link>
+            </li>
+            <li>
               <Link
                 href="/dashboard/orders"
-                className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
+                className={` font-medium font-satoshi  flex items-center gap-4 ${
                   pathname == "/dashboard/orders"
                     ? "text-[#fda600]"
                     : "text-[#bbb]"
                 }`}
               >
                 <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
+                  width="16"
+                  height="17"
+                  viewBox="0 0 16 17"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M16.365 2.86816V4.78057M11.584 2.86816V4.78057M6.80298 2.86816V4.78057"
+                    d="M5.66663 9.875C5.66663 11.155 6.71996 12.2083 7.99996 12.2083C9.27996 12.2083 10.3333 11.155 10.3333 9.875"
                     stroke="currentColor"
-                    strokeWidth="1.43431"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   />
                   <path
-                    d="M3.4563 13.3863V9.56144C3.4563 6.85689 3.4563 5.50461 4.2965 4.66442C5.13669 3.82422 6.48897 3.82422 9.19352 3.82422H13.9745C16.6791 3.82422 18.0313 3.82422 18.8716 4.66442C19.7118 5.50461 19.7118 6.85689 19.7118 9.56144V13.3863C19.7118 16.0908 19.7118 17.4431 18.8716 18.2833C18.0313 19.1235 16.6791 19.1235 13.9745 19.1235H9.19352C6.48897 19.1235 5.13669 19.1235 4.2965 18.2833C3.4563 17.4431 3.4563 16.0908 3.4563 13.3863Z"
+                    d="M5.87329 1.70825L3.45996 4.12825"
                     stroke="currentColor"
-                    strokeWidth="1.43431"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   />
                   <path
-                    d="M3.4563 16.2549V9.56144C3.4563 6.85689 3.4563 5.50461 4.2965 4.66442C5.13669 3.82422 6.48897 3.82422 9.19352 3.82422H13.9745C16.6791 3.82422 18.0313 3.82422 18.8716 4.66442C19.7118 5.50461 19.7118 6.85689 19.7118 9.56144V16.2549C19.7118 18.9594 19.7118 20.3117 18.8716 21.1519C18.0313 21.9921 16.6791 21.9921 13.9745 21.9921H9.19352C6.48897 21.9921 5.13669 21.9921 4.2965 21.1519C3.4563 20.3117 3.4563 18.9594 3.4563 16.2549Z"
+                    d="M10.1267 1.70825L12.54 4.12825"
                     stroke="currentColor"
-                    strokeWidth="1.43431"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   />
                   <path
-                    d="M7.75903 15.2996H11.5839M7.75903 10.5186H15.4087"
+                    d="M1.33337 5.60824C1.33337 4.3749 1.99337 4.2749 2.81337 4.2749H13.1867C14.0067 4.2749 14.6667 4.3749 14.6667 5.60824C14.6667 7.04157 14.0067 6.94157 13.1867 6.94157H2.81337C1.99337 6.94157 1.33337 7.04157 1.33337 5.60824Z"
                     stroke="currentColor"
-                    strokeWidth="1.43431"
-                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M2.33337 7.04175L3.27337 12.8017C3.48671 14.0951 4.00004 15.0417 5.90671 15.0417H9.92671C12 15.0417 12.3067 14.1351 12.5467 12.8817L13.6667 7.04175"
+                    stroke="currentColor"
+                    stroke-linecap="round"
                   />
                 </svg>
                 Orders
@@ -209,7 +249,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <li>
                   <Link
                     href="/dashboard/orders/track-order"
-                    className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
+                    className={` font-medium font-satoshi  flex items-center gap-4 ${
                       pathname == "/dashboard/orders/track-order"
                         ? "text-[#fda600]"
                         : "text-[#bbb]"
@@ -259,7 +299,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               {" "}
               <Link
                 href="/dashboard/address"
-                className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
+                className={` font-medium font-satoshi  flex items-center gap-4 ${
                   pathname == "/dashboard/address"
                     ? "text-[#fda600]"
                     : "text-[#bbb]"
@@ -304,7 +344,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <li>
               <Link
                 href="/dashboard/account-details"
-                className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
+                className={` font-medium font-satoshi  flex items-center gap-4 ${
                   pathname.includes("/account-details")
                     ? "text-[#fda600]"
                     : "text-[#bbb]"
@@ -365,7 +405,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <li>
               <Link
                 href="/dashboard/wallet"
-                className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 ${
+                className={` font-medium font-satoshi  flex items-center gap-4 ${
                   pathname.includes("/wallet")
                     ? "text-[#fda600]"
                     : "text-[#bbb]"
@@ -400,7 +440,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             </li>
           </ul>
 
-          <button
+          {/* <button
             className={`text-xl leading-[27px] font-medium font-satoshi  flex items-center gap-4 text-[#fff]`}
           >
             <svg
@@ -423,11 +463,28 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               />
             </svg>
             Logout
-          </button>
+          </button> */}
+          <div className="flex items-center gap-2">
+            <Image
+              src="/woman3.svg"
+              alt=""
+              height={50}
+              width={50}
+              className="rounded-full h-[45px] w-[45px] object-cover"
+            />
+            <div>
+              <h2 className="font-satoshi font-medium text-sm text-[#BBBBBB]">
+                Jennifer
+              </h2>
+              <span className="text-xs text-[#bbb] ">
+                st.jennyandy@gmail.com
+              </span>
+            </div>
+          </div>
         </nav>
       </div>
       <div className="lg:ml-[25%] bg-[#F4F3EC] min-h-screen flex flex-col">
-        <AdminTopBanner title="Jennifer" pathname={pathname} />
+        <AdminTopBanner />
         <div className="p-3 md:p-[30px] mt-1 lg:mt-[100px] bg-inherit space-y-10">
           {children}
         </div>
