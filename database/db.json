@@ -237,6 +237,35 @@
             "status":"In stock",
             "price": "17000"  
         }
+    ],
+    "orders": [
+        {
+            "id": "OD221142",
+            "image": "/p2.png",
+            "placed_on": "12th April, 2024",
+            "number": 5,
+           "status": "successful",
+           "amount": "65000",
+           "title":"Agbada Outfit"
+        },
+        {
+            "id": "OD223456",
+            "image": "/p3.png",
+            "placed_on": "12th May, 2024",
+            "number": 2,
+           "status": "on transit",
+           "amount": "22000",
+           "title":"Pink Knitted Sweat Shirt"
+        },
+        {
+            "id": "OD223296",
+            "image": "/p13.png",
+            "placed_on": "1st June, 2024",
+            "number": 2,
+           "status": "Order placed",
+           "amount": "22000",
+           "title":"Senator Outfit"
+        }
     ]
 }
 
