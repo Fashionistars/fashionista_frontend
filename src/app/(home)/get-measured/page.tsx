@@ -25,7 +25,7 @@ const page = () => {
           >
             <iframe
               className="absolute top-0 left-0 w-full h-full rounded-2xl"
-              src={`https://www.youtube.com/embed/xI70E6SVmBQ`}
+              src={`https://youtube.com/shorts/sk8eb2nW_ds`}
               title="How to take your measurement on Fashionistar"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
