@@ -1,407 +1,675 @@
 # FRONTEND_ARCHITECTURE_JAN_2026.MD
 
-# 🏛️ INDUSTRIAL ENTERPRISE GRADE FRONTEND ARCHITECTURE (V6.0)
+# 🏛️ FASHIONISTAR AI: INDUSTRIAL FRONTEND ARCHITECTURE (V7.0 - Final Enterprise Edition)
 
-**Project:** FASHIONISTAR AI (Next-Gen E-Commerce)  
-**Target Date:** 2026  
-**Framework:** Next.js 15 (App Router) + TypeScript 5.5+  
-**Styling Engine:** Tailwind CSS + Shadcn/ui  
-**Backend Alignment:** Django 6.0 (DRF Sync + Ninja Async)  
-**Author:** Lead Fullstack Architect (AI-Assisted)
+**Target Era:** 2026-2030
+**Core Framework:** Next.js 15 (App Router + Turbopack)
+**Language:** TypeScript 5.8+ (Strict Mode)
+**Styling Engine:** Tailwind CSS v4 + Shadcn/ui
+**Backend Alignment:** Django 6.0 (Sync DRF + Async Ninja Hybrid)
+**State Strategy:** The "Trinity" (Server State + URL State + Client State)
+**Performance Target:** Core Web Vitals < 75ms (INP), < 1.0s (LCP)
 
 ---
 
 ## 📑 TABLE OF CONTENTS
 
-1.  [The Verdict: UI Component Strategy](#1-the-verdict-ui-component-strategy)
-2.  [Executive Architectural Summary](#2-executive-architectural-summary)
-3.  [Directory Structure (Feature-Sliced Design)](#3-directory-structure-feature-sliced-design)
-4.  [Core Systems & Infrastructure](#4-core-systems--infrastructure)
-    - 4.1 [The Dual-Engine API Gateway (Sync vs Async)](#41-the-dual-engine-api-gateway)
-    - 4.2 [State Management: The Trinity Strategy](#42-state-management)
-    - 4.3 [Unified Notification System (FCM)](#43-unified-notification-system)
-5.  [AI Integration & Streaming](#5-ai-integration--streaming)
-6.  [PayCore Analysis & Integration](#6-paycore-analysis--integration)
-7.  [10 Industrial Professional Recommendations](#7-10-industrial-professional-recommendations)
-8.  [Detailed Checklist & Implementation Guide](#8-detailed-checklist--implementation-guide)
+1.  [Executive Architectural Summary](#1-executive-architectural-summary)
+2.  [Frontend-Backend Integration Map](#2-frontend-backend-integration-map)
+3.  [Directory Structure (Feature-Sliced Design 2.0)](#3-directory-structure-feature-sliced-design-20)
+4.  [The Core Pillars: Detailed Implementation](#4-the-core-pillars-detailed-implementation)
+    *   4.1 [UI Component Strategy: Shadcn/ui & Utils](#41-ui-component-strategy-shadcnui--utils)
+    *   4.2 [Dual-Engine API Gateway & Resilience](#42-dual-engine-api-gateway--resilience)
+    *   4.3 [State Management: The Trinity Strategy](#43-state-management-the-trinity-strategy)
+    *   4.4 [Data Contracts & Validation: The Zod-First Mandate](#44-data-contracts--validation-the-zod-first-mandate)
+    *   4.5 [Configuration & Environment: Type-Safe Tooling](#45-configuration--environment-type-safe-tooling)
+5.  [Performance & Rendering Strategy](#5-performance--rendering-strategy)
+6.  [UI/UX & Design Principles](#6-uiux--design-principles)
+7.  [Transactional Communications: React Email](#7-transactional-communications-react-email)
+8.  [AI Integration & Streaming](#8-ai-integration--streaming)
+9.  [Error Handling, Resilience & Monitoring](#9-error-handling-resilience--monitoring)
+10. [Testing & Quality Assurance (QA) Strategy](#10-testing--quality-assurance-qa-strategy)
+11. [Developer Experience (DevEx) & Code Quality](#11-developer-experience-devex--code-quality)
+12. [Security & Compliance Layer](#12-security--compliance-layer)
+13. [Production-Ready Tech Stack](#13-production-ready-tech-stack)
+14. [CI/CD Pipeline & DevOps Strategy](#14-cicd-pipeline--devops-strategy)
+15. [Implementation Roadmap](#15-implementation-roadmap)
 
 ---
 
-## 1. THE VERDICT: UI COMPONENT STRATEGY
+## 1. EXECUTIVE ARCHITECTURAL SUMMARY
 
-After exhaustive research of the current 2026 web ecosystem, we have selected **Shadcn/ui** as the winner. It is the only choice that offers the performance of Tailwind, the accessibility of Radix, and the code ownership required for an enterprise asset.
+We are architecting a **High-Performance Distributed UI** built on the **Feature-Sliced Design (FSD) 2.0** pattern. Our architecture is defined by five non-negotiable pillars designed to out-compete existing e-commerce moguls.
 
-### 🏆 THE WINNER: **shadcn/ui**
-
-**Why this is the ONLY choice for a 2026 Enterprise System:**
-
-1.  **Ownership & Longevity:** Unlike MUI or AntD, Shadcn is **not a dependency** in `package.json` that will break your app when updated. You copy the component code into your project. You own it. If the library author disappears, your project survives.
-2.  **Zero Runtime Overhead:** MUI uses Emotion (CSS-in-JS), which adds significant JavaScript bloat and slows down the browser's "Paint" time. Shadcn uses **Tailwind CSS**, which compiles to raw CSS at build time. It is mathematically faster.
-3.  **Server Component (RSC) Compatible:** Next.js App Router relies on Server Components. MUI struggles with hydration errors here. Shadcn works natively.
-4.  **Headless Accessibility:** It uses **Radix UI** primitives under the hood. This guarantees WAI-ARIA compliance (screen readers, keyboard nav) which is legally required for enterprise apps, without forcing a specific "Google Look."
-
-**❌ The Losers:**
-
-- **Material UI:** Too heavy, looks generic, hydration issues with Next.js 14/15.
-- **DaisyUI:** Good for prototypes, but relies on semantic class names that become unmanageable at scale.
+**The 5 Pillars of Fashionistar V7:**
+1.  **Dual-Pipeline Networking:** Strict separation of `Axios` for DRF (Transactional) and `Ky/Fetch` for Ninja (Computational/AI) APIs.
+2.  **Instantaneous UX through Optimistic UI:** All user interactions provide immediate feedback, with server reconciliation happening invisibly.
+3.  **URL as the Single Source of State:** We employ URL-Driven State using **Nuqs**, ensuring every application state is shareable, bookmarkable, and SEO-friendly.
+4.  **Next-Gen Hybrid Rendering (PPR):** We leverage **Partial Prerendering** in Next.js 15 for instant static shells with dynamic content streams, providing the fastest possible initial load.
+5.  **Industrial-Grade Resilience & Observability:** Granular error boundaries, centralized monitoring with Sentry and OpenTelemetry, and automated CI/CD quality gates ensure 99.99% uptime.
 
 ---
 
-## 2. EXECUTIVE ARCHITECTURAL SUMMARY
+## 2. FRONTEND-BACKEND INTEGRATION MAP
 
-We are moving away from a "Page-Based" architecture to a **"Feature-Sliced Domain" (FSD)** architecture. This separates business logic by domain (Auth, Product, AI-Measurement) rather than by technology (Components, Hooks).
+This diagram illustrates the flow of data from the client, through our frontend infrastructure, to the dual-engine Django backend.
 
-**The Core Pillars:**
-
-1.  **Strict Typing:** Zod Schemas must mirror Pydantic Models 1:1.
-2.  **Optimistic UI:** Interactions (Likes, Add to Cart) update instantly visually, then sync with background API.
-3.  **Hybrid Rendering:** Marketing pages are Static (SSG), Product pages are Server Rendered (SSR), Dashboard/AI is Client Rendered (CSR).
-4.  **Strict Separation of Concerns:**
-    - **Sync Operations (Auth, Orders, CRUD):** Handled by `Axios` connecting to Django DRF.
-    - **Async Operations (AI, Search, Real-time):** Handled by `Ky/Fetch` connecting to Django Ninja.
-
----
-
-## 3. DIRECTORY STRUCTURE (FEATURE-SLICED DESIGN)
-
-This structure is non-negotiable for scalability. Ideally suited for teams of 5-50 engineers.
-
-```text
-src/
-├── app/                        # Next.js App Router (Routing Layer ONLY)
-│   ├── (marketing)/            # Public pages (Landing, About)
-│   ├── (shop)/                 # Shop, Product Details, Cart
-│   ├── (auth)/                 # Login, Register, OTP
-│   ├── (dashboard)/            # User & Vendor Dashboards
-│   │   ├── vendor/
-│   │   └── client/
-│   └── api/                    # Next.js API Routes (BFF Layer)
-│
-├── core/                       # INFRASTRUCTURE (The "Engine")
-│   ├── config/                 # Env vars, Constants
-│   ├── api/
-│   │   ├── client.sync.ts      # Axios Instance for DRF (Auth, Orders)
-│   │   └── client.async.ts     # Fetch/Ky Instance for Ninja (AI, Search)
-│   ├── types/                  # Global Types (Backend Responses)
-│   └── utils/                  # Date formatting, String helpers
-│
-├── components/                 # SHARED UI (The "LEGO Bricks")
-│   ├── ui/                     # Shadcn Components (Button, Input, Dialog)
-│   ├── shared/                 # App-wide molecules (Navbar, Footer)
-│   └── providers/              # React Context Providers (Theme, Auth)
-│
-├── features/                   # DOMAIN LOGIC (The "Business")
-│   ├── auth/
-│   │   ├── components/         # LoginForm, RegisterForm
-│   │   ├── hooks/              # useLogin, useUser
-│   │   ├── services/           # auth.service.ts (API calls)
-│   │   └── schemas/            # Zod schemas matching Pydantic
-│   ├── product/
-│   ├── cart/
-│   ├── ai-measurement/         # COMPLEX AI LOGIC (Async)
-│   │   ├── components/         # CameraCapture, MeshVisualizer
-│   │   ├── hooks/              # useBodyScan (Async)
-│   │   └── services/           # measurement.service.ts
-│   └── notifications/          # Firebase Integration
-│
-├── lib/                        # Third-party wrappers
-│   ├── firebase.ts
-│   ├── stripe.ts
-│   └── sentry.ts
-│
-└── styles/                     # Global CSS & Tailwind Config
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       CLIENT LAYER (Next.js Frontend)                       │
+│                   (Browser / PWA / Native Wrapper)                          │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │
+                  ┌────────────────────┴────────────────────┐
+                  │ (Vercel Edge Network / Cloudflare)      │
+                  │  - Caching Static Assets (SSG Pages)    │
+                  │  - Image Optimization (next/image)      │
+                  │  - Edge Functions (Middleware)          │
+                  └────────────────────┬────────────────────┘
+                                       │
+                         ┌─────────────┴─────────────┐
+                         │      API GATEWAY (BFF)      │
+                         │ (Next.js API Routes)        │
+                         │ - /api/v1/* (DRF Proxy)     │
+                         │ - /api/v2/* (Ninja Proxy)   │
+                         └─────────────┬─────────────┘
+                                       │
+                  ┌────────────────────┴────────────────────┐
+                  │                    │                    │
+                  ▼                    ▼                    ▼
+┌───────────────────────────┐ ┌───────────────────────────────┐ ┌───────────────────────────┐
+│ SYNC CLIENT (Axios)       │ │ ASYNC CLIENT (Ky)             │ │ REAL-TIME CLIENT          │
+│ - CSRF Handling           │ │ - Streaming Support           │ │ (WebSocket / SSE)         │
+│ - Token Auto-Refresh      │ │ - Auto-Retry Logic            │ │ - Live Inventory          │
+│ - Circuit Breaker         │ │ - Long Timeouts (60s)         │ │ - Order Status            │
+└────────────────┬──────────┘ └────────────────┬──────────────┘ └────────────────┬──────────┘
+                 │                             │                                 │
+                 ▼                             ▼                                 ▼
+┌───────────────────────────┐ ┌───────────────────────────────┐ ┌───────────────────────────┐
+│ DJANGO DRF (SYNC)         │ │ DJANGO NINJA (ASYNC)          │ │ DJANGO CHANNELS (REAL-TIME) │
+│ - Auth, Orders, Payments  │ │ - AI Measurement, Search      │ │ - WebSocket Connections   │
+└───────────────────────────┘ └───────────────────────────────┘ └───────────────────────────┘
 ```
 
 ---
 
-## 4. CORE SYSTEMS & INFRASTRUCTURE
+## 3. DIRECTORY STRUCTURE (FEATURE-SLICED DESIGN 2.0)
 
-### 4.1 The Dual-Engine API Gateway (Sync vs Async)
+This structure is mandatory for scalability and team velocity.
 
-We strictly separate **Transactional (Sync/DRF)** from **Computational (Async/Ninja)** operations to match the backend architecture.
+```text
+src/
+├── app/                        # ROUTING LAYER (Next.js 15 App Router)
+│   ├── [locale]/               # Internationalization Wrapper
+│   │   ├── (public)/           # Static Marketing Pages
+│   │   ├── (shop)/             # E-Commerce Logic
+│   │   ├── (auth)/             # Login, Register, OTP
+│   │   └── (dashboard)/        # Secure Areas
+│   └── api/                    # BFF (Backend for Frontend) Proxy
+│
+├── core/                       # INFRASTRUCTURE LAYER (The Engine)
+│   ├── config/                 # Env vars, Constants (T3 Env)
+│   ├── api/
+│   │   ├── client.sync.ts      # Axios for DRF
+│   │   └── client.async.ts     # Ky for Ninja
+│   ├── i18n/                   # Localization dictionaries
+│   ├── types/                  # Global TS Interfaces (Pydantic Generated)
+│   └── monitoring/             # Sentry, OpenTelemetry Setup
+│
+├── components/                 # UI LAYER (Shadcn + Shared)
+│   ├── ui/                     # Shadcn Primitives (Button, Input)
+│   ├── shared/                 # Navbar, Footer, Loaders
+│   ├── layouts/                # AppShell, AuthLayout, DashboardLayout
+│   ├── animations/             # Framer Motion wrappers (FadeIn, SlideUp)
+│   ├── emails/                 # React Email Templates
+│   └── providers/              # React Contexts (Theme, Auth, Query)
+│
+├── features/                   # DOMAIN LAYER (Business Logic)
+│   ├── auth/
+│   │   ├── components/         # LoginForm, RegisterForm
+│   │   ├── services/           # auth.service.ts
+│   │   ├── store/              # auth.store.ts (Zustand)
+│   │   └── schemas/            # Zod Schemas
+│   └── ...                     # Other business domains (product, cart, etc.)
+│
+├── lib/                        # Third-party wrappers (Firebase, Stripe)
+│   └── utils.ts                # cn utility
+│
+├── tests/                      # QUALITY ASSURANCE LAYER
+│   ├── e2e/                    # Playwright End-to-End tests
+│   └── unit/                   # Vitest Unit tests
+│
+├── public/                     # Static Assets (robots.txt, sw.js)
+│
+└── styles/                     # Tailwind v4 Configuration
+```
 
-#### **A. The Sync Client (Axios + DRF)**
+---
 
-_Used for: Auth, Checkout, Order History, User Profile._
-_Pattern Borrowed from PayCore: Class-based Service with Interceptors_
+## 4. THE CORE PILLARS: DETAILED IMPLEMENTATION
+
+### 4.1 UI Component Strategy: Shadcn/ui & Utils
+We use Shadcn/ui. The most critical piece of code to enable this is the strict `cn` utility to merge Tailwind classes without conflict.
+
+**Implementation Code:** `src/lib/utils.ts`
 
 ```typescript
-// src/core/api/client.sync.ts
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
-import { toast } from "sonner"; // Modern toast library
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+/**
+ * Merges Tailwind classes safely, handling conflicts (e.g., pb-4 overriding p-2)
+ */
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+```
+
+---
+
+### 4.2 Dual-Engine API Gateway & Resilience
+We explicitly decouple synchronous transactional calls from asynchronous AI streaming calls.
+
+#### **A. Sync Client (Axios + DRF) - Industrial Grade**
+*For: Auth, Orders, Payments, CRUD.*
+
+**Implementation Code:** `src/core/api/client.sync.ts`
+
+```typescript
+import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from "axios";
+import { toast } from "sonner";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 
-export const apiSync = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_V1_URL, // Django DRF
-  timeout: 10000,
-  withCredentials: true, // For HTTPOnly Cookies
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  },
+export const apiSync: AxiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_V1_URL,
+  timeout: 15000,
+  withCredentials: true,
+  headers: { "Content-Type": "application/json" }
 });
 
-// ROBUST INTERCEPTOR FOR AUTH & ERRORS (From PayCore Best Practices)
 let isRefreshing = false;
 let refreshSubscribers: ((token: string) => void)[] = [];
 
 apiSync.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & {
-      _retry?: boolean;
-    };
-
-    // 1. Handle 401 (Unauthorized) - Auto Token Refresh
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    
+    // Auto-Refresh Logic
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve) => {
           refreshSubscribers.push((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
+            if(originalRequest.headers) originalRequest.headers.Authorization = `Bearer ${token}`;
             resolve(apiSync(originalRequest));
           });
         });
       }
-
       originalRequest._retry = true;
       isRefreshing = true;
-
       try {
-        // Attempt Refresh
-        // Note: In real production, this might be a cookie-based refresh endpoint
-        const { accessToken } = await refreshTokenCall();
-        useAuthStore.getState().setToken(accessToken);
-
-        // Resolve Queue
-        refreshSubscribers.forEach((cb) => cb(accessToken));
+        const { data } = await axios.post("/api/v1/auth/token/refresh/", {}, { withCredentials: true });
+        const newAccessToken = data.access;
+        // Update Store
+        useAuthStore.getState().setToken(newAccessToken);
+        // Notify subscribers
+        refreshSubscribers.forEach((cb) => cb(newAccessToken));
         refreshSubscribers = [];
-
+        if(originalRequest.headers) originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return apiSync(originalRequest);
       } catch (refreshError) {
-        // Refresh Failed - Logout
         useAuthStore.getState().logout();
-        window.location.href = "/login";
+        window.location.href = "/auth/login";
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
       }
     }
 
-    // 2. Handle 500 (Server Error) - Global Toast
-    if (error.response?.status && error.response.status >= 500) {
-      toast.error("System Busy", {
-        description:
-          "Our fashion engineers are fixing a stitch. Try again shortly.",
-      });
-    }
-
+    // Global Toast Error Handling
+    const traceId = error.response?.headers['x-trace-id'];
+    const errorMessage = (error.response?.data as any)?.detail || "System malfunction";
+    toast.error("Request Failed", { description: `${errorMessage} (Trace: ${traceId || 'N/A'})` });
+    
     return Promise.reject(error);
-  },
+  }
 );
 ```
 
-#### **B. The Async Client (Ky + Django Ninja)**
+#### **B. Async Client (Ky + Django Ninja) - High Performance**
+*For: AI Streams, Search, Analytics.*
 
-_Used for: AI Measurement, Search, Recommendation Stream._
+**Implementation Code:** `src/core/api/client.async.ts`
 
 ```typescript
-// src/core/api/client.async.ts
-import ky from "ky"; // Lightweight fetch wrapper perfect for Async
+import ky from "ky";
 
 export const apiAsync = ky.create({
-  prefixUrl: process.env.NEXT_PUBLIC_API_V2_URL, // Django Ninja
-  timeout: 30000, // Longer timeout for AI
+  prefixUrl: process.env.NEXT_PUBLIC_API_V2_URL,
+  timeout: 60000, // 60s for AI ops
   retry: {
-    limit: 2,
-    methods: ["get", "post"], // Safe retry for idempotent AI queries
+    limit: 3,
+    methods: ["get", "post"],
+    statusCodes: [408, 413, 429, 500, 502, 503, 504],
   },
   hooks: {
     beforeRequest: [
-      (request) => {
-        // Append lightweight headers
-        request.headers.set("X-Client-Version", "2026.1.0");
-        // Add Authorization if needed, but keep it lightweight
+      request => {
+        const token = window.localStorage.getItem('auth_token'); // Or from Zustand
+        if (token) request.headers.set('Authorization', `Bearer ${token}`);
+      }
+    ]
+  }
+});
+```
+
+---
+
+### 4.3 State Management: The Trinity Strategy
+This is not a recommendation; it is a mandate.
+
+#### **1. Server State (TanStack Query v5)**
+**Implementation Code:** `src/components/providers/query-provider.tsx`
+
+```typescript
+'use client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useState } from 'react'
+
+export default function QueryProvider({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000, // Data is fresh for 1 min
+        retry: 1,
       },
-    ],
-  },
+    },
+  }))
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+    </QueryClientProvider>
+  )
+}
+```
+
+#### **2. URL State (Nuqs)**
+Used for filters, search terms, and tabs.
+
+**Implementation Example:** `src/features/shop/hooks/use-product-filters.ts`
+
+```typescript
+import { useQueryState, parseAsInteger, parseAsString } from 'nuqs'
+
+export function useProductFilters() {
+  const [category, setCategory] = useQueryState('category', parseAsString.withDefault('all'))
+  const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
+
+  return { category, setCategory, page, setPage }
+}
+```
+
+#### **3. Global Client State (Zustand)**
+Used for Auth and Cart.
+
+**Implementation Code:** `src/features/cart/store/cart.store.ts`
+
+```typescript
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+
+interface CartItem {
+  id: string;
+  qty: number;
+}
+
+interface CartState {
+  items: CartItem[];
+  addItem: (item: CartItem) => void;
+  clearCart: () => void;
+}
+
+export const useCartStore = create<CartState>()(
+  persist(
+    (set) => ({
+      items: [],
+      addItem: (item) => set((state) => ({ items: [...state.items, item] })),
+      clearCart: () => set({ items: [] }),
+    }),
+    { name: 'fashionistar-cart-storage' }
+  )
+)
+```
+
+---
+
+### 4.4 Data Contracts & Validation: The Zod-First Mandate
+We operate on a zero-trust policy.
+
+**Implementation Code:** `src/features/auth/schemas/login.schema.ts`
+
+```typescript
+import { z } from "zod";
+
+export const LoginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-// Usage Example: Streaming AI Data
-export const streamBodyMeasurement = async (imageFile: File) => {
-  const formData = new FormData();
-  formData.append("file", imageFile);
+export type LoginPayload = z.infer<typeof LoginSchema>;
 
-  // Ky handles streams natively better than Axios
-  const response = await apiAsync.post("ai/scan", { body: formData });
-  return response.json();
+// Example usage in API Service
+export const validateLoginResponse = (data: unknown) => {
+  const AuthResponseSchema = z.object({
+    access: z.string(),
+    refresh: z.string(),
+    user: z.object({ id: z.string(), email: z.string() })
+  });
+  return AuthResponseSchema.parse(data); // Throws if backend changes format
 };
 ```
 
-### 4.2 State Management: The Trinity Strategy
+---
 
-Do not use Redux for everything. Use the right tool for the scope.
+### 4.5 Configuration & Environment: Type-Safe Tooling
+We mandate `@t3-oss/env-nextjs` to prevent deployment errors.
 
-1.  **Server State (TanStack Query v5):**
-    - _Purpose:_ Fetching Products, Orders, User Data.
-    - _Why:_ Caching, deduping requests, background revalidation.
-    - _Code:_ `useQuery({ queryKey: ['products'], queryFn: getProducts })`
+**Implementation Code:** `src/core/config/env.mjs`
 
-2.  **Global Client State (Zustand):**
-    - _Purpose:_ Shopping Cart, UI Toggles (Sidebar open/close), AI Session Data.
-    - _Why:_ Redux is too boilerplate-heavy. Zustand is 1kb and atomic.
+```javascript
+import { createEnv } from "@t3-oss/env-nextjs";
+import { z } from "zod";
 
-3.  **URL State (Nuqs):**
-    - _Purpose:_ Filters, Search Queries, Pagination.
-    - _Why:_ Shareable URLs. `fashionistar.com/shop?color=red&size=m`.
+export const env = createEnv({
+  server: {
+    NODE_ENV: z.enum(["development", "test", "production"]),
+    CLOUDINARY_SECRET: z.string().min(1),
+  },
+  client: {
+    NEXT_PUBLIC_API_V1_URL: z.string().url(),
+    NEXT_PUBLIC_API_V2_URL: z.string().url(),
+  },
+  runtimeEnv: {
+    NODE_ENV: process.env.NODE_ENV,
+    NEXT_PUBLIC_API_V1_URL: process.env.NEXT_PUBLIC_API_V1_URL,
+    NEXT_PUBLIC_API_V2_URL: process.env.NEXT_PUBLIC_API_V2_URL,
+    CLOUDINARY_SECRET: process.env.CLOUDINARY_SECRET,
+  },
+});
+```
 
-### 4.3 Unified Notification System (FCM)
+---
 
-We integrate **Firebase Cloud Messaging (FCM)** for a unified push strategy across Web, Android, and iOS.
+## 5. PERFORMANCE & RENDERING STRATEGY
+
+### 5.1 Next.js 15 Partial Prerendering (PPR)
+Enabled in `next.config.js`.
+
+```javascript
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    ppr: 'incremental', // Enables Partial Prerendering
+    reactCompiler: true, // Auto-memoization
+  },
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    remotePatterns: [{ hostname: 'res.cloudinary.com' }],
+  }
+};
+module.exports = nextConfig;
+```
+
+---
+
+## 6. UI/UX & DESIGN PRINCIPLES
+
+### 6.1 Aesthetics & Micro-interactions (Framer Motion)
+Standardized animation wrapper.
+
+**Implementation Code:** `src/components/animations/fade-in.tsx`
 
 ```typescript
-// src/features/notifications/useNotification.ts
-import { useEffect } from "react";
-import { onMessage } from "firebase/messaging";
-import { messaging } from "@/lib/firebase";
-import { toast } from "sonner";
+'use client'
+import { motion } from "framer-motion";
 
-export const useCloudMessaging = () => {
-  useEffect(() => {
-    if (typeof window !== "undefined" && "serviceWorker" in navigator) {
-      const unsubscribe = onMessage(messaging, (payload) => {
-        console.log("Foreground Message:", payload);
+export const FadeIn = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.4, delay, ease: "easeOut" }}
+  >
+    {children}
+  </motion.div>
+);
+```
 
-        // Custom UI Toast for "In-App" feel
-        toast.message(payload.notification?.title, {
-          description: payload.notification?.body,
-          action: {
-            label: "View",
-            onClick: () => console.log("Navigate to order"),
-          },
-        });
-      });
-      return () => unsubscribe();
+---
+
+## 7. TRANSACTIONAL COMMUNICATIONS: REACT EMAIL
+Email template definition.
+
+**Implementation Code:** `src/components/emails/welcome.tsx`
+
+```typescript
+import { Html, Button, Text } from "@react-email/components";
+
+export default function WelcomeEmail({ url }: { url: string }) {
+  return (
+    <Html lang="en">
+      <Text>Welcome to Fashionistar AI!</Text>
+      <Button href={url} style={{ background: "#000", color: "#fff", padding: "12px 20px" }}>
+        Start Shopping
+      </Button>
+    </Html>
+  );
+}
+```
+
+---
+
+## 8. AI INTEGRATION & STREAMING
+Handling WASM for client-side processing.
+
+**Implementation Concept:** `src/features/ai/utils/load-wasm.ts`
+
+```typescript
+export const loadFFmpeg = async () => {
+  const { FFmpeg } = await import('@ffmpeg/ffmpeg');
+  const ffmpeg = new FFmpeg();
+  await ffmpeg.load({
+    coreURL: '/assets/ffmpeg/ffmpeg-core.js', // Loaded from public
+  });
+  return ffmpeg;
+};
+```
+
+---
+
+## 9. ERROR HANDLING, RESILIENCE & MONITORING
+Granular Error Boundaries.
+
+**Implementation Code:** `src/components/shared/error-boundary.tsx`
+
+```typescript
+'use client'
+import React from "react";
+import { Button } from "@/components/ui/button";
+
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error("Uncaught error:", error, errorInfo);
+    // Send to Sentry here
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-6 text-center border rounded-md bg-destructive/10">
+          <h2 className="text-lg font-bold">Something went wrong.</h2>
+          <Button onClick={() => this.setState({ hasError: false })} className="mt-4">
+            Try again
+          </Button>
+        </div>
+      );
     }
-  }, []);
-};
+    return this.props.children;
+  }
+}
+export default ErrorBoundary;
 ```
 
 ---
 
-## 5. AI INTEGRATION & STREAMING
+## 10. TESTING & QUALITY ASSURANCE (QA) STRATEGY
 
-The logic for the AI measurement tool must be isolated in `src/features/ai-measurement`.
-
-**Flow:**
-
-1.  **Capture:** Use `react-webcam` or HTML5 Input with strict constraints (force rear camera on mobile).
-2.  **Upload:** Send to **Django Ninja (Async)** endpoint using `apiAsync`.
-3.  **Optimistic UI:** Show a skeleton loader of the body mesh immediately.
-4.  **Polling/SSE:** If the AI takes > 5 seconds, use Server-Sent Events (SSE) to show a progress bar ("Detecting Shoulders..." -> "Calculating Inseam...").
-5.  **Fallback:** If AI fails (confidence < 80%), trigger a "Manual Correction" modal using **Zod** forms.
-
----
-
-## 6. PAYCORE ANALYSIS & INTEGRATION
-
-_Observations from PayCore Frontend:_
-
-- **Good:** Used decentralized `services/` folder structure (e.g. `api.service.ts`).
-- **Good:** Used Toast notifications for errors.
-- **Bad:** Middleware/Interceptors were good but tight coupling.
-- **Bad:** WebSocket implementation was efficient but needs better typing for our case.
-
-**Architecture Injection from PayCore:**
-We will adapt the **"Service Layer Pattern"** from PayCore but strictly typed.
-
-_Example Service Definition:_
+### A. Unit Testing (Vitest)
+**Implementation Code:** `src/features/auth/auth.test.ts`
 
 ```typescript
-// src/features/product/product.service.ts
-import { apiAsync } from "@/core/api/client.async";
-import { ProductSchema, ProductType } from "./product.schema"; // Zod
+import { describe, it, expect } from 'vitest';
+import { LoginSchema } from './schemas/login.schema';
 
-export const ProductService = {
-  getAll: async (): Promise<ProductType[]> => {
-    const data = await apiAsync.get("products").json();
-    // Runtime Validation: Crashes dev build if API changes, saving prod bugs
-    // STRICT ZOD VALIDATION
-    return ProductSchema.array().parse(data);
-  },
+describe('Auth Validation', () => {
+  it('rejects invalid emails', () => {
+    const result = LoginSchema.safeParse({ email: 'bad-email', password: 'password123' });
+    expect(result.success).toBe(false);
+  });
+});
+```
 
-  scanItem: async (id: string) => {
-    // ...
-  },
-};
+### B. E2E Testing (Playwright)
+**Implementation Code:** `tests/e2e/login.spec.ts`
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test('user can login', async ({ page }) => {
+  await page.goto('/auth/login');
+  await page.fill('input[name="email"]', 'user@example.com');
+  await page.fill('input[name="password"]', 'securepass');
+  await page.click('button[type="submit"]');
+  await expect(page).toHaveURL('/dashboard');
+});
 ```
 
 ---
 
-## 7. 10 INDUSTRIAL PROFESSIONAL RECOMMENDATIONS
+## 11. DEVELOPER EXPERIENCE (DEVEX) & CODE QUALITY
 
-1.  **Implement "Barrel Files" Carefully:**
-    Do not use `index.ts` everywhere. It breaks Tree-Shaking in Webpack/Turbopack. Import directly: `import { Button } from "@/components/ui/button"`.
-
-2.  **Strict "Zod-First" Development:**
-    Frontend should not "guess" the API response. Define a Zod schema for _every_ API endpoint. If the backend changes a boolean to a string, the Frontend should catch it (via Zod parse error) during development.
-
-3.  **The "Image Blur" Strategy (LCP Optimization):**
-    For a fashion site, images are everything. Use `next/image` with `placeholder="blur"`. Generate the `blurDataURL` on the server (Django) and send it with the API response. This makes the site feel _instantly_ loaded.
-
-4.  **Error Boundary Granularity:**
-    Don't wrap the whole app in one Error Boundary. Wrap specific widgets.
-    - _Example:_ If the "AI Measurement" widget crashes, the "Add to Cart" button should still work. Isolate failures.
-
-5.  **Mobile Thumb-Zone Architecture:**
-    Place all primary interactive elements (Nav, Cart, Scan) in the bottom 30% of the viewport. Top of screen is for Viewing, Bottom is for Acting.
-
-6.  **Skeleton Loading > Spinners:**
-    Never use a spinning circle for initial page loads. Use Skeleton screens (gray pulsing shapes) that mimic the layout of the product cards. It reduces perceived latency by 40%.
-
-7.  **Debounced Search with URL Sync:**
-    When searching for "Gucci Bag", update the URL to `?q=Gucci+Bag` only after the user stops typing for 500ms. This prevents spamming your Django Ninja async endpoint.
-
-8.  **Prefetching on Hover:**
-    When a user hovers over a product card, tell TanStack Query to prefetch the details of that product. By the time they click, the data is already there. Instant transition.
-
-9.  **Accessibility (a11y) as a CI Check:**
-    Install `eslint-plugin-jsx-a11y`. The build should FAIL if an image is missing an `alt` tag or a button has no label. Legal compliance is not optional.
-
-10. **Environment Variable Validation:**
-    Create a `env.mjs` file using T3 Env. This validates that `NEXT_PUBLIC_API_URL` exists at build time. Prevents deploying a broken app because someone forgot to set a variable in Vercel/Docker.
+### Code Conventions: No Barrel Files
+We enforce specific imports.
+*   ❌ `import { Button } from "@/components/ui"` (Avoid Barrel files for tree shaking)
+*   ✅ `import { Button } from "@/components/ui/button"`
 
 ---
 
-## 8. DETAILED CHECKLIST & IMPLEMENTATION GUIDE
+## 12. SECURITY & COMPLIANCE LAYER
+Middleware implementation for security.
 
-### Phase 1: Foundation Setup
+**Implementation Code:** `src/middleware.ts`
 
-- [ ] Initialize Next.js 15 App Router project
-- [ ] Install Tailwind CSS & Shadcn/ui CLI
-- [ ] Configure `core/api/client.sync.ts` (Axios + Interceptors)
-- [ ] Configure `core/api/client.async.ts` (Ky)
+```typescript
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-### Phase 2: Core Components & Layouts
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next();
+  
+  // CSP Headers
+  response.headers.set(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; img-src 'self' res.cloudinary.com data:;"
+  );
 
-- [ ] Build "AppShell" (Navbar, Sidebar, Footer) using Shadcn
-- [ ] Implement Mobile Bottom Navigation (Thumb Zone)
-- [ ] Create `AuthLayout` vs `ShopLayout`
+  return response;
+}
 
-### Phase 3: Infrastructure Integration
+export const config = {
+  matcher: '/:path*',
+}
+```
 
-- [ ] Setup Zustand Stores (`useCartStore`, `useAuthStore`)
-- [ ] Setup TanStack Query Provider with `staleTime: 5 mins`
-- [ ] Integrate Firebase Cloud Messaging (FCM) Service Worker
+---
 
-### Phase 4: Feature Implementation (Iterative)
+## 13. PRODUCTION-READY TECH STACK & DEPENDENCIES
+| Category          | Library                       | Purpose                                           |
+| :---------------- | :---------------------------- | :------------------------------------------------ |
+| **Core**          | `next`, `react`, `typescript` | Framework, UI Library, Language                   |
+| **State & Data**  | `zustand`, `@tanstack/react-query`, `nuqs` | Client, Server, and URL State Management          |
+| **UI & Styling**  | `tailwindcss`, `shadcn/ui`, `radix-ui` | Styling, Component Primitives, Accessibility      |
+| **Animation**     | `framer-motion`               | Micro-interactions & Page Transitions             |
+| **Forms**         | `react-hook-form`, `zod`      | Form state management, Schema validation          |
+| **Notifications** | `sonner`                      | Elegant and accessible toast notifications        |
 
-- [ ] **Auth:** Login/Register with Zod Validation
-- [ ] **Products:** Product Listing with Infinite Scroll (useIntersectionObserver)
-- [ ] **AI:** Camera Capture Component + Streaming API Hook
+---
 
-### Phase 5: Production Polish
+## 14. CI/CD PIPELINE & DEVOPS STRATEGY
 
-- [ ] Run Lighthouse Audits (Aim for 95+ Performance)
-- [ ] Verify Accessibility via Screen Reader
-- [ ] Configure Sentry for Error Tracking
-- [ ] Deploy to Vercel/Docker with Environment Validation
+### A. CI/CD Pipeline
+The pipeline is enhanced with mandatory QA gates.
+
+```
+┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐
+│   COMMIT (PR)    │──▶│   STATIC ANALYSIS│──▶│   BUILD & TEST   │──▶│   REVIEW/MERGE   │
+│ - Run Git Hooks  │   │ - ESLint         │   │ - next build     │   │ - Manual Approval│
+└──────────────────┘   │ - Prettier       │   │ - Vitest (Unit)  │   └─────────┬────────┘
+                       │ - A11y Check     │   └──────────────────┘             │
+                       └──────────────────┘                                      │
+                                                                                 ▼
+                                                                 ┌───────────────┴───────────────┐
+                                                                 │       DEPLOY (Staging)        │
+                                                                 │ - Deploy to Staging Env       │
+                                                                 │ - Run Playwright (E2E Tests)  │
+                                                                 └───────────────┬───────────────┘
+                                                                                 │
+                                                                                 ▼
+                                                                 ┌───────────────┴───────────────┐
+                                                                 │      DEPLOY (Production)      │
+                                                                 │ - Canary Rollout (10%)        │
+                                                                 │ - Monitor Sentry/Vercel       │
+                                                                 │ - Promote to 100%             │
+                                                                 └───────────────────────────────┘
+```
+
+---
+
+## 15. IMPLEMENTATION ROADMAP & PRODUCTION CHECKLIST
+
+### Phase 1: Foundation (Days 1-3)
+- [ ] Initialize Next.js 15 + TS.
+- [ ] Setup Tailwind v4 + Shadcn/ui CLI.
+- [ ] Create `core/api/client.sync.ts` & `client.async.ts` (Use code in Section 4.2).
+- [ ] Configure `t3-env` for variable validation (Use code in Section 4.5).
+
+### Phase 2: Core Systems (Days 4-7)
+- [ ] Install TanStack Query, Zustand, Nuqs.
+- [ ] Implement `QueryProvider` (Use code in Section 4.3).
+- [ ] Configure Next.js middleware for CSP (Use code in Section 12).
+
+### Phase 3: Features & Aesthetics (Days 8-14)
+- [ ] Implement Auth Service with Zod schemas (Use code in Section 4.4).
+- [ ] Build Login/Register forms.
+- [ ] Build Product Listing with Infinite Scroll.
+- [ ] Implement `Framer Motion` animations (Use code in Section 6.1).
+
+### Phase 4: Advanced Features & Polish (Days 15-20)
+- [ ] Implement AI Measurement widget with camera access.
+- [ ] Integrate Firebase FCM for notifications.
+- [ ] Add Sentry for error tracking.
+- [ ] Run Lighthouse Audits (Target: 95+).
+
+---
+**Status:** READY FOR DEVELOPMENT  
+**Version:** 7.0 Final Enterprise Edition  
+**Signed Off By:** Lead Architect
