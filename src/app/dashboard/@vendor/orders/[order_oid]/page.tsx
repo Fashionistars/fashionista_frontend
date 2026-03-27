@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
-import { getSingleOrder, orderAcceptReject } from "@/app/utils/libs";
+import { getSingleOrder, orderAcceptReject } from "@/core/services/api";
 
 interface OrderProp {
   params: {

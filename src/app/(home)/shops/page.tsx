@@ -1,10 +1,9 @@
 import React from "react";
-import arrow from "../../../../public/arrows.svg";
 import Image from "next/image";
 import Link from "next/link";
-import data, { data2 } from "@/app/utils/mock";
-import Card from "@/app/components/Card";
-import Cads from "@/app/components/Cads";
+import data, { data2 } from "@/lib/utils/mock-data";
+import Card from "@/components/ui/compounds/Card";
+import Cads from "@/components/ui/compounds/Cads";
 
 const page = () => {
   const collections = data.map((collection) => {
@@ -22,10 +21,10 @@ const page = () => {
           </h3>
           <div className="flex items-center gap-2">
             <button className="w-[30px] h-[30px] rounded-full ">
-              <Image src={arrow} alt="" />
+              <Image src="/arrows.svg" alt="previous" width={30} height={30} />
             </button>
             <button className="w-[30px] h-[30px] rounded-full">
-              <Image src={arrow} alt="" className="scale-x-[-1]" />
+              <Image src="/arrows.svg" alt="next" width={30} height={30} className="scale-x-[-1]" />
             </button>
           </div>
         </div>

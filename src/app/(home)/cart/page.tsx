@@ -1,20 +1,18 @@
 import Image from "next/image";
 import React from "react";
-import empty from "../../../../public/empty.svg";
 import Link from "next/link";
-import man2 from "../../../../public/man4_asset.svg";
 
 const page = () => {
   const cart_items = [
     {
-      image: man2,
+      image: "/man2_asset.svg",
       size: "XXL",
       title: "Men Senator",
       price: "$1200.00",
     },
 
     {
-      image: man2,
+      image: "/man2_asset.svg",
       size: "XXL",
       title: "Men Senator",
       price: "$1200.00",
@@ -30,6 +28,8 @@ const page = () => {
         <Image
           src={item.image}
           alt={item.title}
+          width={235}
+          height={268}
           className="w-[144px] h-[164px] md:w-[235px] md:h-[268px] object-cover "
         />
         {/* </div> */}
@@ -78,7 +78,7 @@ const page = () => {
             You have no product in your cart
           </p>
           <div className="flex justify-center py-8 items-center">
-            <Image src={empty} alt="" />
+            <Image src="/empty.svg" alt="" />
           </div>
           <div className="w-full h-[327px] flex flex-col justify-between font-satoshi border-[0.74px] border-[#d9d9d9] p-4">
             <div>

@@ -1,4 +1,4 @@
-import { fetchWithAuth } from "./fetchAuth";
+import { fetchWithAuth } from "@/lib/api/fetchAuth";
 import { vendor } from "./mock";
 import { axiosInstance } from "./axiosInstance";
 import { VendorProp } from "@/types";

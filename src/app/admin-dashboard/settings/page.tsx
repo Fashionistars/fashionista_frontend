@@ -1,13 +1,12 @@
 import React from "react";
 import Image from "next/image";
-import sapphire from "../../../../public/vendor/sapphire.svg";
 
 const page = () => {
   return (
     <div className="flex justify-between ">
       <div className="w-[118px] h-[118px] rounded-full bg-[#fda600]">
         <Image
-          src={sapphire}
+          src="/vendor/sapphire.svg"
           width={100}
           height={100}
           alt="Profile image"

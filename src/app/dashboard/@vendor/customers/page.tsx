@@ -1,4 +1,4 @@
-import TopBanner from "@/app/components/TopBanner";
+import TopBanner from "@/components/shared/utilities/TopBanner";
 import React from "react";
 
 interface CustomerProp {
@@ -171,16 +171,16 @@ const page = () => {
             <path
               d="M3 9.5H15"
               stroke="black"
-              stroke-width="1.2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M6.74997 13.25C6.74997 13.25 3.00001 10.4882 3 9.5C2.99999 8.5118 6.75 5.75 6.75 5.75"
               stroke="black"
-              stroke-width="1.2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
           Previuos
@@ -198,16 +198,16 @@ const page = () => {
             <path
               d="M15 9.5L3 9.5"
               stroke="black"
-              stroke-width="1.2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M11.25 5.75C11.25 5.75 15 8.5118 15 9.5C15 10.4882 11.25 13.25 11.25 13.25"
               stroke="black"
-              stroke-width="1.2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </button>

@@ -5,7 +5,7 @@ import { createNewProduct } from "../utils/libs";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { FormSchema } from "../utils/schema";
+import { FormSchema } from "@/lib/validation/addProduct";
 import { newProduct } from "../actions/vendor";
 import Prices from "./AddProduct/Prices";
 import BasicInformation from "./AddProduct/BasicInformation";

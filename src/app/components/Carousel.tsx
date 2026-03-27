@@ -1,9 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import couple from "../../../public/couple_assets.svg";
-import man from "../../../public/asset4.svg";
-import man2 from "../../../public/man2_asset.svg";
 import { useState, useEffect } from "react";
 
 const Slider = () => {
@@ -11,17 +8,17 @@ const Slider = () => {
   const slides = [
     {
       text: " Your Style with the Latest Fashion Trends.",
-      image: couple,
+      image: "/couple_assets.svg",
       highlight: "Style",
     },
     {
       text: "  We offer amazing discounts on first order.",
-      image: man,
+      image: "/asset4.svg",
       highlight: "discounts",
     },
     {
       text: "Get your exact measurement without stress",
-      image: man2,
+      image: "/man2_asset.svg",
       highlight: "measurement",
     },
   ];
@@ -57,7 +54,7 @@ const Slider = () => {
         </div>
         <div className="relative flex justify-center">
           <div className="z-10 absolute -top-12">
-            <Image src={slide.image} alt="" className="w-full h-full" />
+            <Image src={slide.image} alt="" width={600} height={600} className="w-full h-full" />
           </div>
         </div>
       </div>
@@ -89,7 +86,7 @@ export default Slider;
         </div>
         <div className="relative flex justify-center">
           <div className="z-10 absolute -top-16">
-            <Image src={couple} alt="" />
+            <Image src="/couple_assets.svg" alt="" />
           </div>
         </div>
       </div>
@@ -102,7 +99,7 @@ export default Slider;
         </div>
         <div className="relative flex justify-center">
           <div className="z-10 absolute -top-16">
-            <Image src={man} alt="" />
+            <Image src="/asset4.svg" alt="" />
           </div>
         </div>
       </div>
@@ -115,7 +112,7 @@ export default Slider;
         </div>
         <div className="relative flex justify-center">
           <div className="z-10 absolute -top-16">
-            <Image src={man2} alt="" />
+            <Image src="/man2_asset.svg" alt="" />
           </div>
         </div>
       </div> */

@@ -1,7 +1,7 @@
 import React from "react";
-import VendorCard from "@/app/components/VendorCard";
-// import { vendor } from "@/app/utils/mock";
-import { getAllVendors } from "@/app/utils/libs";
+import VendorCard from "@/components/ui/compounds/VendorCard";
+// import { vendor } from "@/lib/utils/mock-data";
+import { getAllVendors } from "@/core/services/api";
 
 const page = async () => {
   const vendors = (await getAllVendors()) || [];

@@ -34,23 +34,23 @@ help: ## Display this help message
 ##@ Development
 # ═══════════════════════════════════════════════════════════════
 
-install: ## Install Node.js dependencies
-	@echo "$(CYAN)Installing dependencies...$(NC)"
-	npm install
+install: ## Install Node.js dependencies with pnpm
+	@echo "$(CYAN)Installing dependencies with pnpm...$(NC)"
+	pnpm install
 	@echo "$(GREEN)✓ Dependencies installed$(NC)"
 
 dev: ## Start Next.js development server (Turbopack — port 3000)
 	@echo "$(CYAN)Starting Next.js dev server with Turbopack...$(NC)"
-	npm run dev
+	pnpm dev
 
 build: ## Build production bundle
 	@echo "$(CYAN)Building for production...$(NC)"
-	npm run build
+	pnpm build
 	@echo "$(GREEN)✓ Production build complete$(NC)"
 
 start: ## Start production server (requires build first)
 	@echo "$(CYAN)Starting production server...$(NC)"
-	npm run start
+	pnpm start
 
 preview: build start ## Build + start production server locally
 
@@ -62,26 +62,26 @@ setup: install dev ## First-time setup → start dev server
 
 lint: ## Run ESLint
 	@echo "$(CYAN)Running ESLint...$(NC)"
-	npm run lint
+	pnpm lint
 	@echo "$(GREEN)✓ Linting passed$(NC)"
 
 lint-fix: ## Run ESLint with auto-fix
 	@echo "$(CYAN)Running ESLint with auto-fix...$(NC)"
-	npx next lint --fix
+	pnpm lint:fix
 	@echo "$(GREEN)✓ Lint issues fixed$(NC)"
 
 type-check: ## Run TypeScript type checking
 	@echo "$(CYAN)Running TypeScript type check...$(NC)"
-	npx tsc --noEmit
+	pnpm type-check
 	@echo "$(GREEN)✓ Type check passed$(NC)"
 
 format: ## Format code with Prettier
 	@echo "$(CYAN)Formatting code...$(NC)"
-	npx prettier --write "src/**/*.{ts,tsx,js,jsx,json,css,md}"
+	pnpm format
 	@echo "$(GREEN)✓ Code formatted$(NC)"
 
 format-check: ## Check formatting without writing changes
-	npx prettier --check "src/**/*.{ts,tsx,js,jsx,json,css,md}"
+	pnpm format:check
 
 quality: lint type-check format-check ## Run all quality checks (lint + types + format)
 	@echo "$(GREEN)✓ All quality checks passed$(NC)"
@@ -92,33 +92,38 @@ quality: lint type-check format-check ## Run all quality checks (lint + types + 
 
 test: ## Run unit tests (Vitest)
 	@echo "$(CYAN)Running unit tests...$(NC)"
-	npx vitest run
+	pnpm test
 	@echo "$(GREEN)✓ Tests passed$(NC)"
 
 test-watch: ## Run tests in watch mode
-	npx vitest
+	pnpm test:watch
 
 test-cov: ## Run tests with coverage report
 	@echo "$(CYAN)Running tests with coverage...$(NC)"
-	npx vitest run --coverage
+	pnpm test:cov
 	@echo "$(GREEN)✓ Coverage report generated$(NC)"
 
 test-ui: ## Open Vitest UI dashboard
-	npx vitest --ui
+	pnpm test:ui
 
 test-e2e: ## Run Playwright end-to-end tests
 	@echo "$(CYAN)Running E2E tests...$(NC)"
-	npx playwright test
+	pnpm test:e2e
 	@echo "$(GREEN)✓ E2E tests passed$(NC)"
 
 test-e2e-ui: ## Run Playwright tests with headed browser
-	npx playwright test --headed
+	pnpm test:e2e:ui
 
 test-e2e-report: ## Show last Playwright test report
-	npx playwright show-report
+	pnpm test:e2e:report
 
 test-e2e-install: ## Install Playwright browsers
-	npx playwright install --with-deps
+	pnpm dlx playwright install --with-deps
+
+test-stress: ## Run cURL stress tests (Pillar 1)
+	@echo "$(CYAN)Running cURL stress tests...$(NC)"
+	bash tests/stress/auth.stress.sh
+	@echo "$(GREEN)✓ Stress tests complete$(NC)"
 
 # ═══════════════════════════════════════════════════════════════
 ##@ Docker — Development
@@ -230,9 +235,9 @@ clean: ## Clean build artifacts (.next, out)
 	rm -rf .next out .turbo
 	@echo "$(GREEN)✓ Cleaned$(NC)"
 
-clean-deps: ## Remove node_modules
-	@echo "$(YELLOW)Removing node_modules...$(NC)"
-	rm -rf node_modules
+clean-deps: ## Remove node_modules and pnpm lock
+	@echo "$(YELLOW)Removing node_modules and lockfile...$(NC)"
+	rm -rf node_modules pnpm-lock.yaml
 	@echo "$(GREEN)✓ node_modules removed$(NC)"
 
 clean-all: clean clean-deps docker-clean ## Nuclear clean (build + deps + Docker)
@@ -244,11 +249,21 @@ clean-all: clean clean-deps docker-clean ## Nuclear clean (build + deps + Docker
 
 env-setup: ## Create .env.local from .env.example (safe — won't overwrite)
 	@if [ ! -f .env.local ]; then \
-		cp .env.example .env.local 2>/dev/null || echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local; \
+		cp .env.example .env.local 2>/dev/null || echo "NEXT_PUBLIC_API_V1_URL=http://localhost:8000/api" > .env.local; \
 		echo "$(GREEN)✓ Created .env.local — edit with your values$(NC)"; \
 	else \
 		echo "$(YELLOW)⚠ .env.local already exists$(NC)"; \
 	fi
+
+tunnel-frontend: ## 🌐 Start localtunnel for frontend (port 3000)
+	@echo "$(CYAN)Starting localtunnel for frontend on port 3000...$(NC)"
+	@echo "$(YELLOW)Your frontend URL will be: https://fashionistar-frontend.loca.lt$(NC)"
+	pnpm dlx localtunnel --port 3000 --subdomain fashionistar-frontend
+
+playwright-install: ## Install Playwright browsers
+	@echo "$(CYAN)Installing Playwright browsers...$(NC)"
+	pnpm dlx playwright install --with-deps
+	@echo "$(GREEN)✓ Playwright browsers installed$(NC)"
 
 env-check: ## Display current environment configuration
 	@echo "$(CYAN)Environment variables:$(NC)"
@@ -285,32 +300,33 @@ full-stack: ## Display instructions for full-stack development
 
 info: ## Display project information
 	@echo "$(BOLD)$(CYAN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(NC)"
-	@echo "$(BOLD)  FASHIONISTAR AI — Frontend$(NC)"
+	@echo "$(BOLD)  FASHIONISTAR AI — Frontend V8.0$(NC)"
 	@echo "$(CYAN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(NC)"
 	@echo "  Node:         $$(node --version 2>/dev/null || echo 'not installed')"
-	@echo "  NPM:          $$(npm --version 2>/dev/null || echo 'not installed')"
-	@echo "  Framework:    Next.js 15 (App Router + Turbopack)"
+	@echo "  pnpm:         $$(pnpm --version 2>/dev/null || echo 'not installed')"
+	@echo "  Framework:    Next.js 15.2+ (App Router + Turbopack)"
 	@echo "  Language:     TypeScript 5.8+ (Strict Mode)"
-	@echo "  Styling:      Tailwind CSS v4 + Shadcn/ui"
-	@echo "  State:        Zustand + TanStack Query + Nuqs"
-	@echo "  API Clients:  Axios (DRF) + Ky (Ninja)"
-	@echo "  Testing:      Vitest (Unit) + Playwright (E2E)"
+	@echo "  Styling:      Tailwind CSS v3.4 + Shadcn/ui"
+	@echo "  State:        Zustand v5 + TanStack Query v5 + Nuqs v2"
+	@echo "  API Clients:  Axios (DRF Sync) + Ky (Ninja Async)"
+	@echo "  Testing:      Vitest (Unit) + Playwright (E2E) + cURL Stress"
+	@echo "  Tunnel:       localtunnel (fashionistar-frontend.loca.lt)"
 	@echo "$(CYAN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(NC)"
 
-deps: ## List installed Node packages
-	npm list --depth=0
+deps: ## List installed packages (pnpm)
+	pnpm list --depth=0
 
-outdated: ## Check for outdated Node packages
-	npm outdated
+outdated: ## Check for outdated packages
+	pnpm outdated
 
-update: ## Update Node packages
+update: ## Update packages
 	@echo "$(CYAN)Updating dependencies...$(NC)"
-	npm update
+	pnpm update
 	@echo "$(GREEN)✓ Dependencies updated$(NC)"
 
 analyze: ## Analyze production bundle size
 	@echo "$(CYAN)Analyzing bundle...$(NC)"
-	ANALYZE=true npm run build
+	ANALYZE=true pnpm build
 
 # ═══════════════════════════════════════════════════════════════
 ##@ Quick Commands

@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import logo from "../../../public/logo.svg";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import menu from "../../../public/menu.svg";
-import AdminTopBanner from "../components/AdminTopBanner";
+
+import AdminTopBanner from "@/components/shared/utilities/AdminTopBanner";
+
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -21,10 +21,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             onClick={() => setIsOpen(true)}
             className="w-[34px] h-[34px] flex justify-center  items-center bg-[#F4F3EC] border-[0.8px] border-black rounded-full"
           >
-            <Image src={menu} alt="" />
+            <Image src="/menu.svg" alt="" width={24} height={24} />
           </button>
           <div className="flex items-center">
-            <Image src={logo} alt="logo" className="w-[39px] h-[38px]" />
+            <Image src="/logo.svg" width={55} height={55} alt="logo" className="w-[39px] h-[38px]" />
             <h2 className="font-bon_foyage px-3 text-[25px] leading-[25px] text-black">
               Fashionistar
             </h2>
@@ -110,7 +110,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </svg>
         </button>
         <div className="flex items-center md:justify-center px-10 py-5 md:py-[30px] border-b-[1.2px] border-b-[#282828]">
-          <Image src={logo} alt="logo" className="w-[55px] h-[54px]" />
+          <Image src="/logo.svg" width={55} height={55} alt="logo" className="w-[55px] h-[54px]" />
           <h2 className="font-bon_foyage px-3 text-4xl leading-9 text-white">
             Fashionistar
           </h2>
@@ -426,12 +426,12 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <path
                   d="M7.66669 10.0625H15.3334"
                   stroke="currentColor"
-                  stroke-linecap="round"
+                  strokeLinecap="round"
                 />
                 <path
                   d="M7.66669 13.416H12.9375"
                   stroke="currentColor"
-                  stroke-linecap="round"
+                  strokeLinecap="round"
                 />
               </svg>
               Reviews

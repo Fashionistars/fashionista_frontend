@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import girl from "../../../../../public/girl.png";
 
 const page = () => {
   return (
@@ -171,7 +170,7 @@ const page = () => {
         </form>
         <div className="w-full h-full absolute top-0 ">
           <Image
-            src={girl}
+            src="/girl.png"
             width={600}
             height={600}
             alt=""

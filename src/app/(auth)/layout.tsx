@@ -1,7 +1,5 @@
 import Image from "next/image";
 import React from "react";
-import bg_auth from "../../../public/bg-auth.svg";
-import logo from "../../../public/logo.svg";
 
 const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (

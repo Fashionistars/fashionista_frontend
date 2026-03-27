@@ -3,7 +3,7 @@
 # 🏛️ FASHIONISTAR AI: INDUSTRIAL FRONTEND ARCHITECTURE (V7.0 - Final Enterprise Edition)
 
 **Target Era:** 2026-2030
-**Core Framework:** Next.js 15 (App Router + Turbopack)
+**Core Framework:** Next.js 16 0R 17 (App Router + Turbopack)
 **Language:** TypeScript 5.8+ (Strict Mode)
 **Styling Engine:** Tailwind CSS v4 + Shadcn/ui
 **Backend Alignment:** Django 6.0 (Sync DRF + Async Ninja Hybrid)

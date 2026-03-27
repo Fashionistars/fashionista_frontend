@@ -2,7 +2,6 @@
 import React, { useRef } from "react";
 import { category } from "../utils/mock";
 import Image from "next/image";
-import arrow from "../../../public/arrows.svg";
 
 const CategoryScroll = () => {
   const categoryScrollRef = useRef<HTMLDivElement>(null);
@@ -26,11 +25,15 @@ const CategoryScroll = () => {
   const categories = category.map((cat, index) => {
     return (
       <div key={index} className="relative group">
-        <Image
-          src={cat.image}
-          alt=""
-          className="aspect-square object-cover w-full"
-        />
+        <div className="relative aspect-square w-full">
+          <Image
+            src={cat.image}
+            alt={cat.title}
+            fill
+            sizes="(max-width: 768px) 40vw, (max-width: 1024px) 35vw, 23vw"
+            className="object-cover"
+          />
+        </div>
         <span className="absolute bottom-3 left-2 md:bottom-6 mb:left-5 text-[15.6px] leading-[15.48px] md:text-[32px] font-bon_foyage md:leading-[32px] text-white group-hover:text-[#fda600] ">
           {cat.title}
         </span>
@@ -44,13 +47,13 @@ const CategoryScroll = () => {
           className="w-[50px] h-[50px] rounded-full "
           onClick={scrollLeft}
         >
-          <Image src={arrow} alt="" />
+          <Image src="/arrows.svg" alt="scroll left" width={50} height={50} />
         </button>
         <button
           className="w-[50px] h-[50px] rounded-full"
           onClick={scrollRight}
         >
-          <Image src={arrow} alt="" className="scale-x-[-1]" />
+          <Image src="/arrows.svg" alt="scroll right" width={50} height={50} className="scale-x-[-1]" />
         </button>
       </div>
       <div

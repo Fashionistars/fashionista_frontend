@@ -1,11 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import logo from "../../../../public/logo.svg";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import menu from "../../../../public/menu.svg";
-import AdminTopBanner from "../../components/AdminTopBanner";
+import AdminTopBanner from "@/components/shared/utilities/AdminTopBanner";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -21,10 +19,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             onClick={() => setIsOpen(true)}
             className="w-[34px] h-[34px] flex justify-center  items-center bg-[#F4F3EC] border-[0.8px] border-black rounded-full"
           >
-            <Image src={menu} alt="" />
+            <Image src="/menu.svg" alt="" />
           </button>
           <div className="flex items-center">
-            <Image src={logo} alt="logo" className="w-[39px] h-[38px]" />
+            <Image src="/logo.svg" width={55} height={55} alt="logo" className="w-[39px] h-[38px]" />
             <h2 className="font-bon_foyage px-3 text-[25px] leading-[25px] text-black">
               Fashionistar
             </h2>
@@ -110,7 +108,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </svg>
         </button>
         <div className="flex items-center md:justify-center px-10 py-5 md:py-[30px] border-b-[1.2px] border-b-[#282828]">
-          <Image src={logo} alt="logo" className="w-[55px] h-[54px]" />
+          <Image src="/logo.svg" width={55} height={55} alt="logo" className="w-[55px] h-[54px]" />
           <h2 className="font-bon_foyage px-3 text-4xl leading-9 text-white">
             Fashionistar
           </h2>
@@ -227,28 +225,28 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                       <path
                         d="M4.4126 10.7719V6.69336H18.7557V10.7719C18.7557 13.8076 18.7557 15.3255 17.8221 16.2685C16.8886 17.2116 15.386 17.2116 12.3809 17.2116H10.7873C7.78223 17.2116 6.2797 17.2116 5.34615 16.2685C4.4126 15.3255 4.4126 13.8076 4.4126 10.7719Z"
                         stroke="currentColor"
-                        stroke-width="1.43431"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.43431"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                       <path
                         d="M4.4126 6.69396L5.10216 5.22288C5.63697 4.08197 5.90436 3.51152 6.44637 3.19033C6.98837 2.86914 7.68362 2.86914 9.07409 2.86914H14.0942C15.4847 2.86914 16.1798 2.86914 16.7219 3.19033C17.2639 3.51152 17.5313 4.08197 18.066 5.22288L18.7557 6.69396"
                         stroke="currentColor"
-                        stroke-width="1.43431"
-                        stroke-linecap="round"
+                        strokeWidth="1.43431"
+                        strokeLinecap="round"
                       />
                       <path
                         d="M10.1494 9.5625H13.018"
                         stroke="currentColor"
-                        stroke-width="1.43431"
-                        stroke-linecap="round"
+                        strokeWidth="1.43431"
+                        strokeLinecap="round"
                       />
                       <path
                         d="M11.584 19.6035V21.994M11.584 19.6035H6.80299M11.584 19.6035H16.365M6.80299 19.6035H4.41248C3.09224 19.6035 2.02197 20.6738 2.02197 21.994M6.80299 19.6035V21.994M16.365 19.6035H18.7555C20.0758 19.6035 21.1461 20.6738 21.1461 21.994M16.365 19.6035V21.994"
                         stroke="currentColor"
-                        stroke-width="1.43431"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="1.43431"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </svg>
                     Track my Order

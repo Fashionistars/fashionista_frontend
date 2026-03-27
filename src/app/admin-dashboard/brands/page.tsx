@@ -1,10 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import sapphire from "../../../../public/vendor/sapphire.svg";
-import burberry from "../../../../public/vendor/burberry.svg";
-import ralph from "../../../../public/vendor/ralph.svg";
-import calvin from "../../../../public/vendor/calvin.svg";
-import { vendor } from "@/app/utils/mock";
+import { vendor } from "@/lib/utils/mock-data";
 import Image from "next/image";
 
 const page = () => {

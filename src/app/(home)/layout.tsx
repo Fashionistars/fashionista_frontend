@@ -1,11 +1,8 @@
-import Image from "next/image";
+
 import Link from "next/link";
-import Navbar from "@/app/components/Navbar";
-import MobileNavBar from "../components/MobileNavBar";
-import Footer from "../components/Footer";
-import NewNavbar from "../components/NewNavbar";
-import NewFooter from "../components/NewFooter";
-import NewMobileNav from "../components/NewMobileNav";
+import NewNavbar from "@/components/shared/navigation/NewNavbar";
+import NewFooter from "@/components/shared/feedback/NewFooter";
+import NewMobileNav from "@/components/shared/navigation/NewMobileNav";
 
 export default function Home({
   children,

@@ -1,9 +1,9 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { axiosInstance } from "../utils/axiosInstance";
+import { axiosInstance } from "@/lib/api/axiosInstance";
 import { cookies } from "next/headers";
-import { signupSchema } from "../utils/schemas/auth_shema";
+import { signupSchema } from "@/lib/validation/auth_shema";
 
 export const signUp = async (prev: any, formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
@@ -42,27 +42,26 @@ export const verify = async (formdata: FormData) => {
 };
 export const login = async (prev: any, formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
-  let user_role;
   try {
     const res = await axiosInstance.post("/auth/login", data);
     console.log(res.data);
     const { access, refresh, role } = res.data;
-    // user_role = role;
+    const cookieStore = await cookies();
 
-    cookies().set("access_token", access, {
+    cookieStore.set("access_token", access, {
       maxAge: 60 * 60 * 24,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
-    cookies().set("refresh_token", refresh, {
+    cookieStore.set("refresh_token", refresh, {
       maxAge: 60 * 60 * 24 * 7,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
 
-    cookies().set("role", role, {
+    cookieStore.set("role", role, {
       maxAge: 60 * 60 * 24 * 7 * 365,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
