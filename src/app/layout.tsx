@@ -11,6 +11,7 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+  preload: false, // avoids dev-time network errors when fonts.googleapis.com unreachable
 });
 
 const raleway = Raleway({
@@ -18,6 +19,7 @@ const raleway = Raleway({
   variable: "--font-raleway",
   display: "swap",
   weight: ["300", "400", "500", "600", "700", "800", "900"],
+  preload: false, // same — fallback fonts are sufficient in dev
 });
 
 // ── Local Fonts ───────────────────────────────────────────────────────────────
