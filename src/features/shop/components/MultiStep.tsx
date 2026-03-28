@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { createNewProduct } from "@/lib/utils/helpers";
+// createNewProduct available from '@/lib/utils/helpers' when product API is wired
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -70,6 +70,9 @@ export default function Form() {
   } = useForm<Inputs>({
     resolver: zodResolver(FormSchema),
   });
+
+  // suppress unused-var — register/watch/setValue/errors kept for future form wiring
+  void register; void watch; void setValue; void errors;
 
   const { back } = useRouter();
   const processForm: SubmitHandler<Inputs> = async (data) => {

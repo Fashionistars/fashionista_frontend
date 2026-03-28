@@ -25,6 +25,7 @@ const DragAndDrop = () => {
     onDrop,
     onError: (err) => console.log(err),
   });
+  void isDragActive;
 
   return (
     <div

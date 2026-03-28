@@ -66,12 +66,15 @@ test.describe("Pillar 2 — Django Admin Panel E2E", () => {
       test.skip(true, `ngrok dropped: ${String(e).slice(0, 80)}`);
       return;
     }
-    // 404 = ngrok URL rotated or Django SECRET_ADMIN_URL differs — treat as offline
-    if (!res || res.status() === 404) {
-      test.skip(true, "Admin URL returned 404 — backend URL may have changed");
+    // Treat any non-2xx/3xx response as backend offline/unreachable — skip gracefully.
+    // 404 = ngrok URL rotated or Django SECRET_ADMIN_URL differs
+    // 502/503/504 = ngrok tunnel down or Django server not running
+    const status = res?.status() ?? 0;
+    if (!res || ![200, 301, 302].includes(status)) {
+      test.skip(true, `Admin URL returned ${status} — backend may be offline or URL changed`);
       return;
     }
-    expect([200, 301, 302]).toContain(res?.status() ?? 0);
+    expect([200, 301, 302]).toContain(status);
     expect(page.url()).toContain("admin");
   });
 

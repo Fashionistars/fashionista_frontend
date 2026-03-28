@@ -16,6 +16,7 @@ const BasicInformation = ({
 }) => {
   const [preview, setPreview] = useState<string | undefined>(undefined);
   const [fileName, setFileName] = useState<string>("");
+  void preview;
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -76,7 +77,7 @@ const BasicInformation = ({
 
   return (
     <form
-      action={BasicInformationAction}
+      action={BasicInformationAction as any}
       id="basic"
       className="flex flex-col gap-8 w-full shrink-0"
     >

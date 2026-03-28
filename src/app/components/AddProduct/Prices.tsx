@@ -18,7 +18,7 @@ const Prices = ({
   };
   console.log("New Product details", newProductFields);
   return (
-    <form id="prices" action={PricesAction} className="space-y-10 w-full">
+    <form id="prices" action={PricesAction as any} className="space-y-10 w-full">
       <div className="space-y-2">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           Prices

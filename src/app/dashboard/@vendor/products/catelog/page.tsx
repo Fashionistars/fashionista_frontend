@@ -1,8 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { deleteProduct } from "@/features/shop/api/actions";
-import { fetchWithAuth } from "@/core/api/middleware";
 
 const page = async () => {
   const products = [
@@ -25,6 +23,7 @@ const page = async () => {
   ];
   const vendor_id = "123abc";
   const product_id = "cba321";
+  void vendor_id; void product_id;
   // const fetchedData = await fetchWithAuth(`/vendor/product/${vendor_id}`);
 
   // const cartList = products.map((product) => (

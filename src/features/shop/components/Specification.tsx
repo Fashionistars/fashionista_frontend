@@ -1,6 +1,6 @@
 "use client";
 import { NewProductType } from "@/types";
-import React, { useState } from "react";
+import React from "react";
 import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
 import { useFormState } from "react-dom";
 import { SpecificationAction } from "@/features/shop/api/actions";

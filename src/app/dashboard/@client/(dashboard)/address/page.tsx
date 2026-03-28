@@ -3,6 +3,7 @@ import React from "react";
 
 const page = async () => {
   const getAddress = await fetchWithAuth("/client/shipping-address");
+  void getAddress;
   return (
     <div className="space-y-10 pb-10">
       <div>

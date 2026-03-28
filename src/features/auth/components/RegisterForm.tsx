@@ -46,7 +46,7 @@ export function RegisterForm() {
 
   const { mutate, isPending } = useMutation({
     mutationFn: register,
-    onSuccess: (data) => {
+    onSuccess: () => {
       const identifier = mode === "email" ? watch("email") : watch("phone");
       setPendingOTP(
         mode === "email" ? { email: identifier } : { phone: identifier }

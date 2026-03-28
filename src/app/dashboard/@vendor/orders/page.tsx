@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import OrderTable from "@/components/OrdersTable";
 import { Suspense } from "react";

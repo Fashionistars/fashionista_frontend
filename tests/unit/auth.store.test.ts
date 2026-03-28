@@ -4,7 +4,7 @@
  * Tests Zustand store state transitions.
  * Also tests concurrency-safe behaviour under rapid state changes.
  */
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { act } from "react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 

@@ -7,11 +7,15 @@ import { Providers } from "@/components/providers";
 import "./globals.css";
 
 // ── Google Fonts ──────────────────────────────────────────────────────────────
+// NOTE: preload: false + fallback arrays prevent download warnings when
+// fonts.googleapis.com is unreachable (Playwright, offline dev, CI environments).
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
   preload: false, // avoids dev-time network errors when fonts.googleapis.com unreachable
+  adjustFontFallback: false, // prevents synthetic download on restricted networks
+  fallback: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
 });
 
 const raleway = Raleway({
@@ -19,7 +23,9 @@ const raleway = Raleway({
   variable: "--font-raleway",
   display: "swap",
   weight: ["300", "400", "500", "600", "700", "800", "900"],
-  preload: false, // same — fallback fonts are sufficient in dev
+  preload: false,
+  adjustFontFallback: false, // same — prevents network attempts when offline
+  fallback: ["Trebuchet MS", "Gill Sans", "system-ui", "sans-serif"],
 });
 
 // ── Local Fonts ───────────────────────────────────────────────────────────────

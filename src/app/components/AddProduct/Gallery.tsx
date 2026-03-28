@@ -24,6 +24,7 @@ const Gallery = ({
     image_4: "",
     video: null,
   });
+  void preview; void setPreview;
 
   // const onDrop = useCallback((acceptedFiles: File[]) => {
   //   const file = acceptedFiles[0];
@@ -62,6 +63,7 @@ const Gallery = ({
     ),
     onError: (err) => console.log(err),
   });
+  void isDragActive;
 
   const CreateDropzone = (name: "image_2" | "image_3" | "image_4") => {
     const { getRootProps, getInputProps } = useDropzone({
@@ -151,7 +153,7 @@ const Gallery = ({
   };
 
   return (
-    <form action={GalleryAction} id="gallery" className="w-full space-y-10">
+    <form action={GalleryAction as any} id="gallery" className="w-full space-y-10">
       <div className="space-y-2">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           Gallery

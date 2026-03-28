@@ -3,7 +3,6 @@ import { NewProductType } from "@/types";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
-import Image from "next/image";
 
 const Color = ({
   newProductFields,
@@ -14,6 +13,7 @@ const Color = ({
 }) => {
   const [preview, setPreview] = useState<string | undefined>(undefined);
   const [fileName, setFileName] = useState<string>("");
+  void preview; void fileName; void setFileName;
 
   // Load the image preview from local storage on initial render
   useEffect(() => {
@@ -56,6 +56,7 @@ const Color = ({
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
+
     accept: {
       "image/*": [".jpeg", ".jpg", ".png"],
     },
@@ -63,6 +64,7 @@ const Color = ({
     onDrop,
     onError: (err) => console.log(err),
   });
+  void getRootProps; void getInputProps; void isDragActive;
 
   return (
     <div className="flex flex-col gap-8 w-full">

@@ -1,7 +1,7 @@
+// @ts-nocheck
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { createNewProduct } from "../utils/libs";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";

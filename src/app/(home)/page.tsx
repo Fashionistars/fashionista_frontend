@@ -104,7 +104,7 @@ export default async function Home(props: PageProps) {
       </div>
 
       <ShopByCategory />
-      <LatestCollection searchParams={searchParams} />
+      <LatestCollection searchParams={searchParams as any} />
       <div className=" w-full h-[593px] bg-[#fda600] md:h-[746px] relative p-10 md:p-14 lg:p-24 flex flex-col gap-5 md:gap-10 items-center">
         <p className="font-raleway font-semibold text-xl text-black">
           SENATOR OUTFITS

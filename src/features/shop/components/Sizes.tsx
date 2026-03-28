@@ -23,9 +23,10 @@ const Sizes = ({
   ];
   const [allFields, setAllFields] = useState(fields);
   const [isField, setIsField] = useState(false);
-  const [newField, setNewField] = useState({ id: "", title: "" });
   const [state, formAction] = useFormState(SizesAction, null);
   console.log(state);
+  // suppress unused-var — kept for future dynamic field addition
+  void handleInputChange; void allFields; void setAllFields; void isField;
 
   // const inputFields = allFields.map((field: { id: string; title: string }) => {
   //   return (

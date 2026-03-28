@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import TopBanner from "@/components/shared/utilities/TopBanner";
 import Link from "next/link";

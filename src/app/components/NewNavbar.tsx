@@ -10,6 +10,7 @@ import CartItems from "./CartItems";
 const NewNavbar = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  void showModal; void setShowModal;
   const [showCart, setShowCart] = useState(false);
   const pathname = usePathname();
   return (

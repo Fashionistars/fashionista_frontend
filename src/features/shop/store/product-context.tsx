@@ -8,7 +8,6 @@ import {
   useContext,
 } from "react";
 import { NewProductType } from "@/types";
-import { FormSchema } from "@/lib/validation/addProduct";
 import { NewProductFieldTypes } from "@/lib/validation/addProduct";
 
 const initialValue: NewProductType = {

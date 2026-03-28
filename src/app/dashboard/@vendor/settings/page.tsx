@@ -1,7 +1,7 @@
 import TopBanner from "@/components/shared/utilities/TopBanner";
 import Image from "next/image";
 import React from "react";
-import DragAndDrop from "@/components/ui/compounds/DragAndDrop";
+import DragAndDrop from "@/components/shared/utilities/DragAndDrop";
 
 interface VendorProp {
   image: string;

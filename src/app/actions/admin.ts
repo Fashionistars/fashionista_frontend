@@ -11,6 +11,7 @@ export const getAllColloections = async () => {
   } catch (error) {
     console.log(error);
   }
+  return undefined;
 };
 export const newCollection = async (formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
@@ -26,4 +27,5 @@ export const newCollection = async (formdata: FormData) => {
   } catch (error) {
     console.log(error);
   }
+  return undefined;
 };

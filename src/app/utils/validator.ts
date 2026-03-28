@@ -5,5 +5,6 @@ const validator = (form:any, schema:ZodSchema) => {
     if (!validated.success) {
         return {errors: validated.error.flatten().fieldErrors}
     }
+    return undefined;
 }
 export default validator

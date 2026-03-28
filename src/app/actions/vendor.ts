@@ -1,6 +1,5 @@
 "use server";
-import { object, z } from "zod";
-import { FormSchema, PricesSchema } from "@/lib/validation/addProduct";
+import { PricesSchema } from "@/lib/validation/addProduct";
 import { fetchWithAuth } from "@/lib/api/fetchAuth";
 import {
   BasicInformationSchema,
@@ -69,7 +68,7 @@ export const GalleryAction = async (formdata: FormData) => {
   }
   redirect("/dashboard/products?step=specification");
 };
-export const SpecificationAction = async (prev: any, formdata: FormData) => {
+export const SpecificationAction = async (prev: any, formdata: FormData) => { void prev;
   const data = Object.fromEntries(formdata.entries());
 
   const specData = { specification: data };
@@ -81,7 +80,7 @@ export const SpecificationAction = async (prev: any, formdata: FormData) => {
   }
   redirect("/dashboard/products?step=sizes");
 };
-export const SizesAction = async (prev: any, formdata: FormData) => {
+export const SizesAction = async (prev: any, formdata: FormData) => { void prev;
   const newData = {
     sizes: {
       size: formdata.get("size"),
@@ -98,7 +97,7 @@ export const SizesAction = async (prev: any, formdata: FormData) => {
   redirect("/dashboard/products?step=color");
 };
 
-export const newProduct = async (formdata: FormData | object) => {
+export const newProduct = async (formdata: FormData | object) => { void formdata;
   // const data = Object.fromEntries(formdata.entries());
   // console.log("form information", data);
   // const validatedForm = FormSchema.safeParse(data);
@@ -135,4 +134,4 @@ export const deleteProduct = async (vendor_id: string, product_id: string) => {
   }
 };
 
-export const editProduct = async () => {};
+export const editProduct = async () => { return undefined; };

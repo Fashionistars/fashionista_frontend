@@ -10,7 +10,7 @@
  * NOTE: We test the client CONFIGURATION and error-handling logic,
  * not the actual HTTP calls (those are Playwright E2E tests).
  */
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import axios from "axios";
 
 // Mock the auth store
@@ -62,7 +62,7 @@ describe("API Client — Sync (Axios)", () => {
     });
 
     // Trigger interceptor manually
-    client.interceptors.request.handlers.forEach((h) => {
+    client.interceptors.request.handlers!.forEach((h) => {
       if (h?.fulfilled) {
         h.fulfilled({ headers: {} as never, method: "GET", url: "/" } as never);
       }
@@ -84,7 +84,7 @@ describe("API Client — Sync (Axios)", () => {
 
     // Simulate a 401 error
     const error = { response: { status: 401, data: {} }, config: {} };
-    client.interceptors.response.handlers.forEach((h) => {
+    client.interceptors.response.handlers!.forEach((h) => {
       if (h?.rejected) {
         h.rejected(error).catch(() => {});
       }

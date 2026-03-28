@@ -26,4 +26,5 @@ export const newCollection = async (formdata: FormData) => {
   } catch (error) {
     console.log(error);
   }
+  return undefined;
 };

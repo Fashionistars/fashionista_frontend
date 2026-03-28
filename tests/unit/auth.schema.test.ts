@@ -9,7 +9,6 @@ import {
   LoginSchema,
   RegisterSchema,
   OTPSchema,
-  PasswordResetRequestSchema,
   ChangePasswordSchema,
 } from "@/features/auth/schemas/auth.schemas";
 

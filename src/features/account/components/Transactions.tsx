@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import OnlyDigitsInput from "./NumberInput";
-import Collapsible from "./Collapsible";
+import { Collapsible } from "./Collapsible";
 
 interface WithdrawalProp {
   order: string;
@@ -131,17 +130,18 @@ const Transactions = () => {
     return (
       <div key={index} className="w-1/2">
         <Collapsible
-          text={question.text}
-          title={question.title}
-          isOpen={isOpen == index}
-          onClick={() => setIsOpen(isOpen === index ? null : index)}
-        />
+          trigger={<span className="font-satoshi text-lg">{question.title}</span>}
+        >
+          <p>{question.text}</p>
+        </Collapsible>
       </div>
     );
   });
   const searchParams = useSearchParams();
   const options = searchParams.get("options");
   const delta = 1;
+  // suppress unused variable for setIsOpen if any
+  void isOpen; void setIsOpen;
   return (
     <div>
       <nav className="flex justify-between items-center py-8">
@@ -193,7 +193,14 @@ const Transactions = () => {
 
               <form className="flex flex-wrap gap-10">
                 <div className="flex flex-col gap-2 w-full md:w-[48%]">
-                  <OnlyDigitsInput title="Amount" name="amount" />
+                  <label className="font-satoshi text-[15px] leading-5 text-[#000]">
+                    Amount
+                  </label>
+                  <input
+                    type="number"
+                    name="amount"
+                    className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-none text-[#000]"
+                  />
                 </div>
                 <div className="flex flex-col gap-2 w-full md:w-[48%]">
                   <label className="font-satoshi text-[15px] leading-5 text-[#000]">

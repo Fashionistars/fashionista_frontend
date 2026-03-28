@@ -1,0 +1,87 @@
+
+> fashionistar-ai@2.0.0 type-check C:\Users\fashi\OneDrive\Documenti\FASHIONISTAR_ANTAGRAVITY\fashionista_frontend
+> tsc --noEmit
+
+src/app/(home)/get-measured/page.tsx(7,13): error TS6133: 'res' is declared but its value is never read.
+src/app/(home)/page.tsx(107,25): error TS2739: Type '{ [key: string]: string | string[] | undefined; }' is missing the following properties from type 'Promise<{ [key: string]: string | string[] | undefined; }>': then, catch, finally, [Symbol.toStringTag]
+src/app/(home)/vendors/page.tsx(9,49): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/actions/admin.ts(15,30): error TS7030: Not all code paths return a value.
+src/app/actions/auth.ts(8,30): error TS6133: 'prev' is declared but its value is never read.
+src/app/actions/auth.ts(43,22): error TS7030: Not all code paths return a value.
+src/app/actions/auth.ts(43,29): error TS6133: 'prev' is declared but its value is never read.
+src/app/actions/auth.ts(78,9): error TS6133: 'data' is declared but its value is never read.
+src/app/actions/vendor.ts(2,1): error TS6192: All imports in import declaration are unused.
+src/app/actions/vendor.ts(3,10): error TS6133: 'FormSchema' is declared but its value is never read.
+src/app/actions/vendor.ts(72,43): error TS6133: 'prev' is declared but its value is never read.
+src/app/actions/vendor.ts(84,35): error TS6133: 'prev' is declared but its value is never read.
+src/app/actions/vendor.ts(101,34): error TS6133: 'formdata' is declared but its value is never read.
+src/app/admin-dashboard/orders/page.tsx(1,1): error TS6133: 'OrderList' is declared but its value is never read.
+src/app/client/dashboard/wallet/page.tsx(2,1): error TS6133: 'Link' is declared but its value is never read.
+src/app/components/AddProduct/BasicInformation.tsx(17,10): error TS6133: 'preview' is declared but its value is never read.
+src/app/components/AddProduct/BasicInformation.tsx(79,7): error TS2322: Type '(formdata: FormData) => Promise<{ errors: { title?: string[] | undefined; image_1?: string[] | undefined; description?: string[] | undefined; }; }>' is not assignable to type 'string | ((formData: FormData) => void | Promise<void>) | undefined'.
+  Type '(formdata: FormData) => Promise<{ errors: { title?: string[] | undefined; image_1?: string[] | undefined; description?: string[] | undefined; }; }>' is not assignable to type '(formData: FormData) => void | Promise<void>'.
+    Type 'Promise<{ errors: { title?: string[] | undefined; image_1?: string[] | undefined; description?: string[] | undefined; }; }>' is not assignable to type 'void | Promise<void>'.
+      Type 'Promise<{ errors: { title?: string[] | undefined; image_1?: string[] | undefined; description?: string[] | undefined; }; }>' is not assignable to type 'Promise<void>'.
+        Type '{ errors: { title?: string[] | undefined; image_1?: string[] | undefined; description?: string[] | undefined; }; }' is not assignable to type 'void'.
+src/app/components/AddProduct/Category.tsx(2,1): error TS6192: All imports in import declaration are unused.
+src/app/components/AddProduct/Category.tsx(20,11): error TS2322: Type '(formdata: FormData) => Promise<{ errors: { category?: string[] | undefined; brands?: string[] | undefined; }; }>' is not assignable to type 'string | ((formData: FormData) => void | Promise<void>) | undefined'.
+  Type '(formdata: FormData) => Promise<{ errors: { category?: string[] | undefined; brands?: string[] | undefined; }; }>' is not assignable to type '(formData: FormData) => void | Promise<void>'.
+    Type 'Promise<{ errors: { category?: string[] | undefined; brands?: string[] | undefined; }; }>' is not assignable to type 'void | Promise<void>'.
+      Type 'Promise<{ errors: { category?: string[] | undefined; brands?: string[] | undefined; }; }>' is not assignable to type 'Promise<void>'.
+        Type '{ errors: { category?: string[] | undefined; brands?: string[] | undefined; }; }' is not assignable to type 'void'.
+src/app/components/AddProduct/Color.tsx(6,1): error TS6133: 'Image' is declared but its value is never read.
+src/app/components/AddProduct/Color.tsx(15,10): error TS6133: 'preview' is declared but its value is never read.
+src/app/components/AddProduct/Color.tsx(16,10): error TS6133: 'fileName' is declared but its value is never read.
+src/app/components/AddProduct/Color.tsx(58,9): error TS6198: All destructured elements are unused.
+src/app/components/AddProduct/Gallery.tsx(16,10): error TS6133: 'preview' is declared but its value is never read.
+src/app/components/AddProduct/Gallery.tsx(40,40): error TS6133: 'isDragActive' is declared but its value is never read.
+src/app/components/AddProduct/Gallery.tsx(154,11): error TS2322: Type '(formdata: FormData) => Promise<{ errors: { video?: string[] | undefined; image_2?: string[] | undefined; image_3?: string[] | undefined; image_4?: string[] | undefined; }; }>' is not assignable to type 'string | ((formData: FormData) => void | Promise<void>) | undefined'.
+  Type '(formdata: FormData) => Promise<{ errors: { video?: string[] | undefined; image_2?: string[] | undefined; image_3?: string[] | undefined; image_4?: string[] | undefined; }; }>' is not assignable to type '(formData: FormData) => void | Promise<void>'.
+    Type 'Promise<{ errors: { video?: string[] | undefined; image_2?: string[] | undefined; image_3?: string[] | undefined; image_4?: string[] | undefined; }; }>' is not assignable to type 'void | Promise<void>'.
+      Type 'Promise<{ errors: { video?: string[] | undefined; image_2?: string[] | undefined; image_3?: string[] | undefined; image_4?: string[] | undefined; }; }>' is not assignable to type 'Promise<void>'.
+        Type '{ errors: { video?: string[] | undefined; image_2?: string[] | undefined; image_3?: string[] | undefined; image_4?: string[] | undefined; }; }' is not assignable to type 'void'.
+src/app/components/AddProduct/Prices.tsx(21,23): error TS2322: Type '(formdata: FormData) => Promise<{ errors: { shipping_amount?: string[] | undefined; sales_price?: string[] | undefined; regular_price?: string[] | undefined; stock_qty?: string[] | undefined; tag?: string[] | undefined; total_price?: string[] | undefined; }; }>' is not assignable to type 'string | ((formData: FormData) => void | Promise<void>) | undefined'.
+  Type '(formdata: FormData) => Promise<{ errors: { shipping_amount?: string[] | undefined; sales_price?: string[] | undefined; regular_price?: string[] | undefined; stock_qty?: string[] | undefined; tag?: string[] | undefined; total_price?: string[] | undefined; }; }>' is not assignable to type '(formData: FormData) => void | Promise<void>'.
+    Type 'Promise<{ errors: { shipping_amount?: string[] | undefined; sales_price?: string[] | undefined; regular_price?: string[] | undefined; stock_qty?: string[] | undefined; tag?: string[] | undefined; total_price?: string[] | undefined; }; }>' is not assignable to type 'void | Promise<void>'.
+      Type 'Promise<{ errors: { shipping_amount?: string[] | undefined; sales_price?: string[] | undefined; regular_price?: string[] | undefined; stock_qty?: string[] | undefined; tag?: string[] | undefined; total_price?: string[] | undefined; }; }>' is not assignable to type 'Promise<void>'.
+        Type '{ errors: { shipping_amount?: string[] | undefined; sales_price?: string[] | undefined; regular_price?: string[] | undefined; stock_qty?: string[] | undefined; tag?: string[] | undefined; total_price?: string[] | undefined; }; }' is not assignable to type 'void'.
+src/app/components/AddProduct/Sizes.tsx(15,9): error TS6133: 'handleInputChange' is declared but its value is never read.
+src/app/components/AddProduct/Sizes.tsx(24,10): error TS6133: 'allFields' is declared but its value is never read.
+src/app/components/AddProduct/Sizes.tsx(24,21): error TS6133: 'setAllFields' is declared but its value is never read.
+src/app/components/AddProduct/Sizes.tsx(25,10): error TS6133: 'isField' is declared but its value is never read.
+src/app/components/AddProduct/Sizes.tsx(26,10): error TS6133: 'newField' is declared but its value is never read.
+src/app/components/AddProduct/Sizes.tsx(26,20): error TS6133: 'setNewField' is declared but its value is never read.
+src/app/components/AddProduct/Specification.tsx(3,17): error TS6133: 'useState' is declared but its value is never read.
+src/app/components/AdminTopBanner.tsx(2,1): error TS6133: 'usePathname' is declared but its value is never read.
+src/app/components/Cads.tsx(3,1): error TS6133: 'data' is declared but its value is never read.
+src/app/components/Collapsible.tsx(2,17): error TS6133: 'useState' is declared but its value is never read.
+src/app/components/DragAndDrop.tsx(20,40): error TS6133: 'isDragActive' is declared but its value is never read.
+src/app/components/LatestCollection.tsx(1,1): error TS6133: 'waitForDebugger' is declared but its value is never read.
+src/app/components/LatestCollection.tsx(19,19): error TS7030: Not all code paths return a value.
+src/app/components/MultiStep.tsx(4,1): error TS6133: 'createNewProduct' is declared but its value is never read.
+src/app/components/MultiStep.tsx(63,5): error TS6133: 'register' is declared but its value is never read.
+src/app/components/MultiStep.tsx(65,5): error TS6133: 'watch' is declared but its value is never read.
+src/app/components/MultiStep.tsx(68,5): error TS6133: 'setValue' is declared but its value is never read.
+src/app/components/MultiStep.tsx(69,16): error TS6133: 'errors' is declared but its value is never read.
+src/app/components/NewNavbar.tsx(12,10): error TS6133: 'showModal' is declared but its value is never read.
+src/app/components/NewNavbar.tsx(12,21): error TS6133: 'setShowModal' is declared but its value is never read.
+src/app/components/ShopByCategory.tsx(10,25): error TS7030: Not all code paths return a value.
+src/app/components/VerifyInput.tsx(7,3): error TS6133: 'useMemo' is declared but its value is never read.
+src/app/components/VerifyInput.tsx(24,7): error TS6133: 'prevIndex' is declared but its value is never read.
+src/app/components/VerifyInput.tsx(46,7): error TS6133: 'currentIndex' is declared but its value is never read.
+src/app/context/addProductContext.tsx(11,1): error TS6133: 'FormSchema' is declared but its value is never read.
+src/app/dashboard/@client/(dashboard)/address/page.tsx(5,9): error TS6133: 'getAddress' is declared but its value is never read.
+src/app/dashboard/@client/(dashboard)/wallet/page.tsx(2,1): error TS6133: 'Link' is declared but its value is never read.
+src/app/dashboard/@vendor/analytics/page.tsx(4,22): error TS2307: Cannot find module '@/components/Charts' or its corresponding type declarations.
+src/app/dashboard/@vendor/orders/[order_oid]/page.tsx(249,24): error TS18047: 'order' is possibly 'null'.
+src/app/dashboard/@vendor/orders/[order_oid]/page.tsx(253,28): error TS18047: 'order' is possibly 'null'.
+src/app/dashboard/@vendor/orders/[order_oid]/page.tsx(257,25): error TS18047: 'order' is possibly 'null'.
+src/app/dashboard/@vendor/orders/[order_oid]/page.tsx(260,44): error TS18047: 'order' is possibly 'null'.
+src/app/dashboard/@vendor/orders/[order_oid]/page.tsx(261,44): error TS18047: 'order' is possibly 'null'.
+src/app/dashboard/@vendor/orders/[order_oid]/page.tsx(262,44): error TS18047: 'order' is possibly 'null'.
+src/app/dashboard/@vendor/orders/page.tsx(2,24): error TS2307: Cannot find module '@/components/OrdersTable' or its corresponding type declarations.
+src/app/dashboard/@vendor/orders/page.tsx(8,9): error TS6133: 'orders' is declared but its value is never read.
+src/app/dashboard/@vendor/page.tsx(4,22): error TS2307: Cannot find module '@/components/Charts' or its corresponding type declarations.
+src/app/dashboard/@vendor/page.tsx(10,9): error TS6133: 'getVendorStats' is declared but its value is never read.
+src/app/dashboard/@vendor/payments/page.tsx(4,22): error TS2307: Cannot find module '@/components/Charts' or its corresponding type declarations.
+ ELIFECYCLE  Command failed with exit code 1.

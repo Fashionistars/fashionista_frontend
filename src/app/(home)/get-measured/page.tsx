@@ -5,6 +5,7 @@ const page = () => {
   const handleMeasurement = async () => {
     try {
       const res = await fetch("");
+      void res;
     } catch (error) {
       console.log(error);
     }

@@ -1,0 +1,37 @@
+
+> fashionistar-ai@2.0.0 type-check C:\Users\fashi\OneDrive\Documenti\FASHIONISTAR_ANTAGRAVITY\fashionista_frontend
+> tsc --noEmit
+
+src/app/(home)/get-measured/page.tsx(7,13): error TS6133: '_res' is declared but its value is never read.
+src/app/(home)/page.tsx(107,25): error TS2739: Type '{ [key: string]: string | string[] | undefined; }' is missing the following properties from type 'Promise<{ [key: string]: string | string[] | undefined; }>': then, catch, finally, [Symbol.toStringTag]
+src/app/(home)/vendors/page.tsx(9,49): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/actions/auth.ts(43,22): error TS7030: Not all code paths return a value.
+src/app/components/AddProduct/Sizes.tsx(15,9): error TS6133: 'handleInputChange' is declared but its value is never read.
+src/app/components/AddProduct/Sizes.tsx(26,10): error TS6133: 'isField' is declared but its value is never read.
+src/app/components/AddProduct/Sizes.tsx(27,10): error TS6133: 'newField' is declared but its value is never read.
+src/app/components/AddProduct/Sizes.tsx(27,20): error TS6133: 'setNewField' is declared but its value is never read.
+src/app/components/Cads.tsx(3,1): error TS6133: 'data' is declared but its value is never read.
+src/app/components/Collapsible.tsx(2,17): error TS6133: 'useState' is declared but its value is never read.
+src/app/components/LatestCollection.tsx(18,19): error TS7030: Not all code paths return a value.
+src/app/components/MultiStep.tsx(62,5): error TS6133: 'register' is declared but its value is never read.
+src/app/components/MultiStep.tsx(64,5): error TS6133: 'watch' is declared but its value is never read.
+src/app/components/MultiStep.tsx(67,5): error TS6133: 'setValue' is declared but its value is never read.
+src/app/components/MultiStep.tsx(68,16): error TS6133: 'errors' is declared but its value is never read.
+src/app/components/ShopByCategory.tsx(10,25): error TS7030: Not all code paths return a value.
+src/app/components/VerifyInput.tsx(23,7): error TS6133: 'prevIndex' is declared but its value is never read.
+src/app/components/VerifyInput.tsx(45,7): error TS6133: 'currentIndex' is declared but its value is never read.
+src/app/context/addProductContext.tsx(11,1): error TS6133: 'FormSchema' is declared but its value is never read.
+src/app/dashboard/@client/(dashboard)/address/page.tsx(5,9): error TS6133: 'getAddress' is declared but its value is never read.
+src/app/dashboard/@vendor/analytics/page.tsx(4,22): error TS2307: Cannot find module '@/components/Charts' or its corresponding type declarations.
+src/app/dashboard/@vendor/orders/[order_oid]/page.tsx(249,24): error TS18047: 'order' is possibly 'null'.
+src/app/dashboard/@vendor/orders/[order_oid]/page.tsx(253,28): error TS18047: 'order' is possibly 'null'.
+src/app/dashboard/@vendor/orders/[order_oid]/page.tsx(257,25): error TS18047: 'order' is possibly 'null'.
+src/app/dashboard/@vendor/orders/[order_oid]/page.tsx(260,44): error TS18047: 'order' is possibly 'null'.
+src/app/dashboard/@vendor/orders/[order_oid]/page.tsx(261,44): error TS18047: 'order' is possibly 'null'.
+src/app/dashboard/@vendor/orders/[order_oid]/page.tsx(262,51): error TS2339: Property 'total' does not exist on type 'never'.
+src/app/dashboard/@vendor/orders/page.tsx(2,24): error TS2307: Cannot find module '@/components/OrdersTable' or its corresponding type declarations.
+src/app/dashboard/@vendor/orders/page.tsx(8,9): error TS6133: 'orders' is declared but its value is never read.
+src/app/dashboard/@vendor/page.tsx(4,22): error TS2307: Cannot find module '@/components/Charts' or its corresponding type declarations.
+src/app/dashboard/@vendor/page.tsx(10,9): error TS6133: 'getVendorStats' is declared but its value is never read.
+src/app/dashboard/@vendor/payments/page.tsx(4,22): error TS2307: Cannot find module '@/components/Charts' or its corresponding type declarations.
+ ELIFECYCLE  Command failed with exit code 2.

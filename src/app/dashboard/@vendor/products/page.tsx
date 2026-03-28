@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import MultiStep from "@/components/MultiStep";
+import MultiStep from "@/features/shop/components/MultiStep";
 
 const page = () => {
   return (

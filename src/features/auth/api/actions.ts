@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { signupSchema } from "@/lib/validation/auth_shema";
 
 export const signUp = async (prev: any, formdata: FormData) => {
+  void prev;
   const data = Object.fromEntries(formdata.entries());
 
   const validated = signupSchema.safeParse(data);
@@ -41,6 +42,7 @@ export const verify = async (formdata: FormData) => {
   redirect("/login");
 };
 export const login = async (prev: any, formdata: FormData) => {
+  void prev;
   const data = Object.fromEntries(formdata.entries());
     try {
     const res = await axiosInstance.post("/auth/login", data);
@@ -71,12 +73,14 @@ export const login = async (prev: any, formdata: FormData) => {
   }
 
   // redirect("/dashboard");
+  return undefined;
 };
 
 export const forget_password = async (formdata: FormData) => {
   const data = {
     email: formdata.get("email"),
   };
+  void data;
   try {
   } catch (error) {}
 };

@@ -4,7 +4,7 @@ import VendorCard from "@/components/ui/compounds/VendorCard";
 import { getAllVendors } from "@/core/services/api";
 
 const page = async () => {
-  const vendors = (await getAllVendors()) || [];
+  const vendors = ((await getAllVendors()) || []) as any[];
   const vendor_list = vendors.map((vendor) => (
     <VendorCard vendorProp={vendor} key={vendor.id} />
   ));
