@@ -49,10 +49,14 @@ export function PasswordResetForm() {
           <CheckCircle className="w-8 h-8 text-green-600" />
         </div>
         <div>
-          <h2 className="font-semibold text-lg text-foreground">Check your email</h2>
+          <h2 className="font-semibold text-lg text-foreground">
+            Check your email
+          </h2>
           <p className="text-sm text-muted-foreground mt-1">
             We sent a password reset link to{" "}
-            <span className="font-semibold text-foreground">{watch("email")}</span>
+            <span className="font-semibold text-foreground">
+              {watch("email")}
+            </span>
           </p>
         </div>
         <p className="text-xs text-muted-foreground">
@@ -84,7 +88,10 @@ export function PasswordResetForm() {
       noValidate
     >
       <div className="space-y-1.5">
-        <label htmlFor="reset-email" className="text-sm font-medium text-foreground">
+        <label
+          htmlFor="reset-email"
+          className="text-sm font-medium text-foreground"
+        >
           Email Address
         </label>
         <div className="relative">

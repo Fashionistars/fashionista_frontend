@@ -130,7 +130,9 @@ const Transactions = () => {
     return (
       <div key={index} className="w-1/2">
         <Collapsible
-          trigger={<span className="font-satoshi text-lg">{question.title}</span>}
+          trigger={
+            <span className="font-satoshi text-lg">{question.title}</span>
+          }
         >
           <p>{question.text}</p>
         </Collapsible>
@@ -141,7 +143,8 @@ const Transactions = () => {
   const options = searchParams.get("options");
   const delta = 1;
   // suppress unused variable for setIsOpen if any
-  void isOpen; void setIsOpen;
+  void isOpen;
+  void setIsOpen;
   return (
     <div>
       <nav className="flex justify-between items-center py-8">

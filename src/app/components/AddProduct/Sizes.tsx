@@ -14,7 +14,7 @@ const Sizes = ({
   updateNewProductField: (fields: Partial<NewProductFieldTypes>) => void;
 }) => {
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     updateNewProductField({ [e.target.name]: e.target.value });
   };
@@ -23,7 +23,8 @@ const Sizes = ({
     { id: crypto.randomUUID(), title: "price" },
   ];
   const [allFields, setAllFields] = useState(fields);
-  void allFields; void setAllFields;
+  void allFields;
+  void setAllFields;
   const [isField, setIsField] = useState(false);
   const [newField, setNewField] = useState({ id: "", title: "" });
   const [state, formAction] = useFormState(SizesAction, null);

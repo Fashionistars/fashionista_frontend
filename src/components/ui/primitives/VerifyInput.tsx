@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable */
 "use client";
 import React, {
@@ -22,7 +23,7 @@ const VerificationInput: React.FC = () => {
       e: React.FormEvent<HTMLInputElement>,
       currentIndex: number,
       nextIndex: number,
-      prevIndex: number
+      prevIndex: number,
     ) => {
       const { value } = e.currentTarget;
       if (
@@ -38,14 +39,14 @@ const VerificationInput: React.FC = () => {
         return newValues;
       });
     },
-    [boxRefs]
+    [boxRefs],
   );
 
   const handleKeyDown = useCallback(
     (
       e: KeyboardEvent<HTMLInputElement>,
       currentIndex: number,
-      prevIndex: number
+      prevIndex: number,
     ) => {
       if (
         e.key === "Backspace" &&
@@ -57,7 +58,7 @@ const VerificationInput: React.FC = () => {
         boxRefs[prevIndex]?.current?.focus();
       }
     },
-    [boxRefs]
+    [boxRefs],
   );
 
   const combinedValue = values.join("");

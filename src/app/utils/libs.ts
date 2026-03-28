@@ -31,7 +31,7 @@ export const getSingleOrder = async (order_oid: string) => {
 
 export const orderAcceptReject = async (
   order_oid: string,
-  data: { notification_type: string }
+  data: { notification_type: string },
 ) => {
   try {
     const res = await fetchWithAuth(`/vendor/orders/${order_oid}`, "get", data);

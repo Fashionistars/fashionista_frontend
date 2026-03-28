@@ -43,14 +43,27 @@ export type LoginResponse = z.infer<typeof LoginResponseSchema>;
 // ── Register ──────────────────────────────────────────────────────────────────
 export const RegisterSchema = z
   .object({
-    email: z.string().email("Invalid email address").optional().or(z.literal("")),
-    phone: z
+    email: z
       .string()
-      .regex(/^\+\d{10,15}$/, "Phone must be in E.164 format (e.g. +2348012345678)")
+      .email("Invalid email address")
       .optional()
       .or(z.literal("")),
-    first_name: z.string().min(2, "First name must be at least 2 characters").max(50),
-    last_name: z.string().min(2, "Last name must be at least 2 characters").max(50),
+    phone: z
+      .string()
+      .regex(
+        /^\+\d{10,15}$/,
+        "Phone must be in E.164 format (e.g. +2348012345678)",
+      )
+      .optional()
+      .or(z.literal("")),
+    first_name: z
+      .string()
+      .min(2, "First name must be at least 2 characters")
+      .max(50),
+    last_name: z
+      .string()
+      .min(2, "Last name must be at least 2 characters")
+      .max(50),
     password: z
       .string()
       .min(8, "Password must be at least 8 characters")
@@ -91,19 +104,23 @@ export const ResendOTPSchema = z.object({
 export type ResendOTPPayload = z.infer<typeof ResendOTPSchema>;
 
 // ── Password Reset Request ────────────────────────────────────────────────────
-export const PasswordResetRequestSchema = z.object({
-  email: z.string().email().optional().or(z.literal("")),
-  phone: z
-    .string()
-    .regex(/^\+\d{10,15}$/)
-    .optional()
-    .or(z.literal("")),
-}).refine((d) => d.email || d.phone, {
-  message: "Email or phone is required",
-  path: ["email"],
-});
+export const PasswordResetRequestSchema = z
+  .object({
+    email: z.string().email().optional().or(z.literal("")),
+    phone: z
+      .string()
+      .regex(/^\+\d{10,15}$/)
+      .optional()
+      .or(z.literal("")),
+  })
+  .refine((d) => d.email || d.phone, {
+    message: "Email or phone is required",
+    path: ["email"],
+  });
 
-export type PasswordResetRequestPayload = z.infer<typeof PasswordResetRequestSchema>;
+export type PasswordResetRequestPayload = z.infer<
+  typeof PasswordResetRequestSchema
+>;
 
 // ── Password Reset Confirm (Email — uidb64 + token from URL) ──────────────────
 export const PasswordResetConfirmEmailSchema = z

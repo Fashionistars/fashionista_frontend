@@ -34,7 +34,7 @@ const BasicInformation = ({
 
       reader.readAsDataURL(file);
     },
-    [newProductFields?.image_1.name, updateNewProductField]
+    [newProductFields?.image_1.name, updateNewProductField],
   );
 
   // const { getRootProps, getInputProps } = useDropzone({
@@ -70,7 +70,7 @@ const BasicInformation = ({
   });
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     updateNewProductField({ [e.target.name]: e.target.value });
   };

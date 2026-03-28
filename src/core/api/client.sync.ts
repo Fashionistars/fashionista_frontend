@@ -54,7 +54,9 @@ apiSync.interceptors.request.use(
     // Circuit breaker guard
     if (circuitOpen) {
       return Promise.reject(
-        new Error("API circuit breaker is open. Too many consecutive failures.")
+        new Error(
+          "API circuit breaker is open. Too many consecutive failures.",
+        ),
       ) as never;
     }
 
@@ -81,7 +83,7 @@ apiSync.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // ── Response Interceptor ──────────────────────────────────────────────────────
@@ -121,7 +123,7 @@ apiSync.interceptors.response.use(
           {
             withCredentials: true,
             headers: { "ngrok-skip-browser-warning": "true" },
-          }
+          },
         );
 
         const newToken: string = data.access;
@@ -135,7 +137,10 @@ apiSync.interceptors.response.use(
               if (parsed?.state) {
                 parsed.state.accessToken = newToken;
                 parsed.state.isAuthenticated = true;
-                sessionStorage.setItem("fashionistar-auth", JSON.stringify(parsed));
+                sessionStorage.setItem(
+                  "fashionistar-auth",
+                  JSON.stringify(parsed),
+                );
               }
             }
           } catch {
@@ -172,7 +177,9 @@ apiSync.interceptors.response.use(
 
     // ── Global Error Toast ───────────────────────────────────────────────────
     if (typeof window !== "undefined") {
-      const traceId = (error.response?.headers as Record<string, string>)?.["x-trace-id"];
+      const traceId = (error.response?.headers as Record<string, string>)?.[
+        "x-trace-id"
+      ];
       const responseData = error.response?.data as
         | { detail?: string; message?: string; error?: string }
         | undefined;
@@ -198,7 +205,7 @@ apiSync.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default apiSync;

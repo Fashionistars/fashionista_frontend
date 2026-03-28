@@ -74,7 +74,7 @@ export const apiAsync: KyInstance = ky.create({
           if (process.env.NODE_ENV === "development") {
             const body = await response.clone().text();
             console.error(
-              `[apiAsync] ${response.status} ${response.url}\n${body}`
+              `[apiAsync] ${response.status} ${response.url}\n${body}`,
             );
           }
         }

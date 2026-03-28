@@ -10,25 +10,25 @@
 @layer base {
   :root {
     /* ── Shadcn/ui CSS Variables — Light Mode ─────────────────────────────── */
-    --background: 46 33% 94%;          /* #F4F3EC — Cream background */
-    --foreground: 0 0% 20%;            /* #333333 — Dark text */
-    --card: 0 0% 100%;                 /* White cards */
+    --background: 46 33% 94%; /* #F4F3EC — Cream background */
+    --foreground: 0 0% 20%; /* #333333 — Dark text */
+    --card: 0 0% 100%; /* White cards */
     --card-foreground: 0 0% 20%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 20%;
-    --primary: 184 97% 15%;            /* #01454A — FASHIONISTAR Green */
-    --primary-foreground: 0 0% 100%;   /* White text on primary */
-    --secondary: 228 60% 97%;          /* #F4F5FB — Light blue-gray */
+    --primary: 184 97% 15%; /* #01454A — FASHIONISTAR Green */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
+    --secondary: 228 60% 97%; /* #F4F5FB — Light blue-gray */
     --secondary-foreground: 0 0% 20%;
     --muted: 220 15% 90%;
     --muted-foreground: 220 10% 45%;
-    --accent: 38 100% 50%;             /* #FDA600 — FASHIONISTAR Gold */
-    --accent-foreground: 0 0% 0%;      /* Black text on gold */
+    --accent: 38 100% 50%; /* #FDA600 — FASHIONISTAR Gold */
+    --accent-foreground: 0 0% 0%; /* Black text on gold */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --border: 220 15% 88%;
     --input: 220 15% 88%;
-    --ring: 184 97% 15%;               /* Focus ring = primary */
+    --ring: 184 97% 15%; /* Focus ring = primary */
     --radius: 0.5rem;
 
     /* ── Chart Colors ──────────────────────────────────────────────────────── */
@@ -47,7 +47,7 @@
     --card-foreground: 0 0% 95%;
     --popover: 220 15% 14%;
     --popover-foreground: 0 0% 95%;
-    --primary: 184 97% 25%;            /* Slightly brighter green in dark mode */
+    --primary: 184 97% 25%; /* Slightly brighter green in dark mode */
     --primary-foreground: 0 0% 100%;
     --secondary: 220 15% 20%;
     --secondary-foreground: 0 0% 85%;
@@ -75,12 +75,19 @@
 
   body {
     @apply bg-background text-foreground font-raleway antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
     text-rendering: optimizeLegibility;
   }
 
   /* ── Typography Defaults ────────────────────────────────────────────────── */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-satoshi font-semibold tracking-tight;
   }
 
@@ -133,11 +140,11 @@
 
   /* ── Card Elevation ──────────────────────────────────────────────────────── */
   .card-shadow {
-    box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.10);
+    box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.1);
   }
 
   .card-shadow-hover {
-    box-shadow: 0px 8px 40px 0px rgba(1, 69, 74, 0.20);
+    box-shadow: 0px 8px 40px 0px rgba(1, 69, 74, 0.2);
   }
 }
 
@@ -175,7 +182,9 @@ progress {
   width: 20px;
   height: 20px;
   cursor: pointer;
-  transition: border-color 0.2s, background-color 0.2s;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
 }
 
 .custom-checkbox:checked {

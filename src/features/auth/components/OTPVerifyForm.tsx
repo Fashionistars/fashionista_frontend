@@ -20,7 +20,8 @@ const RESEND_COOLDOWN_SECONDS = 60;
 
 export function OTPVerifyForm() {
   const router = useRouter();
-  const { setToken, setUser, pendingOTPEmail, pendingOTPPhone } = useAuthStore();
+  const { setToken, setUser, pendingOTPEmail, pendingOTPPhone } =
+    useAuthStore();
 
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [countdown, setCountdown] = useState(RESEND_COOLDOWN_SECONDS);
@@ -92,7 +93,10 @@ export function OTPVerifyForm() {
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, OTP_LENGTH);
+    const pasted = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, OTP_LENGTH);
     const newOtp = [...otp];
     pasted.split("").forEach((digit, i) => {
       newOtp[i] = digit;
@@ -124,7 +128,9 @@ export function OTPVerifyForm() {
             <input
               key={index}
               id={`otp-input-${index}`}
-              ref={(el) => { inputRefs.current[index] = el; }}
+              ref={(el) => {
+                inputRefs.current[index] = el;
+              }}
               type="text"
               inputMode="numeric"
               maxLength={1}

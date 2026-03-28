@@ -11,8 +11,10 @@ export const fetchWithAuth = async (
   _url: string,
   _method: "get" | "post" | "put" | "delete" | "patch" = "get",
   _data: null | object | FormData = null,
-  _content = "application/json"
+  _content = "application/json",
 ): Promise<unknown> => {
-  console.warn("[DEPRECATED] fetchWithAuth — use apiSync from @/core/api/client.sync instead");
+  console.warn(
+    "[DEPRECATED] fetchWithAuth — use apiSync from @/core/api/client.sync instead",
+  );
   return null;
 };

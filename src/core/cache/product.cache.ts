@@ -37,16 +37,16 @@ async function fetchFromBackend<T>(path: string, fallback: T): Promise<T> {
 // ── Products ─────────────────────────────────────────────────────────────────
 export const getCachedProducts = unstable_cache(
   async (category: string = "all", page: number = 1) => {
-    return fetchFromBackend(
-      `/v1/products/?category=${category}&page=${page}`,
-      { results: [], count: 0 }
-    );
+    return fetchFromBackend(`/v1/products/?category=${category}&page=${page}`, {
+      results: [],
+      count: 0,
+    });
   },
   ["products"],
   {
     tags: ["products"],
     revalidate: 300, // 5 minutes
-  }
+  },
 );
 
 // ── Single Product ────────────────────────────────────────────────────────────
@@ -54,14 +54,14 @@ export const getCachedProduct = unstable_cache(
   async (slug: string) => {
     return fetchFromBackend<Record<string, unknown> | null>(
       `/v1/products/${slug}/`,
-      null
+      null,
     );
   },
   ["product"],
   {
     tags: ["product"],
     revalidate: 600, // 10 minutes
-  }
+  },
 );
 
 // ── Categories ────────────────────────────────────────────────────────────────
@@ -73,7 +73,7 @@ export const getCachedCategories = unstable_cache(
   {
     tags: ["categories"],
     revalidate: 900, // 15 minutes
-  }
+  },
 );
 
 // ── Collections ───────────────────────────────────────────────────────────────
@@ -85,5 +85,5 @@ export const getCachedCollections = unstable_cache(
   {
     tags: ["collections"],
     revalidate: 900, // 15 minutes
-  }
+  },
 );

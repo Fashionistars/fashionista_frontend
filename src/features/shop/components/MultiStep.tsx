@@ -72,7 +72,10 @@ export default function Form() {
   });
 
   // suppress unused-var — register/watch/setValue/errors kept for future form wiring
-  void register; void watch; void setValue; void errors;
+  void register;
+  void watch;
+  void setValue;
+  void errors;
 
   const { back } = useRouter();
   const processForm: SubmitHandler<Inputs> = async (data) => {

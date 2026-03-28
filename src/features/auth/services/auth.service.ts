@@ -9,7 +9,10 @@
  * Uses apiAsync (Ky) for Ninja endpoints when high-concurrency is needed.
  */
 import { apiSync } from "@/core/api/client.sync";
-import { AUTH_ENDPOINTS, PASSWORD_ENDPOINTS } from "@/core/constants/api.constants";
+import {
+  AUTH_ENDPOINTS,
+  PASSWORD_ENDPOINTS,
+} from "@/core/constants/api.constants";
 import type {
   LoginPayload,
   LoginResponse,
@@ -40,7 +43,9 @@ export async function login(payload: LoginPayload): Promise<LoginResponse> {
  * POST /api/v1/auth/register/
  * Triggers OTP send to email or phone. User must verify before logging in.
  */
-export async function register(payload: RegisterPayload): Promise<{ message: string }> {
+export async function register(
+  payload: RegisterPayload,
+): Promise<{ message: string }> {
   const { data } = await apiSync.post(AUTH_ENDPOINTS.REGISTER, payload);
   return data;
 }
@@ -60,7 +65,9 @@ export async function verifyOTP(payload: OTPPayload): Promise<LoginResponse> {
  * POST /api/v1/auth/resend-otp/
  * Re-sends OTP to email or phone. Rate-limited by backend.
  */
-export async function resendOTP(payload: ResendOTPPayload): Promise<{ message: string }> {
+export async function resendOTP(
+  payload: ResendOTPPayload,
+): Promise<{ message: string }> {
   const { data } = await apiSync.post(AUTH_ENDPOINTS.RESEND_OTP, payload);
   return data;
 }
@@ -118,7 +125,10 @@ export async function revokeSession(sessionId: number): Promise<void> {
  * Revoke all sessions except the current one (logout all other devices).
  */
 export async function revokeOtherSessions(): Promise<{ message: string }> {
-  const { data } = await apiSync.post(AUTH_ENDPOINTS.SESSIONS_REVOKE_OTHERS, {});
+  const { data } = await apiSync.post(
+    AUTH_ENDPOINTS.SESSIONS_REVOKE_OTHERS,
+    {},
+  );
   return data;
 }
 
@@ -137,9 +147,12 @@ export async function getLoginEvents(): Promise<LoginEvent[]> {
  * Sends OTP to email or SMS.
  */
 export async function requestPasswordReset(
-  payload: PasswordResetRequestPayload
+  payload: PasswordResetRequestPayload,
 ): Promise<{ message: string }> {
-  const { data } = await apiSync.post(PASSWORD_ENDPOINTS.RESET_REQUEST, payload);
+  const { data } = await apiSync.post(
+    PASSWORD_ENDPOINTS.RESET_REQUEST,
+    payload,
+  );
   return data;
 }
 
@@ -148,12 +161,12 @@ export async function requestPasswordReset(
  * Confirms email-based reset (link from email).
  */
 export async function confirmPasswordResetEmail(
-  payload: PasswordResetConfirmEmailPayload
+  payload: PasswordResetConfirmEmailPayload,
 ): Promise<{ message: string }> {
   const { uidb64, token, ...body } = payload;
   const { data } = await apiSync.post(
     PASSWORD_ENDPOINTS.RESET_CONFIRM_EMAIL(uidb64, token),
-    body
+    body,
   );
   return data;
 }
@@ -163,9 +176,12 @@ export async function confirmPasswordResetEmail(
  * Confirms phone-based reset using OTP only (no phone field in payload).
  */
 export async function confirmPasswordResetPhone(
-  payload: PasswordResetConfirmPhonePayload
+  payload: PasswordResetConfirmPhonePayload,
 ): Promise<{ message: string }> {
-  const { data } = await apiSync.post(PASSWORD_ENDPOINTS.RESET_CONFIRM_PHONE, payload);
+  const { data } = await apiSync.post(
+    PASSWORD_ENDPOINTS.RESET_CONFIRM_PHONE,
+    payload,
+  );
   return data;
 }
 
@@ -174,7 +190,7 @@ export async function confirmPasswordResetPhone(
  * Change password for an authenticated user (requires old password).
  */
 export async function changePassword(
-  payload: ChangePasswordPayload
+  payload: ChangePasswordPayload,
 ): Promise<{ message: string }> {
   const { data } = await apiSync.post(PASSWORD_ENDPOINTS.CHANGE, payload);
   return data;

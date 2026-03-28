@@ -24,7 +24,8 @@ const Gallery = ({
     image_4: "",
     video: null,
   });
-  void preview; void setPreview;
+  void preview;
+  void setPreview;
 
   // const onDrop = useCallback((acceptedFiles: File[]) => {
   //   const file = acceptedFiles[0];
@@ -59,7 +60,7 @@ const Gallery = ({
 
         reader.readAsDataURL(file);
       },
-      [updateNewProductField]
+      [updateNewProductField],
     ),
     onError: (err) => console.log(err),
   });
@@ -83,7 +84,7 @@ const Gallery = ({
 
           reader.readAsDataURL(file);
         },
-        [name]
+        [name],
       ),
       accept: { "image/*": [".jpeg", ".jpg", ".png"] },
     });
@@ -153,7 +154,11 @@ const Gallery = ({
   };
 
   return (
-    <form action={GalleryAction as any} id="gallery" className="w-full space-y-10">
+    <form
+      action={GalleryAction as any}
+      id="gallery"
+      className="w-full space-y-10"
+    >
       <div className="space-y-2">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           Gallery

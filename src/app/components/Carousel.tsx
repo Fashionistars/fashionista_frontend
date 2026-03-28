@@ -25,7 +25,7 @@ const Slider = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrent((prevCurrent) =>
-        prevCurrent === slides.length - 1 ? 0 : prevCurrent + 1
+        prevCurrent === slides.length - 1 ? 0 : prevCurrent + 1,
       );
     }, 5000);
 
@@ -41,7 +41,7 @@ const Slider = () => {
         </span>
       ) : (
         part
-      )
+      ),
     );
   }
   const sliders = slides.map((slide, index) => {
@@ -54,7 +54,13 @@ const Slider = () => {
         </div>
         <div className="relative flex justify-center">
           <div className="z-10 absolute -top-12">
-            <Image src={slide.image} alt="" width={600} height={600} className="w-full h-full" />
+            <Image
+              src={slide.image}
+              alt=""
+              width={600}
+              height={600}
+              className="w-full h-full"
+            />
           </div>
         </div>
       </div>

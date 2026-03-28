@@ -10,12 +10,16 @@ const Category = ({
   updateNewProductField: (fields: Partial<NewProductFieldTypes>) => void;
 }) => {
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>,
   ) => {
     updateNewProductField({ [e.target.name]: e.target.value });
   };
   return (
-    <form action={CategoryAction as any} id="category" className="space-y-10 w-full">
+    <form
+      action={CategoryAction as any}
+      id="category"
+      className="space-y-10 w-full"
+    >
       <div className="space-y-2 ">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           {" "}

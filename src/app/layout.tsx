@@ -15,7 +15,13 @@ const inter = Inter({
   display: "swap",
   preload: false, // avoids dev-time network errors when fonts.googleapis.com unreachable
   adjustFontFallback: false, // prevents synthetic download on restricted networks
-  fallback: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+  fallback: [
+    "system-ui",
+    "-apple-system",
+    "BlinkMacSystemFont",
+    "Segoe UI",
+    "sans-serif",
+  ],
 });
 
 const raleway = Raleway({
@@ -49,7 +55,7 @@ const satoshi = localFont({
 // ── Metadata (SEO) ────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
+    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   ),
   title: {
     default: "FASHIONISTAR AI — Premium Fashion E-Commerce",

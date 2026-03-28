@@ -16,12 +16,30 @@ const LatestCollection = async ({
 }) => {
   // Next.js 15: searchParams must be awaited before read
   const resolvedParams = await searchParams;
-  
+
   // Mock collections for development
   const mockCollections: CollectionsProps[] = [
-    { id: "1", image: "/minimalist.svg", rating: 4.5, title: "Minimalist Dress", price: "150" },
-    { id: "2", image: "/gown.svg", rating: 5, title: "Elegant Gown", price: "280" },
-    { id: "3", image: "/vintage.svg", rating: 4.8, title: "Vintage Coat", price: "220" },
+    {
+      id: "1",
+      image: "/minimalist.svg",
+      rating: 4.5,
+      title: "Minimalist Dress",
+      price: "150",
+    },
+    {
+      id: "2",
+      image: "/gown.svg",
+      rating: 5,
+      title: "Elegant Gown",
+      price: "280",
+    },
+    {
+      id: "3",
+      image: "/vintage.svg",
+      rating: 4.8,
+      title: "Vintage Coat",
+      price: "220",
+    },
   ];
 
   const catFunc = async () => {

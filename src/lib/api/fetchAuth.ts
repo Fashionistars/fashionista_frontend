@@ -5,7 +5,7 @@ export const fetchWithAuth = async (
   url: string,
   method: "get" | "post" | "put" | "delete" | "patch" = "get",
   data: null | object | FormData = null,
-  content = "application/json"
+  content = "application/json",
 ) => {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("access_token")?.value;

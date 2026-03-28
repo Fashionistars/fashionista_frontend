@@ -21,7 +21,7 @@ const initialValue: NewProductType = {
   shipping_amount: "1000",
   stock_qty: "",
   tag: "",
-  total_price: "2000",
+  total_price: "",
   category: "",
   brands: "",
   image_2: undefined as unknown as File,
@@ -50,7 +50,7 @@ type NewProductValueTypes = {
 };
 
 export const NewProductContext = createContext<NewProductValueTypes | null>(
-  null
+  null,
 );
 
 const LOCAL_STORAGE_KEY = "new_product_fields";
@@ -77,7 +77,7 @@ const NewProductContextProvider = ({
         ...dealDetails,
       }));
     },
-    []
+    [],
   );
 
   const resetLocalStorage = () => {
@@ -95,7 +95,7 @@ const NewProductContextProvider = ({
       updateNewProductField,
       resetLocalStorage,
     }),
-    [newProductFields, updateNewProductField]
+    [newProductFields, updateNewProductField],
   );
 
   return (
@@ -111,7 +111,7 @@ export function useAddProductContext() {
   const context = useContext(NewProductContext);
   if (context === null) {
     throw new Error(
-      "useAddProductContext must be used within a NewProductContextProvider"
+      "useAddProductContext must be used within a NewProductContextProvider",
     );
   }
   return context;

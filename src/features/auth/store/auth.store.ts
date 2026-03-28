@@ -66,17 +66,14 @@ export const useAuthStore = create<AuthState>()(
       pendingOTPEmail: undefined,
       pendingOTPPhone: undefined,
 
-      setToken: (token) =>
-        set({ accessToken: token, isAuthenticated: true }),
+      setToken: (token) => set({ accessToken: token, isAuthenticated: true }),
 
-      setUser: (user) =>
-        set({ user }),
+      setUser: (user) => set({ user }),
 
       setPendingOTP: ({ email, phone }) =>
         set({ pendingOTPEmail: email, pendingOTPPhone: phone }),
 
-      setLoading: (loading) =>
-        set({ isLoading: loading }),
+      setLoading: (loading) => set({ isLoading: loading }),
 
       logout: () =>
         set({
@@ -92,7 +89,7 @@ export const useAuthStore = create<AuthState>()(
       // sessionStorage: clears when the browser tab is closed
       // This is the correct security posture for JWT access tokens
       storage: createJSONStorage(() =>
-        typeof window !== "undefined" ? sessionStorage : localStorage
+        typeof window !== "undefined" ? sessionStorage : localStorage,
       ),
       // Only persist essential fields — NOT the loading state
       partialize: (state) => ({
@@ -102,11 +99,12 @@ export const useAuthStore = create<AuthState>()(
         pendingOTPEmail: state.pendingOTPEmail,
         pendingOTPPhone: state.pendingOTPPhone,
       }),
-    }
-  )
+    },
+  ),
 );
 
 // ── Selectors (for performance — avoid object spread re-renders) ───────────────
-export const selectIsAuthenticated = (state: AuthState) => state.isAuthenticated;
+export const selectIsAuthenticated = (state: AuthState) =>
+  state.isAuthenticated;
 export const selectUser = (state: AuthState) => state.user;
 export const selectToken = (state: AuthState) => state.accessToken;

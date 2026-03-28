@@ -128,7 +128,7 @@ export const deleteProduct = async (vendor_id: string, product_id: string) => {
   try {
     const res = await fetchWithAuth(
       `/vendor/product-delete/${vendor_id}/${product_id}`,
-      "delete"
+      "delete",
     );
     console.log(res);
   } catch (error) {

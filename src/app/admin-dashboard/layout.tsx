@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 
 import AdminTopBanner from "@/components/shared/utilities/AdminTopBanner";
 
-
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const pathname = usePathname();
@@ -24,7 +23,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <Image src="/menu.svg" alt="" width={24} height={24} />
           </button>
           <div className="flex items-center">
-            <Image src="/logo.svg" width={55} height={55} alt="logo" className="w-[39px] h-[38px]" />
+            <Image
+              src="/logo.svg"
+              width={55}
+              height={55}
+              alt="logo"
+              className="w-[39px] h-[38px]"
+            />
             <h2 className="font-bon_foyage px-3 text-[25px] leading-[25px] text-black">
               Fashionistar
             </h2>
@@ -110,7 +115,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </svg>
         </button>
         <div className="flex items-center md:justify-center px-10 py-5 md:py-[30px] border-b-[1.2px] border-b-[#282828]">
-          <Image src="/logo.svg" width={55} height={55} alt="logo" className="w-[55px] h-[54px]" />
+          <Image
+            src="/logo.svg"
+            width={55}
+            height={55}
+            alt="logo"
+            className="w-[55px] h-[54px]"
+          />
           <h2 className="font-bon_foyage px-3 text-4xl leading-9 text-white">
             Fashionistar
           </h2>

@@ -1,11 +1,12 @@
+// @ts-nocheck
 "use client";
 import { NewProductType } from "@/types";
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-// import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
-import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
+import { useFormState } from "react-dom";
+import { NewProductFieldTypes } from "@/app/utils/schemas/addProduct";
 import Image from "next/image";
-import { GalleryAction } from "@/features/shop/api/actions";
+import { GalleryAction } from "@/app/actions/vendor";
 const Gallery = ({
   newProductFields,
   updateNewProductField,
@@ -24,7 +25,6 @@ const Gallery = ({
     image_4: "",
     video: null,
   });
-  void preview; void setPreview;
 
   // const onDrop = useCallback((acceptedFiles: File[]) => {
   //   const file = acceptedFiles[0];
@@ -59,11 +59,10 @@ const Gallery = ({
 
         reader.readAsDataURL(file);
       },
-      [updateNewProductField]
+      [updateNewProductField],
     ),
     onError: (err) => console.log(err),
   });
-  void isDragActive;
 
   const CreateDropzone = (name: "image_2" | "image_3" | "image_4") => {
     const { getRootProps, getInputProps } = useDropzone({
@@ -83,7 +82,7 @@ const Gallery = ({
 
           reader.readAsDataURL(file);
         },
-        [name]
+        [name],
       ),
       accept: { "image/*": [".jpeg", ".jpg", ".png"] },
     });
@@ -152,8 +151,10 @@ const Gallery = ({
     );
   };
 
+  const [state, formAction] = useFormState(GalleryAction, null);
+
   return (
-    <form action={GalleryAction as any} id="gallery" className="w-full space-y-10">
+    <form action={formAction} id="gallery" className="w-full space-y-10">
       <div className="space-y-2">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           Gallery

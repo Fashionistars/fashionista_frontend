@@ -16,28 +16,22 @@ import { useQueryState, parseAsString, parseAsInteger } from "nuqs";
 export function useProductFilters() {
   const [category, setCategory] = useQueryState(
     "category",
-    parseAsString.withDefault("")
+    parseAsString.withDefault(""),
   );
   const [sortBy, setSortBy] = useQueryState(
     "sort",
-    parseAsString.withDefault("newest")
+    parseAsString.withDefault("newest"),
   );
   const [minPrice, setMinPrice] = useQueryState(
     "min_price",
-    parseAsInteger.withDefault(0)
+    parseAsInteger.withDefault(0),
   );
   const [maxPrice, setMaxPrice] = useQueryState(
     "max_price",
-    parseAsInteger.withDefault(500000)
+    parseAsInteger.withDefault(500000),
   );
-  const [search, setSearch] = useQueryState(
-    "q",
-    parseAsString.withDefault("")
-  );
-  const [page, setPage] = useQueryState(
-    "page",
-    parseAsInteger.withDefault(1)
-  );
+  const [search, setSearch] = useQueryState("q", parseAsString.withDefault(""));
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
 
   const resetFilters = () => {
     setCategory(null);

@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
 
-
 const Color = ({
   newProductFields,
   updateNewProductField,
@@ -14,7 +13,9 @@ const Color = ({
 }) => {
   const [preview, setPreview] = useState<string | undefined>(undefined);
   const [fileName, setFileName] = useState<string>("");
-  void preview; void fileName; void setFileName;
+  void preview;
+  void fileName;
+  void setFileName;
 
   // Load the image preview from local storage on initial render
   useEffect(() => {
@@ -47,13 +48,13 @@ const Color = ({
 
         localStorage.setItem(
           "image_1",
-          JSON.stringify({ path: reader.result })
+          JSON.stringify({ path: reader.result }),
         );
       };
 
       reader.readAsDataURL(file);
     },
-    [newProductFields, updateNewProductField]
+    [newProductFields, updateNewProductField],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -64,7 +65,9 @@ const Color = ({
     onDrop,
     onError: (err) => console.log(err),
   });
-  void getRootProps; void getInputProps; void isDragActive;
+  void getRootProps;
+  void getInputProps;
+  void isDragActive;
 
   return (
     <div className="flex flex-col gap-8 w-full">

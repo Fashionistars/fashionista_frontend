@@ -3,7 +3,8 @@ import { RegisterForm } from "@/features/auth/components/RegisterForm";
 
 export const metadata: Metadata = {
   title: "Create Account",
-  description: "Join FASHIONISTAR AI — Africa's premier AI-powered fashion platform. Get personalized size recommendations and exclusive collections.",
+  description:
+    "Join FASHIONISTAR AI — Africa's premier AI-powered fashion platform. Get personalized size recommendations and exclusive collections.",
   robots: { index: false, follow: false },
 };
 

@@ -22,7 +22,12 @@ export function Collapsible({
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className={cn("border border-border rounded-lg overflow-hidden", className)}>
+    <div
+      className={cn(
+        "border border-border rounded-lg overflow-hidden",
+        className,
+      )}
+    >
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
@@ -36,7 +41,12 @@ export function Collapsible({
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </button>
       {isOpen && (

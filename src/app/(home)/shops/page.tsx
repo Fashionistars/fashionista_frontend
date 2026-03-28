@@ -24,7 +24,13 @@ const page = () => {
               <Image src="/arrows.svg" alt="previous" width={30} height={30} />
             </button>
             <button className="w-[30px] h-[30px] rounded-full">
-              <Image src="/arrows.svg" alt="next" width={30} height={30} className="scale-x-[-1]" />
+              <Image
+                src="/arrows.svg"
+                alt="next"
+                width={30}
+                height={30}
+                className="scale-x-[-1]"
+              />
             </button>
           </div>
         </div>

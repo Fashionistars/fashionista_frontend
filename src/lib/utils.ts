@@ -20,7 +20,7 @@ export function cn(...inputs: ClassValue[]) {
 export function formatCurrency(
   amount: number,
   currency: string = "NGN",
-  locale: string = "en-NG"
+  locale: string = "en-NG",
 ): string {
   return new Intl.NumberFormat(locale, {
     style: "currency",
@@ -38,10 +38,10 @@ export function formatDate(
     day: "numeric",
     month: "long",
     year: "numeric",
-  }
+  },
 ): string {
   return new Intl.DateTimeFormat("en-NG", options).format(
-    typeof date === "string" ? new Date(date) : date
+    typeof date === "string" ? new Date(date) : date,
   );
 }
 

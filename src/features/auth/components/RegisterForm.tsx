@@ -14,7 +14,10 @@ import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, Mail, Phone, User } from "lucide-react";
 import { useState } from "react";
 
-import { RegisterSchema, type RegisterPayload } from "@/features/auth/schemas/auth.schemas";
+import {
+  RegisterSchema,
+  type RegisterPayload,
+} from "@/features/auth/schemas/auth.schemas";
 import { register } from "@/features/auth/services/auth.service";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 
@@ -49,7 +52,7 @@ export function RegisterForm() {
     onSuccess: () => {
       const identifier = mode === "email" ? watch("email") : watch("phone");
       setPendingOTP(
-        mode === "email" ? { email: identifier } : { phone: identifier }
+        mode === "email" ? { email: identifier } : { phone: identifier },
       );
       toast.success("Account created!", {
         description: "Check your email/phone for the OTP code.",
@@ -69,7 +72,10 @@ export function RegisterForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
       {/* Mode toggle: Email / Phone */}
-      <div className="flex rounded-lg border border-border overflow-hidden" role="tablist">
+      <div
+        className="flex rounded-lg border border-border overflow-hidden"
+        role="tablist"
+      >
         <button
           type="button"
           role="tab"
@@ -103,7 +109,9 @@ export function RegisterForm() {
       {/* Name fields */}
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label htmlFor="reg-fname" className="text-sm font-medium">First Name</label>
+          <label htmlFor="reg-fname" className="text-sm font-medium">
+            First Name
+          </label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
@@ -114,10 +122,16 @@ export function RegisterForm() {
               placeholder="Daniel"
             />
           </div>
-          {errors.first_name && <p className="text-xs text-destructive">{errors.first_name.message}</p>}
+          {errors.first_name && (
+            <p className="text-xs text-destructive">
+              {errors.first_name.message}
+            </p>
+          )}
         </div>
         <div className="space-y-1">
-          <label htmlFor="reg-lname" className="text-sm font-medium">Last Name</label>
+          <label htmlFor="reg-lname" className="text-sm font-medium">
+            Last Name
+          </label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
@@ -128,14 +142,20 @@ export function RegisterForm() {
               placeholder="Ezichi"
             />
           </div>
-          {errors.last_name && <p className="text-xs text-destructive">{errors.last_name.message}</p>}
+          {errors.last_name && (
+            <p className="text-xs text-destructive">
+              {errors.last_name.message}
+            </p>
+          )}
         </div>
       </div>
 
       {/* Email or Phone */}
       {mode === "email" ? (
         <div className="space-y-1">
-          <label htmlFor="reg-email" className="text-sm font-medium">Email Address</label>
+          <label htmlFor="reg-email" className="text-sm font-medium">
+            Email Address
+          </label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
@@ -147,11 +167,15 @@ export function RegisterForm() {
               placeholder="you@fashionistar.com"
             />
           </div>
-          {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="text-xs text-destructive">{errors.email.message}</p>
+          )}
         </div>
       ) : (
         <div className="space-y-1">
-          <label htmlFor="reg-phone" className="text-sm font-medium">Phone Number</label>
+          <label htmlFor="reg-phone" className="text-sm font-medium">
+            Phone Number
+          </label>
           <div className="relative">
             <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
@@ -163,13 +187,17 @@ export function RegisterForm() {
               placeholder="+2348012345678"
             />
           </div>
-          {errors.phone && <p className="text-xs text-destructive">{errors.phone.message}</p>}
+          {errors.phone && (
+            <p className="text-xs text-destructive">{errors.phone.message}</p>
+          )}
         </div>
       )}
 
       {/* Password */}
       <div className="space-y-1">
-        <label htmlFor="reg-password" className="text-sm font-medium">Password</label>
+        <label htmlFor="reg-password" className="text-sm font-medium">
+          Password
+        </label>
         <div className="relative">
           <input
             id="reg-password"
@@ -185,15 +213,23 @@ export function RegisterForm() {
             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
-            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            {showPassword ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
           </button>
         </div>
-        {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
+        {errors.password && (
+          <p className="text-xs text-destructive">{errors.password.message}</p>
+        )}
       </div>
 
       {/* Confirm Password */}
       <div className="space-y-1">
-        <label htmlFor="reg-password-confirm" className="text-sm font-medium">Confirm Password</label>
+        <label htmlFor="reg-password-confirm" className="text-sm font-medium">
+          Confirm Password
+        </label>
         <input
           id="reg-password-confirm"
           type={showPassword ? "text" : "password"}
@@ -203,12 +239,18 @@ export function RegisterForm() {
           placeholder="Repeat password"
         />
         {errors.password_confirm && (
-          <p className="text-xs text-destructive">{errors.password_confirm.message}</p>
+          <p className="text-xs text-destructive">
+            {errors.password_confirm.message}
+          </p>
         )}
       </div>
 
       {/* Root error (email or phone required) */}
-      {errors.root && <p className="text-xs text-destructive text-center">{errors.root.message}</p>}
+      {errors.root && (
+        <p className="text-xs text-destructive text-center">
+          {errors.root.message}
+        </p>
+      )}
 
       {/* Submit */}
       <button
@@ -229,7 +271,10 @@ export function RegisterForm() {
 
       <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link href="/login" className="text-primary font-semibold hover:underline">
+        <Link
+          href="/login"
+          className="text-primary font-semibold hover:underline"
+        >
           Sign in
         </Link>
       </p>

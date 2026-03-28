@@ -13,7 +13,7 @@ const Sizes = ({
   updateNewProductField: (fields: Partial<NewProductFieldTypes>) => void;
 }) => {
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     updateNewProductField({ [e.target.name]: e.target.value });
   };
@@ -26,7 +26,10 @@ const Sizes = ({
   const [state, formAction] = useFormState(SizesAction, null);
   console.log(state);
   // suppress unused-var — kept for future dynamic field addition
-  void handleInputChange; void allFields; void setAllFields; void isField;
+  void handleInputChange;
+  void allFields;
+  void setAllFields;
+  void isField;
 
   // const inputFields = allFields.map((field: { id: string; title: string }) => {
   //   return (

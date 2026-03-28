@@ -35,7 +35,13 @@ const NewMobileNav = () => {
       className="flex justify-between items-center bg-white md:hidden p-6"
     >
       <div className="flex items-center gap-2 w-1/2 ">
-        <Image src="/logo.svg" alt="Fashionistar Logo" width={40} height={40} className="w-10 h-10 " />
+        <Image
+          src="/logo.svg"
+          alt="Fashionistar Logo"
+          width={40}
+          height={40}
+          className="w-10 h-10 "
+        />
         <h2 className="font-bon_foyage text-2xl text-[#333]">Fashionistar</h2>
       </div>
       <div className="flex items-center space-x-2 md:space-x-4">
@@ -70,7 +76,13 @@ const NewMobileNav = () => {
       >
         <div className="bg-[#01454A] py-5 px-6 flex items-center justify-between">
           <div className="flex items-center gap-2 w-1/2 ">
-            <Image src="/logo.svg" alt="Fashionistar Logo" width={40} height={40} className="w-10 h-10 " />
+            <Image
+              src="/logo.svg"
+              alt="Fashionistar Logo"
+              width={40}
+              height={40}
+              className="w-10 h-10 "
+            />
             <h2 className="font-bon_foyage text-2xl text-[#fff]">
               Fashionistar
             </h2>

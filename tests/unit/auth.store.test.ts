@@ -3,16 +3,15 @@
  *
  * Tests Zustand store state transitions.
  * Also tests concurrency-safe behaviour under rapid state changes.
+ *
+ * NOTE: Zustand setState is synchronous — act() wrapping is not needed here.
  */
 import { describe, it, expect, beforeEach } from "vitest";
-import { act } from "react";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 
 // Reset store between tests
 beforeEach(() => {
-  act(() => {
-    useAuthStore.getState().logout();
-  });
+  useAuthStore.getState().logout();
 });
 
 describe("Auth Store — State Transitions", () => {
@@ -24,9 +23,7 @@ describe("Auth Store — State Transitions", () => {
   });
 
   it("✅ setToken sets token and marks authenticated", () => {
-    act(() => {
-      useAuthStore.getState().setToken("test-jwt-access-token");
-    });
+    useAuthStore.getState().setToken("test-jwt-access-token");
     const state = useAuthStore.getState();
     expect(state.accessToken).toBe("test-jwt-access-token");
     expect(state.isAuthenticated).toBe(true);
@@ -42,27 +39,21 @@ describe("Auth Store — State Transitions", () => {
       is_staff: false,
       date_joined: "2026-01-01T00:00:00Z",
     };
-    act(() => {
-      useAuthStore.getState().setUser(mockUser);
-    });
+    useAuthStore.getState().setUser(mockUser);
     expect(useAuthStore.getState().user).toMatchObject(mockUser);
   });
 
   it("✅ logout clears all auth state", () => {
-    act(() => {
-      useAuthStore.getState().setToken("sometoken");
-      useAuthStore.getState().setUser({
-        id: "1",
-        first_name: "Test",
-        last_name: "User",
-        is_verified: true,
-        is_staff: false,
-        date_joined: "2026-01-01",
-      });
+    useAuthStore.getState().setToken("sometoken");
+    useAuthStore.getState().setUser({
+      id: "1",
+      first_name: "Test",
+      last_name: "User",
+      is_verified: true,
+      is_staff: false,
+      date_joined: "2026-01-01",
     });
-    act(() => {
-      useAuthStore.getState().logout();
-    });
+    useAuthStore.getState().logout();
     const state = useAuthStore.getState();
     expect(state.accessToken).toBeNull();
     expect(state.user).toBeNull();
@@ -70,22 +61,18 @@ describe("Auth Store — State Transitions", () => {
   });
 
   it("✅ setPendingOTP stores email/phone for OTP flow", () => {
-    act(() => {
-      useAuthStore.getState().setPendingOTP({ email: "otp@test.com" });
-    });
+    useAuthStore.getState().setPendingOTP({ email: "otp@test.com" });
     expect(useAuthStore.getState().pendingOTPEmail).toBe("otp@test.com");
   });
 });
 
 // ── RACE CONDITION / CONCURRENCY TEST ────────────────────────────────────────
 describe("Auth Store — Concurrency Safety", () => {
-  it("✅ handles 100 rapid setToken calls — last write wins", async () => {
+  it("✅ handles 100 rapid setToken calls — last write wins", () => {
     const tokens = Array.from({ length: 100 }, (_, i) => `token-${i}`);
 
     // Fire all updates as fast as possible (simulates race condition)
-    await act(async () => {
-      tokens.forEach((token) => useAuthStore.getState().setToken(token));
-    });
+    tokens.forEach((token) => useAuthStore.getState().setToken(token));
 
     // The store should have a token (last write wins — correct Zustand behavior)
     const finalToken = useAuthStore.getState().accessToken;
@@ -93,13 +80,11 @@ describe("Auth Store — Concurrency Safety", () => {
     expect(useAuthStore.getState().isAuthenticated).toBe(true);
   });
 
-  it("✅ logout after rapid writes clears state", async () => {
-    await act(async () => {
-      Array.from({ length: 50 }, (_, i) =>
-        useAuthStore.getState().setToken(`token-${i}`)
-      );
-      useAuthStore.getState().logout();
-    });
+  it("✅ logout after rapid writes clears state", () => {
+    Array.from({ length: 50 }, (_, i) =>
+      useAuthStore.getState().setToken(`token-${i}`)
+    );
+    useAuthStore.getState().logout();
     expect(useAuthStore.getState().isAuthenticated).toBe(false);
     expect(useAuthStore.getState().accessToken).toBeNull();
   });

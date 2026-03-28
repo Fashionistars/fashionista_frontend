@@ -16,7 +16,7 @@ export const trackOrder = async (formdata: FormData) => {
   // Validate here
   try {
     const tracking = await fetchWithAuth(
-      `/client/order/tracking/${data?.order_id}`
+      `/client/order/tracking/${data?.order_id}`,
     );
     console.log(tracking);
   } catch (error) {}

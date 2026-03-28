@@ -47,8 +47,8 @@ export const useProductStore = create<ProductState>()(
     {
       name: "fashionistar-products",
       storage: createJSONStorage(() =>
-        typeof window !== "undefined" ? localStorage : sessionStorage
+        typeof window !== "undefined" ? localStorage : sessionStorage,
       ),
-    }
-  )
+    },
+  ),
 );

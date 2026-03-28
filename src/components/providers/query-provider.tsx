@@ -20,9 +20,10 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
             staleTime: 60 * 1000,
             // Retry once on failure, except for auth errors
             retry: (failureCount, error: unknown) => {
-              const status = (error as { response?: { status?: number } })?.response
-                ?.status;
-              if (status === 401 || status === 403 || status === 404) return false;
+              const status = (error as { response?: { status?: number } })
+                ?.response?.status;
+              if (status === 401 || status === 403 || status === 404)
+                return false;
               return failureCount < 1;
             },
             // Refetch when window regains focus (keeps data fresh)
@@ -33,17 +34,14 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
             retry: false,
           },
         },
-      })
+      }),
   );
 
   return (
     <QueryClientProvider client={queryClient}>
       {children}
       {/* DevTools — only rendered in development (tree-shaken in build) */}
-      <ReactQueryDevtools
-        initialIsOpen={false}
-        buttonPosition="bottom-right"
-      />
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" />
     </QueryClientProvider>
   );
 }

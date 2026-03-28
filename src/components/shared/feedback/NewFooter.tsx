@@ -3,7 +3,6 @@ import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 
-
 const NewFooter = () => {
   return (
     <div
@@ -14,7 +13,9 @@ const NewFooter = () => {
         <div className="w-full md:w-[46%] border-b border-[#D9D9D9D] md:border-none py-8 flex flex-col gap-5 items-center md:items-start">
           <div className="flex items-center gap-2 w-1/2 md:w-fit">
             <Image
-              src="/logo.svg" width={55} height={55}
+              src="/logo.svg"
+              width={55}
+              height={55}
               alt="Fashionistar Logo"
               className="w-10 h-10 md:w-[55px] md:h-[56px]"
             />
@@ -198,8 +199,12 @@ const NewFooter = () => {
         </div>
 
         <div className="flex items-center gap-7 md:gap-2 lg:gap-7 md:order-3">
-          <span className="font-raleway font-bold text-sm text-black bg-white px-3 py-2 rounded">Flutterwave</span>
-          <span className="font-raleway font-bold text-sm text-black bg-white px-3 py-2 rounded">Paystack</span>
+          <span className="font-raleway font-bold text-sm text-black bg-white px-3 py-2 rounded">
+            Flutterwave
+          </span>
+          <span className="font-raleway font-bold text-sm text-black bg-white px-3 py-2 rounded">
+            Paystack
+          </span>
         </div>
       </div>
     </div>

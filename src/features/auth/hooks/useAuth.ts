@@ -9,7 +9,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { useAuthStore, selectIsAuthenticated, selectUser, selectToken } from "@/features/auth/store/auth.store";
+import {
+  useAuthStore,
+  selectIsAuthenticated,
+  selectUser,
+  selectToken,
+} from "@/features/auth/store/auth.store";
 import { logout as logoutService } from "@/features/auth/services/auth.service";
 
 export function useAuth() {

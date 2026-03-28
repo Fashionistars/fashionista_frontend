@@ -25,7 +25,7 @@ const Slider = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrent((prevCurrent) =>
-        prevCurrent === slides.length - 1 ? 0 : prevCurrent + 1
+        prevCurrent === slides.length - 1 ? 0 : prevCurrent + 1,
       );
     }, 5000);
 
@@ -41,7 +41,7 @@ const Slider = () => {
         </span>
       ) : (
         part
-      )
+      ),
     );
   }
   const sliders = slides.map((slide, index) => {

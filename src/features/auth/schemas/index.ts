@@ -1,2 +1,2 @@
 export * from "./auth_shema";
-export * from './addProduct';
+export * from "./addProduct";

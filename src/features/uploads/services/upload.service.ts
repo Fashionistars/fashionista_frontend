@@ -52,7 +52,7 @@ export interface UploadProgressEvent {
  */
 export async function getPresignedToken(
   folder: string,
-  resourceType: "image" | "video" | "auto" = "image"
+  resourceType: "image" | "video" | "auto" = "image",
 ): Promise<PresignedUploadData> {
   const { data } = await apiSync.post(COMMON_ENDPOINTS.UPLOAD_PRESIGN, {
     folder,
@@ -72,7 +72,7 @@ export async function getPresignedToken(
 export async function uploadToCloudinary(
   file: File,
   presigned: PresignedUploadData,
-  onProgress?: (event: UploadProgressEvent) => void
+  onProgress?: (event: UploadProgressEvent) => void,
 ): Promise<CloudinaryUploadResult> {
   const formData = new FormData();
   formData.append("file", file);
@@ -105,11 +105,16 @@ export async function uploadToCloudinary(
       if (xhr.status >= 200 && xhr.status < 300) {
         resolve(JSON.parse(xhr.responseText) as CloudinaryUploadResult);
       } else {
-        reject(new Error(`Cloudinary upload failed: ${xhr.status} ${xhr.responseText}`));
+        reject(
+          new Error(
+            `Cloudinary upload failed: ${xhr.status} ${xhr.responseText}`,
+          ),
+        );
       }
     };
 
-    xhr.onerror = () => reject(new Error("Network error during Cloudinary upload"));
+    xhr.onerror = () =>
+      reject(new Error("Network error during Cloudinary upload"));
     xhr.send(formData);
   });
 }
@@ -122,7 +127,7 @@ export async function uploadFile(
   file: File,
   folder: string = "general",
   resourceType: "image" | "video" | "auto" = "image",
-  onProgress?: (event: UploadProgressEvent) => void
+  onProgress?: (event: UploadProgressEvent) => void,
 ): Promise<CloudinaryUploadResult> {
   const presigned = await getPresignedToken(folder, resourceType);
   return uploadToCloudinary(file, presigned, onProgress);

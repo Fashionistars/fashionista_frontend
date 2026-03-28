@@ -44,12 +44,12 @@ export const verify = async (formdata: FormData) => {
 export const login = async (prev: any, formdata: FormData) => {
   void prev;
   const data = Object.fromEntries(formdata.entries());
-    try {
+  try {
     const res = await axiosInstance.post("/auth/login", data);
     console.log(res.data);
     const { access, refresh, role } = res.data;
     const cookieStore = await cookies();
-        cookieStore.set("access_token", access, {
+    cookieStore.set("access_token", access, {
       maxAge: 60 * 60 * 24,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

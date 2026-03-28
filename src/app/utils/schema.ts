@@ -25,9 +25,9 @@ export const FormSchema = z.object({
     .refine(
       (file) =>
         ["image/jpeg", "image/jpg", "image/png", "image/gif"].includes(
-          file.type
+          file.type,
         ),
-      { message: "Image must be a JPEG, PNG, or GIF" }
+      { message: "Image must be a JPEG, PNG, or GIF" },
     ),
   title: z
     .string({ required_error: "This field is required" })
@@ -55,9 +55,9 @@ export const FormSchema = z.object({
     .refine(
       (file) =>
         ["image/jpeg", "image/jpg", "image/png", "image/gif"].includes(
-          file.type
+          file.type,
         ),
-      { message: "Image must be a JPEG, PNG, or GIF" }
+      { message: "Image must be a JPEG, PNG, or GIF" },
     ),
   image_3: z
     .instanceof(File, {
@@ -69,9 +69,9 @@ export const FormSchema = z.object({
     .refine(
       (file) =>
         ["image/jpeg", "image/jpg", "image/png", "image/gif"].includes(
-          file.type
+          file.type,
         ),
-      { message: "Image must be a JPEG, PNG, or GIF" }
+      { message: "Image must be a JPEG, PNG, or GIF" },
     ),
   image_4: z
     .instanceof(File, {
@@ -83,18 +83,18 @@ export const FormSchema = z.object({
     .refine(
       (file) =>
         ["image/jpeg", "image/jpg", "image/png", "image/gif"].includes(
-          file.type
+          file.type,
         ),
-      { message: "Image must be a JPEG, PNG, or GIF" }
+      { message: "Image must be a JPEG, PNG, or GIF" },
     ),
   video: z
     .instanceof(File)
     .refine(
       (file) =>
         ["image/jpeg", "image/jpg", "image/png", "image/gif"].includes(
-          file.type
+          file.type,
         ),
-      { message: "Image must be a JPEG, PNG, or GIF" }
+      { message: "Image must be a JPEG, PNG, or GIF" },
     ),
   specification: z.object({
     title: z.string(),
@@ -112,9 +112,9 @@ export const FormSchema = z.object({
       .refine(
         (file) =>
           ["image/jpeg", "image/jpg", "image/png", "image/gif"].includes(
-            file.type
+            file.type,
           ),
-        { message: "Image must be a JPEG, PNG, or GIF" }
+        { message: "Image must be a JPEG, PNG, or GIF" },
       ),
   }),
 });

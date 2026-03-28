@@ -15,7 +15,10 @@ import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, Mail, Lock } from "lucide-react";
 import { useState } from "react";
 
-import { LoginSchema, type LoginPayload } from "@/features/auth/schemas/auth.schemas";
+import {
+  LoginSchema,
+  type LoginPayload,
+} from "@/features/auth/schemas/auth.schemas";
 import { login } from "@/features/auth/services/auth.service";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 
@@ -47,7 +50,9 @@ export function LoginForm() {
       }
       setToken(data.access);
       setUser(data.user);
-      toast.success("Welcome back!", { description: `Hello, ${data.user.first_name} 👋` });
+      toast.success("Welcome back!", {
+        description: `Hello, ${data.user.first_name} 👋`,
+      });
       router.push("/");
     },
     onError: () => {
@@ -61,7 +66,10 @@ export function LoginForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
       {/* Email */}
       <div className="space-y-1.5">
-        <label htmlFor="login-email" className="text-sm font-medium text-foreground">
+        <label
+          htmlFor="login-email"
+          className="text-sm font-medium text-foreground"
+        >
           Email Address
         </label>
         <div className="relative">
@@ -76,14 +84,19 @@ export function LoginForm() {
           />
         </div>
         {errors.email && (
-          <p className="text-xs text-destructive mt-1">{errors.email.message}</p>
+          <p className="text-xs text-destructive mt-1">
+            {errors.email.message}
+          </p>
         )}
       </div>
 
       {/* Password */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <label htmlFor="login-password" className="text-sm font-medium text-foreground">
+          <label
+            htmlFor="login-password"
+            className="text-sm font-medium text-foreground"
+          >
             Password
           </label>
           <Link
@@ -109,11 +122,17 @@ export function LoginForm() {
             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
-            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            {showPassword ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
           </button>
         </div>
         {errors.password && (
-          <p className="text-xs text-destructive mt-1">{errors.password.message}</p>
+          <p className="text-xs text-destructive mt-1">
+            {errors.password.message}
+          </p>
         )}
       </div>
 
@@ -137,7 +156,10 @@ export function LoginForm() {
       {/* Register link */}
       <p className="text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{" "}
-        <Link href="/register" className="text-primary font-semibold hover:underline">
+        <Link
+          href="/register"
+          className="text-primary font-semibold hover:underline"
+        >
           Create one
         </Link>
       </p>

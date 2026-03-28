@@ -11,10 +11,14 @@ import { z } from "zod";
 export const env = createEnv({
   // ── Server-Side Variables (NOT exposed to browser) ──────────────────────
   server: {
-    NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+    NODE_ENV: z
+      .enum(["development", "test", "production"])
+      .default("development"),
     CLOUDINARY_API_SECRET: z.string().min(1),
     CLOUDINARY_API_KEY: z.string().min(1),
-    NEXTAUTH_SECRET: z.string().min(32, "NEXTAUTH_SECRET must be at least 32 chars"),
+    NEXTAUTH_SECRET: z
+      .string()
+      .min(32, "NEXTAUTH_SECRET must be at least 32 chars"),
     JWT_SECRET: z.string().min(1),
     STRIPE_SECRET_KEY: z.string().startsWith("sk_").optional(),
     SENTRY_AUTH_TOKEN: z.string().optional(),
@@ -29,9 +33,15 @@ export const env = createEnv({
       .default("development"),
 
     // Backend API
-    NEXT_PUBLIC_API_V1_URL: z.string().url("NEXT_PUBLIC_API_V1_URL must be a valid URL"),
-    NEXT_PUBLIC_API_V2_URL: z.string().url("NEXT_PUBLIC_API_V2_URL must be a valid URL"),
-    NEXT_PUBLIC_BACKEND_URL: z.string().url("NEXT_PUBLIC_BACKEND_URL must be a valid URL"),
+    NEXT_PUBLIC_API_V1_URL: z
+      .string()
+      .url("NEXT_PUBLIC_API_V1_URL must be a valid URL"),
+    NEXT_PUBLIC_API_V2_URL: z
+      .string()
+      .url("NEXT_PUBLIC_API_V2_URL must be a valid URL"),
+    NEXT_PUBLIC_BACKEND_URL: z
+      .string()
+      .url("NEXT_PUBLIC_BACKEND_URL must be a valid URL"),
 
     // Frontend
     NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -79,18 +89,23 @@ export const env = createEnv({
     NEXT_PUBLIC_API_V2_URL: process.env.NEXT_PUBLIC_API_V2_URL,
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-    NEXT_PUBLIC_FRONTEND_TUNNEL_URL: process.env.NEXT_PUBLIC_FRONTEND_TUNNEL_URL,
+    NEXT_PUBLIC_FRONTEND_TUNNEL_URL:
+      process.env.NEXT_PUBLIC_FRONTEND_TUNNEL_URL,
     NEXT_PUBLIC_CLOUDINARY_CLOUD: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD,
-    NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
+    NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET:
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
-    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-    NEXT_PUBLIC_FEATURE_AI_MEASUREMENTS: process.env.NEXT_PUBLIC_FEATURE_AI_MEASUREMENTS,
-    NEXT_PUBLIC_FEATURE_SOCIAL_LOGIN: process.env.NEXT_PUBLIC_FEATURE_SOCIAL_LOGIN,
-    NEXT_PUBLIC_FEATURE_BETA_CHECKOUT: process.env.NEXT_PUBLIC_FEATURE_BETA_CHECKOUT,
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+    NEXT_PUBLIC_FEATURE_AI_MEASUREMENTS:
+      process.env.NEXT_PUBLIC_FEATURE_AI_MEASUREMENTS,
+    NEXT_PUBLIC_FEATURE_SOCIAL_LOGIN:
+      process.env.NEXT_PUBLIC_FEATURE_SOCIAL_LOGIN,
+    NEXT_PUBLIC_FEATURE_BETA_CHECKOUT:
+      process.env.NEXT_PUBLIC_FEATURE_BETA_CHECKOUT,
   },
 
   // ── Options ───────────────────────────────────────────────────────────────
   skipValidation:
-    !!process.env.SKIP_ENV_VALIDATION ||
-    process.env.NODE_ENV === "test",
+    !!process.env.SKIP_ENV_VALIDATION || process.env.NODE_ENV === "test",
 });

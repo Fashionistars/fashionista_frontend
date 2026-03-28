@@ -6,7 +6,13 @@ const page = () => {
     <div className="bg-[#F4F3EC] flex flex-col gap-6 pb-9">
       <section className="flex flex-col gap-6 md:gap-10 md:flex-row py-5 px-1 md:px-20 md:h-[580px] ">
         <div className="relative w-full md:w-1/2 md:h-full">
-          <Image src="/senator.svg" alt="About Fashionistar" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
+          <Image
+            src="/senator.svg"
+            alt="About Fashionistar"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+          />
         </div>
         <div className="gap-3 w-full md:w-1/2 flex flex-col justify-between">
           <div className="flex flex-col items-center md:items-start gap-3">
@@ -23,17 +29,35 @@ const page = () => {
           </div>
           <div className="grid grid-cols-3 gap-1 h-[150px] md:h-auto ">
             <div className="relative w-full h-full">
-              <Image src="/man3_assets.svg" alt="" fill sizes="33vw" className="object-cover" />
+              <Image
+                src="/man3_assets.svg"
+                alt=""
+                fill
+                sizes="33vw"
+                className="object-cover"
+              />
             </div>
-            </div>
-            <div className="w-full h-full">
+          </div>
+          <div className="w-full h-full">
             <div className="relative w-full h-full">
-              <Image src="/man4_asset.svg" alt="" fill sizes="33vw" className="object-cover" />
+              <Image
+                src="/man4_asset.svg"
+                alt=""
+                fill
+                sizes="33vw"
+                className="object-cover"
+              />
             </div>
-            </div>
-            <div className="w-full h-full">
+          </div>
+          <div className="w-full h-full">
             <div className="relative w-full h-full">
-              <Image src="/man5_asset.svg" alt="" fill sizes="33vw" className="object-cover" />
+              <Image
+                src="/man5_asset.svg"
+                alt=""
+                fill
+                sizes="33vw"
+                className="object-cover"
+              />
             </div>
           </div>
         </div>
@@ -370,10 +394,22 @@ const page = () => {
         </div>
         <div className="flex items-center gap-2 md:gap-0 md:w-1/2">
           <div className="md:h-3/4 h-[195px] w-full relative">
-            <Image src="/woman3.svg" alt="" fill sizes="(max-width: 768px) 50vw, 25vw" className="h-full w-full object-cover" />
+            <Image
+              src="/woman3.svg"
+              alt=""
+              fill
+              sizes="(max-width: 768px) 50vw, 25vw"
+              className="h-full w-full object-cover"
+            />
           </div>
           <div className="h-[336px] md:h-full w-full relative">
-            <Image src="/woman4.svg" alt="" fill sizes="(max-width: 768px) 50vw, 25vw" className="w-full h-full object-cover" />
+            <Image
+              src="/woman4.svg"
+              alt=""
+              fill
+              sizes="(max-width: 768px) 50vw, 25vw"
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </section>
@@ -469,7 +505,13 @@ const page = () => {
           </div>
         </div>
         <div className="absolute right-0 top-0 w-[180px] h-full">
-          <Image src="/girl.png" alt="" fill sizes="180px" className="object-contain" />
+          <Image
+            src="/girl.png"
+            alt=""
+            fill
+            sizes="180px"
+            className="object-contain"
+          />
         </div>
       </section>
     </div>

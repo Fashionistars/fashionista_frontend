@@ -26,7 +26,11 @@ interface CartState {
 
   addItem: (item: Omit<CartItem, "id">) => void;
   removeItem: (productId: string, variantId?: string) => void;
-  updateQuantity: (productId: string, quantity: number, variantId?: string) => void;
+  updateQuantity: (
+    productId: string,
+    quantity: number,
+    variantId?: string,
+  ) => void;
   clearCart: () => void;
   toggleCart: () => void;
 
@@ -47,7 +51,7 @@ export const useCartStore = create<CartState>()(
         set((state) => {
           const key = `${newItem.product_id}-${newItem.variant_id ?? "default"}`;
           const existing = state.items.find(
-            (i) => `${i.product_id}-${i.variant_id ?? "default"}` === key
+            (i) => `${i.product_id}-${i.variant_id ?? "default"}` === key,
           );
 
           if (existing) {
@@ -56,16 +60,13 @@ export const useCartStore = create<CartState>()(
               items: state.items.map((i) =>
                 `${i.product_id}-${i.variant_id ?? "default"}` === key
                   ? { ...i, quantity: i.quantity + (newItem.quantity ?? 1) }
-                  : i
+                  : i,
               ),
             };
           }
 
           return {
-            items: [
-              ...state.items,
-              { ...newItem, id: `${key}-${Date.now()}` },
-            ],
+            items: [...state.items, { ...newItem, id: `${key}-${Date.now()}` }],
           };
         });
       },
@@ -77,7 +78,7 @@ export const useCartStore = create<CartState>()(
               !(
                 i.product_id === productId &&
                 (variantId ? i.variant_id === variantId : true)
-              )
+              ),
           ),
         }));
       },
@@ -92,7 +93,7 @@ export const useCartStore = create<CartState>()(
             i.product_id === productId &&
             (variantId ? i.variant_id === variantId : true)
               ? { ...i, quantity }
-              : i
+              : i,
           ),
         }));
       },
@@ -100,8 +101,7 @@ export const useCartStore = create<CartState>()(
       clearCart: () => set({ items: [] }),
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
 
-      getItemCount: () =>
-        get().items.reduce((sum, i) => sum + i.quantity, 0),
+      getItemCount: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
 
       getTotal: () =>
         get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
@@ -112,10 +112,10 @@ export const useCartStore = create<CartState>()(
     {
       name: "fashionistar-cart",
       storage: createJSONStorage(() =>
-        typeof window !== "undefined" ? localStorage : sessionStorage
+        typeof window !== "undefined" ? localStorage : sessionStorage,
       ),
       // Don't persist UI state (isOpen)
       partialize: (state) => ({ items: state.items }),
-    }
-  )
+    },
+  ),
 );

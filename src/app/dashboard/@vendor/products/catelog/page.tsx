@@ -23,7 +23,8 @@ const page = async () => {
   ];
   const vendor_id = "123abc";
   const product_id = "cba321";
-  void vendor_id; void product_id;
+  void vendor_id;
+  void product_id;
   // const fetchedData = await fetchWithAuth(`/vendor/product/${vendor_id}`);
 
   // const cartList = products.map((product) => (

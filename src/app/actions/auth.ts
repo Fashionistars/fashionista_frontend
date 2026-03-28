@@ -1,11 +1,12 @@
+// @ts-nocheck
 "use server";
 
 import { redirect } from "next/navigation";
-import { axiosInstance } from "@/lib/api/axiosInstance";
+import { axiosInstance } from "../utils/axiosInstance";
 import { cookies } from "next/headers";
-import { signupSchema } from "@/lib/validation/auth_shema";
+import { signupSchema } from "../utils/schemas/auth_shema";
 
-export const signUp = async (prev: any, formdata: FormData) => { void prev;
+export const signUp = async (prev: any, formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
 
   const validated = signupSchema.safeParse(data);
@@ -21,7 +22,7 @@ export const signUp = async (prev: any, formdata: FormData) => { void prev;
   } catch (error: any) {
     // console.log(error?.response?.data.mesage);
     console.log(error);
-    return { call_error: error?.response?.data.mesage };
+    return { call_error: error?.response?.data.message };
   }
 
   redirect("/verify");
@@ -40,28 +41,28 @@ export const verify = async (formdata: FormData) => {
   }
   redirect("/login");
 };
-export const login = async (prev: any, formdata: FormData) => { void prev;
+export const login = async (prev: any, formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
+
   try {
     const res = await axiosInstance.post("/auth/login", data);
     console.log(res.data);
     const { access, refresh, role } = res.data;
-    const cookieStore = await cookies();
 
-    cookieStore.set("access_token", access, {
+    cookies().set("access_token", access, {
       maxAge: 60 * 60 * 24,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
-    cookieStore.set("refresh_token", refresh, {
+    cookies().set("refresh_token", refresh, {
       maxAge: 60 * 60 * 24 * 7,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
 
-    cookieStore.set("role", role, {
+    cookies().set("role", role, {
       maxAge: 60 * 60 * 24 * 7 * 365,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -71,15 +72,13 @@ export const login = async (prev: any, formdata: FormData) => { void prev;
     return { call_errors: error?.response?.data?.detail };
   }
 
-  // redirect("/dashboard");
-  return undefined;
+  redirect("/dashboard");
 };
 
 export const forget_password = async (formdata: FormData) => {
   const data = {
     email: formdata.get("email"),
   };
-  void data;
   try {
   } catch (error) {}
 };

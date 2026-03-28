@@ -1,32 +1,19 @@
+// @ts-nocheck
 "use server";
-import { PricesSchema } from "@/lib/validation/addProduct";
-import { fetchWithAuth } from "@/lib/api/fetchAuth";
+import { object, z } from "zod";
+import { FormSchema, PricesSchema } from "../utils/schema";
+import { fetchWithAuth } from "../utils/fetchAuth";
 import {
   BasicInformationSchema,
   CategorySchema,
+  ColorSchema,
   GallerySchema,
+  NewProductFieldTypes,
   SizesSchema,
   SpecificationSchema,
-} from "@/lib/validation/addProduct";
+} from "../utils/schemas/addProduct";
 import { redirect } from "next/navigation";
-// const schema = z.object({
-//   image_1: z
-//     .instanceof(File, {
-//       message: "Image is required and should be a file",
-//     })
-//     .refine((file) => file.size <= 10 * 1024 * 1024, {
-//       message: "Image must be less than 5MB",
-//     }) // 5MB limit
-//     .refine(
-//       (file) =>
-//         ["image/jpeg", "image/jpg", "image/png", "image/gif"].includes(
-//           file.type
-//         ),
-//       { message: "Image must be a JPEG, PNG, or GIF" }
-//     ),
-//   title: z.string().min(3, "Product title is required "),
-//   discription: z.string().min(10, "Product description is required"),
-// });
+
 export const BasicInformationAction = async (formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
   const validated = BasicInformationSchema.safeParse(data);
@@ -58,7 +45,7 @@ export const CategoryAction = async (formdata: FormData) => {
   }
   redirect("/dashboard/products?step=gallery");
 };
-export const GalleryAction = async (formdata: FormData) => {
+export const GalleryAction = async (prev: any, formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
   const validated = GallerySchema.safeParse(data);
   if (!validated.success) {
@@ -66,9 +53,10 @@ export const GalleryAction = async (formdata: FormData) => {
       errors: validated.error.flatten().fieldErrors,
     };
   }
+
   redirect("/dashboard/products?step=specification");
 };
-export const SpecificationAction = async (prev: any, formdata: FormData) => { void prev;
+export const SpecificationAction = async (prev: any, formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
 
   const specData = { specification: data };
@@ -80,14 +68,14 @@ export const SpecificationAction = async (prev: any, formdata: FormData) => { vo
   }
   redirect("/dashboard/products?step=sizes");
 };
-export const SizesAction = async (prev: any, formdata: FormData) => { void prev;
+export const SizesAction = async (prev: any, formdata: FormData) => {
   const newData = {
     sizes: {
       size: formdata.get("size"),
       price: formdata.get("size_price"),
     },
   };
-  console.log(newData);
+
   const validated = SizesSchema.safeParse(newData);
   if (!validated.success) {
     return {
@@ -97,8 +85,58 @@ export const SizesAction = async (prev: any, formdata: FormData) => { void prev;
   redirect("/dashboard/products?step=color");
 };
 
-export const newProduct = async (formdata: FormData | object) => { void formdata;
-  // const data = Object.fromEntries(formdata.entries());
+export const ColorAction = async (
+  fields: NewProductFieldTypes,
+  formdata: FormData,
+) => {
+  const validatedColor = ColorSchema.safeParse(fields);
+  if (!validatedColor.success) {
+    return {
+      errors: validatedColor.error.flatten().fieldErrors,
+    };
+  }
+  const validatedSizes = SizesSchema.safeParse(fields);
+  if (!validatedSizes.success) {
+    return {
+      errors: validatedSizes.error.flatten().fieldErrors,
+    };
+  }
+  const validated_spec = SpecificationSchema.safeParse(fields);
+  if (!validated_spec.success) {
+    return {
+      errors: validated_spec.error.flatten().fieldErrors,
+    };
+  }
+  const validated_gallery = GallerySchema.safeParse(fields);
+  if (!validated_gallery.success) {
+    return {
+      errors: validated_gallery.error.flatten().fieldErrors,
+    };
+  }
+  const validated_category = CategorySchema.safeParse(fields);
+  if (!validated_category.success) {
+    return {
+      errors: validated_category.error.flatten().fieldErrors,
+    };
+  }
+  const validated_prices = PricesSchema.safeParse(fields);
+  if (!validated_prices.success) {
+    return {
+      errors: validated_prices.error.flatten().fieldErrors,
+    };
+  }
+  const validated_basic = BasicInformationSchema.safeParse(fields);
+  if (!validated_basic.success) {
+    return {
+      errors: validated_basic.error.flatten().fieldErrors,
+    };
+  }
+  console.log("Created Product details", fields);
+};
+
+export const newProduct = async (formdata: FormData) => {
+  const data = Object.fromEntries(formdata.entries());
+  console.log(data);
   // console.log("form information", data);
   // const validatedForm = FormSchema.safeParse(data);
   // if (!validatedForm.success) {
@@ -126,7 +164,7 @@ export const deleteProduct = async (vendor_id: string, product_id: string) => {
   try {
     const res = await fetchWithAuth(
       `/vendor/product-delete/${vendor_id}/${product_id}`,
-      "delete"
+      "delete",
     );
     console.log(res);
   } catch (error) {
@@ -134,4 +172,4 @@ export const deleteProduct = async (vendor_id: string, product_id: string) => {
   }
 };
 
-export const editProduct = async () => { return undefined; };
+export const editProduct = async () => {};

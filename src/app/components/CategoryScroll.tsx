@@ -53,7 +53,13 @@ const CategoryScroll = () => {
           className="w-[50px] h-[50px] rounded-full"
           onClick={scrollRight}
         >
-          <Image src="/arrows.svg" alt="scroll right" width={50} height={50} className="scale-x-[-1]" />
+          <Image
+            src="/arrows.svg"
+            alt="scroll right"
+            width={50}
+            height={50}
+            className="scale-x-[-1]"
+          />
         </button>
       </div>
       <div

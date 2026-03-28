@@ -214,4 +214,3 @@ export default async function Home(props: PageProps) {
     </div>
   );
 }
-
