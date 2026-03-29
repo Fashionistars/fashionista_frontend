@@ -5,10 +5,11 @@ export const fetchWithAuth = async (
   url: string,
   method: "get" | "post" | "put" | "delete" | "patch" = "get",
   data: null | object | FormData = null,
-  content = "application/json"
+  content = "application/json",
 ) => {
-  const accessToken = cookies().get("access_token")?.value;
-  const refreshToken = cookies().get("refresh_token")?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("access_token")?.value;
+  const refreshToken = cookieStore.get("refresh_token")?.value;
   console.log(accessToken);
   try {
     const response = await axiosInstance({

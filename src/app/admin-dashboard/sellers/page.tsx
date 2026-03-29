@@ -1,31 +1,29 @@
 import React from "react";
 import Link from "next/link";
-import man from "../../../../public/man4_asset.svg";
-import man2 from "../../../../public/woman3.svg";
 import Image from "next/image";
 const page = () => {
   const products = [
     {
       id: 1,
-      image: man,
+      image: "/man2_asset.svg",
       title: "Men Senator",
       email: "Vendor4@email.com",
     },
     {
       id: 2,
-      image: man2,
+      image: "/man3_assets.svg",
       title: "Men Attire",
       email: "Vendor3@email.com",
     },
     {
       id: 3,
-      image: man,
+      image: "/man2_asset.svg",
       title: "Men Senator",
       email: "Vendor2@email.com",
     },
     {
       id: 4,
-      image: man2,
+      image: "/man3_assets.svg",
       title: "Men Attire",
       email: "vendor1@email.com",
     },

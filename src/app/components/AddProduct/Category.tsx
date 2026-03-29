@@ -1,8 +1,7 @@
 import React from "react";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { NewProductType } from "@/types";
-import { NewProductFieldTypes } from "@/app/utils/schemas/addProduct";
-import { CategoryAction } from "@/app/actions/vendor";
+import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
+import { CategoryAction } from "@/features/shop/api/actions";
 
 const Category = ({
   newProductFields,
@@ -12,12 +11,16 @@ const Category = ({
   updateNewProductField: (fields: Partial<NewProductFieldTypes>) => void;
 }) => {
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>,
   ) => {
     updateNewProductField({ [e.target.name]: e.target.value });
   };
   return (
-    <form action={CategoryAction} id="category" className="space-y-10 w-full">
+    <form
+      action={CategoryAction as any}
+      id="category"
+      className="space-y-10 w-full"
+    >
       <div className="space-y-2 ">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           {" "}

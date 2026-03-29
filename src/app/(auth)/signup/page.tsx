@@ -2,10 +2,11 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import SignUpForm from "@/app/components/SignUpForm";
+import SignUpForm from "@/features/auth/components/SignUpForm";
 
 const Page = () => {
   const [role, setRole] = useState<"Vendor" | "Client" | undefined>();
+
   return (
     <>
       <div className=" ">

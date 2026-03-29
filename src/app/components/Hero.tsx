@@ -1,5 +1,4 @@
 import React from "react";
-import heroImg from "../../../public/heroimg.png";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -48,7 +47,7 @@ const Hero = () => {
         {/*  w-[270px] h-[300px] md:w-[505px] md:h-[550px] */}
         <div className="absolute -right-3 -bottom-5 lg:right-0 lg:bottom-0">
           <Image
-            src={heroImg}
+            src="/heroimg.png"
             alt=""
             className="w-[275px] h-[300px] md:w-[505px] md:h-[550px] max-w-full"
           />

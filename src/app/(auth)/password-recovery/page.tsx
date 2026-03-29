@@ -1,4 +1,4 @@
-import Button from "@/app/components/Button";
+import Button from "@/components/ui/primitives/Button";
 import React from "react";
 
 const page = () => {

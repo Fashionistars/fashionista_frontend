@@ -1,5 +1,5 @@
 import React from "react";
-import { trackOrder } from "@/app/actions/client";
+import { trackOrder } from "@/features/orders/api/actions";
 
 const page = () => {
   return (

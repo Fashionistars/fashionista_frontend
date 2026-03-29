@@ -1,11 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
-import Navbar from "@/app/components/Navbar";
-import MobileNavBar from "../components/MobileNavBar";
-import Footer from "../components/Footer";
-import NewNavbar from "../components/NewNavbar";
-import NewFooter from "../components/NewFooter";
-import NewMobileNav from "../components/NewMobileNav";
+import NewNavbar from "@/components/shared/navigation/NewNavbar";
+import NewFooter from "@/components/shared/feedback/NewFooter";
+import NewMobileNav from "@/components/shared/navigation/NewMobileNav";
 
 export default function Home({
   children,
@@ -19,7 +15,7 @@ export default function Home({
           <div className="bg-[#01454a] text-white relative py-4 md:py-6 md:px-10  lg:px-20  md:flex md:flex-wrap-reverse lg:flex-nowrap justify-between items-center text-sm ">
             <div className="hidden md:flex justify-between items-center gap-3  font-raleway font-bold md:w-1/2 lg:w-[25%]">
               <Link href="/about-us">About Us</Link>
-              <Link href="#">Wishlist</Link>
+              <Link href="/wishlist">Wishlist</Link>
               <Link href="#">Tracking Order</Link>
             </div>
             <div className="hidden md:flex justify-end md:w-1/2 lg:w-[30%] lg:order-3 gap-4 ">

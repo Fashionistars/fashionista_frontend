@@ -1,11 +1,11 @@
 import React from "react";
-import BarChart from "../components/Charts";
+import BarChart from "@/components/ui/compounds/Charts";
 import { ChartOptions, ChartData } from "chart.js";
 import Image from "next/image";
 import { Suspense } from "react";
 
-import OrderList from "../components/OrderList";
-import { OrderProp } from "@/types";
+import OrderList from "@/features/orders/components/OrderList";
+import { OrderProp } from "@/core/types";
 
 interface MembersProp {
   image: string;

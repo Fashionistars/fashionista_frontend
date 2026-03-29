@@ -1,17 +1,10 @@
 import Image from "next/image";
-import { data2 } from "../utils/mock";
-import Cads from "../components/Cads";
+import { data2 } from "@/lib/utils/mock-data";
 import Link from "next/link";
-import Hero from "../components/Hero";
-import ShopByCategory from "../components/ShopByCategory";
-import LatestCollection from "../components/LatestCollection";
-import { CollectionsProps, PageProps } from "@/types";
-import { formatCurrency } from "../utils/formatCurrency";
+import { Hero, ShopByCategory, LatestCollection } from "@/components";
+import type { PageProps } from "@/core/types";
+import { formatCurrency } from "@/lib/formatting";
 
-type DealsProp = CollectionsProps & {
-  status: "sold out" | "sales";
-  new_price: string;
-};
 type ReviewProps = {
   id: string;
   image: string;
@@ -22,34 +15,10 @@ type ReviewProps = {
 export default async function Home(props: PageProps) {
   const { searchParams } = props;
 
-  const deals = data2.map((card) => {
-    return <Cads data={card} key={card.image} />;
-  });
-  const get_deals = async () => {
-    try {
-      const res = await fetch("http://localhost:4000/deals");
-      const deals = (await res.json()) as DealsProp[];
-      return deals;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const get_reviews = async () => {
-    try {
-      const res = await fetch("http://localhost:4000/reviews", {
-        headers: { "Content-Type": "application/json" },
-      });
-      const reviews = (await res.json()) as ReviewProps[];
-      return reviews;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const new_deals = (await get_deals()) || [];
-
-  const dealList = new_deals.map((deal) => (
+  // For immediate rendering, use mock data for deals
+  const dealList = data2.map((deal) => (
     <div
-      key={deal.id}
+      key={deal.image}
       className="flex flex-col w-[45%]  md:w-[32%] max-w-[300px]"
     >
       <div className="relative ">
@@ -61,15 +30,9 @@ export default async function Home(props: PageProps) {
           height={500}
         />
         <div className="absolute top-7 left-2 md:top-10 lg:top-3 lg:left-3">
-          {deal.status == "sales" ? (
-            <p className="w-[83px] h-7 rounded-[5px] flex items-center justify-center uppercase bg-[#fda600] text-white font-semibold font-raleway">
-              {deal.status}
-            </p>
-          ) : (
-            <p className="bg-[#848484] py-1 px-4 text-white rounded-[5px] uppercase font-semibold">
-              {deal.status}
-            </p>
-          )}
+          <p className="w-[83px] h-7 rounded-[5px] flex items-center justify-center uppercase bg-[#fda600] text-white font-semibold font-raleway">
+            sales
+          </p>
         </div>
         <span className="absolute bottom-8 md:bottom-10 lg:bottom-4 right-3">
           <svg
@@ -85,7 +48,7 @@ export default async function Home(props: PageProps) {
             />
           </svg>
         </span>
-      </div>{" "}
+      </div>
       <div className="flex flex-col gap-3">
         <span className="text-[#fda600] text-xl">★★★★★</span>
         <p className="font-raleway font-semibold text-lg md:text-2xl text-black">
@@ -93,7 +56,7 @@ export default async function Home(props: PageProps) {
         </p>
         <div className="flex items-center gap-2">
           <p className="font-raleway font-semibold text-lg md:text-2xl text-black">
-            {formatCurrency(deal.new_price)}
+            {formatCurrency((deal as any).new_price || deal.price)}
           </p>
           <p className="font-raleway font-semibold  md:text-xl line-through text-[#848484]">
             {formatCurrency(deal.price)}
@@ -102,34 +65,24 @@ export default async function Home(props: PageProps) {
       </div>
     </div>
   ));
-  const reviews = (await get_reviews()) || [];
 
-  const reviewList = reviews.map((review) => (
-    <div
-      style={{ boxShadow: "0px 4px 25px 0px #0000001A" }}
-      key={review.id}
-      className="flex flex-col md:flex-row items-center gap-10 py-9 px-10 border border-[#D9D9D9] w-full shrink-0  lg:w-[48%]"
-    >
-      <Image
-        src={review.image}
-        alt=""
-        width={500}
-        height={500}
-        className="w-[105px] h-[105px] object-cover"
-      />
-      <div className="flex flex-col items-center md:items-start gap-2.5">
-        <span className="text-[#fda600] text-xl">★★★★★</span>
-
-        <p className="font-raleway text-center md:text-left text-xl text-[#333] flex-none  self-stretch grow-0   w-full">
-          {review.text}
-        </p>
-
-        <p className="font-raleway font-semibold text-2xl text-black ">
-          {review.name}
-        </p>
-      </div>
-    </div>
-  ));
+  // Mock review list for immediate rendering
+  const mockReviews: ReviewProps[] = [
+    {
+      id: "1",
+      image: "/man2_asset.svg",
+      text: "Amazing quality and perfect fit!",
+      rating: 5,
+      name: "Sarah Johnson",
+    },
+    {
+      id: "2",
+      image: "/woman.svg",
+      text: "Exceeded my expectations!",
+      rating: 5,
+      name: "Emily Davis",
+    },
+  ];
 
   return (
     <div className="flex flex-col gap-5">
@@ -151,7 +104,7 @@ export default async function Home(props: PageProps) {
       </div>
 
       <ShopByCategory />
-      <LatestCollection searchParams={searchParams} />
+      <LatestCollection searchParams={searchParams as any} />
       <div className=" w-full h-[593px] bg-[#fda600] md:h-[746px] relative p-10 md:p-14 lg:p-24 flex flex-col gap-5 md:gap-10 items-center">
         <p className="font-raleway font-semibold text-xl text-black">
           SENATOR OUTFITS
@@ -225,7 +178,32 @@ export default async function Home(props: PageProps) {
       <div className="px-5 py-10 md:p-10 lg:p-20 space-y-5">
         <h2 className="font-bon_foyage text-5xl text-[#333]">Our Reviews</h2>
         <div className="flex md:flex-wrap items-center lg:p-5 overflow-hidden gap-10 md:gap-3 lg:gap-6 justify-between">
-          {reviewList}
+          {mockReviews.map((review) => (
+            <div
+              style={{ boxShadow: "0px 4px 25px 0px #0000001A" }}
+              key={review.id}
+              className="flex flex-col md:flex-row items-center gap-10 py-9 px-10 border border-[#D9D9D9] w-full shrink-0  lg:w-[48%]"
+            >
+              <Image
+                src={review.image}
+                alt=""
+                width={500}
+                height={500}
+                className="w-[105px] h-[105px] object-cover"
+              />
+              <div className="flex flex-col items-center md:items-start gap-2.5">
+                <span className="text-[#fda600] text-xl">★★★★★</span>
+
+                <p className="font-raleway text-center md:text-left text-xl text-[#333] flex-none  self-stretch grow-0   w-full">
+                  {review.text}
+                </p>
+
+                <p className="font-raleway font-semibold text-2xl text-black ">
+                  {review.name}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
         <div className="flex items-center gap-3 justify-center">
           <span className="w-[1.5rem] h-[1.5rem] rounded-full bg-[#01454A] border-2 border-[#01454A]" />

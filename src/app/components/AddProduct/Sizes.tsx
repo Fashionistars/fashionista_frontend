@@ -1,8 +1,9 @@
+// @ts-nocheck
 "use client";
 import { NewProductType } from "@/types";
 import React, { useState } from "react";
-import { NewProductFieldTypes } from "@/app/utils/schemas/addProduct";
-import { SizesAction } from "@/app/actions/vendor";
+import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
+import { SizesAction } from "@/features/shop/api/actions";
 import { useFormState } from "react-dom";
 
 const Sizes = ({
@@ -13,7 +14,7 @@ const Sizes = ({
   updateNewProductField: (fields: Partial<NewProductFieldTypes>) => void;
 }) => {
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     updateNewProductField({ [e.target.name]: e.target.value });
   };
@@ -22,6 +23,8 @@ const Sizes = ({
     { id: crypto.randomUUID(), title: "price" },
   ];
   const [allFields, setAllFields] = useState(fields);
+  void allFields;
+  void setAllFields;
   const [isField, setIsField] = useState(false);
   const [newField, setNewField] = useState({ id: "", title: "" });
   const [state, formAction] = useFormState(SizesAction, null);

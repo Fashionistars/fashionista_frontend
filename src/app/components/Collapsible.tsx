@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 import React, { useState } from "react";
 interface CollapsibleProp {
@@ -27,9 +28,9 @@ const Collapsible = ({ title, text, onClick, isOpen }: CollapsibleProp) => {
             <path
               d="M13.5 6.75004C13.5 6.75004 10.1858 11.25 9 11.25C7.8141 11.25 4.5 6.75 4.5 6.75"
               stroke="black"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </button>

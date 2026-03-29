@@ -1,12 +1,9 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import instagram from "../../../../../public/socials/instagram.svg";
-import twitter from "../../../../../public/socials/twitter.svg";
-import facebook from "../../../../../public/socials/facebook.svg";
-import Card from "@/app/components/Card";
-import Cads from "@/app/components/Cads";
-import data, { data2 } from "@/app/utils/mock";
+import Card from "@/components/ui/compounds/Card";
+import Cads from "@/components/ui/compounds/Cads";
+import data, { data2 } from "@/lib/utils/mock-data";
 
 interface NameProp {
   params: {
@@ -47,7 +44,7 @@ const page = ({ params }: NameProp) => {
               className="w-5 h-5 md:w-[25px] md:h-[25px] bg-[#fda600] flex justify-center items-center rounded-full"
             >
               <Image
-                src={twitter}
+                src="/socials/twitter.svg"
                 alt=""
                 className="w-[80%] h-[80%] max-h-auto object-cover"
               />
@@ -58,7 +55,7 @@ const page = ({ params }: NameProp) => {
               className="w-5 h-5 md:w-[25px]  md:h-[25px] bg-[#fda600] flex justify-center items-center rounded-full"
             >
               <Image
-                src={instagram}
+                src="/socials/instagram.svg"
                 alt=""
                 className="w-full h-full object-cover"
               />
@@ -69,7 +66,7 @@ const page = ({ params }: NameProp) => {
               className="w-5 h-5 md:w-[25px] md:h-[25px] bg-[#fda600] flex justify-center items-center rounded-full"
             >
               <Image
-                src={facebook}
+                src="/socials/facebook.svg"
                 alt=""
                 className="w-full h-full object-cover"
               />
@@ -86,7 +83,7 @@ const page = ({ params }: NameProp) => {
           >
             <path
               fillRule="evenodd"
-              clip-rule="evenodd"
+              clipRule="evenodd"
               d="M7.40945 17.5655L7.45512 17.6095L7.4587 17.613C8.29556 18.4149 9.10696 18.9646 10.0247 18.954C10.9383 18.9435 11.7464 18.3795 12.5827 17.5652C13.729 16.4545 15.2121 14.9563 16.2836 13.179C17.3592 11.395 18.0533 9.27425 17.531 6.94654C15.7665 -0.920188 4.24281 -0.929405 2.46901 6.93819C1.96156 9.19992 2.60266 11.2688 3.62503 13.0223C4.64356 14.7692 6.06871 16.2523 7.21166 17.3725C7.27826 17.4378 7.34398 17.5018 7.40866 17.5648L7.40945 17.5655ZM10 5.20835C8.50429 5.20835 7.29171 6.42092 7.29171 7.91669C7.29171 9.41242 8.50429 10.625 10 10.625C11.4958 10.625 12.7084 9.41242 12.7084 7.91669C12.7084 6.42092 11.4958 5.20835 10 5.20835Z"
               fill="#000"
             />

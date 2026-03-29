@@ -2,82 +2,193 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
+/* ══════════════════════════════════════════════════════════════════════════════
+   FASHIONISTAR AI — Global CSS Design System
+   Tailwind CSS v3.4 + Shadcn/ui CSS Variable System
+   ══════════════════════════════════════════════════════════════════════════════ */
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
+    /* ── Shadcn/ui CSS Variables — Light Mode ─────────────────────────────── */
+    --background: 46 33% 94%; /* #F4F3EC — Cream background */
+    --foreground: 0 0% 20%; /* #333333 — Dark text */
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 0 0% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 20%;
+    --primary: 184 97% 15%; /* #01454A — FASHIONISTAR Green */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
+    --secondary: 228 60% 97%; /* #F4F5FB — Light blue-gray */
+    --secondary-foreground: 0 0% 20%;
+    --muted: 220 15% 90%;
+    --muted-foreground: 220 10% 45%;
+    --accent: 38 100% 50%; /* #FDA600 — FASHIONISTAR Gold */
+    --accent-foreground: 0 0% 0%; /* Black text on gold */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
+    --ring: 184 97% 15%; /* Focus ring = primary */
+    --radius: 0.5rem;
 
-body {
-  color: rgb(var(--foreground-rgb));
-  /* background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb)); */
-  background: #f4f3ec;
-}
-.dark {
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.55) 36%,
-    rgba(0, 0, 0, 0.85) 67.75%,
-    #000000 89.5%
-  );
-}
-.shd {
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-}
-.scroll::-webkit-scrollbar {
-  display: none;
-}
-.scroll {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 23%;
-  scroll-behavior: smooth;
+    /* ── Chart Colors ──────────────────────────────────────────────────────── */
+    --chart-1: 184 97% 15%;
+    --chart-2: 38 100% 50%;
+    --chart-3: 210 70% 50%;
+    --chart-4: 340 82% 52%;
+    --chart-5: 120 60% 40%;
+  }
+
+  .dark {
+    /* ── Shadcn/ui CSS Variables — Dark Mode ──────────────────────────────── */
+    --background: 220 15% 10%;
+    --foreground: 0 0% 95%;
+    --card: 220 15% 14%;
+    --card-foreground: 0 0% 95%;
+    --popover: 220 15% 14%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 184 97% 25%; /* Slightly brighter green in dark mode */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 15% 20%;
+    --secondary-foreground: 0 0% 85%;
+    --muted: 220 15% 20%;
+    --muted-foreground: 220 10% 65%;
+    --accent: 38 100% 50%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 15% 25%;
+    --input: 220 15% 25%;
+    --ring: 184 97% 30%;
+  }
+
+  /* ── Base Reset ──────────────────────────────────────────────────────────── */
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-raleway antialiased;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ── Typography Defaults ────────────────────────────────────────────────── */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-satoshi font-semibold tracking-tight;
+  }
+
+  /* ── Focus Styles ────────────────────────────────────────────────────────── */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
 }
 
 @layer utilities {
+  /* ── Text Balance ────────────────────────────────────────────────────────── */
   .text-balance {
     text-wrap: balance;
   }
-}
-.custom-checkbox {
-  appearance: none;
-  background-color: #fff;
+
+  /* ── Shimmer Loading ─────────────────────────────────────────────────────── */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 25%,
+      hsl(var(--background)) 50%,
+      hsl(var(--muted)) 75%
+    );
+    background-size: 200% 100%;
+    @apply animate-shimmer;
+  }
+
+  /* ── Hide Scrollbar ──────────────────────────────────────────────────────── */
+  .scroll-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scroll-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ── Horizontal Scroll Grid ──────────────────────────────────────────────── */
+  .scroll-grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(240px, 1fr);
+    scroll-behavior: smooth;
+    overflow-x: auto;
+  }
+
+  /* ── Glass Morphism ──────────────────────────────────────────────────────── */
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+
+  /* ── Card Elevation ──────────────────────────────────────────────────────── */
+  .card-shadow {
+    box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-shadow-hover {
+    box-shadow: 0px 8px 40px 0px rgba(1, 69, 74, 0.2);
+  }
 }
 
+/* ── Custom Progress Bar ─────────────────────────────────────────────────────── */
 progress {
   appearance: none;
   height: 18px;
-  width: 300px;
+  width: 100%;
   border-radius: 100px;
+  overflow: hidden;
 
-  /* Chrome and Safari */
   &::-webkit-progress-bar {
-    background: #d9d9d9;
+    background: hsl(var(--muted));
     border-radius: 100px;
   }
 
   &::-webkit-progress-value {
-    background-color: #fda600;
+    background: hsl(var(--accent));
     border-radius: 100px;
+    transition: width 0.3s ease;
   }
 
-  /* Firefox */
   &::-moz-progress-bar {
-    background-color: #fda600;
+    background: hsl(var(--accent));
     border-radius: 100px;
   }
+}
+
+/* ── Custom Checkbox ─────────────────────────────────────────────────────────── */
+.custom-checkbox {
+  appearance: none;
+  background-color: hsl(var(--background));
+  border: 2px solid hsl(var(--border));
+  border-radius: 4px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.custom-checkbox:checked {
+  background-color: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");
 }

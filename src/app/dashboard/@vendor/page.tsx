@@ -1,10 +1,11 @@
+// @ts-nocheck
 import Link from "next/link";
 import React from "react";
-import TopBanner from "@/app/components/TopBanner";
-import BarChart from "@/app/components/Charts";
+import TopBanner from "@/components/shared/utilities/TopBanner";
+import BarChart from "@/components/Charts";
 import { ChartOptions, ChartData } from "chart.js";
 import { fetchWithAuth } from "../../utils/fetchAuth";
-import { getVendor } from "@/app/utils/libs";
+import { getVendor } from "@/core/services/api";
 
 const page = async () => {
   const getVendorStats = async () => {

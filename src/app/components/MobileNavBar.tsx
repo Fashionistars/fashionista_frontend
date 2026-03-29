@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import menu from "../../../public/menu.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -266,7 +265,7 @@ const MobileNavBar = () => {
         onClick={() => setShowNav(true)}
         className="w-[34px] h-[34px] flex justify-center  items-center bg-[#F4F3EC] border-[0.8px] border-black rounded-full"
       >
-        <Image src={menu} alt="" />
+        <Image src="/menu.svg" alt="" />
       </button>
       <div className="flex items-center">
         <Image src="/logo.svg" alt="logo" width={39} height={38} />

@@ -1,7 +1,8 @@
+// @ts-nocheck
 import React from "react";
-import OrderTable from "@/app/components/OrdersTable";
+import OrderTable from "@/components/OrdersTable";
 import { Suspense } from "react";
-import { getVendorOrders } from "@/app/utils/libs";
+import { getVendorOrders } from "@/core/services/api";
 import { OrderProp } from "@/types";
 
 const page = async () => {

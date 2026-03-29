@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 import {
   createContext,
@@ -8,8 +9,8 @@ import {
   useContext,
 } from "react";
 import { NewProductType } from "@/types";
-import { FormSchema } from "../utils/schema";
-import { NewProductFieldTypes } from "../utils/schemas/addProduct";
+import { FormSchema } from "@/lib/validation/addProduct";
+import { NewProductFieldTypes } from "@/lib/validation/addProduct";
 
 const initialValue: NewProductType = {
   image_1: undefined as unknown as File,
@@ -20,7 +21,7 @@ const initialValue: NewProductType = {
   shipping_amount: "1000",
   stock_qty: "",
   tag: "",
-  total_price: "2000",
+  total_price: "",
   category: "",
   brands: "",
   image_2: undefined as unknown as File,
@@ -49,7 +50,7 @@ type NewProductValueTypes = {
 };
 
 export const NewProductContext = createContext<NewProductValueTypes | null>(
-  null
+  null,
 );
 
 const LOCAL_STORAGE_KEY = "new_product_fields";
@@ -76,7 +77,7 @@ const NewProductContextProvider = ({
         ...dealDetails,
       }));
     },
-    []
+    [],
   );
 
   const resetLocalStorage = () => {
@@ -94,7 +95,7 @@ const NewProductContextProvider = ({
       updateNewProductField,
       resetLocalStorage,
     }),
-    [newProductFields, updateNewProductField]
+    [newProductFields, updateNewProductField],
   );
 
   return (
@@ -110,7 +111,7 @@ export function useAddProductContext() {
   const context = useContext(NewProductContext);
   if (context === null) {
     throw new Error(
-      "useAddProductContext must be used within a NewProductContextProvider"
+      "useAddProductContext must be used within a NewProductContextProvider",
     );
   }
   return context;

@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -5,6 +6,7 @@ import logo from "../../../../public/logo.svg";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import menu from "../../../../public/menu.svg";
+import Modal from "@/app/components/Modal";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);

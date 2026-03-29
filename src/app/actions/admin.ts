@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { fetchWithAuth } from "../utils/fetchAuth";
+import { fetchWithAuth } from "@/lib/api/fetchAuth";
 const schema = z.object({});
 
 export const getAllColloections = async () => {
@@ -11,6 +11,7 @@ export const getAllColloections = async () => {
   } catch (error) {
     console.log(error);
   }
+  return undefined;
 };
 export const newCollection = async (formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
@@ -26,4 +27,5 @@ export const newCollection = async (formdata: FormData) => {
   } catch (error) {
     console.log(error);
   }
+  return undefined;
 };

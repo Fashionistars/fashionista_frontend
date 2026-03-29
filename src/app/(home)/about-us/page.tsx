@@ -1,21 +1,18 @@
 import Image from "next/image";
 import React from "react";
-import senator from "../../../../public/senator.svg";
-import man from "../../../../public/man3_assets.svg";
-import man1 from "../../../../public/man4_asset.svg";
-import man2 from "../../../../public/man5_asset.svg";
-import woman1 from "../../../../public/woman3.svg";
-import woman2 from "../../../../public/woman4.svg";
-import bg from "../../../../public/bg.svg";
-import ceo from "../../../../public/ceo.png";
-import girl from "../../../../public/girl.png";
 
 const page = () => {
   return (
     <div className="bg-[#F4F3EC] flex flex-col gap-6 pb-9">
       <section className="flex flex-col gap-6 md:gap-10 md:flex-row py-5 px-1 md:px-20 md:h-[580px] ">
-        <div className="w-full md:w-1/2 md:h-full ">
-          <Image src={senator} alt="" className="w-full h-full object-cover" />
+        <div className="relative w-full md:w-1/2 md:h-full">
+          <Image
+            src="/senator.svg"
+            alt="About Fashionistar"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+          />
         </div>
         <div className="gap-3 w-full md:w-1/2 flex flex-col justify-between">
           <div className="flex flex-col items-center md:items-start gap-3">
@@ -31,14 +28,36 @@ const page = () => {
             </p>
           </div>
           <div className="grid grid-cols-3 gap-1 h-[150px] md:h-auto ">
-            <div className="w-full h-full">
-              <Image src={man} alt="" className="w-full h-full object-cover" />
+            <div className="relative w-full h-full">
+              <Image
+                src="/man3_assets.svg"
+                alt=""
+                fill
+                sizes="33vw"
+                className="object-cover"
+              />
             </div>
-            <div className="w-full h-full">
-              <Image src={man1} alt="" className="w-full h-full object-cover" />
+          </div>
+          <div className="w-full h-full">
+            <div className="relative w-full h-full">
+              <Image
+                src="/man4_asset.svg"
+                alt=""
+                fill
+                sizes="33vw"
+                className="object-cover"
+              />
             </div>
-            <div className="w-full h-full">
-              <Image src={man2} alt="" className="w-full h-full object-cover" />
+          </div>
+          <div className="w-full h-full">
+            <div className="relative w-full h-full">
+              <Image
+                src="/man5_asset.svg"
+                alt=""
+                fill
+                sizes="33vw"
+                className="object-cover"
+              />
             </div>
           </div>
         </div>
@@ -374,17 +393,29 @@ const page = () => {
           </span>
         </div>
         <div className="flex items-center gap-2 md:gap-0 md:w-1/2">
-          <div className="md:h-3/4 h-[195px] w-full">
-            <Image src={woman1} alt="" className=" h-full w-full" />
+          <div className="md:h-3/4 h-[195px] w-full relative">
+            <Image
+              src="/woman3.svg"
+              alt=""
+              fill
+              sizes="(max-width: 768px) 50vw, 25vw"
+              className="h-full w-full object-cover"
+            />
           </div>
-          <div className="h-[336px] md:h-full w-full">
-            <Image src={woman2} alt="" className="w-full h-full" />
+          <div className="h-[336px] md:h-full w-full relative">
+            <Image
+              src="/woman4.svg"
+              alt=""
+              fill
+              sizes="(max-width: 768px) 50vw, 25vw"
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </section>
       <section className="relative">
-        <div>
-          <Image src={bg} alt="" className="w-full h-" />
+        <div className="relative w-full">
+          <Image src="/bg.svg" alt="" fill sizes="100vw" className="w-full" />
         </div>
         <div className="absolute top-0 left-0 bg-[#fda600]/70 w-full h-full flex items-center justify-around">
           <div className="flex flex-col items-center gap-[2px]">
@@ -442,11 +473,13 @@ const page = () => {
             lorem.
           </p>
         </div>
-        <div className="w-full md:w-1/2">
+        <div className="w-full md:w-1/2 relative min-h-[300px] md:min-h-[400px]">
           <Image
-            src={ceo}
+            src="/ceo.png"
             alt="a picture of the CEO"
-            className="w-full h-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
           />
         </div>
       </section>
@@ -471,8 +504,14 @@ const page = () => {
             </button>
           </div>
         </div>
-        <div className="absolute right-0 top-0">
-          <Image src={girl} alt="" className="w-full h-full object-contain" />
+        <div className="absolute right-0 top-0 w-[180px] h-full">
+          <Image
+            src="/girl.png"
+            alt=""
+            fill
+            sizes="180px"
+            className="object-contain"
+          />
         </div>
       </section>
     </div>

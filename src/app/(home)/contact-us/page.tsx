@@ -1,6 +1,5 @@
 import Image from "next/image";
 import React from "react";
-import girl from "../../../../public/girl2.svg";
 
 const page = () => {
   return (
@@ -112,7 +111,7 @@ const page = () => {
             </div>
           </form>
           <div className="hidden md:flex">
-            <Image src={girl} alt="" />
+            <Image src="/girl2.svg" alt="" />
           </div>
         </div>
       </div>

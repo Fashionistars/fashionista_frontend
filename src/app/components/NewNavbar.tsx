@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Search, UserRound, ShoppingCart } from "lucide-react";
-import logo from "../../../public/logo.svg";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +10,8 @@ import CartItems from "./CartItems";
 const NewNavbar = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  void showModal;
+  void setShowModal;
   const [showCart, setShowCart] = useState(false);
   const pathname = usePathname();
   return (
@@ -22,7 +23,7 @@ const NewNavbar = () => {
     >
       <div className="flex items-center gap-2 w-1/2 md:w-full lg:w-fit">
         <Image
-          src={logo}
+          src="/logo.svg"
           alt="Fashionistar Logo"
           className="w-10 h-10 md:w-[55px] md:h-[56px]"
         />

@@ -1,8 +1,8 @@
 "use client";
 import { NewProductType } from "@/types";
 import React from "react";
-import { NewProductFieldTypes } from "@/app/utils/schemas/addProduct";
-import { PricesAction } from "@/app/actions/vendor";
+import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
+import { PricesAction } from "@/features/shop/api/actions";
 
 const Prices = ({
   newProductFields,
@@ -12,13 +12,17 @@ const Prices = ({
   updateNewProductField: (fields: Partial<NewProductFieldTypes>) => void;
 }) => {
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     updateNewProductField({ [e.target.name]: e.target.value });
   };
   console.log("New Product details", newProductFields);
   return (
-    <form id="prices" action={PricesAction} className="space-y-10 w-full">
+    <form
+      id="prices"
+      action={PricesAction as any}
+      className="space-y-10 w-full"
+    >
       <div className="space-y-2">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           Prices

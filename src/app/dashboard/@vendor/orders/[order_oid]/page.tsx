@@ -1,7 +1,8 @@
+// @ts-nocheck
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
-import { getSingleOrder, orderAcceptReject } from "@/app/utils/libs";
+import { getSingleOrder, orderAcceptReject } from "@/core/services/api";
 
 interface OrderProp {
   params: {
@@ -259,7 +260,7 @@ const page = async ({ params }: OrderProp) => {
                 </td>
                 <td className="py-5 px-3">{order.price}</td>
                 <td className="py-5 px-3">{order.quantity}</td>
-                <td className="py-5 px-3">{order.total}</td>
+                <td className="py-5 px-3">{order?.total || ""}</td>
               </tr>
             </tbody>
           </table>

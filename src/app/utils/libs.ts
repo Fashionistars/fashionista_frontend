@@ -1,4 +1,4 @@
-import { fetchWithAuth } from "./fetchAuth";
+import { fetchWithAuth } from "@/lib/api/fetchAuth";
 import { vendor } from "./mock";
 import { axiosInstance } from "./axiosInstance";
 import { VendorProp } from "@/types";
@@ -31,10 +31,11 @@ export const getSingleOrder = async (order_oid: string) => {
 
 export const orderAcceptReject = async (
   order_oid: string,
-  data: { notification_type: string }
+  data: { notification_type: string },
 ) => {
   try {
     const res = await fetchWithAuth(`/vendor/orders/${order_oid}`, "get", data);
+    return res;
   } catch (error) {
     console.log(error);
   }
@@ -51,7 +52,7 @@ export const getAllProducts = async () => {
 export const createNewProduct = async (formdata: object | FormData) => {
   try {
     const res = await fetchWithAuth("/vendor/product-create", "post", formdata);
-    // console.log(res);
+    return res;
   } catch (error) {
     console.log(error);
   }
@@ -64,4 +65,5 @@ export const getAllVendors = async () => {
   } catch (error) {
     console.log(error);
   }
+  return undefined;
 };

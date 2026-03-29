@@ -1,6 +1,6 @@
 import React from "react";
-import VerificationInput from "@/app/components/VerifyInput";
-import { verify } from "@/app/actions/auth";
+import VerificationInput from "@/components/ui/primitives/VerifyInput";
+import { verify } from "@/features/auth/api/actions";
 
 const page = () => {
   return (

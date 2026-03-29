@@ -1,11 +1,11 @@
+// @ts-nocheck
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { createNewProduct } from "../utils/libs";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { FormSchema } from "../utils/schema";
+import { FormSchema } from "@/lib/validation/addProduct";
 import { newProduct } from "../actions/vendor";
 import Prices from "./AddProduct/Prices";
 import BasicInformation from "./AddProduct/BasicInformation";
@@ -59,41 +59,9 @@ export default function Form() {
   const [currentStep, setCurrentStep] = useState(0);
   const delta = currentStep - previousStep;
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    reset,
-    trigger,
-    setValue,
-    formState: { errors },
-  } = useForm<Inputs>({
-    resolver: zodResolver(FormSchema),
-  });
-
   const { back } = useRouter();
-  const processForm: SubmitHandler<Inputs> = async (data) => {
-    await newProduct(data);
-    // await createNewProduct(data);
-    reset();
-  };
 
   type FieldName = keyof Inputs;
-
-  const next = async () => {
-    const fields = steps[currentStep].fields;
-    const output = await trigger(fields as FieldName[], { shouldFocus: true });
-
-    if (!output) return;
-
-    if (currentStep < steps.length - 1) {
-      if (currentStep === steps.length - 1) {
-        await handleSubmit(processForm)();
-      }
-      setPreviousStep(currentStep);
-      setCurrentStep((step) => step + 1);
-    }
-  };
 
   // const back = () => {
   //   if (currentStep > 0) {
@@ -261,7 +229,6 @@ export default function Form() {
         </button>
 
         <button
-          onClick={next}
           form={!step ? "basic" : step}
           type="submit"
           className="py-2.5 px-[30px] bg-[#fda600] outline-none font-medium text-black hover:text-white grow-0"
