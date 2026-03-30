@@ -13,7 +13,7 @@ interface WishListProps {
 const page = async () => {
   const getWishlist = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/wishlist");
+      const res = await axios.get("http://localhost:3000/wishlist");
 
       return res.data;
     } catch (error) {

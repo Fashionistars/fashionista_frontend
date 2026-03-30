@@ -7,6 +7,20 @@ const nextConfig = {
   // then re-enable: experimental: { reactCompiler: true }
   // experimental: {},
 
+  // ── Dev Server — Allow Tunnel Hosts ─────────────────────────────────────
+  // Next.js 15 blocks requests from unknown hostnames in dev mode.
+  // Add all tunnel domains here so cloudflared / localtunnel work.
+  allowedDevHosts: [
+    'localhost',
+    '127.0.0.1',
+    '*.trycloudflare.com',   // Cloudflare Quick Tunnels
+    '*.loca.lt',             // localtunnel.me
+    '*.ngrok-free.app',      // ngrok free static domains
+    '*.ngrok-free.dev',      // ngrok free dynamic domains
+    'fashionistar.net',
+    '*.fashionistar.net',
+  ],
+
   // ── Image Optimization ───────────────────────────────────────────────────
   images: {
     remotePatterns: [
@@ -32,6 +46,11 @@ const nextConfig = {
         hostname: '127.0.0.1',
         port: '8000',
         pathname: '/media/**',
+      },
+      // Cloudflare Quick Tunnels (frontend accessed via trycloudflare.com)
+      {
+        protocol: 'https',
+        hostname: '**.trycloudflare.com',
       },
       // Placeholder services
       {
