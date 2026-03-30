@@ -3,12 +3,14 @@ import { FormSchema } from "./app/utils/schema";
 import { signupSchema } from "./app/utils/schemas/auth_shema";
 
 interface CardProps {
+  id?: string;
   image: string;
   title: string;
   vendor: string;
   rating: number;
   price: number;
 }
+
 
 // interface NewProductType{
 //     image_1: File,

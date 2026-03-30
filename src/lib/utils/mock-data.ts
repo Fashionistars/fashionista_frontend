@@ -1,5 +1,9 @@
+// ── Product cards (shops page) ────────────────────────────────────────────────
+// IDs added to guarantee unique React keys — avoids "Encountered two children
+// with the same key" console errors when titles are non-unique.
 const data = [
   {
+    id: "prod-001",
     image: "/minimalist.svg",
     title: "Pink Knitted Sweat Shirt",
     vendor: "Romelles Collections",
@@ -7,20 +11,23 @@ const data = [
     price: 120,
   },
   {
+    id: "prod-002",
     image: "/vintage.svg",
-    title: "Men leather jacket",
+    title: "Men Leather Jacket",
     vendor: "Lavida Wears",
     rating: 5.0,
     price: 220,
   },
   {
+    id: "prod-003",
     image: "/senator.svg",
-    title: "Men senator",
+    title: "Men Senator (Classic)",
     vendor: "Lyta Collections",
     rating: 4.6,
     price: 120,
   },
   {
+    id: "prod-004",
     image: "/gown.svg",
     title: "Women Asoebi",
     vendor: "Romelles Collections",
@@ -28,13 +35,15 @@ const data = [
     price: 120,
   },
   {
+    id: "prod-005",
     image: "/senator.svg",
-    title: "Men senator",
+    title: "Men Senator (Premium)",
     vendor: "Lyta Collections",
-    rating: 4.6,
-    price: 120,
+    rating: 4.8,
+    price: 145,
   },
   {
+    id: "prod-006",
     image: "/gown.svg",
     title: "Women Native Attire",
     vendor: "Romelles Collections",
@@ -42,6 +51,7 @@ const data = [
     price: 220,
   },
   {
+    id: "prod-007",
     image: "/minimalist.svg",
     title: "Turtle Neck Sleeve",
     vendor: "Romelles Collections",
@@ -49,6 +59,7 @@ const data = [
     price: 120,
   },
   {
+    id: "prod-008",
     image: "/vintage.svg",
     title: "Vintage Jacket",
     vendor: "Lavida Wears",
@@ -60,6 +71,7 @@ export default data;
 
 export const data2 = [
   {
+    id: "deal-001",
     image: "/minimalist.svg",
     title: "Pink Knitted Sweat Shirt",
     vendor: "Romelles Collections",
@@ -68,22 +80,25 @@ export const data2 = [
     timer: "365, 14, 06, 59",
   },
   {
+    id: "deal-002",
     image: "/vintage.svg",
-    title: "Men leather jacket",
+    title: "Men Leather Jacket",
     vendor: "Lavida Wears",
     rating: 5.0,
     price: 220,
     timer: "765, 12, 06, 00",
   },
   {
+    id: "deal-003",
     image: "/senator.svg",
-    title: "Men senator",
+    title: "Men Senator",
     vendor: "Lyta Collections",
     rating: 4.6,
     price: 120,
     timer: "365, 14, 06, 59",
   },
   {
+    id: "deal-004",
     image: "/gown.svg",
     title: "Women Asoebi",
     vendor: "Romelles Collections",
@@ -132,15 +147,16 @@ export const reviews = [
   },
 ];
 
+// ── Category filters (unique IDs to prevent duplicate key warnings) ───────────
 export const category = [
-  { image: "/minimalist.svg", title: "Minimalist" },
-  { image: "/gown.svg", title: "Native Gown" },
-  { image: "/man3_assets.svg", title: "Kaftan" },
-  { image: "/senator.svg", title: "Native" },
-  { image: "/vintage.svg", title: "Vintage Sleeves" },
-  { image: "/gown.svg", title: "Ankara Gown" },
-  { image: "/senator.svg", title: "Senator" },
-  { image: "/minimalist.svg", title: "Minimalist" },
+  { id: "cat-001", image: "/minimalist.svg", title: "Minimalist" },
+  { id: "cat-002", image: "/gown.svg", title: "Native Gown" },
+  { id: "cat-003", image: "/man3_assets.svg", title: "Kaftan" },
+  { id: "cat-004", image: "/senator.svg", title: "Native" },
+  { id: "cat-005", image: "/vintage.svg", title: "Vintage Sleeves" },
+  { id: "cat-006", image: "/gown.svg", title: "Ankara Gown" },
+  { id: "cat-007", image: "/senator.svg", title: "Senator" },
+  { id: "cat-008", image: "/minimalist.svg", title: "Knitwear" },
 ];
 
 export const blog = [
@@ -222,9 +238,9 @@ export const vendor = [
   },
   {
     image: "/vendor/burberry.svg",
-    name: "Burberry",
-    rating: 4.6,
-    address: "512 Alfred Ave. Lagos. Nigeria",
-    mobile: "(+234) 90 0000 000",
+    name: "Burberry Studio",
+    rating: 4.7,
+    address: "45 Victoria Island. Lagos. Nigeria",
+    mobile: "(+234) 80 1234 567",
   },
 ];

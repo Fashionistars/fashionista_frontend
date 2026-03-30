@@ -255,10 +255,25 @@ env-setup: ## Create .env.local from .env.example (safe — won't overwrite)
 		echo "$(YELLOW)⚠ .env.local already exists$(NC)"; \
 	fi
 
-tunnel-frontend: ## 🌐 Start localtunnel for frontend (port 3000)
-	@echo "$(CYAN)Starting localtunnel for frontend on port 3000...$(NC)"
-	@echo "$(YELLOW)Your frontend URL will be: https://fashionistar-frontend.loca.lt$(NC)"
-	pnpm dlx localtunnel --port 3000 --subdomain fashionistar-frontend
+tunnel-frontend: ## 🌐 Start Cloudflare Tunnel for frontend (best free option, port 443)
+	@echo "$(CYAN)╔════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(CYAN)  FASHIONISTAR TUNNEL — Cloudflare Tunnel (cloudflared)  $(NC)"
+	@echo "$(CYAN)╚════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Strategy: Cloudflare Tunnel (uses port 443 — Windows-safe)$(NC)"
+	@echo "$(YELLOW)URL will be printed after startup. Copy it to .env.local$(NC)"
+	@echo ""
+	cloudflared tunnel --url http://localhost:3000 2>&1
+
+tunel-lt-fixed: ## 🌐 Fallback: localtunnel with IPv4 fix (-l 127.0.0.1)
+	@echo "$(CYAN)Starting localtunnel (IPv4 fix) for frontend on port 3000...$(NC)"
+	@echo "$(YELLOW)URL: https://fashionistar-frontend.loca.lt$(NC)"
+	pnpm dlx localtunnel --port 3000 --subdomain fashionistar-frontend --local-host 127.0.0.1
+
+tunnel-ssh: ## 🌐 Zero-install tunnel via localhost.run (SSH — requires SSH)
+	@echo "$(CYAN)Starting localhost.run SSH tunnel on port 3000...$(NC)"
+	@echo "$(YELLOW)No install needed. URL will be printed below.$(NC)"
+	ssh -o StrictHostKeyChecking=no -R 80:localhost:3000 nokey@localhost.run
 
 playwright-install: ## Install Playwright browsers
 	@echo "$(CYAN)Installing Playwright browsers...$(NC)"
@@ -310,7 +325,7 @@ info: ## Display project information
 	@echo "  State:        Zustand v5 + TanStack Query v5 + Nuqs v2"
 	@echo "  API Clients:  Axios (DRF Sync) + Ky (Ninja Async)"
 	@echo "  Testing:      Vitest (Unit) + Playwright (E2E) + cURL Stress"
-	@echo "  Tunnel:       localtunnel (fashionistar-frontend.loca.lt)"
+	@echo "  Tunnel:       cloudflared | localtunnel | localhost.run (SSH)"
 	@echo "$(CYAN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(NC)"
 
 deps: ## List installed packages (pnpm)
