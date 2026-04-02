@@ -8,8 +8,8 @@ type dataProps = {
 const Cads = ({ data }: dataProps) => {
   return (
     <div className="w-[45%] md:w-[30%] lg:w-[290px] flex flex-col gap-1  relative">
-      <div className="relative">
-        <Image src={data.image} alt={data.title} className="w-full h-full" />
+      <div className="relative" style={{ paddingBottom: '120%' }}>
+        <Image src={data.image} alt={data.title} fill sizes="(max-width: 768px) 45vw, (max-width: 1024px) 30vw, 290px" className="object-cover" />
         <div className="absolute right-3 top-3">
           <svg
             width="19"

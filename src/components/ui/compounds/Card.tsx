@@ -9,11 +9,13 @@ type dataProps = {
 const Card = ({ data }: dataProps) => {
   return (
     <div className="w-[45%] md:w-[30%] lg:w-[290px] flex flex-col">
-      <div className="relative overflow-hidden w-full">
+      <div className="relative overflow-hidden w-full" style={{ paddingBottom: '120%' }}>
         <Image
           src={data.image}
           alt={data.title}
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-200 ease-in-out"
+          fill
+          sizes="(max-width: 768px) 45vw, (max-width: 1024px) 30vw, 290px"
+          className="object-cover hover:scale-105 transition-transform duration-200 ease-in-out"
         />
         <div className="absolute right-3 top-3">
           <svg

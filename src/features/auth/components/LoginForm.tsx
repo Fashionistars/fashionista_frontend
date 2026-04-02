@@ -2,13 +2,15 @@
 /**
  * LoginForm Component — Feature Auth
  *
+ * Phase 3: Email / Phone toggle with dynamic country-code selector (Nigeria +234 default)
+ * Phase 5: Smart post-auth redirect (vendor → dashboard, client → returnUrl or dashboard)
+ * Phase 8: suppressHydrationWarning on all input wrapper divs
+ *
  * Uses: React Hook Form + Zod resolver + TanStack Query mutation
- * Calls: features/auth/services/auth.service.ts → login()
- * Success: sets token in Zustand store, redirects to /
  */
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -21,145 +23,298 @@ import {
 } from "@/features/auth/schemas/auth.schemas";
 import { login } from "@/features/auth/services/auth.service";
 import { useAuthStore } from "@/features/auth/store/auth.store";
+import { PhoneInputField } from "@/components/shared/forms/PhoneInputField";
+import { GoogleIcon } from "@/components/shared/icons/GoogleIcon";
+import { RichErrorMessage, FieldError } from "@/components/shared/feedback/RichErrorMessage";
+import { parseApiError } from "@/lib/api/parseApiError";
+
+
+type LoginMode = "email" | "phone";
 
 export function LoginForm() {
   const router = useRouter();
-  const { setToken, setUser, setPendingOTP } = useAuthStore();
+  const searchParams = useSearchParams();
+  const { setTokens, setUser, setPendingOTP } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
+  const [mode, setMode] = useState<LoginMode>("email");
+  const [phoneValue, setPhoneValue] = useState("");
+  const [apiError, setApiError] = useState<ReturnType<typeof parseApiError> | null>(null);
+
+  // returnUrl — where to send the user after successful auth
+  const returnUrl = searchParams.get("returnUrl") ?? "";
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<LoginPayload>({
     resolver: zodResolver(LoginSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email_or_phone: "", password: "" },
   });
+
+  // Smart redirect after successful authentication
+  function handlePostAuthRedirect(role?: string, hasVendorProfile?: boolean) {
+    if (role === "vendor" || role === "Vendor") {
+      // TODO: replace `false` with `data.has_vendor_profile` once
+      // fashionistar_backend/apps/vendor model is migrated with:
+      //   - OneToOne or FK relationship to UnifiedUser
+      //   - related_name="vendor_profile"
+      //   - LoginView/OTPVerifyView response includes: has_vendor_profile: bool
+      const vendorSetupComplete = hasVendorProfile ?? false;
+      router.push(vendorSetupComplete ? "/vendor/dashboard" : "/vendor/setup");
+      return;
+    }
+    // Client redirect
+    if (returnUrl && returnUrl.startsWith("/")) {
+      router.push(returnUrl);
+      return;
+    }
+    router.push("/client/dashboard");
+  }
 
   const { mutate, isPending } = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
+      setApiError(null);
+
       if (data.requires_otp) {
         // Backend requires OTP verification step
-        setPendingOTP({ email: data.user?.email });
+        const pendingEmail = data.user?.email ?? data.identifying_info;
+        setPendingOTP({ email: pendingEmail });
         toast.info("OTP Required", {
-          description: "A verification code has been sent to your email.",
+          description: "A verification code has been sent to your email/phone.",
         });
-        router.push("/verify-otp");
+        const otpHref = returnUrl
+          ? `/verify-otp?returnUrl=${encodeURIComponent(returnUrl)}`
+          : "/verify-otp";
+        router.push(otpHref);
         return;
       }
-      setToken(data.access);
-      setUser(data.user);
-      toast.success("Welcome back!", {
-        description: `Hello, ${data.user.first_name} 👋`,
+
+      setTokens(data.access, data.refresh ?? "");
+
+      if (data.user) {
+        setUser({ ...data.user, role: data.user.role ?? data.role });
+      } else {
+        setUser({
+          id: data.user_id ?? "",
+          email: data.identifying_info?.includes("@") ? data.identifying_info : undefined,
+          phone: data.identifying_info?.startsWith("+") ? data.identifying_info : undefined,
+          first_name: data.identifying_info ?? "User",
+          last_name: "",
+          role: data.role,
+          is_verified: true,
+          is_staff: data.role === "admin",
+          date_joined: new Date().toISOString(),
+        });
+      }
+
+      const displayName = data.user?.first_name ?? data.identifying_info ?? "User";
+      toast.success("Welcome back! 👋", {
+        description: `Hello, ${displayName}`,
+        duration: 3000,
       });
-      router.push("/");
+
+      handlePostAuthRedirect(data.role ?? data.user?.role, data.has_vendor_profile);
     },
-    onError: () => {
-      // Error toast handled by apiSync interceptor + x-trace-id
+    onError: (error) => {
+      const parsed = parseApiError(error);
+      setApiError(parsed);
+      toast.error("Sign In Failed", {
+        description: parsed.message,
+        duration: 6000,
+      });
     },
   });
 
-  const onSubmit = (data: LoginPayload) => mutate(data);
+  const toggleMode = (newMode: LoginMode) => {
+    setMode(newMode);
+    setPhoneValue("");
+    setValue("email_or_phone", "");
+    setApiError(null);
+  };
+
+  const onSubmit = (data: LoginPayload) => {
+    setApiError(null);
+    mutate(data);
+  };
+
+  // When phone mode: normalise and set form value before submit
+  function handlePhoneChange(e164: string) {
+    setPhoneValue(e164);
+    setValue("email_or_phone", e164, { shouldValidate: false });
+  }
+
+  const googleHref = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/google/${returnUrl ? `?returnUrl=${encodeURIComponent(returnUrl)}` : ""}`;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-      {/* Email */}
-      <div className="space-y-1.5">
-        <label
-          htmlFor="login-email"
-          className="text-sm font-medium text-foreground"
+
+      {/* ── Mode toggle: Email / Phone ──────────────────────────────── */}
+      <div
+        className="flex rounded-xl border border-border overflow-hidden shadow-sm"
+        role="tablist"
+        aria-label="Sign in method"
+      >
+        <button
+          type="button"
+          role="tab"
+          id="login-tab-email"
+          aria-selected={mode === "email"}
+          onClick={() => toggleMode("email")}
+          className={`flex-1 py-2.5 text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
+            mode === "email"
+              ? "bg-primary text-primary-foreground shadow-inner"
+              : "bg-background text-muted-foreground hover:bg-muted/60"
+          }`}
         >
-          Email Address
-        </label>
-        <div className="relative">
-          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <input
-            id="login-email"
-            type="email"
-            autoComplete="email"
-            {...register("email")}
-            className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
-            placeholder="you@fashionistar.com"
-          />
-        </div>
-        {errors.email && (
-          <p className="text-xs text-destructive mt-1">
-            {errors.email.message}
-          </p>
-        )}
+          <Mail className="h-4 w-4" />
+          Email
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="login-tab-phone"
+          aria-selected={mode === "phone"}
+          onClick={() => toggleMode("phone")}
+          className={`flex-1 py-2.5 text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
+            mode === "phone"
+              ? "bg-primary text-primary-foreground shadow-inner"
+              : "bg-background text-muted-foreground hover:bg-muted/60"
+          }`}
+        >
+          <span className="text-xs">📱</span>
+          Phone
+        </button>
       </div>
 
-      {/* Password */}
+      {/* ── API-level error ─────────────────────────────────────────── */}
+      {apiError && <RichErrorMessage parsed={apiError} />}
+
+      {/* ── Email or Phone ──────────────────────────────────────────── */}
+      {mode === "email" ? (
+        <div className="space-y-1.5">
+          <label htmlFor="login-email" className="text-sm font-medium text-foreground">
+            Email Address
+          </label>
+          <div className="relative" suppressHydrationWarning>
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            <input
+              id="login-email"
+              type="email"
+              autoComplete="email"
+              {...register("email_or_phone")}
+              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all placeholder:text-muted-foreground/60"
+              placeholder="you@fashionistar.com"
+            />
+          </div>
+          <FieldError message={errors.email_or_phone?.message} />
+        </div>
+      ) : (
+        <div className="space-y-1.5">
+          <label htmlFor="login-phone" className="text-sm font-medium text-foreground">
+            Phone Number
+          </label>
+          <PhoneInputField
+            id="login-phone"
+            onChange={handlePhoneChange}
+            value={phoneValue}
+            defaultCountry="NG"
+            placeholder="8012345678"
+            error={errors.email_or_phone?.message}
+          />
+          {/* Hidden field to satisfy React Hook Form */}
+          <input type="hidden" {...register("email_or_phone")} value={phoneValue} />
+        </div>
+      )}
+
+      {/* ── Password ─────────────────────────────────────────────────── */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <label
-            htmlFor="login-password"
-            className="text-sm font-medium text-foreground"
-          >
+          <label htmlFor="login-password" className="text-sm font-medium text-foreground">
             Password
           </label>
-          <Link
-            href="/forgot-password"
-            className="text-xs text-primary hover:underline"
-          >
+          <Link href="/forgot-password" className="text-xs text-primary hover:underline">
             Forgot password?
           </Link>
         </div>
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <div className="relative" suppressHydrationWarning>
+          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
           <input
             id="login-password"
             type={showPassword ? "text" : "password"}
             autoComplete="current-password"
             {...register("password")}
-            className="w-full pl-10 pr-10 py-2.5 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+            className="w-full pl-10 pr-10 py-2.5 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all placeholder:text-muted-foreground/60"
             placeholder="••••••••"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
-            {showPassword ? (
-              <EyeOff className="h-4 w-4" />
-            ) : (
-              <Eye className="h-4 w-4" />
-            )}
+            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
         </div>
-        {errors.password && (
-          <p className="text-xs text-destructive mt-1">
-            {errors.password.message}
-          </p>
-        )}
+        <FieldError message={errors.password?.message} />
       </div>
 
-      {/* Submit */}
+      {/* ── Submit ───────────────────────────────────────────────────── */}
       <button
         id="login-submit-btn"
         type="submit"
         disabled={isPending}
-        className="w-full py-2.5 px-4 bg-primary text-primary-foreground rounded-lg font-semibold text-sm hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+        className="
+          w-full py-3 px-4 bg-primary text-primary-foreground rounded-xl
+          font-semibold text-sm hover:bg-primary/90
+          disabled:opacity-60 disabled:cursor-not-allowed
+          transition-all duration-200
+          flex items-center justify-center gap-2
+          shadow-sm hover:shadow-md active:scale-[0.99]
+        "
       >
         {isPending ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            Signing in...
+            Signing in…
           </>
         ) : (
           "Sign In"
         )}
       </button>
 
-      {/* Register link */}
+      {/* ── Divider ──────────────────────────────────────────────────── */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-white px-2 text-muted-foreground">Or continue with</span>
+        </div>
+      </div>
+
+      {/* ── Google Sign-In ───────────────────────────────────────────── */}
+      <a
+        href={googleHref}
+        id="google-auth-btn"
+        className="
+          w-full flex items-center justify-center gap-3 px-4 py-2.5
+          border border-border rounded-xl text-sm font-medium
+          hover:bg-muted/50 hover:border-primary/30
+          transition-all duration-200
+          shadow-sm hover:shadow-md
+        "
+      >
+        <GoogleIcon />
+        Continue with Google
+      </a>
+
+      {/* ── Footer ───────────────────────────────────────────────────── */}
       <p className="text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{" "}
-        <Link
-          href="/register"
-          className="text-primary font-semibold hover:underline"
-        >
+        <Link href="/auth/choose-role" className="text-primary font-semibold hover:underline">
           Create one
         </Link>
       </p>

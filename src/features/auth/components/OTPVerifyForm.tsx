@@ -2,30 +2,42 @@
 /**
  * OTPVerifyForm Component — Feature Auth
  *
+ * Phase 4a: Rich error display — exact DRF error messages, not generic
+ * Phase 4b: Resend OTP — sends { email_or_phone } (fixed from { email, phone })
+ * Phase 4c: OTP identifier displayed from pendingOTPEmail | pendingOTPPhone
+ * Phase 5:  Smart post-auth redirect (vendor → dashboard/setup, client → returnUrl)
+ * Phase 8:  suppressHydrationWarning
+ *
  * Used after: register, login (if OTP required), forgot password
  * Uses: 6 individual input boxes, auto-advance, paste support
- * Calls: features/auth/services/auth.service.ts → verifyOTP() + resendOTP()
  */
 import { useRef, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Loader2, RefreshCw } from "lucide-react";
 
 import { verifyOTP, resendOTP } from "@/features/auth/services/auth.service";
 import { useAuthStore } from "@/features/auth/store/auth.store";
+import { RichErrorMessage } from "@/components/shared/feedback/RichErrorMessage";
+import { parseApiError } from "@/lib/api/parseApiError";
 
 const OTP_LENGTH = 6;
 const RESEND_COOLDOWN_SECONDS = 60;
 
 export function OTPVerifyForm() {
   const router = useRouter();
-  const { setToken, setUser, pendingOTPEmail, pendingOTPPhone } =
-    useAuthStore();
+  const searchParams = useSearchParams();
+  const { setTokens, setUser, pendingOTPEmail, pendingOTPPhone } = useAuthStore();
 
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [countdown, setCountdown] = useState(RESEND_COOLDOWN_SECONDS);
+  const [verifyError, setVerifyError] = useState<ReturnType<typeof parseApiError> | null>(null);
+  const [resendError, setResendError] = useState<ReturnType<typeof parseApiError> | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  // returnUrl — carry through from login/register
+  const returnUrl = searchParams.get("returnUrl") ?? "";
 
   // Countdown timer for resend button
   useEffect(() => {
@@ -33,6 +45,25 @@ export function OTPVerifyForm() {
     const timer = setInterval(() => setCountdown((c) => c - 1), 1000);
     return () => clearInterval(timer);
   }, [countdown]);
+
+  // Smart redirect after OTP verification
+  function handlePostAuthRedirect(role?: string, hasVendorProfile?: boolean) {
+    if (role === "vendor" || role === "Vendor") {
+      // TODO: replace `false` with `data.has_vendor_profile` once
+      // fashionistar_backend/apps/vendor model is migrated with:
+      //   - OneToOne or FK to UnifiedUser with related_name="vendor_profile"
+      //   - OTPVerifyView response includes: has_vendor_profile: bool
+      const vendorSetupComplete = hasVendorProfile ?? false;
+      router.push(vendorSetupComplete ? "/vendor/dashboard" : "/vendor/setup");
+      return;
+    }
+    // Client redirect
+    if (returnUrl && returnUrl.startsWith("/")) {
+      router.push(returnUrl);
+      return;
+    }
+    router.push("/client/dashboard");
+  }
 
   const { mutate: verify, isPending: isVerifying } = useMutation({
     mutationFn: () =>
@@ -42,27 +73,69 @@ export function OTPVerifyForm() {
         phone: pendingOTPPhone,
       }),
     onSuccess: (data) => {
-      setToken(data.access);
-      setUser(data.user);
-      toast.success("Verification successful!", {
-        description: `Welcome, ${data.user.first_name}! 🎉`,
+      setVerifyError(null);
+      setTokens(data.access, data.refresh ?? "");
+
+      if (data.user) {
+        setUser({ ...data.user, role: data.user.role ?? data.role });
+      } else {
+        setUser({
+          id: data.user_id ?? "",
+          email: data.identifying_info?.includes("@") ? data.identifying_info : undefined,
+          phone: data.identifying_info?.startsWith("+") ? data.identifying_info : undefined,
+          first_name: data.identifying_info ?? "User",
+          last_name: "",
+          role: data.role,
+          is_verified: true,
+          is_staff: false,
+          date_joined: new Date().toISOString(),
+        });
+      }
+
+      const displayName = data.user?.first_name ?? data.identifying_info ?? "User";
+      toast.success("✅ Verification successful!", {
+        description: `Welcome to Fashionistar, ${displayName}! 🎉`,
+        duration: 4000,
       });
-      router.push("/");
+
+      handlePostAuthRedirect(data.role ?? data.user?.role, data.has_vendor_profile);
     },
-    onError: () => {
-      // Toast handled by apiSync interceptor
+    onError: (error) => {
+      const parsed = parseApiError(error, "Invalid or expired OTP. Please check the code and try again.");
+      setVerifyError(parsed);
+      toast.error("Verification Failed", {
+        description: parsed.message,
+        duration: 6000,
+      });
+      // Clear OTP inputs and refocus first box
       setOtp(Array(OTP_LENGTH).fill(""));
-      inputRefs.current[0]?.focus();
+      requestAnimationFrame(() => {
+        inputRefs.current[0]?.focus();
+      });
     },
   });
 
   const { mutate: resend, isPending: isResending } = useMutation({
-    mutationFn: () =>
-      resendOTP({ email: pendingOTPEmail, phone: pendingOTPPhone }),
+    mutationFn: () => {
+      // Phase 4b fix: Backend ResendOTPRequestSerializer expects { email_or_phone }
+      // We derive it from the displayed identifier (pendingOTPEmail or pendingOTPPhone)
+      const email_or_phone = pendingOTPEmail ?? pendingOTPPhone ?? "";
+      return resendOTP({ email_or_phone });
+    },
     onSuccess: () => {
+      setResendError(null);
       setCountdown(RESEND_COOLDOWN_SECONDS);
-      toast.info("OTP Resent", {
-        description: "A new code has been sent to your email/phone.",
+      toast.info("OTP Resent ✉️", {
+        description: `A new 6-digit code has been sent to ${pendingOTPEmail ?? pendingOTPPhone}.`,
+        duration: 4000,
+      });
+    },
+    onError: (error) => {
+      const parsed = parseApiError(error, "Could not resend OTP. Please try again.");
+      setResendError(parsed);
+      toast.error("Resend Failed", {
+        description: parsed.message,
+        duration: 6000,
       });
     },
   });
@@ -73,6 +146,9 @@ export function OTPVerifyForm() {
     const newOtp = [...otp];
     newOtp[index] = digit;
     setOtp(newOtp);
+
+    // Clear any previous error on new input
+    if (digit) setVerifyError(null);
 
     // Auto-advance to next input
     if (digit && index < OTP_LENGTH - 1) {
@@ -97,31 +173,43 @@ export function OTPVerifyForm() {
       .getData("text")
       .replace(/\D/g, "")
       .slice(0, OTP_LENGTH);
-    const newOtp = [...otp];
+    const newOtp = Array(OTP_LENGTH).fill("");
     pasted.split("").forEach((digit, i) => {
       newOtp[i] = digit;
     });
     setOtp(newOtp);
-    // Focus last filled input
+    setVerifyError(null);
     const lastFilledIndex = Math.min(pasted.length, OTP_LENGTH - 1);
     inputRefs.current[lastFilledIndex]?.focus();
+
+    // Auto-submit if fully pasted
+    if (pasted.length === OTP_LENGTH) {
+      setTimeout(() => verify(), 100);
+    }
   };
 
   const isComplete = otp.every(Boolean);
+  const identifier = pendingOTPEmail ?? pendingOTPPhone ?? "your email/phone";
 
   return (
     <div className="space-y-6">
+      {/* ── Recipient display ────────────────────────────────────────── */}
       <div className="text-center space-y-1">
         <p className="text-sm text-muted-foreground">
           Enter the 6-digit code sent to{" "}
-          <span className="font-semibold text-foreground">
-            {pendingOTPEmail || pendingOTPPhone || "your email/phone"}
-          </span>
+          <span className="font-semibold text-foreground">{identifier}</span>
         </p>
       </div>
 
-      {/* OTP Inputs */}
-      <div className="flex gap-2 justify-center" onPaste={handlePaste}>
+      {/* ── Verify error ────────────────────────────────────────────── */}
+      {verifyError && <RichErrorMessage parsed={verifyError} />}
+
+      {/* ── OTP Inputs ──────────────────────────────────────────────── */}
+      <div
+        className="flex gap-2 justify-center"
+        onPaste={handlePaste}
+        suppressHydrationWarning
+      >
         {Array(OTP_LENGTH)
           .fill(null)
           .map((_, index) => (
@@ -133,49 +221,73 @@ export function OTPVerifyForm() {
               }}
               type="text"
               inputMode="numeric"
+              pattern="\d*"
               maxLength={1}
               value={otp[index]}
               onChange={(e) => handleChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
-              className="w-12 h-14 text-center text-xl font-bold border-2 border-input rounded-lg bg-background focus:border-primary focus:outline-none transition-all"
-              aria-label={`OTP digit ${index + 1}`}
+              className={`
+                w-11 h-14 sm:w-12 sm:h-14 text-center text-xl font-bold
+                border-2 rounded-xl bg-background transition-all duration-150
+                focus:border-primary focus:ring-2 focus:ring-ring focus:ring-offset-1
+                focus:outline-none
+                ${otp[index] ? "border-primary/60 bg-primary/5" : "border-input"}
+                ${verifyError ? "border-destructive/60" : ""}
+              `}
+              aria-label={`OTP digit ${index + 1} of ${OTP_LENGTH}`}
+              autoComplete="one-time-code"
             />
           ))}
       </div>
 
-      {/* Verify Button */}
+      {/* ── Verify Button ────────────────────────────────────────────── */}
       <button
         id="otp-verify-btn"
         onClick={() => verify()}
         disabled={!isComplete || isVerifying}
-        className="w-full py-2.5 px-4 bg-primary text-primary-foreground rounded-lg font-semibold text-sm hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+        className="
+          w-full py-3 px-4 bg-primary text-primary-foreground rounded-xl
+          font-semibold text-sm hover:bg-primary/90
+          disabled:opacity-60 disabled:cursor-not-allowed
+          transition-all duration-200
+          flex items-center justify-center gap-2
+          shadow-sm hover:shadow-md active:scale-[0.99]
+        "
       >
         {isVerifying ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            Verifying...
+            Verifying…
           </>
         ) : (
           "Verify Code"
         )}
       </button>
 
-      {/* Resend OTP */}
-      <div className="text-center">
+      {/* ── Resend OTP ───────────────────────────────────────────────── */}
+      <div className="text-center space-y-2">
+        {resendError && (
+          <RichErrorMessage parsed={resendError} className="text-left" />
+        )}
         {countdown > 0 ? (
           <p className="text-sm text-muted-foreground">
             Resend code in{" "}
-            <span className="font-semibold text-foreground">{countdown}s</span>
+            <span className="font-semibold text-foreground tabular-nums">{countdown}s</span>
           </p>
         ) : (
           <button
             id="otp-resend-btn"
             onClick={() => resend()}
             disabled={isResending}
-            className="text-sm text-primary font-semibold hover:underline flex items-center gap-1.5 mx-auto"
+            className="
+              text-sm text-primary font-semibold hover:underline
+              flex items-center gap-1.5 mx-auto
+              disabled:opacity-50 disabled:cursor-not-allowed
+              transition-colors
+            "
           >
-            <RefreshCw className="h-3.5 w-3.5" />
-            {isResending ? "Sending..." : "Resend Code"}
+            <RefreshCw className={`h-3.5 w-3.5 ${isResending ? "animate-spin" : ""}`} />
+            {isResending ? "Sending…" : "Resend Code"}
           </button>
         )}
       </div>

@@ -46,7 +46,28 @@ export async function login(payload: LoginPayload): Promise<LoginResponse> {
 export async function register(
   payload: RegisterPayload,
 ): Promise<{ message: string }> {
-  const { data } = await apiSync.post(AUTH_ENDPOINTS.REGISTER, payload);
+  // Map frontend field names to backend serializer field names:
+  //   password_confirm → password2 (Django UserRegistrationSerializer)
+  //   first_name / last_name passed through directly
+  //   role passed from route searchParam (vendor | client)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const backendPayload: Record<string, any> = {
+    email: payload.email || undefined,
+    phone: payload.phone || undefined,
+    first_name: payload.first_name || undefined,
+    last_name: payload.last_name || undefined,
+    password: payload.password,
+    password2: payload.password_confirm, // Backend expects password2
+    role: payload.role ?? "client",       // From route searchParam via form prop
+  };
+
+  // Remove empty optional fields to avoid backend validation errors
+  if (!backendPayload.email) delete backendPayload.email;
+  if (!backendPayload.phone) delete backendPayload.phone;
+  if (!backendPayload.first_name) delete backendPayload.first_name;
+  if (!backendPayload.last_name) delete backendPayload.last_name;
+
+  const { data } = await apiSync.post(AUTH_ENDPOINTS.REGISTER, backendPayload);
   return data;
 }
 
@@ -63,7 +84,8 @@ export async function verifyOTP(payload: OTPPayload): Promise<LoginResponse> {
 // ── Resend OTP ────────────────────────────────────────────────────────────────
 /**
  * POST /api/v1/auth/resend-otp/
- * Re-sends OTP to email or phone. Rate-limited by backend.
+ * Re-sends OTP to email or phone.
+ * Backend ResendOTPRequestSerializer expects: { email_or_phone: string }
  */
 export async function resendOTP(
   payload: ResendOTPPayload,
@@ -85,10 +107,22 @@ export async function googleAuth(code: string): Promise<LoginResponse> {
 // ── Logout ────────────────────────────────────────────────────────────────────
 /**
  * POST /api/v1/auth/logout/
- * Invalidates server-side refresh token. Frontend clears its own state.
+ * Sends refresh token to backend for blacklisting.
+ * Caller (AccountOptions) MUST also call clearAuth() from the Zustand store
+ * to clear local state — regardless of whether this API call succeeds.
  */
 export async function logout(): Promise<void> {
-  await apiSync.post(AUTH_ENDPOINTS.LOGOUT, {});
+  try {
+    const store = await import("@/features/auth/store/auth.store");
+    const refreshToken = store.useAuthStore.getState().refreshToken;
+    if (refreshToken) {
+      await apiSync.post(AUTH_ENDPOINTS.LOGOUT, { refresh: refreshToken });
+    } else {
+      await apiSync.post(AUTH_ENDPOINTS.LOGOUT, {});
+    }
+  } catch {
+    // Silently ignore — local auth is cleared regardless of API response
+  }
 }
 
 // ── Token Refresh ─────────────────────────────────────────────────────────────

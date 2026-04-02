@@ -7,10 +7,10 @@ import Cads from "@/components/ui/compounds/Cads";
 
 const page = () => {
   const collections = data.map((collection) => {
-    return <Card data={collection} key={collection.title} />;
+    return <Card data={collection} key={collection.id} />;
   });
   const deals = data2.map((card) => {
-    return <Cads data={card} key={card.image} />;
+    return <Cads data={card} key={card.id} />;
   });
   return (
     <div className=" py-8 flex flex-col md:gap-10">
