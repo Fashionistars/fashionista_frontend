@@ -14,6 +14,8 @@ export interface AuthUser {
   phone?: string;
   first_name: string;
   last_name: string;
+  /** "vendor" | "client" | "admin" — used for post-auth redirect logic */
+  role?: string;
   is_verified: boolean;
   is_staff: boolean;
   avatar?: string;
@@ -41,6 +43,7 @@ export interface LoginEvent {
 interface AuthState {
   // ── State ──────────────────────────────────────────────────────────────
   accessToken: string | null;
+  refreshToken: string | null;
   user: AuthUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -49,10 +52,13 @@ interface AuthState {
 
   // ── Actions ────────────────────────────────────────────────────────────
   setToken: (token: string) => void;
+  setTokens: (access: string, refresh: string) => void;
   setUser: (user: AuthUser) => void;
   setPendingOTP: (opts: { email?: string; phone?: string }) => void;
   setLoading: (loading: boolean) => void;
   logout: () => void;
+  /** Alias for logout — clears all auth state from store + sessionStorage */
+  clearAuth: () => void;
 }
 
 // ── Store ─────────────────────────────────────────────────────────────────────
@@ -60,6 +66,7 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       accessToken: null,
+      refreshToken: null,
       user: null,
       isAuthenticated: false,
       isLoading: false,
@@ -67,6 +74,9 @@ export const useAuthStore = create<AuthState>()(
       pendingOTPPhone: undefined,
 
       setToken: (token) => set({ accessToken: token, isAuthenticated: true }),
+
+      setTokens: (access, refresh) =>
+        set({ accessToken: access, refreshToken: refresh, isAuthenticated: true }),
 
       setUser: (user) => set({ user }),
 
@@ -78,6 +88,18 @@ export const useAuthStore = create<AuthState>()(
       logout: () =>
         set({
           accessToken: null,
+          refreshToken: null,
+          user: null,
+          isAuthenticated: false,
+          pendingOTPEmail: undefined,
+          pendingOTPPhone: undefined,
+        }),
+
+      // clearAuth is an alias for logout — same behaviour
+      clearAuth: () =>
+        set({
+          accessToken: null,
+          refreshToken: null,
           user: null,
           isAuthenticated: false,
           pendingOTPEmail: undefined,
@@ -94,6 +116,7 @@ export const useAuthStore = create<AuthState>()(
       // Only persist essential fields — NOT the loading state
       partialize: (state) => ({
         accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
         user: state.user,
         isAuthenticated: state.isAuthenticated,
         pendingOTPEmail: state.pendingOTPEmail,

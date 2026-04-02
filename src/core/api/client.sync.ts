@@ -92,6 +92,31 @@ apiSync.interceptors.response.use(
     // Reset circuit breaker on success
     consecutiveFailures = 0;
     if (circuitOpen) circuitOpen = false;
+
+    // ── Fashionistar Envelope Unwrapping ─────────────────────────────────────
+    // The backend FashionistarRenderer wraps ALL responses in:
+    //   { "success": true, "message": "...", "data": { ...actual_payload... } }
+    // We transparently unwrap the inner "data" field so service functions
+    // can parse the actual API payload directly without knowing about the envelope.
+    // Pass-through if: the response is a pre-wrapped payload already used by a service,
+    // or if "data" key is missing (e.g., raw JSON from health endpoint).
+    if (
+      response.data &&
+      typeof response.data === "object" &&
+      "success" in response.data &&
+      response.data.success === true &&
+      "data" in response.data &&
+      response.data.data !== null
+    ) {
+      // Unwrap: merge "data" inner payload with top-level fields
+      // This allows services to access both access tokens AND message at root
+      response.data = {
+        ...response.data.data,
+        message: response.data.message,
+        _envelope: true, // Debug marker
+      };
+    }
+
     return response;
   },
   async (error: AxiosError) => {
@@ -117,16 +142,37 @@ apiSync.interceptors.response.use(
       isRefreshing = true;
 
       try {
+        // Get refresh token from sessionStorage
+        let refreshToken: string | null = null;
+        if (typeof window !== "undefined") {
+          try {
+            const stored = sessionStorage.getItem("fashionistar-auth");
+            if (stored) {
+              const parsed = JSON.parse(stored);
+              refreshToken = parsed?.state?.refreshToken ?? null;
+            }
+          } catch {
+            // ignore
+          }
+        }
+
+        // Only attempt refresh if we have a refresh token
+        if (!refreshToken) {
+          throw new Error("No refresh token available");
+        }
+
         const { data } = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_V1_URL}/v1/auth/token/refresh/`,
-          {},
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/token/refresh/`,
+          { refresh: refreshToken },
           {
             withCredentials: true,
             headers: { "ngrok-skip-browser-warning": "true" },
           },
         );
 
-        const newToken: string = data.access;
+        // Extract token — handle both raw response and Fashionistar envelope
+        // {access: "..."} OR {success: true, data: {access: "..."}}
+        const newToken: string = data.access || data.data?.access;
 
         // Update Zustand store
         if (typeof window !== "undefined") {
@@ -157,7 +203,7 @@ apiSync.interceptors.response.use(
         // Refresh failed — force logout
         if (typeof window !== "undefined") {
           sessionStorage.removeItem("fashionistar-auth");
-          window.location.href = "/login";
+          window.location.href = "/auth/sign-in"; // Canonical sign-in URL
         }
         return Promise.reject(refreshError);
       } finally {

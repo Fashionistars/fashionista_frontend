@@ -3,15 +3,46 @@
  *
  * Zero-trust validation: every user input and API response is validated.
  * Aligned with backend Django serializers in apps/authentication/
+ *
+ * Phone validation strategy:
+ *  - Uses libphonenumber-js (Google's libphonenumber, industry standard)
+ *  - Country code selector normalises to E.164 BEFORE this schema runs
+ *  - The PhoneInputField component calls normalisePhone() on every keystroke
+ *  - Schema validates the already-normalised E.164 string
  */
 import { z } from "zod";
+import { isValidPhoneNumber } from "libphonenumber-js";
+
+// ── Shared phone schema ───────────────────────────────────────────────────────
+// The PhoneInputField normalises to E.164 before this validator runs.
+// We use libphonenumber-js for production-grade multi-country validation.
+const phoneFieldSchema = z
+  .string()
+  .refine(
+    (val) => {
+      if (!val || val === "") return true; // optional fields pass empty
+      return isValidPhoneNumber(val);
+    },
+    {
+      message:
+        "Please enter a valid phone number (select your country code and enter the number without the leading 0)",
+    },
+  );
 
 // ── Login ─────────────────────────────────────────────────────────────────────
+// Backend serializer field is `email_or_phone` (accepts email OR phone in E.164)
 export const LoginSchema = z.object({
-  email: z
+  email_or_phone: z
     .string()
-    .email("Please enter a valid email address")
-    .min(1, "Email is required"),
+    .min(1, "Email or phone is required")
+    .refine(
+      (val) => {
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+        const isPhone = isValidPhoneNumber(val) || /^\+\d{10,15}$/.test(val);
+        return isEmail || isPhone;
+      },
+      "Please enter a valid email address or phone number",
+    ),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -20,22 +51,37 @@ export const LoginSchema = z.object({
 
 export type LoginPayload = z.infer<typeof LoginSchema>;
 
-// ── Login Response ─────────────────────────────────────────────────────────────
+// ── Login Response ─────────────────────────────────────────────────────
+// Matches backend LoginView response: {message, user_id, role, identifying_info, access, refresh}
 export const LoginResponseSchema = z.object({
+  message: z.string().optional(),
   access: z.string().min(1),
   refresh: z.string().optional(),
-  user: z.object({
-    id: z.string(),
-    email: z.string().optional(),
-    phone: z.string().optional(),
-    first_name: z.string(),
-    last_name: z.string(),
-    is_verified: z.boolean(),
-    is_staff: z.boolean(),
-    avatar: z.string().optional(),
-    date_joined: z.string(),
-  }),
+  user_id: z.string().optional(),
+  role: z.string().optional(),
+  identifying_info: z.string().optional(),
   requires_otp: z.boolean().optional().default(false),
+  // TODO: replace with data.has_vendor_profile once apps/vendor model is migrated
+  // to fashionistar_backend/apps/vendor with a OneToOne or FK to UnifiedUser
+  // with related_name="vendor_profile".
+  // The vendor app should expose: has_vendor_profile = serializers.BooleanField()
+  // on the OTP verify / login response.
+  has_vendor_profile: z.boolean().optional().default(false),
+  // Optional nested user object (future-proofed)
+  user: z
+    .object({
+      id: z.string(),
+      email: z.string().optional(),
+      phone: z.string().optional(),
+      first_name: z.string(),
+      last_name: z.string(),
+      role: z.string().optional(),
+      is_verified: z.boolean(),
+      is_staff: z.boolean(),
+      avatar: z.string().optional(),
+      date_joined: z.string(),
+    })
+    .optional(),
 });
 
 export type LoginResponse = z.infer<typeof LoginResponseSchema>;
@@ -48,28 +94,25 @@ export const RegisterSchema = z
       .email("Invalid email address")
       .optional()
       .or(z.literal("")),
-    phone: z
-      .string()
-      .regex(
-        /^\+\d{10,15}$/,
-        "Phone must be in E.164 format (e.g. +2348012345678)",
-      )
-      .optional()
-      .or(z.literal("")),
+    phone: phoneFieldSchema.optional().or(z.literal("")),
     first_name: z
       .string()
       .min(2, "First name must be at least 2 characters")
-      .max(50),
+      .max(50, "First name is too long")
+      .regex(/^[a-zA-Z\s'-]+$/, "First name can only contain letters, spaces, hyphens or apostrophes"),
     last_name: z
       .string()
       .min(2, "Last name must be at least 2 characters")
-      .max(50),
+      .max(50, "Last name is too long")
+      .regex(/^[a-zA-Z\s'-]+$/, "Last name can only contain letters, spaces, hyphens or apostrophes"),
     password: z
       .string()
       .min(8, "Password must be at least 8 characters")
       .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
       .regex(/[0-9]/, "Password must contain at least one number"),
-    password_confirm: z.string().min(8),
+    password_confirm: z.string().min(8, "Please confirm your password"),
+    // role is passed as a prop from the route searchParam, not user-editable
+    role: z.enum(["vendor", "client"]).optional().default("client"),
   })
   .refine((data) => data.email || data.phone, {
     message: "Either email or phone number is required",
@@ -86,19 +129,30 @@ export type RegisterPayload = z.infer<typeof RegisterSchema>;
 export const OTPSchema = z.object({
   otp: z
     .string()
-    .min(4, "OTP must be at least 4 digits")
-    .max(6, "OTP must be at most 6 digits")
+    .min(6, "OTP must be exactly 6 digits")
+    .max(6, "OTP must be exactly 6 digits")
     .regex(/^\d+$/, "OTP must contain only digits"),
+  // Backend verify-otp endpoint accepts { otp, email_or_phone }
   email: z.string().email().optional(),
-  phone: z.string().optional(),
+  phone: phoneFieldSchema.optional(),
 });
 
 export type OTPPayload = z.infer<typeof OTPSchema>;
 
 // ── OTP Resend ────────────────────────────────────────────────────────────────
+// Backend ResendOTPRequestSerializer expects: { email_or_phone: string }
 export const ResendOTPSchema = z.object({
-  email: z.string().email().optional(),
-  phone: z.string().optional(),
+  email_or_phone: z
+    .string()
+    .min(1, "Email or phone is required")
+    .refine(
+      (val) => {
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+        const isPhone = isValidPhoneNumber(val) || /^\+\d{10,15}$/.test(val);
+        return isEmail || isPhone;
+      },
+      "Please enter a valid email address or phone number",
+    ),
 });
 
 export type ResendOTPPayload = z.infer<typeof ResendOTPSchema>;
@@ -106,12 +160,8 @@ export type ResendOTPPayload = z.infer<typeof ResendOTPSchema>;
 // ── Password Reset Request ────────────────────────────────────────────────────
 export const PasswordResetRequestSchema = z
   .object({
-    email: z.string().email().optional().or(z.literal("")),
-    phone: z
-      .string()
-      .regex(/^\+\d{10,15}$/)
-      .optional()
-      .or(z.literal("")),
+    email: z.string().email("Invalid email address").optional().or(z.literal("")),
+    phone: phoneFieldSchema.optional().or(z.literal("")),
   })
   .refine((d) => d.email || d.phone, {
     message: "Email or phone is required",
@@ -125,7 +175,11 @@ export type PasswordResetRequestPayload = z.infer<
 // ── Password Reset Confirm (Email — uidb64 + token from URL) ──────────────────
 export const PasswordResetConfirmEmailSchema = z
   .object({
-    new_password: z.string().min(8, "Password must be at least 8 characters"),
+    new_password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .regex(/[0-9]/, "Password must contain at least one number"),
     new_password_confirm: z.string().min(8),
     uidb64: z.string().min(1),
     token: z.string().min(1),
@@ -143,7 +197,11 @@ export type PasswordResetConfirmEmailPayload = z.infer<
 export const PasswordResetConfirmPhoneSchema = z
   .object({
     otp: z.string().min(4).max(6).regex(/^\d+$/),
-    new_password: z.string().min(8),
+    new_password: z
+      .string()
+      .min(8)
+      .regex(/[A-Z]/, "Needs uppercase letter")
+      .regex(/[0-9]/, "Needs a number"),
     new_password_confirm: z.string().min(8),
   })
   .refine((d) => d.new_password === d.new_password_confirm, {
