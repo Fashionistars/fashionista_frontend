@@ -74,7 +74,7 @@ export function OTPVerifyForm() {
       }),
     onSuccess: (data) => {
       setVerifyError(null);
-      setTokens(data.access, data.refresh ?? "");
+      setTokens(data.access ?? "", data.refresh ?? "");
 
       if (data.user) {
         setUser({ ...data.user, role: data.user.role ?? data.role });

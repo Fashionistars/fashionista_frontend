@@ -19,7 +19,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             onClick={() => setIsOpen(true)}
             className="w-[34px] h-[34px] flex justify-center  items-center bg-[#F4F3EC] border-[0.8px] border-black rounded-full"
           >
-            <Image src="/menu.svg" alt="" />
+            <Image src="/menu.svg" alt="Open menu" width={34} height={34} />
           </button>
           <div className="flex items-center">
             <Image

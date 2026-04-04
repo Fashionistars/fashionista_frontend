@@ -72,7 +72,7 @@ export function PasswordResetForm() {
         <button
           type="button"
           id="back-to-login-btn"
-          onClick={() => router.push("/login")}
+          onClick={() => router.push("/auth/sign-in")}
           className="text-sm text-primary font-semibold hover:underline"
         >
           ← Back to login
@@ -130,7 +130,7 @@ export function PasswordResetForm() {
         Remember your password?{" "}
         <button
           type="button"
-          onClick={() => router.push("/login")}
+          onClick={() => router.push("/auth/sign-in")}
           className="text-primary font-semibold hover:underline"
         >
           Sign in

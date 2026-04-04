@@ -52,39 +52,62 @@ export const LoginSchema = z.object({
 export type LoginPayload = z.infer<typeof LoginSchema>;
 
 // ── Login Response ─────────────────────────────────────────────────────
-// Matches backend LoginView response: {message, user_id, role, identifying_info, access, refresh}
+// Matches backend LoginView + GoogleAuthView response shape.
+// GoogleAuthView returns: { status, message, is_new, tokens: { access, refresh }, user: {...} }
+// LoginView returns:      { message, access, refresh, role, user_id, identifying_info }
+// We handle BOTH shapes with optional fields.
 export const LoginResponseSchema = z.object({
-  message: z.string().optional(),
-  access: z.string().min(1),
-  refresh: z.string().optional(),
-  user_id: z.string().optional(),
-  role: z.string().optional(),
+  // ── Standard login / OTP verify fields ───────────────────────────────
+  message:          z.string().optional(),
+  access:           z.string().min(1).optional(),
+  refresh:          z.string().optional(),
+  user_id:          z.string().optional(),
+  role:             z.string().optional(),
   identifying_info: z.string().optional(),
-  requires_otp: z.boolean().optional().default(false),
-  // TODO: replace with data.has_vendor_profile once apps/vendor model is migrated
-  // to fashionistar_backend/apps/vendor with a OneToOne or FK to UnifiedUser
-  // with related_name="vendor_profile".
-  // The vendor app should expose: has_vendor_profile = serializers.BooleanField()
-  // on the OTP verify / login response.
+  requires_otp:     z.boolean().optional().default(false),
   has_vendor_profile: z.boolean().optional().default(false),
-  // Optional nested user object (future-proofed)
-  user: z
+  has_client_profile: z.boolean().optional().default(false),
+
+  // ── Google OAuth response fields ──────────────────────────────────────
+  status:  z.string().optional(),   // "success"
+  is_new:  z.boolean().optional(),  // true = new registration
+  tokens: z
     .object({
-      id: z.string(),
-      email: z.string().optional(),
-      phone: z.string().optional(),
-      first_name: z.string(),
-      last_name: z.string(),
-      role: z.string().optional(),
-      is_verified: z.boolean(),
-      is_staff: z.boolean(),
-      avatar: z.string().optional(),
-      date_joined: z.string(),
+      access:  z.string().min(1),
+      refresh: z.string(),
     })
     .optional(),
+
+  // ── Optional nested user object ───────────────────────────────────────
+  user: z
+    .object({
+      id:          z.string(),
+      member_id:   z.string().optional(),
+      email:       z.string().optional(),
+      phone:       z.string().optional(),
+      first_name:  z.string(),
+      last_name:   z.string(),
+      role:        z.string().optional(),
+      is_verified: z.boolean(),
+      is_staff:    z.boolean().optional().default(false),
+      avatar:      z.string().optional(),
+      date_joined: z.string().optional(),
+    })
+    .optional(),
+}).transform((data) => {
+  // Normalise: if Google response uses tokens.access/refresh, merge to top level
+  if (data.tokens?.access && !data.access) {
+    return {
+      ...data,
+      access:  data.tokens.access,
+      refresh: data.tokens.refresh,
+    };
+  }
+  return data;
 });
 
 export type LoginResponse = z.infer<typeof LoginResponseSchema>;
+
 
 // ── Register ──────────────────────────────────────────────────────────────────
 export const RegisterSchema = z
