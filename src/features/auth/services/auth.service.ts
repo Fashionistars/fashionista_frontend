@@ -97,12 +97,24 @@ export async function resendOTP(
 // ── Google OAuth ──────────────────────────────────────────────────────────────
 /**
  * POST /api/v1/auth/google/
- * Sends `{ code }` from Google redirect URI. Returns JWT tokens.
+ *
+ * Sends { id_token, role? } to the Django backend.
+ * The backend verifies the id_token with Google's public keys (google-auth library),
+ * finds or creates the user, and issues our own JWT access + refresh tokens.
+ *
+ * - For LOGIN:    call with (idToken) — role is optional (derived from DB)
+ * - For REGISTER: call with (idToken, role) — role required for new user creation
  */
-export async function googleAuth(code: string): Promise<LoginResponse> {
-  const { data } = await apiSync.post(AUTH_ENDPOINTS.GOOGLE, { code });
+export async function googleAuth(
+  idToken: string,
+  role?: string,
+): Promise<LoginResponse> {
+  const payload: Record<string, string> = { id_token: idToken };
+  if (role) payload.role = role;
+  const { data } = await apiSync.post(AUTH_ENDPOINTS.GOOGLE, payload);
   return LoginResponseSchema.parse(data);
 }
+
 
 // ── Logout ────────────────────────────────────────────────────────────────────
 /**

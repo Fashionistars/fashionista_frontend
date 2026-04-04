@@ -105,6 +105,44 @@ const nextConfig = {
     ];
   },
 
+  // ── Legacy Route Redirects ───────────────────────────────────────────────
+  // Permanent 301 redirects for deprecated auth route names.
+  // New canonical routes follow Stripe/Vercel/Shopify conventions.
+  redirects: async () => {
+    return [
+      // Login
+      {
+        source: '/login',
+        destination: '/auth/sign-in',
+        permanent: true,
+      },
+      // Register / Sign Up
+      {
+        source: '/register',
+        destination: '/auth/choose-role',
+        permanent: true,
+      },
+      {
+        source: '/signup',
+        destination: '/auth/choose-role',
+        permanent: true,
+      },
+      {
+        source: '/sign-up',
+        destination: '/auth/choose-role',
+        permanent: true,
+      },
+      // Verify OTP (old path was at top-level, now in (auth) group)
+      // Next.js renders /verify-otp fine from (auth) group — no redirect needed.
+      // Forgot Password
+      {
+        source: '/reset-password',
+        destination: '/forgot-password',
+        permanent: true,
+      },
+    ];
+  },
+
   // ── API Rewrites (BFF Proxy) ─────────────────────────────────────────────
   // In development: proxy to local Django (localhost:8000)
   // In production: override via BACKEND_URL env var (ngrok / real server)

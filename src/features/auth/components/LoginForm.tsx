@@ -20,12 +20,14 @@ import { useState } from "react";
 import {
   LoginSchema,
   type LoginPayload,
+  type LoginResponse,
 } from "@/features/auth/schemas/auth.schemas";
 import { login } from "@/features/auth/services/auth.service";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { PhoneInputField } from "@/components/shared/forms/PhoneInputField";
-import { GoogleIcon } from "@/components/shared/icons/GoogleIcon";
 import { RichErrorMessage, FieldError } from "@/components/shared/feedback/RichErrorMessage";
+import { AuthAlert } from "@/components/shared/feedback/AuthAlert";
+import { GoogleSignInButton } from "@/features/auth/components/GoogleSignInButton";
 import { parseApiError } from "@/lib/api/parseApiError";
 
 
@@ -39,6 +41,8 @@ export function LoginForm() {
   const [mode, setMode] = useState<LoginMode>("email");
   const [phoneValue, setPhoneValue] = useState("");
   const [apiError, setApiError] = useState<ReturnType<typeof parseApiError> | null>(null);
+  const [googleError, setGoogleError] = useState<string | null>(null);
+  const [googleSuccess, setGoogleSuccess] = useState<string | null>(null);
 
   // returnUrl — where to send the user after successful auth
   const returnUrl = searchParams.get("returnUrl") ?? "";
@@ -54,23 +58,53 @@ export function LoginForm() {
   });
 
   // Smart redirect after successful authentication
-  function handlePostAuthRedirect(role?: string, hasVendorProfile?: boolean) {
+  function handlePostAuthRedirect(
+    role?: string,
+    hasVendorProfile?: boolean,
+    hasClientProfile?: boolean,
+  ) {
     if (role === "vendor" || role === "Vendor") {
-      // TODO: replace `false` with `data.has_vendor_profile` once
-      // fashionistar_backend/apps/vendor model is migrated with:
-      //   - OneToOne or FK relationship to UnifiedUser
-      //   - related_name="vendor_profile"
-      //   - LoginView/OTPVerifyView response includes: has_vendor_profile: bool
       const vendorSetupComplete = hasVendorProfile ?? false;
       router.push(vendorSetupComplete ? "/vendor/dashboard" : "/vendor/setup");
       return;
     }
-    // Client redirect
+    // Client redirect — same destination regardless of profile completion
+    // (client profile is completed inline on the dashboard)
+    void hasClientProfile; // suppress unused warning — future: /client/complete-profile
     if (returnUrl && returnUrl.startsWith("/")) {
       router.push(returnUrl);
       return;
     }
     router.push("/client/dashboard");
+  }
+
+  // ── Google auth success handler (shared between login + register) ──────────
+  function handleGoogleSuccess(data: LoginResponse) {
+    setGoogleError(null);
+    setGoogleSuccess("Google sign-in successful! Redirecting…");
+    setTokens(data.access ?? "", data.refresh ?? "");
+    if (data.user) {
+      setUser({ ...data.user, role: data.user.role ?? data.role });
+    } else {
+      setUser({
+        id: data.user_id ?? "",
+        email: data.identifying_info?.includes("@") ? data.identifying_info : undefined,
+        phone: data.identifying_info?.startsWith("+") ? data.identifying_info : undefined,
+        first_name: data.identifying_info ?? "User",
+        last_name: "",
+        role: data.role,
+        is_verified: true,
+        is_staff: data.role === "admin",
+        date_joined: new Date().toISOString(),
+      });
+    }
+    toast.success("Google Sign-In Successful!", {
+      description: `Welcome, ${data.user?.first_name ?? "User"}! 🎉`,
+      duration: 3000,
+    });
+    setTimeout(() => {
+      handlePostAuthRedirect(data.role ?? data.user?.role, data.has_vendor_profile);
+    }, 600); // Small delay so success alert is visible
   }
 
   const { mutate, isPending } = useMutation({
@@ -92,7 +126,7 @@ export function LoginForm() {
         return;
       }
 
-      setTokens(data.access, data.refresh ?? "");
+      setTokens(data.access ?? "", data.refresh ?? "");
 
       if (data.user) {
         setUser({ ...data.user, role: data.user.role ?? data.role });
@@ -146,7 +180,7 @@ export function LoginForm() {
     setValue("email_or_phone", e164, { shouldValidate: false });
   }
 
-  const googleHref = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/google/${returnUrl ? `?returnUrl=${encodeURIComponent(returnUrl)}` : ""}`;
+  // No longer a redirect URL — Google credential is sent directly to backend via POST
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
@@ -191,6 +225,14 @@ export function LoginForm() {
 
       {/* ── API-level error ─────────────────────────────────────────── */}
       {apiError && <RichErrorMessage parsed={apiError} />}
+
+      {/* ── Google auth feedback ─────────────────────────────────────── */}
+      {googleError && (
+        <AuthAlert variant="error" message={googleError} autoDismissMs={6000} onDismiss={() => setGoogleError(null)} />
+      )}
+      {googleSuccess && (
+        <AuthAlert variant="success" message={googleSuccess} autoDismissMs={3000} onDismiss={() => setGoogleSuccess(null)} />
+      )}
 
       {/* ── Email or Phone ──────────────────────────────────────────── */}
       {mode === "email" ? (
@@ -296,20 +338,11 @@ export function LoginForm() {
       </div>
 
       {/* ── Google Sign-In ───────────────────────────────────────────── */}
-      <a
-        href={googleHref}
-        id="google-auth-btn"
-        className="
-          w-full flex items-center justify-center gap-3 px-4 py-2.5
-          border border-border rounded-xl text-sm font-medium
-          hover:bg-muted/50 hover:border-primary/30
-          transition-all duration-200
-          shadow-sm hover:shadow-md
-        "
-      >
-        <GoogleIcon />
-        Continue with Google
-      </a>
+      <GoogleSignInButton
+        label="Continue with Google"
+        onSuccess={handleGoogleSuccess}
+        onError={(msg) => { setGoogleError(msg); }}
+      />
 
       {/* ── Footer ───────────────────────────────────────────────────── */}
       <p className="text-center text-sm text-muted-foreground">
