@@ -22,11 +22,13 @@ import { useState } from "react";
 import {
   RegisterSchema,
   type RegisterPayload,
+  type LoginResponse,
 } from "@/features/auth/schemas/auth.schemas";
+
 import { register } from "@/features/auth/services/auth.service";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { PhoneInputField } from "@/components/shared/forms/PhoneInputField";
-import { GoogleIcon } from "@/components/shared/icons/GoogleIcon";
+import { GoogleSignInButton } from "@/features/auth/components/GoogleSignInButton";
 import { RichErrorMessage, FieldError } from "@/components/shared/feedback/RichErrorMessage";
 import { parseApiError } from "@/lib/api/parseApiError";
 
@@ -40,7 +42,7 @@ interface RegisterFormProps {
 export function RegisterForm({ role = "client" }: RegisterFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { setPendingOTP } = useAuthStore();
+  const { setPendingOTP, setTokens, setUser } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [mode, setMode] = useState<RegistrationMode>("email");
   const [apiError, setApiError] = useState<ReturnType<typeof parseApiError> | null>(null);
@@ -108,8 +110,52 @@ export function RegisterForm({ role = "client" }: RegisterFormProps) {
     mutate({ ...data, role });
   };
 
-  const googleHref = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/google/?role=${role}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}` : ""}`;
+  // Helper for Google Auth success — with smart role-based redirect
+  const handleGoogleSuccess = (data: LoginResponse) => {
+    setTokens(data.access ?? "", data.refresh ?? "");
 
+    if (data.user) {
+      setUser({ ...data.user, role: data.user.role ?? data.role });
+    } else {
+      setUser({
+        id: data.user_id ?? "",
+        email: data.identifying_info?.includes("@") ? data.identifying_info : undefined,
+        phone: data.identifying_info?.startsWith("+") ? data.identifying_info : undefined,
+        first_name: data.identifying_info ?? "User",
+        last_name: "",
+        role: data.role,
+        is_verified: true,
+        is_staff: data.role === "admin",
+      });
+    }
+
+    const displayName = data.user?.first_name ?? data.identifying_info ?? "User";
+    toast.success("Account created successfully! 🎉", {
+      description: `Welcome, ${displayName}!`,
+      duration: 3000,
+    });
+
+    // Smart redirect based on role
+    const effectiveRole = data.role ?? data.user?.role ?? "";
+    const isAdminRole = ["admin", "staff", "support", "editor", "director"].includes(effectiveRole.toLowerCase());
+    const isAdminUser = data.user?.is_staff === true;
+
+    if (isAdminRole || isAdminUser) {
+      router.push("/admin-dashboard");
+    } else if (effectiveRole === "vendor" || effectiveRole === "Vendor") {
+      router.push(data.has_vendor_profile ? "/vendor/dashboard" : "/vendor/setup");
+    } else {
+      router.push(returnUrl && returnUrl.startsWith("/") ? returnUrl : "/client/dashboard");
+    }
+  };
+
+
+  const handleGoogleError = (error: string) => {
+    toast.error("Google Sign-In Failed", {
+      description: error,
+      duration: 6000,
+    });
+  };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
       {/* ── Mode toggle: Email / Phone ──────────────────────────────── */}
@@ -173,6 +219,7 @@ export function RegisterForm({ role = "client" }: RegisterFormProps) {
               {...rhfRegister("first_name")}
               className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all placeholder:text-muted-foreground/60"
               placeholder="Daniel"
+              suppressHydrationWarning
             />
           </div>
           <FieldError message={errors.first_name?.message} />
@@ -192,6 +239,7 @@ export function RegisterForm({ role = "client" }: RegisterFormProps) {
               {...rhfRegister("last_name")}
               className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all placeholder:text-muted-foreground/60"
               placeholder="Ezichi"
+              suppressHydrationWarning
             />
           </div>
           <FieldError message={errors.last_name?.message} />
@@ -325,20 +373,12 @@ export function RegisterForm({ role = "client" }: RegisterFormProps) {
       </div>
 
       {/* ── Google Sign-Up ───────────────────────────────────────────── */}
-      <a
-        href={googleHref}
-        id="google-register-btn"
-        className="
-          w-full flex items-center justify-center gap-3 px-4 py-2.5
-          border border-border rounded-xl text-sm font-medium
-          hover:bg-muted/50 hover:border-primary/30
-          transition-all duration-200
-          shadow-sm hover:shadow-md
-        "
-      >
-        <GoogleIcon />
-        Continue with Google
-      </a>
+      <GoogleSignInButton
+        role={role}
+        label="Continue with Google"
+        onSuccess={handleGoogleSuccess}
+        onError={handleGoogleError}
+      />
 
       {/* ── Footer ───────────────────────────────────────────────────── */}
       <p className="text-center text-sm text-muted-foreground">
