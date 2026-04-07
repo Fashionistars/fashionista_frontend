@@ -18,8 +18,9 @@ export interface AuthUser {
   role?: string;
   is_verified: boolean;
   is_staff: boolean;
-  avatar?: string;
-  date_joined: string;
+  /** Cloudinary URL — null when user has no avatar uploaded yet */
+  avatar?: string | null;
+  date_joined?: string;
 }
 
 export interface AuthSession {

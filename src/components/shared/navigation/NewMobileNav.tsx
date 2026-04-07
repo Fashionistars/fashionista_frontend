@@ -15,7 +15,6 @@ import {
   AlertCircle,
   MapPin,
   MessageSquare,
-  UserRoundPlus,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -384,13 +383,9 @@ const NewMobileNav = () => {
               <MapPin /> Our Location
             </Link>
             <div className="flex items-center justify-between">
-              <Link
-                href="/login"
-                className="flex items-center gap-2 font-raleway font-medium text-lg text-[#141414]"
-              >
-                <UserRound /> Login/Signup
-              </Link>
-              <UserRoundPlus />
+              <div className="relative w-full">
+                <AccountOptions showOptions={true} />
+              </div>
             </div>
           </div>
           <div className="space-y-2">

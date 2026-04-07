@@ -97,13 +97,14 @@ const NewNavbar = () => {
         </ul>
       </nav>
       <div className="flex items-center justify-between space-y-2 md:space-x-4 px-2">
-        <div className="bg-[#F4F5FB] rounded-[90px] hidden md:flex items-center px-3 max-w-[297px] w-full gap-3 h-[57px]">
+        <div className="bg-[#F4F5FB] rounded-[90px] hidden md:flex items-center px-3 max-w-[297px] w-full gap-3 h-[57px]" suppressHydrationWarning>
           <Search color="#333333" size={18} />
 
           <input
             type="search"
             placeholder="Search Products..."
             className="placeholder:text-[#333333] font-satoshi font-medium text-[#333333] bg-inherit outline-none border-none  "
+            suppressHydrationWarning
           />
         </div>
 

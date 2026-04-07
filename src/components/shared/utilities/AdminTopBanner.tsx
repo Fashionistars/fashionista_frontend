@@ -31,6 +31,7 @@ const AdminTopBanner = ({
         className={`items-center  md:w-[55%] lg:w-[574px] h-[60px] bg-[#d9d9d9] px-4 gap-6 ${
           pathname == "/admin-dashboard" ? "hidden" : "flex"
         }`}
+        suppressHydrationWarning
       >
         <span className="block transition-all peer-focus:hidden">
           <svg
@@ -58,6 +59,7 @@ const AdminTopBanner = ({
           type="search"
           placeholder="Search"
           className="w-full bg-[#d9d9d9] outline-none focus:outline-none peer"
+          suppressHydrationWarning
         />
       </div>
       <div className="flex items-center gap-1">

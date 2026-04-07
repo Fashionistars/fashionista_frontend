@@ -3,4 +3,5 @@ export { LoginForm } from "./LoginForm";
 export { OTPVerifyForm } from "./OTPVerifyForm";
 export { PasswordResetForm } from "./PasswordResetForm";
 export { RegisterForm } from "./RegisterForm";
-export { default as SignUpForm } from "./SignUpForm"; // Legacy — uses export default
+export { GoogleSignInButton } from "./GoogleSignInButton";
+

@@ -8,14 +8,14 @@ import CartItems from "./CartItems";
 import {
   Search,
   AlignJustify,
-  UserRound,
+  User,
   ShoppingCart,
   X,
   Headset,
-  CircleAlert,
+  AlertCircle,
   MapPin,
-  MessageSquareText,
-  UserRoundPlus,
+  MessageSquare,
+  UserPlus,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -47,7 +47,7 @@ const NewMobileNav = () => {
         </button>
         <div className="relative">
           <button type="button" onClick={() => setShowOptions((prev) => !prev)}>
-            <UserRound />
+            <User />
           </button>
           <AccountOptions showOptions={showOptions} />
         </div>
@@ -318,7 +318,7 @@ const NewMobileNav = () => {
                 href="/about-us"
                 className="flex items-center gap-2 font-raleway font-medium text-lg text-[#141414]"
               >
-                <CircleAlert />
+                <AlertCircle />
                 About Us
               </Link>
             </div>
@@ -365,7 +365,7 @@ const NewMobileNav = () => {
                 href="/about-us"
                 className="flex items-center gap-2 font-raleway font-medium text-lg text-[#141414]"
               >
-                <MessageSquareText />
+                <MessageSquare />
                 Pages
               </Link>
             </div>
@@ -380,9 +380,9 @@ const NewMobileNav = () => {
                 href="/login"
                 className="flex items-center gap-2 font-raleway font-medium text-lg text-[#141414]"
               >
-                <UserRound /> Login/Signup
+                <User /> Login/Signup
               </Link>
-              <UserRoundPlus />
+              <UserPlus />
             </div>
           </div>
           <div className="space-y-2">
