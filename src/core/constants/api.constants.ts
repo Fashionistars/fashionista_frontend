@@ -36,8 +36,8 @@ export const AUTH_ENDPOINTS = {
   // GET — List all active sessions (Telegram-style security dashboard)
   SESSIONS: "/v1/auth/sessions/",
 
-  // DELETE — Revoke a specific session by numeric ID
-  SESSION_REVOKE: (sessionId: number) => `/v1/auth/sessions/${sessionId}/`,
+  // DELETE — Revoke a specific session by UUID7 string ID
+  SESSION_REVOKE: (sessionId: string) => `/v1/auth/sessions/${sessionId}/`,
 
   // POST — Revoke all sessions except the current one
   SESSIONS_REVOKE_OTHERS: "/v1/auth/sessions/revoke-others/",
