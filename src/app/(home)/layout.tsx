@@ -5,8 +5,10 @@ import NewMobileNav from "@/components/shared/navigation/NewMobileNav";
 
 export default function Home({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <>
@@ -176,6 +178,8 @@ export default function Home({
           <NewNavbar />
         </header>
         <section>{children}</section>
+        {/* @modal parallel slot — renders auth forms as glassmorphism overlays */}
+        {modal}
       </main>
       {/* <Footer /> */}
       <NewFooter />

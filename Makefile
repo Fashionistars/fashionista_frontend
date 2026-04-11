@@ -9,7 +9,7 @@ include .env.local
 export
 endif
 
-.PHONY: help install dev build start clean lint test docker-build docker-up docker-down
+.PHONY: help install dev build start clean lint test docker-build docker-up docker-down tunnel-frontend tunel-lt-fixed tunnel-ssh tunnel-ngrok
 .DEFAULT_GOAL := help
 
 # ─── Colors ───
@@ -274,6 +274,23 @@ tunnel-ssh: ## 🌐 Zero-install tunnel via localhost.run (SSH — requires SSH)
 	@echo "$(CYAN)Starting localhost.run SSH tunnel on port 3000...$(NC)"
 	@echo "$(YELLOW)No install needed. URL will be printed below.$(NC)"
 	ssh -o StrictHostKeyChecking=no -R 80:localhost:3000 nokey@localhost.run
+
+tunnel-ngrok: ## 🌐 ⭐ RECOMMENDED — ngrok tunnel on port 3000 (Windows-safe, persistent URL)
+	@echo "$(CYAN)╔════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(CYAN)  FASHIONISTAR — ngrok Secure Tunnel                        $(NC)"
+	@echo "$(CYAN)╚════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@echo "$(BOLD)Prerequisites$(NC)"
+	@echo "  1. Install ngrok: $(CYAN)https://ngrok.com/download$(NC)"
+	@echo "  2. Authenticate:  $(CYAN)ngrok config add-authtoken <YOUR_TOKEN>$(NC)"
+	@echo "  3. Frontend must be running: $(CYAN)make dev$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Starting ngrok → http://localhost:3000 ...$(NC)"
+	@echo "$(YELLOW)Once started, copy the Forwarding URL (https://xxxx.ngrok-free.app)$(NC)"
+	@echo "$(YELLOW)and update NEXT_PUBLIC_BACKEND_URL in .env.local, then update$(NC)"
+	@echo "$(YELLOW)Google Cloud Console → Authorised redirect URIs.$(NC)"
+	@echo ""
+	ngrok http 3000
 
 playwright-install: ## Install Playwright browsers
 	@echo "$(CYAN)Installing Playwright browsers...$(NC)"
