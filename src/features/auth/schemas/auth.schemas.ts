@@ -90,7 +90,7 @@ export const LoginResponseSchema = z.object({
       role:        z.string().optional(),
       is_verified: z.boolean(),
       is_staff:    z.boolean().optional().default(false),
-      avatar:      z.string().optional(),
+      avatar:      z.string().nullable().optional(),
       date_joined: z.string().optional(),
     })
     .optional(),

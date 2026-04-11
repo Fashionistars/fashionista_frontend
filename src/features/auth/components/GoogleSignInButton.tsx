@@ -60,7 +60,7 @@ export function GoogleSignInButton({
     // browser without a redirect. Fastest, no callback URL needed.
     flow: "implicit",
 
-    onSuccess: async (tokenResponse) => {
+    onSuccess: async (__tokenResponse) => {
       // tokenResponse for implicit flow contains `access_token` (Google OAuth2 AT)
       // We must use `credential` from the credential response, OR exchange this AT
       // for userinfo. The correct approach for backend verification is to use

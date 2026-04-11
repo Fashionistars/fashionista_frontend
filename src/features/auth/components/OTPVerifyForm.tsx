@@ -47,12 +47,16 @@ export function OTPVerifyForm() {
   }, [countdown]);
 
   // Smart redirect after OTP verification
-  function handlePostAuthRedirect(role?: string, hasVendorProfile?: boolean) {
-    if (role === "vendor" || role === "Vendor") {
-      // TODO: replace `false` with `data.has_vendor_profile` once
-      // fashionistar_backend/apps/vendor model is migrated with:
-      //   - OneToOne or FK to UnifiedUser with related_name="vendor_profile"
-      //   - OTPVerifyView response includes: has_vendor_profile: bool
+  function handlePostAuthRedirect(role?: string, hasVendorProfile?: boolean, isStaff?: boolean) {
+    const normalizedRole = (role ?? "").toLowerCase();
+    const ADMIN_ROLES = ["admin", "staff", "support", "editor", "director"];
+    const isAdminUser = isStaff === true || ADMIN_ROLES.includes(normalizedRole);
+
+    if (isAdminUser) {
+      router.push("/admin-dashboard");
+      return;
+    }
+    if (normalizedRole === "vendor") {
       const vendorSetupComplete = hasVendorProfile ?? false;
       router.push(vendorSetupComplete ? "/vendor/dashboard" : "/vendor/setup");
       return;
@@ -87,8 +91,8 @@ export function OTPVerifyForm() {
           last_name: "",
           role: data.role,
           is_verified: true,
-          is_staff: false,
-          date_joined: new Date().toISOString(),
+          is_staff: (data.role ?? "").toLowerCase() === "admin" ||
+                    (data.role ?? "").toLowerCase() === "staff",
         });
       }
 
@@ -98,7 +102,12 @@ export function OTPVerifyForm() {
         duration: 4000,
       });
 
-      handlePostAuthRedirect(data.role ?? data.user?.role, data.has_vendor_profile);
+      handlePostAuthRedirect(
+        data.role ?? data.user?.role,
+        data.has_vendor_profile,
+        data.user?.is_staff,
+      );
+
     },
     onError: (error) => {
       const parsed = parseApiError(error, "Invalid or expired OTP. Please check the code and try again.");
@@ -236,6 +245,7 @@ export function OTPVerifyForm() {
               `}
               aria-label={`OTP digit ${index + 1} of ${OTP_LENGTH}`}
               autoComplete="one-time-code"
+              suppressHydrationWarning
             />
           ))}
       </div>

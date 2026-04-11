@@ -62,21 +62,34 @@ export function LoginForm() {
     role?: string,
     hasVendorProfile?: boolean,
     hasClientProfile?: boolean,
+    isStaff?: boolean,
   ) {
-    if (role === "vendor" || role === "Vendor") {
+    const normalizedRole = (role ?? "").toLowerCase();
+
+    // Admin roles: support, staff, admin, editor, director + is_staff flag
+    const ADMIN_ROLES = ["admin", "staff", "support", "editor", "director"];
+    const isAdminUser = isStaff === true || ADMIN_ROLES.includes(normalizedRole);
+
+    if (isAdminUser) {
+      router.push("/admin-dashboard");
+      return;
+    }
+
+    if (normalizedRole === "vendor") {
       const vendorSetupComplete = hasVendorProfile ?? false;
       router.push(vendorSetupComplete ? "/vendor/dashboard" : "/vendor/setup");
       return;
     }
+
     // Client redirect — same destination regardless of profile completion
-    // (client profile is completed inline on the dashboard)
-    void hasClientProfile; // suppress unused warning — future: /client/complete-profile
+    void hasClientProfile; // future: /client/complete-profile
     if (returnUrl && returnUrl.startsWith("/")) {
       router.push(returnUrl);
       return;
     }
     router.push("/client/dashboard");
   }
+
 
   // ── Google auth success handler (shared between login + register) ──────────
   function handleGoogleSuccess(data: LoginResponse) {
@@ -94,8 +107,8 @@ export function LoginForm() {
         last_name: "",
         role: data.role,
         is_verified: true,
-        is_staff: data.role === "admin",
-        date_joined: new Date().toISOString(),
+        is_staff: (data.role ?? "").toLowerCase() === "admin" ||
+                  (data.role ?? "").toLowerCase() === "staff",
       });
     }
     toast.success("Google Sign-In Successful!", {
@@ -103,7 +116,12 @@ export function LoginForm() {
       duration: 3000,
     });
     setTimeout(() => {
-      handlePostAuthRedirect(data.role ?? data.user?.role, data.has_vendor_profile);
+      handlePostAuthRedirect(
+        data.role ?? data.user?.role,
+        data.has_vendor_profile,
+        data.has_client_profile,
+        data.user?.is_staff,
+      );
     }, 600); // Small delay so success alert is visible
   }
 
@@ -139,8 +157,8 @@ export function LoginForm() {
           last_name: "",
           role: data.role,
           is_verified: true,
-          is_staff: data.role === "admin",
-          date_joined: new Date().toISOString(),
+          is_staff: (data.role ?? "").toLowerCase() === "admin" ||
+                    (data.role ?? "").toLowerCase() === "staff",
         });
       }
 
@@ -150,7 +168,13 @@ export function LoginForm() {
         duration: 3000,
       });
 
-      handlePostAuthRedirect(data.role ?? data.user?.role, data.has_vendor_profile);
+      handlePostAuthRedirect(
+        data.role ?? data.user?.role,
+        data.has_vendor_profile,
+        data.has_client_profile,
+        data.user?.is_staff,
+      );
+
     },
     onError: (error) => {
       const parsed = parseApiError(error);

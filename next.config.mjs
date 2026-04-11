@@ -1,25 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // ── Experimental Features ────────────────────────────────────────────────
-  // NOTE: All experimental canary-only flags removed.
-  // reactCompiler needs 'babel-plugin-react-compiler' — add with:
-  //   pnpm add -D babel-plugin-react-compiler
-  // then re-enable: experimental: { reactCompiler: true }
-  // experimental: {},
+  // ── Partial Pre-rendering (PPR) — Next.js 16.2+ ─────────────────────────
+  // Renamed from `experimental.ppr` → `experimental.cacheComponents` → top-level `cacheComponents`
+  cacheComponents: true,
 
-  // ── Dev Server — Allow Tunnel Hosts ─────────────────────────────────────
-  // Next.js 15 blocks requests from unknown hostnames in dev mode.
-  // Add all tunnel domains here so cloudflared / localtunnel work.
-  allowedDevHosts: [
-    'localhost',
-    '127.0.0.1',
-    '*.trycloudflare.com',   // Cloudflare Quick Tunnels
-    '*.loca.lt',             // localtunnel.me
-    '*.ngrok-free.app',      // ngrok free static domains
-    '*.ngrok-free.dev',      // ngrok free dynamic domains
-    'fashionistar.net',
-    '*.fashionistar.net',
-  ],
+
+  // (Top-level allowedDevHosts removed for Next.js 15+ Turbopack compatibility)
 
   // ── Image Optimization ───────────────────────────────────────────────────
   images: {
@@ -175,15 +161,12 @@ const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
 
-  // ── Webpack Customizations ───────────────────────────────────────────────
-  webpack: (config, { isServer }) => {
-    // Bundle analyzer (run: ANALYZE=true pnpm build)
-    if (process.env.ANALYZE === 'true') {
-      const { BundleAnalyzerPlugin } = require('@next/bundle-analyzer')();
-      config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'static' }));
-    }
-    return config;
-  },
 };
 
-export default nextConfig;
+import bundleAnalyzer from '@next/bundle-analyzer';
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+export default withBundleAnalyzer(nextConfig);

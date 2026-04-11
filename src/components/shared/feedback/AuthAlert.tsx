@@ -266,8 +266,8 @@ export function AuthAlert({
         {/* Auto-dismiss countdown progress bar */}
         {autoDismissMs > 0 && (
           <div
-            className={`absolute bottom-0 left-0 h-0.5 ${cfg.progressColor} transition-all duration-[50ms] ease-linear`}
-            style={{ width: `${progress}%` }}
+            className={`absolute bottom-0 left-0 h-0.5 ${cfg.progressColor} transition-all ease-linear`}
+            style={{ transitionDuration: '50ms', width: `${progress}%` }}
           />
         )}
       </div>
