@@ -44,6 +44,9 @@ export const AUTH_ENDPOINTS = {
 
   // GET — Binance-style login audit log
   LOGIN_EVENTS: "/v1/auth/login-events/",
+
+  // GET — Authenticated user profile (for SSR rehydration on page refresh)
+  ME: "/v1/auth/me/",
 } as const;
 
 // ── Password Endpoints (DRF Sync) — /api/v1/password/* ───────────────────────
