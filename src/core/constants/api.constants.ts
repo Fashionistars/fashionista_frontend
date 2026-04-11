@@ -36,14 +36,17 @@ export const AUTH_ENDPOINTS = {
   // GET — List all active sessions (Telegram-style security dashboard)
   SESSIONS: "/v1/auth/sessions/",
 
-  // DELETE — Revoke a specific session by numeric ID
-  SESSION_REVOKE: (sessionId: number) => `/v1/auth/sessions/${sessionId}/`,
+  // DELETE — Revoke a specific session by UUID7 string ID
+  SESSION_REVOKE: (sessionId: string) => `/v1/auth/sessions/${sessionId}/`,
 
   // POST — Revoke all sessions except the current one
   SESSIONS_REVOKE_OTHERS: "/v1/auth/sessions/revoke-others/",
 
   // GET — Binance-style login audit log
   LOGIN_EVENTS: "/v1/auth/login-events/",
+
+  // GET — Authenticated user profile (for SSR rehydration on page refresh)
+  ME: "/v1/auth/me/",
 } as const;
 
 // ── Password Endpoints (DRF Sync) — /api/v1/password/* ───────────────────────
