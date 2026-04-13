@@ -2,19 +2,11 @@
 /**
  * AccountOptions — Navbar dropdown overlay (Phase 6)
  *
- * Dynamically shows Login or Logout based on authentication state.
- * Uses Zustand auth store — no SSR hydration issues (client component).
- *
- * When authenticated:
- *   - Shows "My Account" with user's name/email
- *   - Shows role-specific dashboard link
- *   - Shows "Sign Out" (calls auth store logout + POST /auth/logout/)
- *
- * When not authenticated:
- *   - Shows "Sign In" link (with current pathname as returnUrl)
- *   - Shows "Create Account" link to /auth/choose-role
+ * FIX: Dropdown now auto-closes on route change via useEffect(pathname).
+ * This prevents the "URL changes but page doesn't navigate" bug where the
+ * dropdown overlay stays on top of the new page after a Link click.
  */
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
@@ -37,17 +29,23 @@ import { logout as logoutFn } from "@/features/auth/services/auth.service";
 
 const AccountOptions = ({
   showOptions,
+  onClose,
 }: {
   showOptions: boolean;
+  onClose?: () => void;
 }) => {
   const router = useRouter();
   const pathname = usePathname();
   const { isAuthenticated, user, clearAuth } = useAuthStore();
 
+  // Auto-close dropdown when route changes — fixes overlay-blocking-page bug
+  useEffect(() => {
+    if (onClose) onClose();
+  }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const { mutate: doLogout, isPending: isLoggingOut } = useMutation({
     mutationFn: logoutFn,
     onSettled: () => {
-      // Always clear local auth state, even if logout API call fails
       clearAuth();
       toast.success("Signed out", { description: "See you soon! 👋" });
       router.push("/");
@@ -64,6 +62,8 @@ const AccountOptions = ({
       ? `${user.first_name}${user.last_name ? ` ${user.last_name}` : ""}`
       : user?.email ?? user?.phone ?? "My Account";
 
+  const close = () => onClose?.();
+
   return (
     <div
       id="account-options-panel"
@@ -76,9 +76,7 @@ const AccountOptions = ({
       `}
     >
       {isAuthenticated ? (
-        /* ── Authenticated menu ──────────────────────────────────── */
         <>
-          {/* User greeting */}
           <div className="pb-3 mb-2">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
@@ -97,6 +95,7 @@ const AccountOptions = ({
             <Link
               id="nav-dashboard-link"
               href={dashboardHref}
+              onClick={close}
               className="text-foreground font-raleway font-medium text-base flex items-center gap-2.5 py-2 px-2 rounded-lg hover:bg-muted/60 hover:text-primary transition-colors"
             >
               <LayoutDashboard className="w-4 h-4" />
@@ -105,6 +104,7 @@ const AccountOptions = ({
 
             <Link
               href="/wishlist"
+              onClick={close}
               className="text-foreground font-raleway font-medium text-base flex items-center gap-2.5 py-2 px-2 rounded-lg hover:bg-muted/60 hover:text-primary transition-colors"
             >
               <Heart className="w-4 h-4" />
@@ -113,6 +113,7 @@ const AccountOptions = ({
 
             <Link
               href="/"
+              onClick={close}
               className="text-foreground font-raleway font-medium text-base flex items-center gap-2.5 py-2 px-2 rounded-lg hover:bg-muted/60 hover:text-primary transition-colors"
             >
               <Radio className="w-4 h-4" />
@@ -121,6 +122,7 @@ const AccountOptions = ({
 
             <Link
               href="/settings"
+              onClick={close}
               className="text-foreground font-raleway font-medium text-base flex items-center gap-2.5 py-2 px-2 rounded-lg hover:bg-muted/60 hover:text-primary transition-colors"
             >
               <Settings className="w-4 h-4" />
@@ -128,11 +130,10 @@ const AccountOptions = ({
             </Link>
           </div>
 
-          {/* Sign Out */}
           <div className="pt-2 mt-1">
             <button
               id="nav-logout-btn"
-              onClick={() => doLogout()}
+              onClick={() => { doLogout(); close(); }}
               disabled={isLoggingOut}
               className="
                 w-full text-destructive font-raleway font-medium text-base
@@ -151,7 +152,6 @@ const AccountOptions = ({
           </div>
         </>
       ) : (
-        /* ── Unauthenticated menu ─────────────────────────────────── */
         <div className="flex flex-col gap-1">
           <p className="text-sm text-muted-foreground pb-3 mb-1 border-b border-border/50">
             Sign in to access your account
@@ -160,6 +160,7 @@ const AccountOptions = ({
           <Link
             id="nav-signin-link"
             href={`/auth/sign-in?returnUrl=${encodeURIComponent(pathname)}`}
+            onClick={close}
             className="text-foreground font-raleway font-semibold text-base flex items-center gap-2.5 py-2 px-2 rounded-lg hover:bg-muted/60 hover:text-primary transition-colors"
           >
             <LogIn className="w-4 h-4" />
@@ -169,6 +170,7 @@ const AccountOptions = ({
           <Link
             id="nav-register-link"
             href="/auth/choose-role"
+            onClick={close}
             className="text-foreground font-raleway font-medium text-base flex items-center gap-2.5 py-2 px-2 rounded-lg hover:bg-muted/60 hover:text-primary transition-colors"
           >
             <UserPlus className="w-4 h-4" />
@@ -177,6 +179,7 @@ const AccountOptions = ({
 
           <Link
             href="/"
+            onClick={close}
             className="text-foreground font-raleway font-medium text-base flex items-center gap-2.5 py-2 px-2 rounded-lg hover:bg-muted/60 hover:text-primary transition-colors"
           >
             <Radio className="w-4 h-4" />
@@ -185,6 +188,7 @@ const AccountOptions = ({
 
           <Link
             href="/auth/choose-role?role=vendor"
+            onClick={close}
             className="text-foreground font-raleway font-medium text-base flex items-center gap-2.5 py-2 px-2 rounded-lg hover:bg-muted/60 hover:text-primary transition-colors"
           >
             <UserRoundCheck className="w-4 h-4" />

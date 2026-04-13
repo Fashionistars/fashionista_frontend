@@ -255,15 +255,16 @@ env-setup: ## Create .env.local from .env.example (safe — won't overwrite)
 		echo "$(YELLOW)⚠ .env.local already exists$(NC)"; \
 	fi
 
-tunnel-frontend: ## 🌐 Start Cloudflare Tunnel for frontend (best free option, port 443)
-	@echo "$(CYAN)╔════════════════════════════════════════════════════╗$(NC)"
-	@echo "$(CYAN)  FASHIONISTAR TUNNEL — Cloudflare Tunnel (cloudflared)  $(NC)"
-	@echo "$(CYAN)╚════════════════════════════════════════════════════╝$(NC)"
+tunnel-frontend: ## 🌐 Start ngrok tunnel for frontend (port 3000, already authenticated)
+	@echo "$(CYAN)╔════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(CYAN)  FASHIONISTAR TUNNEL — ngrok Secure Frontend Tunnel         $(NC)"
+	@echo "$(CYAN)╚════════════════════════════════════════════════════════════╝$(NC)"
 	@echo ""
-	@echo "$(YELLOW)Strategy: Cloudflare Tunnel (uses port 443 — Windows-safe)$(NC)"
-	@echo "$(YELLOW)URL will be printed after startup. Copy it to .env.local$(NC)"
+	@echo "$(YELLOW)Strategy: ngrok (HTTPS, Windows-safe, already authenticated)$(NC)"
+	@echo "$(YELLOW)URL will be printed below — copy HTTPS URL to .env.local$(NC)"
+	@echo "$(YELLOW)After getting URL: set NEXT_PUBLIC_BASE_URL=<ngrok-url> in .env.local$(NC)"
 	@echo ""
-	cloudflared tunnel --url http://localhost:3000 2>&1
+	ngrok http 3000
 
 tunel-lt-fixed: ## 🌐 Fallback: localtunnel with IPv4 fix (-l 127.0.0.1)
 	@echo "$(CYAN)Starting localtunnel (IPv4 fix) for frontend on port 3000...$(NC)"

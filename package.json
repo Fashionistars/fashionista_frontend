@@ -11,7 +11,8 @@
     "pnpm": ">=9.0.0"
   },
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "node --max-old-space-size=4096 node_modules/.bin/next dev --turbo",
+    "dev:low": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint --dir src",
