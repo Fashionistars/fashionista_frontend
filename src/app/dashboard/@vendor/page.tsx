@@ -2,9 +2,9 @@
 import Link from "next/link";
 import React from "react";
 import TopBanner from "@/components/shared/utilities/TopBanner";
-import BarChart from "@/components/Charts";
+import BarChart from "@/components/ui/compounds/Charts";
 import { ChartOptions, ChartData } from "chart.js";
-import { fetchWithAuth } from "../../utils/fetchAuth";
+import { fetchWithAuth } from "@/lib/api/fetchAuth";
 import { getVendor } from "@/core/services/api";
 
 const page = async () => {

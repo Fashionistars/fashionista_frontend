@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 
 /**
- * Legacy /password-recovery route — permanently redirected to /forgot-password.
- * The canonical password reset request page is at /forgot-password.
+ * Legacy /password-recovery route — redirects to canonical /auth/forgot-password.
+ * This was the old Django token-based reset entry point.
  */
-export default function PasswordRecoveryRedirect() {
-  redirect("/forgot-password");
+export default function PasswordRecoveryLegacyRedirect() {
+  redirect("/auth/forgot-password");
 }

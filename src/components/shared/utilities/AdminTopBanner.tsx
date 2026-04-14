@@ -4,11 +4,11 @@ import React from "react";
 import Image from "next/image";
 
 const AdminTopBanner = ({
-  title,
-  pathname,
+  title = "",
+  pathname = "",
 }: {
-  title: string;
-  pathname: string;
+  title?: string;
+  pathname?: string;
 }) => {
   return (
     <div className="hidden lg:flex items-center justify-between  h-[122px] px-10 bg-white fixed top-0 right-0 w-[75%] z-50">

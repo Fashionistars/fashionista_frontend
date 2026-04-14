@@ -1,59 +1,51 @@
-/**
- * Collapsible — Stub component
- * This is a placeholder. Replace with Shadcn/ui Collapsible after running:
- * pnpm dlx shadcn@latest add collapsible
- */
-import { type ReactNode, useState } from "react";
-import { cn } from "@/lib/utils";
+"use client";
+import React from "react";
 
-interface CollapsibleProps {
-  trigger: ReactNode;
-  children: ReactNode;
-  className?: string;
-  defaultOpen?: boolean;
+interface CollapsibleProp {
+  title: string;
+  text: string;
+  isOpen: Boolean;
+  onClick: () => void;
 }
 
-export function Collapsible({
-  trigger,
-  children,
-  className,
-  defaultOpen = false,
-}: CollapsibleProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-
+const Collapsible = ({ title, text, onClick, isOpen }: CollapsibleProp) => {
   return (
-    <div
-      className={cn(
-        "border border-border rounded-lg overflow-hidden",
-        className,
-      )}
-    >
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-foreground hover:bg-muted/50 transition-colors"
-        aria-expanded={isOpen}
-      >
-        {trigger}
-        <svg
-          className={cn("w-4 h-4 transition-transform", isOpen && "rotate-180")}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+    <div className="flex flex-col w-full gap-0.5 ">
+      <div className="flex w-full gap-x-3 items-center">
+        <button
+          className={`transition duration-200 outline-none ${
+            isOpen ? "rotate-180 " : "rotate-0 "
+          }`}
+          onClick={onClick}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </button>
-      {isOpen && (
-        <div className="px-4 pb-4 pt-1 text-sm text-muted-foreground animate-fade-in">
-          {children}
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M13.5 6.75004C13.5 6.75004 10.1858 11.25 9 11.25C7.8141 11.25 4.5 6.75 4.5 6.75"
+              stroke="black"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+        <h2 className="text-black text-[15px] font-satoshi font-medium ">
+          {title}
+        </h2>
+      </div>
+      {isOpen ? (
+        <div className="">
+          {" "}
+          <p className="text-[13px] text-[#222] capitalize text-wrap">{text}</p>
         </div>
-      )}
+      ) : null}
     </div>
   );
-}
+};
+
+export default Collapsible;

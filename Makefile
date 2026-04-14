@@ -41,7 +41,9 @@ install: ## Install Node.js dependencies with pnpm
 
 dev: ## Start Next.js development server (Turbopack — port 3000)
 	@echo "$(CYAN)Starting Next.js dev server with Turbopack...$(NC)"
-	pnpm dev
+	@echo "$(YELLOW)  Node memory: 4096MB (via .npmrc node-options)$(NC)"
+	@echo "$(YELLOW)  URL: http://localhost:3000$(NC)"
+	pnpm exec next dev --turbo
 
 build: ## Build production bundle
 	@echo "$(CYAN)Building for production...$(NC)"

@@ -163,7 +163,7 @@ export async function getSessions(): Promise<AuthSession[]> {
  * Revokes a specific session by numeric ID.
  */
 export async function revokeSession(sessionId: number): Promise<void> {
-  await apiSync.delete(AUTH_ENDPOINTS.SESSION_REVOKE(sessionId));
+  await apiSync.delete(AUTH_ENDPOINTS.SESSION_REVOKE(String(sessionId)));
 }
 
 /**

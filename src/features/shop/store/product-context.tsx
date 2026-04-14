@@ -70,7 +70,7 @@ const NewProductContextProvider = ({
 
   const updateNewProductField = useCallback(
     (dealDetails: Partial<NewProductFieldTypes>) => {
-      setNewProductFields((prevFields) => ({
+      setNewProductFields((prevFields: NewProductType) => ({
         ...prevFields,
         ...dealDetails,
       }));
