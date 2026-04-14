@@ -126,6 +126,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning // Required for next-themes
+      data-scroll-behavior="smooth"
       className={`${inter.variable} ${raleway.variable} ${bonFoyage.variable} ${satoshi.variable}`}
     >
       <body className="min-h-screen bg-background font-raleway antialiased">

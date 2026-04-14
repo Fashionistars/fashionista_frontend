@@ -12,6 +12,8 @@
   },
   "scripts": {
     "dev": "next dev --turbo",
+    "dev:mem": "next dev --turbo",
+    "dev:debug": "next dev --turbo --inspect",
     "build": "next build",
     "start": "next start",
     "lint": "next lint --dir src",

@@ -7,6 +7,10 @@ const nextConfig = {
 
   // (Top-level allowedDevHosts removed for Next.js 15+ Turbopack compatibility)
 
+  // next.config.js
+  allowedDevOrigins: ['192.168.8.254'],
+
+
   // ── Image Optimization ───────────────────────────────────────────────────
   images: {
     remotePatterns: [

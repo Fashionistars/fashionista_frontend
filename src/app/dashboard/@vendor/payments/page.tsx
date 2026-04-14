@@ -2,7 +2,7 @@
 import React from "react";
 import TopBanner from "@/components/shared/utilities/TopBanner";
 import Link from "next/link";
-import BarChart from "@/components/Charts";
+import BarChart from "@/components/ui/compounds/Charts";
 import { ChartOptions, ChartData } from "chart.js";
 interface PaymentProp {
   invoice_number: string;

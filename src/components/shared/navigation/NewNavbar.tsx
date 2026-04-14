@@ -116,7 +116,7 @@ const NewNavbar = () => {
             >
               <UserRound />
             </button>
-            <AccountOptions showOptions={showOptions} />
+            <AccountOptions showOptions={showOptions} onClose={() => setShowOptions(false)} />
           </div>
 
           <div className="relative flex">

@@ -1,4 +1,4 @@
-import { checkUserRole } from "../utils/lib";
+import { checkUserRole } from "@/core/utils/role";
 
 export default async function Layout({
   client,

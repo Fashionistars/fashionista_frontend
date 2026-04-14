@@ -275,7 +275,7 @@ function PhoneConfirmForm() {
         <FieldError message={errors.otp?.message} />
         <p className="text-xs text-muted-foreground">
           Didn&apos;t receive the SMS?{" "}
-          <Link href="/forgot-password" className="text-primary hover:underline font-medium">
+          <Link href="/auth/forgot-password" className="text-primary hover:underline font-medium">
             Request a new code
           </Link>
         </p>

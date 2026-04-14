@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-import OrderTable from "@/app/components/OrderTable";
+import OrderTable from "@/features/orders/components/OrderTable";
 // import girl from "../../../../../public/girl.png";
 import { Search, CircleArrowDown } from "lucide-react";
 
