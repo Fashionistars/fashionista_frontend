@@ -9,7 +9,7 @@ include .env.local
 export
 endif
 
-.PHONY: help install dev build start clean lint test docker-build docker-up docker-down tunnel-frontend tunel-lt-fixed tunnel-ssh tunnel-ngrok
+.PHONY: help install dev build start clean lint test docker-build docker-up docker-down tunnel tunnel-frontend tunnel-url tunel-lt-fixed tunnel-ssh tunnel-ngrok
 .DEFAULT_GOAL := help
 
 # ─── Colors ───
@@ -257,16 +257,16 @@ env-setup: ## Create .env.local from .env.example (safe — won't overwrite)
 		echo "$(YELLOW)⚠ .env.local already exists$(NC)"; \
 	fi
 
-tunnel-frontend: ## 🌐 Start ngrok tunnel for frontend (port 3000, already authenticated)
+tunnel: ## 🌐 ⭐ PRIMARY — localtunnel on port 3000 (free, no auth conflict with backend ngrok)
 	@echo "$(CYAN)╔════════════════════════════════════════════════════════════╗$(NC)"
-	@echo "$(CYAN)  FASHIONISTAR TUNNEL — ngrok Secure Frontend Tunnel         $(NC)"
+	@echo "$(CYAN)  FASHIONISTAR FRONTEND — Secure Public Tunnel               $(NC)"
 	@echo "$(CYAN)╚════════════════════════════════════════════════════════════╝$(NC)"
 	@echo ""
-	@echo "$(YELLOW)Strategy: ngrok (HTTPS, Windows-safe, already authenticated)$(NC)"
-	@echo "$(YELLOW)URL will be printed below — copy HTTPS URL to .env.local$(NC)"
-	@echo "$(YELLOW)After getting URL: set NEXT_PUBLIC_BASE_URL=<ngrok-url> in .env.local$(NC)"
+	@echo "$(YELLOW)Using: localtunnel (free, IPv4 fix, no ngrok conflict)$(NC)"
+	@echo "$(YELLOW)URL  : https://fashionistar-fe.loca.lt$(NC)"
+	@echo "$(YELLOW)Tip  : If subdomain taken, a random URL will be assigned.$(NC)"
 	@echo ""
-	ngrok http 3000
+	pnpm dlx localtunnel --port 3000 --subdomain fashionistar-fe --local-host 127.0.0.1
 
 tunel-lt-fixed: ## 🌐 Fallback: localtunnel with IPv4 fix (-l 127.0.0.1)
 	@echo "$(CYAN)Starting localtunnel (IPv4 fix) for frontend on port 3000...$(NC)"
@@ -278,22 +278,33 @@ tunnel-ssh: ## 🌐 Zero-install tunnel via localhost.run (SSH — requires SSH)
 	@echo "$(YELLOW)No install needed. URL will be printed below.$(NC)"
 	ssh -o StrictHostKeyChecking=no -R 80:localhost:3000 nokey@localhost.run
 
-tunnel-ngrok: ## 🌐 ⭐ RECOMMENDED — ngrok tunnel on port 3000 (Windows-safe, persistent URL)
+tunnel-frontend: ## 🌐 ngrok frontend tunnel (requires separate NGROK_FRONTEND_TOKEN in .env.local)
 	@echo "$(CYAN)╔════════════════════════════════════════════════════════════╗$(NC)"
-	@echo "$(CYAN)  FASHIONISTAR — ngrok Secure Tunnel                        $(NC)"
+	@echo "$(CYAN)  FASHIONISTAR TUNNEL — ngrok Frontend (2nd account token)   $(NC)"
 	@echo "$(CYAN)╚════════════════════════════════════════════════════════════╝$(NC)"
 	@echo ""
-	@echo "$(BOLD)Prerequisites$(NC)"
-	@echo "  1. Install ngrok: $(CYAN)https://ngrok.com/download$(NC)"
-	@echo "  2. Authenticate:  $(CYAN)ngrok config add-authtoken <YOUR_TOKEN>$(NC)"
-	@echo "  3. Frontend must be running: $(CYAN)make dev$(NC)"
+	@echo "$(YELLOW)This uses a LOCAL ngrok config (~/.config/ngrok/frontend.yml)$(NC)"
+	@echo "$(YELLOW)so the frontend token does NOT conflict with the backend.$(NC)"
+	@echo "$(YELLOW)Set NGROK_FRONTEND_TOKEN in .env.local, then re-run.$(NC)"
 	@echo ""
-	@echo "$(YELLOW)Starting ngrok → http://localhost:3000 ...$(NC)"
-	@echo "$(YELLOW)Once started, copy the Forwarding URL (https://xxxx.ngrok-free.app)$(NC)"
-	@echo "$(YELLOW)and update NEXT_PUBLIC_BACKEND_URL in .env.local, then update$(NC)"
-	@echo "$(YELLOW)Google Cloud Console → Authorised redirect URIs.$(NC)"
+	@if [ -n "$(NGROK_FRONTEND_TOKEN)" ]; then \
+		ngrok http 3000 --authtoken=$(NGROK_FRONTEND_TOKEN); \
+	else \
+		echo "$(RED)✗ NGROK_FRONTEND_TOKEN not set. Add it to .env.local$(NC)"; \
+		echo "$(YELLOW)  Fallback: run 'make tunnel' (localtunnel, no auth needed)$(NC)"; \
+	fi
+
+tunnel-ngrok: ## 🌐 ngrok (global token, use only when backend ngrok is stopped)
+	@echo "$(YELLOW)⚠ WARNING: Free ngrok only supports 1 tunnel at a time.$(NC)"
+	@echo "$(YELLOW)  Stop backend ngrok first, or use 'make tunnel' instead.$(NC)"
 	@echo ""
 	ngrok http 3000
+
+tunnel-url: ## 🔍 Print active tunnel URLs (ngrok inspector)
+	@echo "$(CYAN)Active ngrok tunnels:$(NC)"
+	@curl -s http://127.0.0.1:4040/api/tunnels 2>/dev/null | \
+		python3 -c "import sys,json; d=json.load(sys.stdin); [print('  ✔ ' + t['public_url'] + ' → ' + t['config']['addr']) for t in d.get('tunnels',[])]" \
+		|| echo "$(YELLOW) ngrok not running. Try: make tunnel (uses localtunnel)$(NC)"
 
 playwright-install: ## Install Playwright browsers
 	@echo "$(CYAN)Installing Playwright browsers...$(NC)"
