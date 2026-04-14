@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { formatCurrency } from "@/lib/formatting";
+import { formatCurrency } from "@/lib/utils";
 interface CollectionsProps {
   id: string;
   image: string;
@@ -102,7 +102,7 @@ const LatestCollection = async ({
           {item.title}
         </p>
         <p className="font-raleway font-semibold text-lg md:text-2xl text-black">
-          {formatCurrency(item.price)}
+          {formatCurrency(Number(item.price))}
         </p>
       </div>
     </div>
