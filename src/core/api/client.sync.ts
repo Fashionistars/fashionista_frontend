@@ -125,7 +125,25 @@ apiSync.interceptors.response.use(
     };
 
     // ── 401: Auto Token Refresh ──────────────────────────────────────────────
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // IMPORTANT: Skip refresh for PUBLIC auth endpoints — these return 401 for
+    // wrong credentials, NOT for expired tokens. Attempting refresh for these
+    // would cause a hard redirect that prevents error alerts from showing.
+    const requestUrl = originalRequest.url ?? '';
+    const isPublicAuthEndpoint = (
+      requestUrl.includes('/auth/login') ||
+      requestUrl.includes('/auth/register') ||
+      requestUrl.includes('/auth/google') ||
+      requestUrl.includes('/auth/verify-otp') ||
+      requestUrl.includes('/auth/resend-otp') ||
+      requestUrl.includes('/password/reset') ||
+      requestUrl.includes('/auth/token/refresh')
+    );
+
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !isPublicAuthEndpoint
+    ) {
       if (isRefreshing) {
         // Queue this request until refresh completes
         return new Promise((resolve) => {
@@ -200,7 +218,7 @@ apiSync.interceptors.response.use(
         }
         return apiSync(originalRequest);
       } catch (refreshError) {
-        // Refresh failed — force logout
+        // Refresh truly failed for an authenticated request — force logout
         if (typeof window !== "undefined") {
           sessionStorage.removeItem("fashionistar-auth");
           window.location.href = "/auth/sign-in"; // Canonical sign-in URL
@@ -210,6 +228,7 @@ apiSync.interceptors.response.use(
         isRefreshing = false;
       }
     }
+
 
     // ── Circuit Breaker Logic ────────────────────────────────────────────────
     consecutiveFailures++;

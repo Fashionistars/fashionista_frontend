@@ -54,7 +54,7 @@ const NewMobileNav = () => {
           <button type="button" onClick={() => setShowOptions((prev) => !prev)}>
             <UserRound />
           </button>
-          <AccountOptions showOptions={showOptions} />
+          <AccountOptions showOptions={showOptions} onClose={() => setShowOptions(false)} />
         </div>
 
         <div className="relative flex">
@@ -384,7 +384,8 @@ const NewMobileNav = () => {
             </Link>
             <div className="flex items-center justify-between">
               <div className="relative w-full">
-                <AccountOptions showOptions={true} />
+                {/* Sidebar account section — always visible in open sidebar */}
+                <AccountOptions showOptions={showOptions} onClose={() => setShowOptions(false)} />
               </div>
             </div>
           </div>

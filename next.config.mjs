@@ -8,7 +8,17 @@ const nextConfig = {
   // (Top-level allowedDevHosts removed for Next.js 15+ Turbopack compatibility)
 
   // next.config.js
-  allowedDevOrigins: ['192.168.8.254'],
+  allowedDevOrigins: [
+    // Local network access (LAN testing)
+    '192.168.8.253',
+    '192.168.8.254',
+    // localtunnel — all *.loca.lt subdomains (tunnel URL changes per session)
+    'fashionistar-fe.loca.lt',
+    'nice-panther-76.loca.lt',
+    'fast-rattlesnake-39.loca.lt',
+    // ngrok backend tunnel (static URL)
+    'hydrographically-tawdrier-hayley.ngrok-free.dev',
+  ],
 
 
   // ── Image Optimization ───────────────────────────────────────────────────

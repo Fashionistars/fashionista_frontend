@@ -278,21 +278,15 @@ tunnel-ssh: ## 🌐 Zero-install tunnel via localhost.run (SSH — requires SSH)
 	@echo "$(YELLOW)No install needed. URL will be printed below.$(NC)"
 	ssh -o StrictHostKeyChecking=no -R 80:localhost:3000 nokey@localhost.run
 
-tunnel-frontend: ## 🌐 ngrok frontend tunnel (requires separate NGROK_FRONTEND_TOKEN in .env.local)
+tunnel-frontend: ## 🌐 localtunnel frontend (zero-install, no ngrok conflict — Windows-safe)
 	@echo "$(CYAN)╔════════════════════════════════════════════════════════════╗$(NC)"
-	@echo "$(CYAN)  FASHIONISTAR TUNNEL — ngrok Frontend (2nd account token)   $(NC)"
+	@echo "$(CYAN)  FASHIONISTAR TUNNEL — localtunnel Frontend (port 3000)     $(NC)"
 	@echo "$(CYAN)╚════════════════════════════════════════════════════════════╝$(NC)"
 	@echo ""
-	@echo "$(YELLOW)This uses a LOCAL ngrok config (~/.config/ngrok/frontend.yml)$(NC)"
-	@echo "$(YELLOW)so the frontend token does NOT conflict with the backend.$(NC)"
-	@echo "$(YELLOW)Set NGROK_FRONTEND_TOKEN in .env.local, then re-run.$(NC)"
+	@echo "$(YELLOW)Strategy: localtunnel via pnpm dlx (no install needed, Windows-safe)$(NC)"
+	@echo "$(YELLOW)URL will appear below after startup. Copy it to .env.local$(NC)"
 	@echo ""
-	@if [ -n "$(NGROK_FRONTEND_TOKEN)" ]; then \
-		ngrok http 3000 --authtoken=$(NGROK_FRONTEND_TOKEN); \
-	else \
-		echo "$(RED)✗ NGROK_FRONTEND_TOKEN not set. Add it to .env.local$(NC)"; \
-		echo "$(YELLOW)  Fallback: run 'make tunnel' (localtunnel, no auth needed)$(NC)"; \
-	fi
+	pnpm dlx localtunnel --port 3000 --subdomain fashionistar-fe --local-host 127.0.0.1
 
 tunnel-ngrok: ## 🌐 ngrok (global token, use only when backend ngrok is stopped)
 	@echo "$(YELLOW)⚠ WARNING: Free ngrok only supports 1 tunnel at a time.$(NC)"

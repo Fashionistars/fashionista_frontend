@@ -1,12 +1,15 @@
 "use client";
 /**
- * AccountOptions — Navbar dropdown overlay (Phase 6)
+ * AccountOptions — Navbar dropdown overlay
  *
- * FIX: Dropdown now auto-closes on route change via useEffect(pathname).
- * This prevents the "URL changes but page doesn't navigate" bug where the
- * dropdown overlay stays on top of the new page after a Link click.
+ * FIX 1: Dropdown auto-closes on route change via useEffect(pathname).
+ * FIX 2: Mount guard prevents onClose firing on first render.
+ * FIX 3: close() calls onClose() synchronously on click — no setTimeout.
+ *         setTimeout caused a race where Next.js navigation and overlay
+ *         state reset interfered, resulting in URL changing but page not
+ *         rendering until a hard refresh.
  */
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
@@ -38,8 +41,14 @@ const AccountOptions = ({
   const pathname = usePathname();
   const { isAuthenticated, user, clearAuth } = useAuthStore();
 
-  // Auto-close dropdown when route changes — fixes overlay-blocking-page bug
+  // Guard: skip onClose on first mount — only close on subsequent route changes
+  const isMounted = useRef(false);
   useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
+    }
+    // Route changed → close dropdown overlay
     if (onClose) onClose();
   }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -62,7 +71,12 @@ const AccountOptions = ({
       ? `${user.first_name}${user.last_name ? ` ${user.last_name}` : ""}`
       : user?.email ?? user?.phone ?? "My Account";
 
-  const close = () => onClose?.();
+  // Close the dropdown immediately on click so Next.js navigation completes
+  // without interference from overlay state changes.
+  // The useEffect(pathname) provides a safety net to close if still open on route change.
+  const close = useCallback(() => {
+    onClose?.();
+  }, [onClose]);
 
   return (
     <div

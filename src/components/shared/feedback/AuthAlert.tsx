@@ -168,6 +168,16 @@ export function AuthAlert({
   const displayMessage = parsed?.message ?? message ?? "";
   const links: ParsedApiError["links"] = parsed?.links ?? [];
 
+  // ── KEY FIX: Reset visibility whenever the error message changes ────────────
+  // Without this, if user dismisses the alert then a new error arrives,
+  // visible stays false because React does NOT re-mount (same tree position).
+  useEffect(() => {
+    if (displayMessage) {
+      setVisible(true);
+      setProgress(100);
+    }
+  }, [displayMessage]);
+
   // Auto-dismiss with countdown progress bar
   useEffect(() => {
     if (!autoDismissMs || autoDismissMs <= 0) return;
