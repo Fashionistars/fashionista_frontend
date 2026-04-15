@@ -66,6 +66,30 @@ function extractFromData(data: Record<string, unknown>): {
 } {
   const fieldErrors: Record<string, string> = {};
 
+  // ── Fashionistar Envelope Error Format ─────────────────────────────────────
+  // Backend returns: { success: false, message: "Validation failed.", code: "...",
+  //                    errors: { email: ["already in use"], detail: "...", ... } }
+  // We surface `message` for the top-level banner and spread `errors` for field-level highlights.
+  const envelopeErrors =
+    data.errors && typeof data.errors === "object" && !Array.isArray(data.errors)
+      ? (data.errors as Record<string, unknown>)
+      : null;
+
+  if (envelopeErrors) {
+    // Field-level errors inside the `errors` object
+    for (const [key, val] of Object.entries(envelopeErrors)) {
+      const str = stringifyValue(val as unknown);
+      if (str) fieldErrors[key] = str;
+    }
+    // Top-level message is always the human-readable summary
+    if (typeof data.message === "string" && data.message) {
+      return { message: data.message, fieldErrors };
+    }
+    // Fallback to first field error or detail inside errors
+    const firstFieldMsg = Object.values(fieldErrors)[0] ?? "";
+    return { message: firstFieldMsg || "Something went wrong. Please try again.", fieldErrors };
+  }
+
   // Priority order: detail → non_field_errors → message → error → first field error
   if (typeof data.detail === "string") {
     return { message: data.detail, fieldErrors };

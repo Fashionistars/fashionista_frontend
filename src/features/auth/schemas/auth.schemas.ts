@@ -79,19 +79,24 @@ export const LoginResponseSchema = z.object({
     .optional(),
 
   // ── Optional nested user object ───────────────────────────────────────
+  // Google users will have: id ✅, phone="" or null (no phone), first/last_name may be ""
   user: z
     .object({
-      id:          z.string(),
-      member_id:   z.string().optional(),
-      email:       z.string().optional(),
-      phone:       z.string().optional(),
-      first_name:  z.string(),
-      last_name:   z.string(),
+      // ✅ id is required — backend must always send this as a UUID string
+      id:          z.string().min(1),
+      member_id:   z.string().optional().nullable(),
+      email:       z.string().optional().nullable(),
+      // ✅ phone: Google OAuth users have no phone — backend sends "" or null
+      // Accept string | empty string | null | undefined all as valid
+      phone:       z.string().nullable().optional().or(z.literal("")),
+      // ✅ Allow empty strings for Google users who have no name in profile
+      first_name:  z.string().default(""),
+      last_name:   z.string().default(""),
       role:        z.string().optional(),
       is_verified: z.boolean(),
       is_staff:    z.boolean().optional().default(false),
       avatar:      z.string().nullable().optional(),
-      date_joined: z.string().optional(),
+      date_joined: z.string().optional().nullable(),
     })
     .optional(),
 }).transform((data) => {

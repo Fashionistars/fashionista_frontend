@@ -24,7 +24,7 @@ export interface AuthUser {
 }
 
 export interface AuthSession {
-  id: number;
+  id: string; // UUID7 string — all backend models use string UUIDs, never numeric IDs
   device: string;
   ip_address: string;
   location?: string;

@@ -55,7 +55,22 @@ export function useAuthHydration(): void {
       try {
         const { data } = await apiSync.get(AUTH_ENDPOINTS.ME);
         if (!cancelled) {
-          setUser(data);
+          // MeSerializer returns `user_id` (not `id`) to avoid shadowing Django's
+          // internal pk. We remap it here so AuthUser.id is always populated.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const raw = data as Record<string, any>;
+          setUser({
+            id: raw.user_id ?? raw.id ?? '',
+            email: raw.email ?? undefined,
+            phone: raw.phone ?? undefined,
+            first_name: raw.first_name ?? '',
+            last_name: raw.last_name ?? '',
+            role: raw.role ?? undefined,
+            is_verified: raw.is_verified ?? false,
+            is_staff: raw.is_staff ?? false,
+            avatar: raw.avatar ?? null,
+            date_joined: raw.date_joined ?? undefined,
+          });
         }
       } catch {
         // Token invalid/expired and refresh failed → force logout
