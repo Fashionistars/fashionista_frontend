@@ -146,27 +146,27 @@ function RoleBadge({
 function ClientMenu({ close }: { close: () => void }) {
   return (
     <nav aria-label="Client account menu" className="flex flex-col gap-0.5 py-2">
-      <Link id="nav-client-dashboard" href="/client/dashboard" onClick={close} className={linkCls}>
+      <Link id="nav-client-dashboard" href="/client/dashboard" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <LayoutDashboard className={iconCls} />
         My Dashboard
       </Link>
-      <Link id="nav-client-wishlist" href="/wishlist" onClick={close} className={linkCls}>
+      <Link id="nav-client-wishlist" href="/wishlist" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <Heart className={iconCls} />
         My Wishlist
       </Link>
-      <Link id="nav-client-orders" href="/client/orders" onClick={close} className={linkCls}>
+      <Link id="nav-client-orders" href="/client/orders" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <ShoppingBag className={iconCls} />
         My Orders
       </Link>
-      <Link id="nav-client-tracking" href="/client/tracking" onClick={close} className={linkCls}>
+      <Link id="nav-client-tracking" href="/client/tracking" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <PackageSearch className={iconCls} />
         Track a Package
       </Link>
-      <Link id="nav-client-reviews" href="/client/reviews" onClick={close} className={linkCls}>
+      <Link id="nav-client-reviews" href="/client/reviews" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <Star className={iconCls} />
         My Reviews
       </Link>
-      <Link id="nav-client-settings" href="/client/settings" onClick={close} className={linkCls}>
+      <Link id="nav-client-settings" href="/client/settings" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <Settings className={iconCls} />
         Account Settings
       </Link>
@@ -177,39 +177,39 @@ function ClientMenu({ close }: { close: () => void }) {
 function VendorMenu({ close }: { close: () => void }) {
   return (
     <nav aria-label="Vendor account menu" className="flex flex-col gap-0.5 py-2">
-      <Link id="nav-vendor-dashboard" href="/vendor/dashboard" onClick={close} className={linkCls}>
+      <Link id="nav-vendor-dashboard" href="/vendor/dashboard" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <LayoutDashboard className={iconCls} />
         Vendor Dashboard
       </Link>
-      <Link id="nav-vendor-shop" href="/vendor/shop" onClick={close} className={linkCls}>
+      <Link id="nav-vendor-shop" href="/vendor/shop" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <Store className={iconCls} />
         My Shop
       </Link>
-      <Link id="nav-vendor-products" href="/vendor/products" onClick={close} className={linkCls}>
+      <Link id="nav-vendor-products" href="/vendor/products" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <Package className={iconCls} />
         My Products
       </Link>
-      <Link id="nav-vendor-orders" href="/vendor/orders" onClick={close} className={linkCls}>
+      <Link id="nav-vendor-orders" href="/vendor/orders" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <ShoppingBag className={iconCls} />
         Orders
       </Link>
-      <Link id="nav-vendor-analytics" href="/vendor/analytics" onClick={close} className={linkCls}>
+      <Link id="nav-vendor-analytics" href="/vendor/analytics" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <BarChart3 className={iconCls} />
         Sales Analytics
       </Link>
-      <Link id="nav-vendor-promotions" href="/vendor/promotions" onClick={close} className={linkCls}>
+      <Link id="nav-vendor-promotions" href="/vendor/promotions" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <Tags className={iconCls} />
         Promotions
       </Link>
-      <Link id="nav-vendor-payouts" href="/vendor/payouts" onClick={close} className={linkCls}>
+      <Link id="nav-vendor-payouts" href="/vendor/payouts" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <Wallet className={iconCls} />
         Payouts
       </Link>
-      <Link id="nav-vendor-settings" href="/vendor/settings" onClick={close} className={linkCls}>
+      <Link id="nav-vendor-settings" href="/vendor/settings" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <Settings className={iconCls} />
         Shop Settings
       </Link>
-      <Link id="nav-vendor-support" href="/vendor/support" onClick={close} className={linkCls}>
+      <Link id="nav-vendor-support" href="/vendor/support" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <HelpCircle className={iconCls} />
         Seller Support
       </Link>
@@ -220,35 +220,35 @@ function VendorMenu({ close }: { close: () => void }) {
 function AdminMenu({ close }: { close: () => void }) {
   return (
     <nav aria-label="Admin account menu" className="flex flex-col gap-0.5 py-2">
-      <Link id="nav-admin-dashboard" href="/admin/dashboard" onClick={close} className={linkCls}>
+      <Link id="nav-admin-dashboard" href="/admin/dashboard" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <LayoutDashboard className={iconCls} />
         Admin Dashboard
       </Link>
-      <Link id="nav-admin-users" href="/admin/users" onClick={close} className={linkCls}>
+      <Link id="nav-admin-users" href="/admin/users" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <Users className={iconCls} />
         Manage Users
       </Link>
-      <Link id="nav-admin-audit" href="/admin/audit-logs" onClick={close} className={linkCls}>
+      <Link id="nav-admin-audit" href="/admin/audit-logs" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <ScrollText className={iconCls} />
         Audit Logs
       </Link>
-      <Link id="nav-admin-reports" href="/admin/reports" onClick={close} className={linkCls}>
+      <Link id="nav-admin-reports" href="/admin/reports" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <AlertTriangle className={iconCls} />
         Reports & Flags
       </Link>
-      <Link id="nav-admin-config" href="/admin/config" onClick={close} className={linkCls}>
+      <Link id="nav-admin-config" href="/admin/config" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <Sliders className={iconCls} />
         System Config
       </Link>
-      <Link id="nav-admin-db" href="/admin/db" onClick={close} className={linkCls}>
+      <Link id="nav-admin-db" href="/admin/db" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <Database className={iconCls} />
         Database Tools
       </Link>
-      <Link id="nav-admin-security" href="/admin/security" onClick={close} className={linkCls}>
+      <Link id="nav-admin-security" href="/admin/security" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <ShieldCheck className={iconCls} />
         Security Centre
       </Link>
-      <Link id="nav-admin-settings" href="/admin/settings" onClick={close} className={linkCls}>
+      <Link id="nav-admin-settings" href="/admin/settings" onClick={() => setTimeout(close, 150)} className={linkCls}>
         <Settings className={iconCls} />
         Platform Settings
       </Link>
@@ -268,10 +268,16 @@ function GuestPanel({
       <p className="text-xs text-muted-foreground pb-3 mb-1 border-b border-border/50">
         Sign in to access your account
       </p>
+      {/*
+       * NOTE: Removed onPointerDown and synchronous onClick={close} because they
+       * unmount the overlay BEFORE Next.js `<Link>` can process the navigation event.
+       * The fallback is a 150ms timeout which gives the browser enough time to register
+       * the click and queue the route transition.
+       */}
       <Link
         id="nav-signin-link"
         href={`/auth/sign-in?returnUrl=${encodeURIComponent(pathname)}`}
-        onClick={close}
+        onClick={() => setTimeout(close, 150)}
         className="text-foreground font-raleway font-semibold text-sm flex items-center gap-2.5 py-2 px-2.5 rounded-lg hover:bg-muted/60 hover:text-primary transition-colors"
       >
         <LogIn className={iconCls} />
@@ -280,7 +286,7 @@ function GuestPanel({
       <Link
         id="nav-register-client-link"
         href="/auth/choose-role"
-        onClick={close}
+        onClick={() => setTimeout(close, 150)}
         className={linkCls}
       >
         <UserPlus className={iconCls} />
@@ -289,7 +295,7 @@ function GuestPanel({
       <Link
         id="nav-order-tracking-guest"
         href="/"
-        onClick={close}
+        onClick={() => setTimeout(close, 150)}
         className={linkCls}
       >
         <Radio className={iconCls} />
@@ -298,7 +304,7 @@ function GuestPanel({
       <Link
         id="nav-register-vendor-link"
         href="/auth/choose-role?role=vendor"
-        onClick={close}
+        onClick={() => setTimeout(close, 150)}
         className={linkCls}
       >
         <UserRoundCheck className={iconCls} />
