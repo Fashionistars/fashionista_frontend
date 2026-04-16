@@ -64,12 +64,13 @@ export function PasswordResetForm() {
   const currentForm = mode === "email" ? emailForm : phoneForm;
 
   const { mutate, isPending } = useMutation({
+    // ✅ KEY FIX: Backend PasswordResetRequestSerializer expects `email_or_phone` (single field).
+    // Sending `{ email: identifier }` or `{ phone: identifier }` → 400 Bad Request.
+    // The serializer validates the value and routes to email or phone reset automatically.
     mutationFn: (data: ResetPayload) =>
-      requestPasswordReset(
-        mode === "email"
-          ? { email: data.identifier }
-          : { phone: data.identifier }
-      ),
+      requestPasswordReset({
+        email_or_phone: data.identifier,
+      } as Parameters<typeof requestPasswordReset>[0]),
     onSuccess: () => {
       setApiError(null);
       const id =

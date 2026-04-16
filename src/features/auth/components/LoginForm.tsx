@@ -92,13 +92,22 @@ export function LoginForm() {
 
 
   // ── Google auth success handler (shared between login + register) ──────────
+  // NOTE: All auth endpoints (Login, VerifyOTP, Google) now return user_id (not id)
+  // for uniform API contract. AuthUser store uses .id — we bridge here.
   function handleGoogleSuccess(data: LoginResponse) {
     setGoogleError(null);
     setGoogleSuccess("Google sign-in successful! Redirecting…");
     setTokens(data.access ?? "", data.refresh ?? "");
+
     if (data.user) {
-      setUser({ ...data.user, role: data.user.role ?? data.role });
+      // ✅ Bridge: backend sends user_id but AuthUser.id is the canonical store field
+      setUser({
+        ...data.user,
+        id: (data.user as unknown as { user_id?: string }).user_id ?? "",
+        role: data.user.role ?? data.role,
+      });
     } else {
+      // Fallback: flat-response shape (unlikely for Google but handled for safety)
       setUser({
         id: data.user_id ?? "",
         email: data.identifying_info?.includes("@") ? data.identifying_info : undefined,
@@ -111,6 +120,7 @@ export function LoginForm() {
                   (data.role ?? "").toLowerCase() === "staff",
       });
     }
+
     toast.success("Google Sign-In Successful!", {
       description: `Welcome, ${data.user?.first_name ?? "User"}! 🎉`,
       duration: 3000,
@@ -122,7 +132,7 @@ export function LoginForm() {
         data.has_client_profile,
         data.user?.is_staff,
       );
-    }, 600); // Small delay so success alert is visible
+    }, 600);
   }
 
   const { mutate, isPending } = useMutation({
@@ -147,7 +157,13 @@ export function LoginForm() {
       setTokens(data.access ?? "", data.refresh ?? "");
 
       if (data.user) {
-        setUser({ ...data.user, role: data.user.role ?? data.role });
+        // LoginView/VerifyOTPView return flat top-level user_id + nested user object
+        // user.user_id maps to AuthUser.id
+        setUser({
+          ...data.user,
+          id: (data.user as unknown as { user_id?: string }).user_id ?? data.user_id ?? "",
+          role: data.user.role ?? data.role,
+        });
       } else {
         setUser({
           id: data.user_id ?? "",

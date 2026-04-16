@@ -79,11 +79,12 @@ export const LoginResponseSchema = z.object({
     .optional(),
 
   // ── Optional nested user object ───────────────────────────────────────
-  // Google users will have: id ✅, phone="" or null (no phone), first/last_name may be ""
+  // Backend returns user_id (NOT id) — unified API contract across all auth endpoints.
+  // LoginView, VerifyOTPView, and GoogleAuthView all return user_id as the key.
   user: z
     .object({
-      // ✅ id is required — backend must always send this as a UUID string
-      id:          z.string().min(1),
+      // ✅ user_id — backend sends this as a UUID string (renamed from 'id' to match backend)
+      user_id:     z.string().min(1),
       member_id:   z.string().optional().nullable(),
       email:       z.string().optional().nullable(),
       // ✅ phone: Google OAuth users have no phone — backend sends "" or null
