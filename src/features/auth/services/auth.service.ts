@@ -190,10 +190,13 @@ export async function getLoginEvents(): Promise<LoginEvent[]> {
 // ── Password Management ───────────────────────────────────────────────────────
 /**
  * POST /api/v1/password/reset-request/
- * Sends OTP to email or SMS.
+ *
+ * Backend: PasswordResetRequestSerializer expects: { email_or_phone: string }
+ * The serializer detects email vs phone and routes accordingly.
+ * Always returns 200 (anti-enumeration — same response whether user exists or not).
  */
 export async function requestPasswordReset(
-  payload: PasswordResetRequestPayload,
+  payload: { email_or_phone: string },
 ): Promise<{ message: string }> {
   const { data } = await apiSync.post(
     PASSWORD_ENDPOINTS.RESET_REQUEST,
