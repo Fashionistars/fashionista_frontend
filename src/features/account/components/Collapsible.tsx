@@ -1,10 +1,9 @@
 "use client";
-import React from "react";
 
 interface CollapsibleProp {
   title: string;
   text: string;
-  isOpen: Boolean;
+  isOpen: boolean;
   onClick: () => void;
 }
 

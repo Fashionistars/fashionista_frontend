@@ -12,6 +12,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
             height={54}
             alt="logo"
             className=""
+            style={{ width: "auto", height: "auto" }}
           />
           <h2 className="font-bon_foyage px-3 text-4xl text-black">
             Fashionistar

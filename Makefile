@@ -9,7 +9,7 @@ include .env.local
 export
 endif
 
-.PHONY: help install dev build start clean lint test docker-build docker-up docker-down tunnel tunnel-frontend tunnel-url tunel-lt-fixed tunnel-ssh tunnel-ngrok
+.PHONY: help install dev build start clean lint test docker-build docker-up docker-down tunnel tunnel-frontend tunnel-url tunel-lt-fixed tunnel-ssh tunnel-ngrok tunnel-ngrok-fe refresh-install
 .DEFAULT_GOAL := help
 
 # ─── Colors ───
@@ -19,13 +19,18 @@ YELLOW  := \033[0;33m
 RED     := \033[0;31m
 BOLD    := \033[1m
 NC      := \033[0m
+PNPM    := pnpm.cmd
+POWERSHELL := powershell -NoProfile -ExecutionPolicy Bypass -Command
+RM_BUILD_ARTIFACTS := $(POWERSHELL) "Remove-Item -LiteralPath '.next','out','.turbo' -Recurse -Force -ErrorAction SilentlyContinue; exit 0"
+RM_DEPS_AND_CACHE := $(POWERSHELL) "Remove-Item -LiteralPath 'node_modules','pnpm-lock.yaml','.next','.turbo','.pnpm-store' -Recurse -Force -ErrorAction SilentlyContinue; exit 0"
+PNPM_INSTALL := $(PNPM) install --store-dir .pnpm-store
 
 ##@ Help
 
 help: ## Display this help message
 	@echo "$(BOLD)$(CYAN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(NC)"
 	@echo "$(BOLD)$(CYAN)  FASHIONISTAR AI — Frontend Developer Commands$(NC)"
-	@echo "$(CYAN)  Next.js 15 · TypeScript 5.8+ · Tailwind CSS v4 · Shadcn/ui$(NC)"
+	@echo "$(CYAN)  Next.js 16.2+ · TypeScript 5.8+ · Tailwind CSS v4 · Shadcn/ui$(NC)"
 	@echo "$(BOLD)$(CYAN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(NC)"
 	@echo ""
 	@awk 'BEGIN {FS = ":.*##"; printf "Usage:\n  make $(CYAN)<target>$(NC)\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  $(CYAN)%-22s$(NC) %s\n", $$1, $$2 } /^##@/ { printf "\n$(YELLOW)%s$(NC)\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
@@ -36,23 +41,23 @@ help: ## Display this help message
 
 install: ## Install Node.js dependencies with pnpm
 	@echo "$(CYAN)Installing dependencies with pnpm...$(NC)"
-	pnpm install
+	$(PNPM_INSTALL)
 	@echo "$(GREEN)✓ Dependencies installed$(NC)"
 
 dev: ## Start Next.js development server (Turbopack — port 3000)
 	@echo "$(CYAN)Starting Next.js dev server with Turbopack...$(NC)"
 	@echo "$(YELLOW)  Node memory: 4096MB (via .npmrc node-options)$(NC)"
 	@echo "$(YELLOW)  URL: http://localhost:3000$(NC)"
-	pnpm exec next dev --turbo
+	$(PNPM) exec next dev --turbo
 
 build: ## Build production bundle
 	@echo "$(CYAN)Building for production...$(NC)"
-	pnpm build
+	$(PNPM) build
 	@echo "$(GREEN)✓ Production build complete$(NC)"
 
 start: ## Start production server (requires build first)
 	@echo "$(CYAN)Starting production server...$(NC)"
-	pnpm start
+	$(PNPM) start
 
 preview: build start ## Build + start production server locally
 
@@ -64,26 +69,26 @@ setup: install dev ## First-time setup → start dev server
 
 lint: ## Run ESLint
 	@echo "$(CYAN)Running ESLint...$(NC)"
-	pnpm lint
+	$(PNPM) lint
 	@echo "$(GREEN)✓ Linting passed$(NC)"
 
 lint-fix: ## Run ESLint with auto-fix
 	@echo "$(CYAN)Running ESLint with auto-fix...$(NC)"
-	pnpm lint:fix
+	$(PNPM) lint:fix
 	@echo "$(GREEN)✓ Lint issues fixed$(NC)"
 
 type-check: ## Run TypeScript type checking
 	@echo "$(CYAN)Running TypeScript type check...$(NC)"
-	pnpm type-check
+	$(PNPM) type-check
 	@echo "$(GREEN)✓ Type check passed$(NC)"
 
 format: ## Format code with Prettier
 	@echo "$(CYAN)Formatting code...$(NC)"
-	pnpm format
+	$(PNPM) format
 	@echo "$(GREEN)✓ Code formatted$(NC)"
 
 format-check: ## Check formatting without writing changes
-	pnpm format:check
+	$(PNPM) format:check
 
 quality: lint type-check format-check ## Run all quality checks (lint + types + format)
 	@echo "$(GREEN)✓ All quality checks passed$(NC)"
@@ -94,33 +99,33 @@ quality: lint type-check format-check ## Run all quality checks (lint + types + 
 
 test: ## Run unit tests (Vitest)
 	@echo "$(CYAN)Running unit tests...$(NC)"
-	pnpm test
+	$(PNPM) test
 	@echo "$(GREEN)✓ Tests passed$(NC)"
 
 test-watch: ## Run tests in watch mode
-	pnpm test:watch
+	$(PNPM) test:watch
 
 test-cov: ## Run tests with coverage report
 	@echo "$(CYAN)Running tests with coverage...$(NC)"
-	pnpm test:cov
+	$(PNPM) test:cov
 	@echo "$(GREEN)✓ Coverage report generated$(NC)"
 
 test-ui: ## Open Vitest UI dashboard
-	pnpm test:ui
+	$(PNPM) test:ui
 
 test-e2e: ## Run Playwright end-to-end tests
 	@echo "$(CYAN)Running E2E tests...$(NC)"
-	pnpm test:e2e
+	$(PNPM) test:e2e
 	@echo "$(GREEN)✓ E2E tests passed$(NC)"
 
 test-e2e-ui: ## Run Playwright tests with headed browser
-	pnpm test:e2e:ui
+	$(PNPM) test:e2e:ui
 
 test-e2e-report: ## Show last Playwright test report
-	pnpm test:e2e:report
+	$(PNPM) test:e2e:report
 
 test-e2e-install: ## Install Playwright browsers
-	pnpm dlx playwright install --with-deps
+	$(PNPM) dlx playwright install --with-deps
 
 test-stress: ## Run cURL stress tests (Pillar 1)
 	@echo "$(CYAN)Running cURL stress tests...$(NC)"
@@ -234,13 +239,19 @@ deploy-docker: docker-build docker-up ## Deploy via Docker
 
 clean: ## Clean build artifacts (.next, out)
 	@echo "$(YELLOW)Cleaning build artifacts...$(NC)"
-	rm -rf .next out .turbo
+	$(RM_BUILD_ARTIFACTS)
 	@echo "$(GREEN)✓ Cleaned$(NC)"
 
 clean-deps: ## Remove node_modules and pnpm lock
 	@echo "$(YELLOW)Removing node_modules and lockfile...$(NC)"
-	rm -rf node_modules pnpm-lock.yaml
+	$(RM_DEPS_AND_CACHE)
 	@echo "$(GREEN)✓ node_modules removed$(NC)"
+
+refresh-install: ## Remove deps/cache and reinstall with pnpm
+	@echo "$(YELLOW)Refreshing dependencies and build caches...$(NC)"
+	$(RM_DEPS_AND_CACHE)
+	$(PNPM_INSTALL)
+	@echo "$(GREEN)✓ Dependencies refreshed$(NC)"
 
 clean-all: clean clean-deps docker-clean ## Nuclear clean (build + deps + Docker)
 	@echo "$(GREEN)✓ Everything cleaned$(NC)"
@@ -266,17 +277,17 @@ tunnel: ## 🌐 ⭐ PRIMARY — localtunnel on port 3000 (free, no auth conflict
 	@echo "$(YELLOW)URL  : https://fashionistar-fe.loca.lt$(NC)"
 	@echo "$(YELLOW)Tip  : If subdomain taken, a random URL will be assigned.$(NC)"
 	@echo ""
-	pnpm dlx localtunnel --port 3000 --subdomain fashionistar-fe --local-host 127.0.0.1
+	$(PNPM) dlx localtunnel --port 3000 --subdomain fashionistar-fe --local-host 127.0.0.1
 
 tunel-lt-fixed: ## 🌐 Fallback: localtunnel with IPv4 fix (-l 127.0.0.1)
 	@echo "$(CYAN)Starting localtunnel (IPv4 fix) for frontend on port 3000...$(NC)"
 	@echo "$(YELLOW)URL: https://fashionistar-frontend.loca.lt$(NC)"
-	pnpm dlx localtunnel --port 3000 --subdomain fashionistar-frontend --local-host 127.0.0.1
+	$(PNPM) dlx localtunnel --port 3000 --subdomain fashionistar-frontend --local-host 127.0.0.1
 
 tunnel-ssh: ## 🌐 Zero-install tunnel via localhost.run (SSH — requires SSH)
 	@echo "$(CYAN)Starting localhost.run SSH tunnel on port 3000...$(NC)"
 	@echo "$(YELLOW)No install needed. URL will be printed below.$(NC)"
-	ssh -o StrictHostKeyChecking=no -R 80:localhost:3000 nokey@localhost.run
+	ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -R 80:localhost:3000 localhost.run
 
 tunnel-frontend: ## 🌐 localtunnel frontend (zero-install, no ngrok conflict — Windows-safe)
 	@echo "$(CYAN)╔════════════════════════════════════════════════════════════╗$(NC)"
@@ -286,13 +297,18 @@ tunnel-frontend: ## 🌐 localtunnel frontend (zero-install, no ngrok conflict �
 	@echo "$(YELLOW)Strategy: localtunnel via pnpm dlx (no install needed, Windows-safe)$(NC)"
 	@echo "$(YELLOW)URL will appear below after startup. Copy it to .env.local$(NC)"
 	@echo ""
-	pnpm dlx localtunnel --port 3000 --subdomain fashionistar-fe --local-host 127.0.0.1
+	$(PNPM) dlx localtunnel --port 3000 --subdomain fashionistar-fe --local-host 127.0.0.1
 
 tunnel-ngrok: ## 🌐 ngrok (global token, use only when backend ngrok is stopped)
 	@echo "$(YELLOW)⚠ WARNING: Free ngrok only supports 1 tunnel at a time.$(NC)"
 	@echo "$(YELLOW)  Stop backend ngrok first, or use 'make tunnel' instead.$(NC)"
 	@echo ""
 	ngrok http 3000
+
+tunnel-ngrok-fe: ## 🌐 Dedicated frontend ngrok tunnel via ngrok-frontend.yml
+	@echo "$(CYAN)Starting dedicated frontend ngrok tunnel on port 3000...$(NC)"
+	@echo "$(YELLOW)Using ngrok-frontend.yml and NGROK_FRONTEND_TOKEN from .env.local$(NC)"
+	ngrok start --all --config ngrok-frontend.yml
 
 tunnel-url: ## 🔍 Print active tunnel URLs (ngrok inspector)
 	@echo "$(CYAN)Active ngrok tunnels:$(NC)"
@@ -302,7 +318,7 @@ tunnel-url: ## 🔍 Print active tunnel URLs (ngrok inspector)
 
 playwright-install: ## Install Playwright browsers
 	@echo "$(CYAN)Installing Playwright browsers...$(NC)"
-	pnpm dlx playwright install --with-deps
+	$(PNPM) dlx playwright install --with-deps
 	@echo "$(GREEN)✓ Playwright browsers installed$(NC)"
 
 env-check: ## Display current environment configuration
@@ -344,9 +360,9 @@ info: ## Display project information
 	@echo "$(CYAN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(NC)"
 	@echo "  Node:         $$(node --version 2>/dev/null || echo 'not installed')"
 	@echo "  pnpm:         $$(pnpm --version 2>/dev/null || echo 'not installed')"
-	@echo "  Framework:    Next.js 15.2+ (App Router + Turbopack)"
+	@echo "  Framework:    Next.js 16.2+ (App Router + Turbopack)"
 	@echo "  Language:     TypeScript 5.8+ (Strict Mode)"
-	@echo "  Styling:      Tailwind CSS v3.4 + Shadcn/ui"
+	@echo "  Styling:      Tailwind CSS v4 + Shadcn/ui"
 	@echo "  State:        Zustand v5 + TanStack Query v5 + Nuqs v2"
 	@echo "  API Clients:  Axios (DRF Sync) + Ky (Ninja Async)"
 	@echo "  Testing:      Vitest (Unit) + Playwright (E2E) + cURL Stress"
@@ -354,19 +370,19 @@ info: ## Display project information
 	@echo "$(CYAN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(NC)"
 
 deps: ## List installed packages (pnpm)
-	pnpm list --depth=0
+	$(PNPM) list --depth=0
 
 outdated: ## Check for outdated packages
-	pnpm outdated
+	$(PNPM) outdated
 
 update: ## Update packages
 	@echo "$(CYAN)Updating dependencies...$(NC)"
-	pnpm update
+	$(PNPM) update
 	@echo "$(GREEN)✓ Dependencies updated$(NC)"
 
 analyze: ## Analyze production bundle size
 	@echo "$(CYAN)Analyzing bundle...$(NC)"
-	ANALYZE=true pnpm build
+	cmd /c "set ANALYZE=true && $(PNPM) build"
 
 # ═══════════════════════════════════════════════════════════════
 ##@ Quick Commands

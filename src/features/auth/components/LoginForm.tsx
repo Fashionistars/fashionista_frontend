@@ -28,6 +28,8 @@ import { PhoneInputField } from "@/components/shared/forms/PhoneInputField";
 import { RichErrorMessage, FieldError } from "@/components/shared/feedback/RichErrorMessage";
 import { AuthAlert } from "@/components/shared/feedback/AuthAlert";
 import { GoogleSignInButton } from "@/features/auth/components/GoogleSignInButton";
+import { getPostAuthRedirectPath } from "@/features/auth/lib/auth-routing";
+import { normalizeAuthUser } from "@/features/auth/lib/normalize-auth-user";
 import { parseApiError } from "@/lib/api/parseApiError";
 
 
@@ -57,80 +59,25 @@ export function LoginForm() {
     defaultValues: { email_or_phone: "", password: "" },
   });
 
-  // Smart redirect after successful authentication
-  function handlePostAuthRedirect(
-    role?: string,
-    hasVendorProfile?: boolean,
-    hasClientProfile?: boolean,
-    isStaff?: boolean,
-  ) {
-    const normalizedRole = (role ?? "").toLowerCase();
-
-    // Admin roles: support, staff, admin, editor, director + is_staff flag
-    const ADMIN_ROLES = ["admin", "staff", "support", "editor", "director"];
-    const isAdminUser = isStaff === true || ADMIN_ROLES.includes(normalizedRole);
-
-    if (isAdminUser) {
-      router.push("/admin-dashboard");
-      return;
-    }
-
-    if (normalizedRole === "vendor") {
-      const vendorSetupComplete = hasVendorProfile ?? false;
-      router.push(vendorSetupComplete ? "/vendor/dashboard" : "/vendor/setup");
-      return;
-    }
-
-    // Client redirect — same destination regardless of profile completion
-    void hasClientProfile; // future: /client/complete-profile
-    if (returnUrl && returnUrl.startsWith("/")) {
-      router.push(returnUrl);
-      return;
-    }
-    router.push("/client/dashboard");
-  }
-
-
   // ── Google auth success handler (shared between login + register) ──────────
-  // NOTE: All auth endpoints (Login, VerifyOTP, Google) now return user_id (not id)
-  // for uniform API contract. AuthUser store uses .id — we bridge here.
   function handleGoogleSuccess(data: LoginResponse) {
     setGoogleError(null);
     setGoogleSuccess("Google sign-in successful! Redirecting…");
     setTokens(data.access ?? "", data.refresh ?? "");
-
-    if (data.user) {
-      // ✅ Bridge: backend sends user_id but AuthUser.id is the canonical store field
-      setUser({
-        ...data.user,
-        id: (data.user as unknown as { user_id?: string }).user_id ?? "",
-        role: data.user.role ?? data.role,
-      });
-    } else {
-      // Fallback: flat-response shape (unlikely for Google but handled for safety)
-      setUser({
-        id: data.user_id ?? "",
-        email: data.identifying_info?.includes("@") ? data.identifying_info : undefined,
-        phone: data.identifying_info?.startsWith("+") ? data.identifying_info : undefined,
-        first_name: data.identifying_info ?? "User",
-        last_name: "",
-        role: data.role,
-        is_verified: true,
-        is_staff: (data.role ?? "").toLowerCase() === "admin" ||
-                  (data.role ?? "").toLowerCase() === "staff",
-      });
-    }
+    setUser(normalizeAuthUser(data));
 
     toast.success("Google Sign-In Successful!", {
       description: `Welcome, ${data.user?.first_name ?? "User"}! 🎉`,
       duration: 3000,
     });
     setTimeout(() => {
-      handlePostAuthRedirect(
-        data.role ?? data.user?.role,
-        data.has_vendor_profile,
-        data.has_client_profile,
-        data.user?.is_staff,
+      router.push(
+        getPostAuthRedirectPath({
+          role: data.role ?? data.user?.role,
+          hasVendorProfile: data.has_vendor_profile,
+          isStaff: data.user?.is_staff,
+          returnUrl,
+        }),
       );
     }, 600);
   }
@@ -148,35 +95,14 @@ export function LoginForm() {
           description: "A verification code has been sent to your email/phone.",
         });
         const otpHref = returnUrl
-          ? `/verify-otp?returnUrl=${encodeURIComponent(returnUrl)}`
-          : "/verify-otp";
+          ? `/auth/verify-otp?returnUrl=${encodeURIComponent(returnUrl)}`
+          : "/auth/verify-otp";
         router.push(otpHref);
         return;
       }
 
       setTokens(data.access ?? "", data.refresh ?? "");
-
-      if (data.user) {
-        // LoginView/VerifyOTPView return flat top-level user_id + nested user object
-        // user.user_id maps to AuthUser.id
-        setUser({
-          ...data.user,
-          id: (data.user as unknown as { user_id?: string }).user_id ?? data.user_id ?? "",
-          role: data.user.role ?? data.role,
-        });
-      } else {
-        setUser({
-          id: data.user_id ?? "",
-          email: data.identifying_info?.includes("@") ? data.identifying_info : undefined,
-          phone: data.identifying_info?.startsWith("+") ? data.identifying_info : undefined,
-          first_name: data.identifying_info ?? "User",
-          last_name: "",
-          role: data.role,
-          is_verified: true,
-          is_staff: (data.role ?? "").toLowerCase() === "admin" ||
-                    (data.role ?? "").toLowerCase() === "staff",
-        });
-      }
+      setUser(normalizeAuthUser(data));
 
       const displayName = data.user?.first_name ?? data.identifying_info ?? "User";
       toast.success("Welcome back! 👋", {
@@ -184,11 +110,13 @@ export function LoginForm() {
         duration: 3000,
       });
 
-      handlePostAuthRedirect(
-        data.role ?? data.user?.role,
-        data.has_vendor_profile,
-        data.has_client_profile,
-        data.user?.is_staff,
+      router.push(
+        getPostAuthRedirectPath({
+          role: data.role ?? data.user?.role,
+          hasVendorProfile: data.has_vendor_profile,
+          isStaff: data.user?.is_staff,
+          returnUrl,
+        }),
       );
 
     },

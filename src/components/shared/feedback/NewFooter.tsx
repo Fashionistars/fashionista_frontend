@@ -1,6 +1,5 @@
 /* eslint-disable */
 import Image from "next/image";
-import React from "react";
 import Link from "next/link";
 
 const NewFooter = () => {
@@ -18,6 +17,7 @@ const NewFooter = () => {
               height={55}
               alt="Fashionistar Logo"
               className="w-10 h-10 md:w-[55px] md:h-[56px]"
+              style={{ width: "auto", height: "auto" }}
             />
             <h2 className="font-bon_foyage text-4xl text-[#333]">
               Fashionistar

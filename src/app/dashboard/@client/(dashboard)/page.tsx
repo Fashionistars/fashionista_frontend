@@ -1,5 +1,5 @@
-import React from "react";
 import Link from "next/link";
+import { connection } from "next/server";
 
 import OrderTable from "@/features/orders/components/OrderTable";
 // import girl from "../../../../../public/girl.png";
@@ -8,6 +8,7 @@ import { Search, CircleArrowDown } from "lucide-react";
 import { Suspense } from "react";
 
 const page = async () => {
+  await connection();
   const date = new Date();
 
   return (

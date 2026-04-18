@@ -1,38 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Raleway } from "next/font/google";
 import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import { Providers } from "@/components/providers";
 
 import "./globals.css";
-
-// ── Google Fonts ──────────────────────────────────────────────────────────────
-// NOTE: preload: false + fallback arrays prevent download warnings when
-// fonts.googleapis.com is unreachable (Playwright, offline dev, CI environments).
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-  preload: false, // avoids dev-time network errors when fonts.googleapis.com unreachable
-  adjustFontFallback: false, // prevents synthetic download on restricted networks
-  fallback: [
-    "system-ui",
-    "-apple-system",
-    "BlinkMacSystemFont",
-    "Segoe UI",
-    "sans-serif",
-  ],
-});
-
-const raleway = Raleway({
-  subsets: ["latin"],
-  variable: "--font-raleway",
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-  preload: false,
-  adjustFontFallback: false, // same — prevents network attempts when offline
-  fallback: ["Trebuchet MS", "Gill Sans", "system-ui", "sans-serif"],
-});
 
 // ── Local Fonts ───────────────────────────────────────────────────────────────
 const bonFoyage = localFont({
@@ -127,7 +98,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning // Required for next-themes
       data-scroll-behavior="smooth"
-      className={`${inter.variable} ${raleway.variable} ${bonFoyage.variable} ${satoshi.variable}`}
+      className={`${bonFoyage.variable} ${satoshi.variable}`}
     >
       <body className="min-h-screen bg-background font-raleway antialiased">
         <Providers>

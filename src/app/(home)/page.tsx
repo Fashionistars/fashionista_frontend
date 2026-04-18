@@ -125,6 +125,7 @@ export default async function Home(props: PageProps) {
           width={500}
           height={500}
           className="w-[200px] h-[232px] md:w-[370px] md:h-[450px] lg:w-[500px] lg:h-[582px] absolute left-0 md:left-6 bottom-0"
+          style={{ width: "auto", height: "auto" }}
         />
         <Image
           src="/adunni.png"

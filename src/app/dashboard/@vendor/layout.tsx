@@ -7,6 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import menu from "../../../../public/menu.svg";
 import Modal from "@/app/components/Modal";
+import { RoleGuard } from "@/features/auth/components/RoleGuard";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -15,7 +16,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     setIsOpen(false);
   }, [pathname]);
   return (
-    <div className="flex flex-col">
+    <RoleGuard requiredRole="vendor">
+      <div className="flex flex-col">
       <div className="p-[11px] w-full bg-[#F4F3EC]">
         <div className="flex items-center justify-between px-2.5 bg-[#EDE7D9] rounded-[5px] h-[50px] lg:hidden">
           <button
@@ -494,8 +496,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </Link>
         </nav>
       </div>
-      <div className="lg:ml-[25%] bg-[#F4F3EC] min-h-screen">{children}</div>
-    </div>
+        <div className="lg:ml-[25%] bg-[#F4F3EC] min-h-screen">{children}</div>
+      </div>
+    </RoleGuard>
   );
 };
 

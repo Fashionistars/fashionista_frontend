@@ -7,9 +7,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Eye, EyeOff, Loader2, Lock, ShieldCheck, KeyRound } from "lucide-react";
 import {
   PasswordResetConfirmEmailSchema,
@@ -39,13 +38,32 @@ type PasswordResetConfirmFormProps = EmailModeProps | PhoneModeProps;
 // ── Unified Form ──────────────────────────────────────────────────────────────
 
 export function PasswordResetConfirmForm(props: PasswordResetConfirmFormProps) {
-  const router = useRouter();
   const [showPw, setShowPw] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const redirectTimeoutRef = useRef<number | null>(null);
 
   const isEmailMode = props.mode === "email";
+
+  useEffect(() => {
+    return () => {
+      if (redirectTimeoutRef.current) {
+        window.clearTimeout(redirectTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const scheduleSignInRedirect = () => {
+    if (redirectTimeoutRef.current) {
+      window.clearTimeout(redirectTimeoutRef.current);
+    }
+
+    // Use a hard navigation so the auth shell fully refreshes after reset success.
+    redirectTimeoutRef.current = window.setTimeout(() => {
+      window.location.assign("/auth/sign-in");
+    }, 1400);
+  };
 
   const {
     register,
@@ -65,7 +83,7 @@ export function PasswordResetConfirmForm(props: PasswordResetConfirmFormProps) {
     onSuccess: (data) => {
       setErrorMsg(null);
       setSuccessMsg(data.message ?? "Password reset successful! You can now sign in.");
-      setTimeout(() => router.push("/auth/sign-in"), 2500);
+      scheduleSignInRedirect();
     },
     onError: (err) => {
       const parsed = parseApiError(err);
@@ -78,7 +96,7 @@ export function PasswordResetConfirmForm(props: PasswordResetConfirmFormProps) {
     onSuccess: (data) => {
       setErrorMsg(null);
       setSuccessMsg(data.message ?? "Password reset successful!");
-      setTimeout(() => router.push("/auth/sign-in"), 2500);
+      scheduleSignInRedirect();
     },
     onError: (err) => {
       const parsed = parseApiError(err);
@@ -157,7 +175,7 @@ export function PasswordResetConfirmForm(props: PasswordResetConfirmFormProps) {
             autoComplete="new-password"
             {...register("new_password")}
             className="w-full pl-10 pr-10 py-2.5 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all placeholder:text-muted-foreground/60"
-            placeholder="Min 8 chars, 1 uppercase, 1 number"
+            placeholder="Use a strong password or passphrase"
           />
           <button
             type="button"

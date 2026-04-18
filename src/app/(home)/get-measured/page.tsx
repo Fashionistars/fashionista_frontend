@@ -1,10 +1,9 @@
 "use client";
-import React from "react";
 
 const page = () => {
   const handleMeasurement = async () => {
     try {
-      const res = await fetch("");
+      await fetch("");
     } catch (error) {
       console.log(error);
     }

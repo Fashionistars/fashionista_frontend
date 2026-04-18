@@ -19,7 +19,6 @@ import type {
   RegisterPayload,
   OTPPayload,
   ResendOTPPayload,
-  PasswordResetRequestPayload,
   PasswordResetConfirmEmailPayload,
   PasswordResetConfirmPhonePayload,
   ChangePasswordPayload,

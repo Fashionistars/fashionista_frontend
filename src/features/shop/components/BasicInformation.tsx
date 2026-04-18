@@ -26,15 +26,13 @@ const BasicInformation = ({
       reader.onloadend = () => {
         setPreview(reader.result as string);
 
-        console.log(URL.createObjectURL(file));
-
         updateNewProductField({ image_1: file });
-        setFileName(newProductFields?.image_1.name);
+        setFileName(file.name);
       };
 
       reader.readAsDataURL(file);
     },
-    [newProductFields?.image_1.name, updateNewProductField],
+    [updateNewProductField],
   );
 
   // const { getRootProps, getInputProps } = useDropzone({

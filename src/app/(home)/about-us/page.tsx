@@ -1,11 +1,10 @@
 import Image from "next/image";
-import React from "react";
 
 const page = () => {
   return (
     <div className="bg-[#F4F3EC] flex flex-col gap-6 pb-9">
       <section className="flex flex-col gap-6 md:gap-10 md:flex-row py-5 px-1 md:px-20 md:h-[580px] ">
-        <div className="relative w-full md:w-1/2 md:h-full">
+        <div className="relative min-h-[320px] w-full md:h-full md:w-1/2">
           <Image
             src="/senator.svg"
             alt="About Fashionistar"
@@ -27,8 +26,8 @@ const page = () => {
               lorem.
             </p>
           </div>
-          <div className="grid grid-cols-3 gap-1 h-[150px] md:h-auto ">
-            <div className="relative w-full h-full">
+          <div className="grid grid-cols-3 gap-1 h-[150px] md:min-h-[160px]">
+            <div className="relative min-h-[150px] w-full">
               <Image
                 src="/man3_assets.svg"
                 alt=""
@@ -38,8 +37,8 @@ const page = () => {
               />
             </div>
           </div>
-          <div className="w-full h-full">
-            <div className="relative w-full h-full">
+          <div className="w-full min-h-[160px]">
+            <div className="relative min-h-[160px] w-full">
               <Image
                 src="/man4_asset.svg"
                 alt=""
@@ -49,8 +48,8 @@ const page = () => {
               />
             </div>
           </div>
-          <div className="w-full h-full">
-            <div className="relative w-full h-full">
+          <div className="w-full min-h-[160px]">
+            <div className="relative min-h-[160px] w-full">
               <Image
                 src="/man5_asset.svg"
                 alt=""
@@ -413,8 +412,8 @@ const page = () => {
           </div>
         </div>
       </section>
-      <section className="relative">
-        <div className="relative w-full">
+      <section className="relative min-h-[220px]">
+        <div className="relative min-h-[220px] w-full">
           <Image src="/bg.svg" alt="" fill sizes="100vw" className="w-full" />
         </div>
         <div className="absolute top-0 left-0 bg-[#fda600]/70 w-full h-full flex items-center justify-around">

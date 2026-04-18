@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 import { formatCurrency } from "@/lib/utils";
 interface CollectionsProps {
   id: string;
@@ -14,7 +13,7 @@ const LatestCollection = async ({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) => {
-  // Next.js 15: searchParams must be awaited before read
+  // Next.js 16 app routes hand searchParams in as a promise here.
   const resolvedParams = await searchParams;
 
   // Mock collections for development

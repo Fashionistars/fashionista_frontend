@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { category } from "@/lib/utils/mock-data";
 import Image from "next/image";
 import arrow from "../../../../public/arrows.svg";

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import Link from "next/link";
-import React from "react";
 import Image from "next/image";
+import { connection } from "next/server";
 import { getSingleOrder, orderAcceptReject } from "@/core/services/api";
 
 interface OrderProp {
@@ -10,16 +10,35 @@ interface OrderProp {
   };
 }
 const page = async ({ params }: OrderProp) => {
+  await connection();
   const { order_oid } = params;
 
   const order = await getSingleOrder(order_oid);
-  console.log(order);
+
+  if (!order) {
+    return (
+      <div className="space-y-6 rounded-[10px] bg-white p-8 font-satoshi shadow-sm">
+        <div className="flex items-center gap-2">
+          <Link href="/vendor/orders" className="text-sm font-medium text-primary">
+            Back to orders
+          </Link>
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-medium text-black">Order not available</h2>
+          <p className="text-sm text-[#585858]">
+            This order could not be loaded yet. Please refresh from the vendor
+            dashboard when live order data is available.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 pb-20">
       <div className="w-full h-[122px] px-6 flex justify-between mb-20 items-center bg-white">
         <div className="flex items-center gap-2">
-          <Link href="/orders">
+            <Link href="/vendor/orders">
             <svg
               width="24"
               height="24"

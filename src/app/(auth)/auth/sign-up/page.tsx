@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { RegisterForm } from "@/features/auth/components/RegisterForm";
 
 export const metadata: Metadata = {
@@ -24,7 +23,6 @@ export default async function SignUpPage({
 }) {
   const params = await searchParams;
   const role = params.role;
-  const returnUrl = params.returnUrl ?? "";
 
   // Guard: missing or invalid role → redirect to role selection
   if (!role || (role !== "vendor" && role !== "client")) {
@@ -51,16 +49,6 @@ export default async function SignUpPage({
             role={role as "vendor" | "client"}
           />
 
-          {/* Already have an account */}
-          <p className="text-center text-sm text-muted-foreground mt-6">
-            Already have an account?{" "}
-            <Link
-              href={returnUrl ? `/auth/sign-in?returnUrl=${encodeURIComponent(returnUrl)}` : "/auth/sign-in"}
-              className="text-primary font-semibold hover:underline"
-            >
-              Sign in
-            </Link>
-          </p>
         </div>
       </div>
     </div>

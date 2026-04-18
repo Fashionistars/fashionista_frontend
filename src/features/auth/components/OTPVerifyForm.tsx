@@ -18,6 +18,8 @@ import { toast } from "sonner";
 import { Loader2, RefreshCw } from "lucide-react";
 
 import { verifyOTP, resendOTP } from "@/features/auth/services/auth.service";
+import { getPostAuthRedirectPath } from "@/features/auth/lib/auth-routing";
+import { normalizeAuthUser } from "@/features/auth/lib/normalize-auth-user";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { RichErrorMessage } from "@/components/shared/feedback/RichErrorMessage";
 import { parseApiError } from "@/lib/api/parseApiError";
@@ -46,29 +48,6 @@ export function OTPVerifyForm() {
     return () => clearInterval(timer);
   }, [countdown]);
 
-  // Smart redirect after OTP verification
-  function handlePostAuthRedirect(role?: string, hasVendorProfile?: boolean, isStaff?: boolean) {
-    const normalizedRole = (role ?? "").toLowerCase();
-    const ADMIN_ROLES = ["admin", "staff", "support", "editor", "director"];
-    const isAdminUser = isStaff === true || ADMIN_ROLES.includes(normalizedRole);
-
-    if (isAdminUser) {
-      router.push("/admin-dashboard");
-      return;
-    }
-    if (normalizedRole === "vendor") {
-      const vendorSetupComplete = hasVendorProfile ?? false;
-      router.push(vendorSetupComplete ? "/vendor/dashboard" : "/vendor/setup");
-      return;
-    }
-    // Client redirect
-    if (returnUrl && returnUrl.startsWith("/")) {
-      router.push(returnUrl);
-      return;
-    }
-    router.push("/client/dashboard");
-  }
-
   const { mutate: verify, isPending: isVerifying } = useMutation({
     mutationFn: () =>
       verifyOTP({
@@ -79,22 +58,7 @@ export function OTPVerifyForm() {
     onSuccess: (data) => {
       setVerifyError(null);
       setTokens(data.access ?? "", data.refresh ?? "");
-
-      if (data.user) {
-        setUser({ ...data.user, role: data.user.role ?? data.role });
-      } else {
-        setUser({
-          id: data.user_id ?? "",
-          email: data.identifying_info?.includes("@") ? data.identifying_info : undefined,
-          phone: data.identifying_info?.startsWith("+") ? data.identifying_info : undefined,
-          first_name: data.identifying_info ?? "User",
-          last_name: "",
-          role: data.role,
-          is_verified: true,
-          is_staff: (data.role ?? "").toLowerCase() === "admin" ||
-                    (data.role ?? "").toLowerCase() === "staff",
-        });
-      }
+      setUser(normalizeAuthUser(data));
 
       const displayName = data.user?.first_name ?? data.identifying_info ?? "User";
       toast.success("✅ Verification successful!", {
@@ -102,10 +66,13 @@ export function OTPVerifyForm() {
         duration: 4000,
       });
 
-      handlePostAuthRedirect(
-        data.role ?? data.user?.role,
-        data.has_vendor_profile,
-        data.user?.is_staff,
+      router.push(
+        getPostAuthRedirectPath({
+          role: data.role ?? data.user?.role,
+          hasVendorProfile: data.has_vendor_profile,
+          isStaff: data.user?.is_staff,
+          returnUrl,
+        }),
       );
 
     },

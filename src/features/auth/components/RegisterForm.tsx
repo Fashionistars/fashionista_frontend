@@ -29,6 +29,8 @@ import { register } from "@/features/auth/services/auth.service";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { PhoneInputField } from "@/components/shared/forms/PhoneInputField";
 import { GoogleSignInButton } from "@/features/auth/components/GoogleSignInButton";
+import { getPostAuthRedirectPath } from "@/features/auth/lib/auth-routing";
+import { normalizeAuthUser } from "@/features/auth/lib/normalize-auth-user";
 import { RichErrorMessage, FieldError } from "@/components/shared/feedback/RichErrorMessage";
 import { parseApiError } from "@/lib/api/parseApiError";
 
@@ -84,8 +86,8 @@ export function RegisterForm({ role = "client" }: RegisterFormProps) {
       });
       // Pass returnUrl through to OTP page
       const otpHref = returnUrl
-        ? `/verify-otp?returnUrl=${encodeURIComponent(returnUrl)}`
-        : "/verify-otp";
+        ? `/auth/verify-otp?returnUrl=${encodeURIComponent(returnUrl)}`
+        : "/auth/verify-otp";
       router.push(otpHref);
     },
     onError: (error) => {
@@ -113,21 +115,7 @@ export function RegisterForm({ role = "client" }: RegisterFormProps) {
   // Helper for Google Auth success — with smart role-based redirect
   const handleGoogleSuccess = (data: LoginResponse) => {
     setTokens(data.access ?? "", data.refresh ?? "");
-
-    if (data.user) {
-      setUser({ ...data.user, role: data.user.role ?? data.role });
-    } else {
-      setUser({
-        id: data.user_id ?? "",
-        email: data.identifying_info?.includes("@") ? data.identifying_info : undefined,
-        phone: data.identifying_info?.startsWith("+") ? data.identifying_info : undefined,
-        first_name: data.identifying_info ?? "User",
-        last_name: "",
-        role: data.role,
-        is_verified: true,
-        is_staff: data.role === "admin",
-      });
-    }
+    setUser(normalizeAuthUser(data));
 
     const displayName = data.user?.first_name ?? data.identifying_info ?? "User";
     toast.success("Account created successfully! 🎉", {
@@ -135,18 +123,14 @@ export function RegisterForm({ role = "client" }: RegisterFormProps) {
       duration: 3000,
     });
 
-    // Smart redirect based on role
-    const effectiveRole = data.role ?? data.user?.role ?? "";
-    const isAdminRole = ["admin", "staff", "support", "editor", "director"].includes(effectiveRole.toLowerCase());
-    const isAdminUser = data.user?.is_staff === true;
-
-    if (isAdminRole || isAdminUser) {
-      router.push("/admin-dashboard");
-    } else if (effectiveRole === "vendor" || effectiveRole === "Vendor") {
-      router.push(data.has_vendor_profile ? "/vendor/dashboard" : "/vendor/setup");
-    } else {
-      router.push(returnUrl && returnUrl.startsWith("/") ? returnUrl : "/client/dashboard");
-    }
+    router.push(
+      getPostAuthRedirectPath({
+        role: data.role ?? data.user?.role,
+        hasVendorProfile: data.has_vendor_profile,
+        isStaff: data.user?.is_staff,
+        returnUrl,
+      }),
+    );
   };
 
 

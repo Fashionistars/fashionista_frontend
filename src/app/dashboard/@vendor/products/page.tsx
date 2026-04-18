@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import Link from "next/link";
 import MultiStep from "@/features/shop/components/MultiStep";
 
@@ -8,7 +7,7 @@ const page = () => {
     <div className="space-y-5 md:space-y-10 relative">
       <div className="hidden fixed top-14 md:top-0 right-0 w-full md:w-[75%] h-20 md:h-[16%] md:flex justify-between items-center bg-white px-6">
         <div className="flex items-center gap-2 ">
-          <Link href="/dashboard/products">
+          <Link href="/vendor/products">
             <svg
               width="24"
               height="24"
@@ -38,7 +37,7 @@ const page = () => {
         </div>
         <div className="flex items-center gap-5">
           <Link
-            href="/dashboard/products"
+            href="/vendor/products"
             className="font-satoshi font-medium text-sm text-[#858585] hover:text-black hover:font-semibold"
           >
             Cancel

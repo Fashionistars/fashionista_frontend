@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import TopBanner from "@/components/shared/utilities/TopBanner";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -56,7 +55,7 @@ const OrderTable = () => {
       className="align-top text-center box_shadow md:text-[15px] md:leading-5 text-[7px] leading-[9px] text-black"
     >
       <td className="py-2">
-        <Link href={`/orders/${item.id}`}>{item.id}</Link>
+        <Link href={`/vendor/orders/${item.id}`}>{item.id}</Link>
       </td>
       <td className="py-2">{item.date}</td>
       <td className="py-2">{item.customer_name}</td>
@@ -113,7 +112,11 @@ const OrderTable = () => {
             ].map(({ label, status }) => (
               <Link
                 key={status}
-                href={status ? `/orders?order-status=${status}` : "/orders"}
+                href={
+                  status
+                    ? `/vendor/orders?order-status=${status}`
+                    : "/vendor/orders"
+                }
                 className={`grow-0 order-[0] text-[10px] leading-[13.5px] md:text-base py-1.5 px-2.5 md:py-2 md:px-4 rounded-xl md:rounded-[30px] transition-colors duration-100 ease-in-out ${
                   (status === "" ? !order_status : order_status === status)
                     ? "bg-[#fda600] text-black"

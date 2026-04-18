@@ -1,5 +1,4 @@
 import TopBanner from "@/components/shared/utilities/TopBanner";
-import React from "react";
 
 interface CustomerProp {
   name: string;
@@ -45,10 +44,10 @@ const page = () => {
     },
   ];
 
-  const customerList = customers.map((customer) => {
+  const customerList = customers.map((customer, index) => {
     return (
       <tr
-        key={customer.name}
+        key={`${customer.name}-${customer.status}-${customer.items}-${index}`}
         className="h-[50px] text-black text-[15px] leading-[21px]"
       >
         <td className="pl-2 py-6 flex justify-end">

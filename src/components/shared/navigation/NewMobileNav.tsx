@@ -1,6 +1,6 @@
 /* eslint-disable */
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import AccountOptions from "@/components/shared/overlays/AccountOptions";
@@ -23,8 +23,11 @@ const NewMobileNav = () => {
   const [showNav, setShowNav] = useState<boolean>(false);
   const [showOptions, setShowOptions] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState(false);
+  const closeOptions = useCallback(() => setShowOptions(false), []);
+
   useEffect(() => {
     setShowNav(false);
+    setShowOptions(false);
   }, [pathname]);
   return (
     <div
@@ -40,6 +43,7 @@ const NewMobileNav = () => {
           width={40}
           height={40}
           className="w-10 h-10 "
+          style={{ width: "auto", height: "auto" }}
         />
         <h2 className="font-bon_foyage text-2xl text-[#333]">Fashionistar</h2>
       </div>
@@ -51,10 +55,15 @@ const NewMobileNav = () => {
           <Search />
         </button>
         <div className="relative">
-          <button type="button" onClick={() => setShowOptions((prev) => !prev)}>
+          <button
+            type="button"
+            aria-expanded={showOptions}
+            aria-controls="account-options-panel"
+            onClick={() => setShowOptions((prev) => !prev)}
+          >
             <UserRound />
           </button>
-          <AccountOptions showOptions={showOptions} onClose={() => setShowOptions(false)} />
+          <AccountOptions showOptions={showOptions} onClose={closeOptions} />
         </div>
 
         <div className="relative flex">
@@ -81,6 +90,7 @@ const NewMobileNav = () => {
               width={40}
               height={40}
               className="w-10 h-10 "
+              style={{ width: "auto", height: "auto" }}
             />
             <h2 className="font-bon_foyage text-2xl text-[#fff]">
               Fashionistar
@@ -210,9 +220,9 @@ const NewMobileNav = () => {
               Vendors
             </Link>
             <Link
-              href="/shop"
+              href="/shops"
               className={`w-full py-3 border-b border-[#BBBBBB] px-4 flex items-center gap-3 font-medium text-lg font-raleway ${
-                pathname == "/shop"
+                pathname == "/shops"
                   ? "bg-[#fda600] text-white"
                   : "bg-white text-[#141414]"
               }`}
@@ -314,7 +324,7 @@ const NewMobileNav = () => {
           <div className="bg-[#F4F5FB]/10 rounded-xl border border-[#F4F5FB] py-5 px-3 space-y-5">
             <div className="flex items-center justify-between border-b border-[#BBBBBB] py-2 px-2">
               <Link
-                href="/"
+                href="/contact-us"
                 className="font-raleway font-medium text-lg text-[#141414] flex items-center gap-2 border-r w-1/2 border-[#BBB]"
               >
                 <Headphones />
@@ -331,7 +341,7 @@ const NewMobileNav = () => {
             </div>
             <div className="flex items-center justify-between border-b border-[#BBBBBB] py-2 px-2">
               <Link
-                href="/"
+                href="/blog"
                 className="font-raleway font-medium text-lg text-[#141414] flex items-center gap-2 border-r w-1/2 border-[#BBB]"
               >
                 <svg
@@ -369,7 +379,7 @@ const NewMobileNav = () => {
               </Link>
 
               <Link
-                href="/about-us"
+                href="/pages"
                 className="flex items-center gap-2 font-raleway font-medium text-lg text-[#141414]"
               >
                 <MessageSquare />
@@ -377,15 +387,15 @@ const NewMobileNav = () => {
               </Link>
             </div>
             <Link
-              href="/location"
+              href="/contact-us"
               className="flex items-center gap-2 font-raleway font-medium text-lg text-[#141414]"
             >
               <MapPin /> Our Location
             </Link>
             <div className="flex items-center justify-between">
               <div className="relative w-full">
-                {/* Sidebar account section — always visible in open sidebar */}
-                <AccountOptions showOptions={showOptions} onClose={() => setShowOptions(false)} />
+                {/* Reuse the shared account menu in the sidebar without duplicating close logic. */}
+                <AccountOptions showOptions={showOptions} onClose={closeOptions} />
               </div>
             </div>
           </div>

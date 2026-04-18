@@ -14,162 +14,134 @@
  * already cloned into node_modules. No CDN, no external fetch. Future
  * lucide-react version upgrades only affect this file, nowhere else.
  *
- * Navigation strategy (FIX 3):
- *   close() uses requestAnimationFrame() so Next.js Link can process
- *   its href BEFORE React unmounts the overlay. This prevents the
- *   "URL changes but page stays" bug on unauthenticated state.
+ * Navigation strategy:
+ *   - The dropdown only mounts while visible so hidden panels do not keep
+ *     reacting to parent renders.
+ *   - We close on pathname changes, not on every new onClose function
+ *     identity, which keeps the trigger responsive in both navbars.
  */
-import React, { useEffect, useRef, useCallback } from "react";
-import Link from "next/link";
+
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 // ── All icons from lucide-react (locally installed — production-safe) ─────────
 import {
-  // Shared / Auth
-  LogOut,
-  LogIn,
-  UserPlus,
-  UserRound,
-  Loader2,
-
-  // Client menu
-  LayoutDashboard,
+  BarChart3,
+  Gem,
   Heart,
-  ShoppingBag,
+  LayoutDashboard,
+  Loader2,
+  LogIn,
+  LogOut,
+  Package,
   PackageSearch,
   Settings,
-  Star,
-
-  // Vendor menu
-  Store,
-  BarChart3,
-  Package,
-  Tags,
-  Wallet,
-  HelpCircle,
-
-  // Admin / Staff menu
   Shield,
-  Users,
-  ScrollText,
-  AlertTriangle,
-  Sliders,
-  Database,
-
-  // Guest panel
-  Radio,
+  ShoppingBag,
+  Store,
+  UserPlus,
+  UserRound,
   UserRoundCheck,
-
-  // Role badge icons
-  ShieldCheck,
-  Gem,
-  Crown,
+  Users,
+  Wallet,
+  ScrollText,
+  Star,
+  Shapes,
+  BadgeDollarSign,
 } from "lucide-react";
 
-import { useAuthStore } from "@/features/auth/store/auth.store";
+import { normalizeCanonicalRole } from "@/features/auth/lib/auth-routing";
 import { logout as logoutFn } from "@/features/auth/services/auth.service";
-
-// ── Role Groups ───────────────────────────────────────────────────────────────
-const VENDOR_ROLES = new Set([
-  "vendor",
-  "super_vendor",
-  "Vendor",           // back-compat: capitalised variant
-  "Super Vendor",
-]);
-
-const ADMIN_ROLES = new Set([
-  "admin",       "super_admin",
-  "staff",       "super_staff",
-  "editor",      "super_editor",
-  "support",     "super_support",
-  "assistant",   "super_assistant",
-  "moderator",   "super_moderator",
-  // Django is_staff users without an explicit RBAC role
-  "Admin",  "Staff",  "Support",  "Moderator",  "Editor",
-]);
+import { useAuthStore } from "@/features/auth/store/auth.store";
 
 type RoleGroup = "client" | "vendor" | "admin" | "guest";
 
-function getRoleGroup(role?: string | null, is_staff?: boolean): RoleGroup {
-  if (!role && !is_staff) return "guest";
-  if (is_staff && !VENDOR_ROLES.has(role ?? "")) return "admin";
-  if (ADMIN_ROLES.has(role ?? "")) return "admin";
-  if (VENDOR_ROLES.has(role ?? "")) return "vendor";
-  return "client";
-}
-
-// ── Shared link className ─────────────────────────────────────────────────────
 const linkCls =
-  "text-foreground font-raleway font-medium text-sm flex items-center gap-2.5 py-2 px-2.5 rounded-lg hover:bg-muted/60 hover:text-primary transition-colors";
+  "w-full text-left text-foreground font-raleway font-medium text-sm flex items-center gap-2.5 py-2 px-2.5 rounded-lg hover:bg-muted/60 hover:text-primary transition-colors";
 const iconCls = "w-[15px] h-[15px] shrink-0";
 
-// ── Role badge helper ─────────────────────────────────────────────────────────
-function RoleBadge({
-  group,
-  role,
-}: {
-  group: RoleGroup;
-  role?: string | null;
-}) {
+function getRoleGroup(role?: string | null, isStaff?: boolean): RoleGroup {
+  const canonicalRole = normalizeCanonicalRole(role, isStaff === true);
+  if (canonicalRole === "admin") return "admin";
+  if (canonicalRole === "vendor") return "vendor";
+  if (canonicalRole === "client") return "client";
+  return "guest";
+}
+
+function RoleBadge({ group }: { group: RoleGroup }) {
   if (group === "admin") {
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-rose-100 text-rose-700">
-        <Shield className="w-2.5 h-2.5" />
-        {role ? role.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) : "Staff"}
+      <span className="inline-flex items-center gap-1 rounded-full bg-rose-100 px-1.5 py-0.5 text-[10px] font-semibold text-rose-700">
+        <Shield className="h-2.5 w-2.5" />
+        Admin
       </span>
     );
   }
+
   if (group === "vendor") {
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700">
-        <Gem className="w-2.5 h-2.5" />
-        {role ? role.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) : "Vendor"}
+      <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700">
+        <Gem className="h-2.5 w-2.5" />
+        Vendor
       </span>
     );
   }
-  // client / super_client
-  if (role?.includes("super")) {
+
+  if (group === "client") {
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-violet-100 text-violet-700">
-        <Crown className="w-2.5 h-2.5" />
-        Super Client
+      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary">
+        <UserRound className="h-2.5 w-2.5" />
+        Client
       </span>
     );
   }
+
   return null;
 }
 
-// ── Sub-menus ─────────────────────────────────────────────────────────────────
+function MenuAction({
+  id,
+  href,
+  label,
+  Icon,
+  onNavigate,
+}: {
+  id: string;
+  href: string;
+  label: string;
+  Icon: React.ComponentType<{ className?: string }>;
+  onNavigate: () => void;
+}) {
+  const router = useRouter();
+
+  return (
+    <button
+      id={id}
+      type="button"
+      onClick={() => {
+        onNavigate();
+        router.push(href);
+      }}
+      className={linkCls}
+    >
+      <Icon className={iconCls} />
+      {label}
+    </button>
+  );
+}
 
 function ClientMenu({ close }: { close: () => void }) {
   return (
     <nav aria-label="Client account menu" className="flex flex-col gap-0.5 py-2">
-      <Link id="nav-client-dashboard" href="/client/dashboard" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <LayoutDashboard className={iconCls} />
-        My Dashboard
-      </Link>
-      <Link id="nav-client-wishlist" href="/wishlist" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <Heart className={iconCls} />
-        My Wishlist
-      </Link>
-      <Link id="nav-client-orders" href="/client/orders" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <ShoppingBag className={iconCls} />
-        My Orders
-      </Link>
-      <Link id="nav-client-tracking" href="/client/tracking" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <PackageSearch className={iconCls} />
-        Track a Package
-      </Link>
-      <Link id="nav-client-reviews" href="/client/reviews" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <Star className={iconCls} />
-        My Reviews
-      </Link>
-      <Link id="nav-client-settings" href="/client/settings" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <Settings className={iconCls} />
-        Account Settings
-      </Link>
+      <MenuAction id="nav-client-dashboard" href="/client/dashboard" label="My Dashboard" Icon={LayoutDashboard} onNavigate={close} />
+      <MenuAction id="nav-client-account" href="/client/dashboard/account-details" label="Account Details" Icon={UserRound} onNavigate={close} />
+      <MenuAction id="nav-client-address" href="/client/dashboard/address" label="Saved Addresses" Icon={Store} onNavigate={close} />
+      <MenuAction id="nav-client-orders" href="/client/dashboard/orders" label="My Orders" Icon={ShoppingBag} onNavigate={close} />
+      <MenuAction id="nav-client-track" href="/client/dashboard/orders/track-order" label="Track an Order" Icon={PackageSearch} onNavigate={close} />
+      <MenuAction id="nav-client-wallet" href="/client/dashboard/wallet" label="Wallet" Icon={Wallet} onNavigate={close} />
+      <MenuAction id="nav-client-wishlist" href="/wishlist" label="Wishlist" Icon={Heart} onNavigate={close} />
     </nav>
   );
 }
@@ -177,42 +149,14 @@ function ClientMenu({ close }: { close: () => void }) {
 function VendorMenu({ close }: { close: () => void }) {
   return (
     <nav aria-label="Vendor account menu" className="flex flex-col gap-0.5 py-2">
-      <Link id="nav-vendor-dashboard" href="/vendor/dashboard" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <LayoutDashboard className={iconCls} />
-        Vendor Dashboard
-      </Link>
-      <Link id="nav-vendor-shop" href="/vendor/shop" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <Store className={iconCls} />
-        My Shop
-      </Link>
-      <Link id="nav-vendor-products" href="/vendor/products" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <Package className={iconCls} />
-        My Products
-      </Link>
-      <Link id="nav-vendor-orders" href="/vendor/orders" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <ShoppingBag className={iconCls} />
-        Orders
-      </Link>
-      <Link id="nav-vendor-analytics" href="/vendor/analytics" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <BarChart3 className={iconCls} />
-        Sales Analytics
-      </Link>
-      <Link id="nav-vendor-promotions" href="/vendor/promotions" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <Tags className={iconCls} />
-        Promotions
-      </Link>
-      <Link id="nav-vendor-payouts" href="/vendor/payouts" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <Wallet className={iconCls} />
-        Payouts
-      </Link>
-      <Link id="nav-vendor-settings" href="/vendor/settings" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <Settings className={iconCls} />
-        Shop Settings
-      </Link>
-      <Link id="nav-vendor-support" href="/vendor/support" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <HelpCircle className={iconCls} />
-        Seller Support
-      </Link>
+      <MenuAction id="nav-vendor-dashboard" href="/vendor/dashboard" label="Vendor Dashboard" Icon={LayoutDashboard} onNavigate={close} />
+      <MenuAction id="nav-vendor-products" href="/vendor/products" label="Products" Icon={Package} onNavigate={close} />
+      <MenuAction id="nav-vendor-orders" href="/vendor/orders" label="Orders" Icon={ShoppingBag} onNavigate={close} />
+      <MenuAction id="nav-vendor-analytics" href="/vendor/analytics" label="Analytics" Icon={BarChart3} onNavigate={close} />
+      <MenuAction id="nav-vendor-payments" href="/vendor/payments" label="Payments" Icon={BadgeDollarSign} onNavigate={close} />
+      <MenuAction id="nav-vendor-customers" href="/vendor/customers" label="Customers" Icon={Users} onNavigate={close} />
+      <MenuAction id="nav-vendor-wallet" href="/vendor/wallet" label="Wallet" Icon={Wallet} onNavigate={close} />
+      <MenuAction id="nav-vendor-settings" href="/vendor/settings" label="Settings" Icon={Settings} onNavigate={close} />
     </nav>
   );
 }
@@ -220,38 +164,16 @@ function VendorMenu({ close }: { close: () => void }) {
 function AdminMenu({ close }: { close: () => void }) {
   return (
     <nav aria-label="Admin account menu" className="flex flex-col gap-0.5 py-2">
-      <Link id="nav-admin-dashboard" href="/admin/dashboard" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <LayoutDashboard className={iconCls} />
-        Admin Dashboard
-      </Link>
-      <Link id="nav-admin-users" href="/admin/users" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <Users className={iconCls} />
-        Manage Users
-      </Link>
-      <Link id="nav-admin-audit" href="/admin/audit-logs" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <ScrollText className={iconCls} />
-        Audit Logs
-      </Link>
-      <Link id="nav-admin-reports" href="/admin/reports" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <AlertTriangle className={iconCls} />
-        Reports & Flags
-      </Link>
-      <Link id="nav-admin-config" href="/admin/config" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <Sliders className={iconCls} />
-        System Config
-      </Link>
-      <Link id="nav-admin-db" href="/admin/db" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <Database className={iconCls} />
-        Database Tools
-      </Link>
-      <Link id="nav-admin-security" href="/admin/security" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <ShieldCheck className={iconCls} />
-        Security Centre
-      </Link>
-      <Link id="nav-admin-settings" href="/admin/settings" onClick={() => setTimeout(close, 150)} className={linkCls}>
-        <Settings className={iconCls} />
-        Platform Settings
-      </Link>
+      <MenuAction id="nav-admin-dashboard" href="/admin-dashboard" label="Admin Dashboard" Icon={LayoutDashboard} onNavigate={close} />
+      <MenuAction id="nav-admin-accounts" href="/admin-dashboard/accounts" label="Accounts" Icon={Users} onNavigate={close} />
+      <MenuAction id="nav-admin-sellers" href="/admin-dashboard/sellers" label="Sellers" Icon={Store} onNavigate={close} />
+      <MenuAction id="nav-admin-products" href="/admin-dashboard/products" label="Products" Icon={Package} onNavigate={close} />
+      <MenuAction id="nav-admin-orders" href="/admin-dashboard/orders" label="Orders" Icon={ShoppingBag} onNavigate={close} />
+      <MenuAction id="nav-admin-transactions" href="/admin-dashboard/transactions" label="Transactions" Icon={ScrollText} onNavigate={close} />
+      <MenuAction id="nav-admin-collections" href="/admin-dashboard/collections" label="Collections" Icon={Shapes} onNavigate={close} />
+      <MenuAction id="nav-admin-reviews" href="/admin-dashboard/reviews" label="Reviews" Icon={Star} onNavigate={close} />
+      <MenuAction id="nav-admin-brands" href="/admin-dashboard/brands" label="Brands" Icon={Gem} onNavigate={close} />
+      <MenuAction id="nav-admin-settings" href="/admin-dashboard/settings" label="Platform Settings" Icon={Settings} onNavigate={close} />
     </nav>
   );
 }
@@ -263,58 +185,21 @@ function GuestPanel({
   close: () => void;
   pathname: string;
 }) {
+  const signInHref = `/auth/sign-in?returnUrl=${encodeURIComponent(pathname)}`;
+  const trackingHref = `/auth/sign-in?returnUrl=${encodeURIComponent("/client/dashboard/orders/track-order")}`;
+
   return (
     <div className="flex flex-col gap-0.5 py-1">
-      <p className="text-xs text-muted-foreground pb-3 mb-1 border-b border-border/50">
+      <p className="mb-1 border-b border-border/50 pb-3 text-xs text-muted-foreground">
         Sign in to access your account
       </p>
-      {/*
-       * NOTE: Removed onPointerDown and synchronous onClick={close} because they
-       * unmount the overlay BEFORE Next.js `<Link>` can process the navigation event.
-       * The fallback is a 150ms timeout which gives the browser enough time to register
-       * the click and queue the route transition.
-       */}
-      <Link
-        id="nav-signin-link"
-        href={`/auth/sign-in?returnUrl=${encodeURIComponent(pathname)}`}
-        onClick={() => setTimeout(close, 150)}
-        className="text-foreground font-raleway font-semibold text-sm flex items-center gap-2.5 py-2 px-2.5 rounded-lg hover:bg-muted/60 hover:text-primary transition-colors"
-      >
-        <LogIn className={iconCls} />
-        Sign In
-      </Link>
-      <Link
-        id="nav-register-client-link"
-        href="/auth/choose-role"
-        onClick={() => setTimeout(close, 150)}
-        className={linkCls}
-      >
-        <UserPlus className={iconCls} />
-        Create Account
-      </Link>
-      <Link
-        id="nav-order-tracking-guest"
-        href="/"
-        onClick={() => setTimeout(close, 150)}
-        className={linkCls}
-      >
-        <Radio className={iconCls} />
-        Order Tracking
-      </Link>
-      <Link
-        id="nav-register-vendor-link"
-        href="/auth/choose-role?role=vendor"
-        onClick={() => setTimeout(close, 150)}
-        className={linkCls}
-      >
-        <UserRoundCheck className={iconCls} />
-        Become a Vendor
-      </Link>
+      <MenuAction id="nav-signin-link" href={signInHref} label="Sign In" Icon={LogIn} onNavigate={close} />
+      <MenuAction id="nav-register-client-link" href="/auth/choose-role" label="Create Account" Icon={UserPlus} onNavigate={close} />
+      <MenuAction id="nav-order-tracking-guest" href={trackingHref} label="Track an Order" Icon={PackageSearch} onNavigate={close} />
+      <MenuAction id="nav-register-vendor-link" href="/auth/sign-up?role=vendor" label="Become a Vendor" Icon={UserRoundCheck} onNavigate={close} />
     </div>
   );
 }
-
-// ── Main Component ────────────────────────────────────────────────────────────
 
 const AccountOptions = ({
   showOptions,
@@ -325,18 +210,29 @@ const AccountOptions = ({
 }) => {
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, user, clearAuth } = useAuthStore();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user);
+  const clearAuth = useAuthStore((state) => state.clearAuth);
+  const [hydrated, setHydrated] = useState(false);
+  const closeRef = useRef(onClose);
+  const hasSeenInitialPath = useRef(false);
 
-  // Guard: skip onClose on first mount — only close on subsequent route changes
-  const isMounted = useRef(false);
   useEffect(() => {
-    if (!isMounted.current) {
-      isMounted.current = true;
+    closeRef.current = onClose;
+  }, [onClose]);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hasSeenInitialPath.current) {
+      hasSeenInitialPath.current = true;
       return;
     }
-    // Route changed → close dropdown overlay (primary close mechanism)
-    if (onClose) onClose();
-  }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    closeRef.current?.();
+  }, [pathname]);
 
   const { mutate: doLogout, isPending: isLoggingOut } = useMutation({
     mutationFn: logoutFn,
@@ -347,24 +243,16 @@ const AccountOptions = ({
     },
   });
 
-  // Derive role group once — drives which sub-menu renders
-  const roleGroup: RoleGroup = isAuthenticated
-    ? getRoleGroup(user?.role, user?.is_staff)
-    : "guest";
+  const roleGroup: RoleGroup =
+    hydrated && isAuthenticated
+      ? getRoleGroup(user?.role, user?.is_staff)
+      : "guest";
 
   const displayName =
     user?.first_name
       ? `${user.first_name}${user.last_name ? ` ${user.last_name}` : ""}`
       : user?.email ?? user?.phone ?? "My Account";
 
-  // RAF-deferred close — see FIX 3 header comment above
-  const close = useCallback(() => {
-    requestAnimationFrame(() => {
-      onClose?.();
-    });
-  }, [onClose]);
-
-  // ── User header avatar icon colour per role group ─────────────────────────
   const avatarBg =
     roleGroup === "admin"
       ? "bg-rose-100"
@@ -378,6 +266,14 @@ const AccountOptions = ({
         ? "text-amber-600"
         : "text-primary";
 
+  const close = () => {
+    onClose?.();
+  };
+
+  if (!showOptions) {
+    return null;
+  }
+
   return (
     <div
       id="account-options-panel"
@@ -385,48 +281,37 @@ const AccountOptions = ({
       aria-label="Account options"
       style={{ boxShadow: "0px 4px 25px 0px #0000001A" }}
       className={`
-        w-[292px] p-4 rounded-xl bg-white absolute right-0 z-50
+        absolute right-0 top-[calc(100%+0.75rem)] z-50 w-[292px] rounded-xl bg-white p-4
         divide-y divide-border/50
-        ${showOptions ? "flex flex-col" : "hidden"}
+        flex flex-col
         animate-in fade-in-0 zoom-in-95 duration-150
       `}
     >
-      {isAuthenticated ? (
+      {roleGroup !== "guest" ? (
         <>
-          {/* ── User header ───────────────────────────────────────────────── */}
-          <div className="pb-3 mb-1">
+          <div className="mb-1 pb-3">
             <div className="flex items-center gap-3">
-              {/* Avatar circle */}
-              <div
-                className={`w-9 h-9 rounded-full ${avatarBg} flex items-center justify-center shrink-0`}
-              >
+              <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${avatarBg}`}>
                 {roleGroup === "admin" ? (
-                  <Shield className={`w-4 h-4 ${avatarIconColour}`} />
+                  <Shield className={`h-4 w-4 ${avatarIconColour}`} />
                 ) : roleGroup === "vendor" ? (
-                  <Store className={`w-4 h-4 ${avatarIconColour}`} />
+                  <Store className={`h-4 w-4 ${avatarIconColour}`} />
                 ) : (
-                  <UserRound className={`w-4 h-4 ${avatarIconColour}`} />
+                  <UserRound className={`h-4 w-4 ${avatarIconColour}`} />
                 )}
               </div>
 
-              {/* Name + role badge */}
               <div className="min-w-0 flex-1">
-                <p className="font-semibold text-sm text-foreground truncate leading-tight">
+                <p className="truncate text-sm font-semibold leading-tight text-foreground">
                   {displayName}
                 </p>
                 <div className="mt-0.5">
-                  <RoleBadge group={roleGroup} role={user?.role} />
-                  {!user?.role && (
-                    <span className="text-xs text-muted-foreground capitalize">
-                      {roleGroup === "admin" ? "Staff" : roleGroup === "vendor" ? "Vendor" : "Customer"} account
-                    </span>
-                  )}
+                  <RoleBadge group={roleGroup} />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* ── Role-specific menu ────────────────────────────────────────── */}
           {roleGroup === "vendor" ? (
             <VendorMenu close={close} />
           ) : roleGroup === "admin" ? (
@@ -435,29 +320,25 @@ const AccountOptions = ({
             <ClientMenu close={close} />
           )}
 
-          {/* ── Sign-out ──────────────────────────────────────────────────── */}
-          <div className="pt-2 mt-1">
+          <div className="mt-1 pt-2">
             <button
               id="nav-logout-btn"
+              type="button"
               onClick={() => {
-                doLogout();
                 close();
+                doLogout();
               }}
               disabled={isLoggingOut}
-              aria-label="Sign out of your account"
-              className="
-                w-full text-destructive font-raleway font-medium text-sm
-                flex items-center gap-2.5 py-2 px-2.5 rounded-lg
-                hover:bg-destructive/5 transition-colors
-                disabled:opacity-50 disabled:cursor-not-allowed
-              "
+              className="w-full rounded-lg px-2.5 py-2 text-left text-sm font-medium text-destructive transition-colors hover:bg-destructive/5 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isLoggingOut ? (
-                <Loader2 className="w-[15px] h-[15px] animate-spin" />
-              ) : (
-                <LogOut className="w-[15px] h-[15px]" />
-              )}
-              {isLoggingOut ? "Signing out…" : "Sign Out"}
+              <span className="flex items-center gap-2.5">
+                {isLoggingOut ? (
+                  <Loader2 className="h-[15px] w-[15px] animate-spin" />
+                ) : (
+                  <LogOut className="h-[15px] w-[15px]" />
+                )}
+                {isLoggingOut ? "Signing out…" : "Sign Out"}
+              </span>
             </button>
           </div>
         </>

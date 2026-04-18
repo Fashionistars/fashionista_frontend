@@ -1,0 +1,10 @@
+version: 3
+
+agent:
+  authtoken: ${NGROK_FRONTEND_TOKEN}
+
+endpoints:
+  fashionista-frontend:
+    proto: http
+    addr: 3000
+    host_header: rewrite

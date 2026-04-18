@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useCallback, useState } from "react";
 import { Search, UserRound, ShoppingCart } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
@@ -11,6 +11,8 @@ const NewNavbar = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const pathname = usePathname();
+  const closeOptions = useCallback(() => setShowOptions(false), []);
+
   return (
     <div
       className="hidden md:flex md:flex-wrap lg:flex-nowrap justify-between bg-white items-center py-5 px-2 lg:px-20 sticky top-0 z-40 "
@@ -26,6 +28,7 @@ const NewNavbar = () => {
           width={55}
           height={56}
           className="w-10 h-10 md:w-[55px] md:h-[56px]"
+          style={{ width: "auto", height: "auto" }}
         />
         <h2 className="font-bon_foyage text-2xl md:text-4xl text-[#333]">
           Fashionistar
@@ -50,7 +53,7 @@ const NewNavbar = () => {
             <Link
               href="/categories"
               className={`font-raleway text-lg text-[#333] hover:text-[#fda600] ${
-                pathname == "/category"
+                pathname == "/categories"
                   ? "font-bold text-[#fda600]"
                   : "font-medium text-[#333]"
               } grow-0`}
@@ -111,12 +114,14 @@ const NewNavbar = () => {
         <div className="flex items-center space-x-2 md:space-x-4">
           <div className="relative">
             <button
-              className=""
+              type="button"
+              aria-expanded={showOptions}
+              aria-controls="account-options-panel"
               onClick={() => setShowOptions((prev) => !prev)}
             >
               <UserRound />
             </button>
-            <AccountOptions showOptions={showOptions} onClose={() => setShowOptions(false)} />
+            <AccountOptions showOptions={showOptions} onClose={closeOptions} />
           </div>
 
           <div className="relative flex">

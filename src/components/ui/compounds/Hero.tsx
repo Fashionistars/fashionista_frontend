@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -49,6 +48,7 @@ const Hero = () => {
           <Image
             src="/heroimg.png"
             alt=""
+            priority
             className="w-[275px] h-[300px] md:w-[505px] md:h-[550px] max-w-full"
             width={505}
             height={550}

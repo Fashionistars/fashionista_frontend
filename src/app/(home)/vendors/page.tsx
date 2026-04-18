@@ -1,4 +1,3 @@
-import React from "react";
 import VendorCard from "@/components/ui/compounds/VendorCard";
 // import { vendor } from "@/lib/utils/mock-data";
 import { getAllVendors } from "@/core/services/api";

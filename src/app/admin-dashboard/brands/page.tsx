@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import { vendor } from "@/lib/utils/mock-data";
 import Image from "next/image";
