@@ -256,7 +256,12 @@ function RenderedGoogleButton({
   }
 
   return (
-    <div className={`w-full ${className}`}>
+    <div
+      id="google-auth-btn"
+      data-testid="google-auth-btn"
+      aria-label={label}
+      className={`w-full ${className}`}
+    >
       {/* Keep a local loading shell so auth pages do not jump while GIS mounts. */}
       {!isReady ? (
         <div className="flex w-full items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm">
@@ -266,7 +271,7 @@ function RenderedGoogleButton({
       <div
         ref={containerRef}
         className={`${isReady ? "block" : "hidden"} w-full overflow-hidden rounded-xl`}
-        aria-label={label}
+        aria-label={`${label} button`}
       />
     </div>
   );

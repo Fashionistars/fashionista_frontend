@@ -299,7 +299,7 @@ export function FieldError({
     <p
       role="alert"
       className={`
-        flex items-center gap-1 text-xs text-red-600 mt-0.5
+        mt-0.5 flex items-center gap-1 text-xs text-destructive text-red-600
         animate-[auth-alert-in_0.15s_cubic-bezier(0.16,1,0.3,1)_both]
         ${className}
       `}
