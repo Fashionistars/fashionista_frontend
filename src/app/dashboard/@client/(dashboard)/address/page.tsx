@@ -1,5 +1,4 @@
 import { fetchWithAuth } from "@/core/api/middleware";
-import React from "react";
 
 const page = async () => {
   const getAddress = await fetchWithAuth("/client/shipping-address");

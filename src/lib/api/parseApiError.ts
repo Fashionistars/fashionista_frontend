@@ -32,10 +32,10 @@ const URL_REGEX = /(https?:\/\/[^\s,]+|\/[a-zA-Z0-9/_-]+\/)/g;
 
 // Relative paths that map to app routes (for clickable internal links)
 const INTERNAL_PATH_MAP: Record<string, string> = {
-  "/auth/resend-otp/": "/verify-otp",
+  "/auth/resend-otp/": "/auth/verify-otp",
   "/auth/login/": "/auth/sign-in",
   "/auth/register/": "/auth/choose-role",
-  "/auth/forgot-password/": "/forgot-password",
+  "/auth/forgot-password/": "/auth/forgot-password",
 };
 
 function extractLinks(text: string): Array<{ text: string; href: string }> {

@@ -1,6 +1,5 @@
 // @ts-nocheck
-import React from "react";
-import OrderTable from "@/components/OrdersTable";
+import { OrderTable } from "@/features/orders/components";
 import { Suspense } from "react";
 import { getVendorOrders } from "@/core/services/api";
 import { OrderProp } from "@/types";

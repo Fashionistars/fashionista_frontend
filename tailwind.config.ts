@@ -4,7 +4,7 @@ import animatePlugin from "tailwindcss-animate";
 
 const config: Config = {
   // ── Dark Mode: class-based (controlled by next-themes) ──────────────────
-  darkMode: ["class"],
+  darkMode: "class",
 
   // ── Content Paths ─────────────────────────────────────────────────────────
   content: [

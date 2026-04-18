@@ -38,6 +38,7 @@ import { useEffect } from 'react';
 import { useAuthStore } from '@/features/auth/store/auth.store';
 import { apiSync } from '@/core/api/client.sync';
 import { AUTH_ENDPOINTS } from '@/core/constants/api.constants';
+import { normalizeAuthUser } from '@/features/auth/lib/normalize-auth-user';
 
 export function useAuthHydration(): void {
   const accessToken      = useAuthStore((s) => s.accessToken);
@@ -55,22 +56,7 @@ export function useAuthHydration(): void {
       try {
         const { data } = await apiSync.get(AUTH_ENDPOINTS.ME);
         if (!cancelled) {
-          // MeSerializer returns `user_id` (not `id`) to avoid shadowing Django's
-          // internal pk. We remap it here so AuthUser.id is always populated.
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const raw = data as Record<string, any>;
-          setUser({
-            id: raw.user_id ?? raw.id ?? '',
-            email: raw.email ?? undefined,
-            phone: raw.phone ?? undefined,
-            first_name: raw.first_name ?? '',
-            last_name: raw.last_name ?? '',
-            role: raw.role ?? undefined,
-            is_verified: raw.is_verified ?? false,
-            is_staff: raw.is_staff ?? false,
-            avatar: raw.avatar ?? null,
-            date_joined: raw.date_joined ?? undefined,
-          });
+          setUser(normalizeAuthUser(data));
         }
       } catch {
         // Token invalid/expired and refresh failed → force logout

@@ -31,13 +31,13 @@ export function useAuth() {
       logoutStore();
       queryClient.clear();
       toast.success("Signed out", { description: "See you next time 👋" });
-      router.push("/login");
+      router.push("/auth/sign-in");
     },
     onError: () => {
       // Force logout locally even if backend call fails
       logoutStore();
       queryClient.clear();
-      router.push("/login");
+      router.push("/auth/sign-in");
     },
   });
 

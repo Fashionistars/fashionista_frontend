@@ -1,5 +1,4 @@
 import TopBanner from "@/components/shared/utilities/TopBanner";
-import React from "react";
 import Transactions from "@/features/account/components/Transactions";
 
 const page = () => {

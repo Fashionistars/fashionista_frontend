@@ -1,6 +1,5 @@
 // @ts-nocheck
 import Link from "next/link";
-import React from "react";
 import TopBanner from "@/components/shared/utilities/TopBanner";
 import BarChart from "@/components/ui/compounds/Charts";
 import { ChartOptions, ChartData } from "chart.js";
@@ -12,14 +11,14 @@ const page = async () => {
     try {
       const vendorStat = await fetchWithAuth("/vendor/dashboard");
       return vendorStat;
-    } catch (error) {
-      console.log(error);
+    } catch {
+      return null;
     }
   };
   // const vendorStat = await getVendorStats();
   // console.log(vendorStat);
   const vendor = await getVendor();
-  console.log(vendor);
+  void vendor;
 
   const data: ChartData<"bar", number[], string> = {
     labels: [

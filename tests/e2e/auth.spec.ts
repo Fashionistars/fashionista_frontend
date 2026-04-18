@@ -16,12 +16,12 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Auth — Login Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/login");
+    await page.goto("/auth/sign-in");
     await page.waitForLoadState("domcontentloaded");
   });
 
   test("Login page renders with status 200", async ({ page }) => {
-    const res = await page.goto("/login");
+    const res = await page.goto("/auth/sign-in");
     expect([200, 302]).toContain(res?.status() ?? 0);
   });
 
@@ -72,13 +72,13 @@ test.describe("Auth — Login Page", () => {
     await expect(googleBtn).toContainText(/google/i);
   });
 
-  test("'Create one' link navigates to /register", async ({ page }) => {
-    const link = page.locator('a[href="/register"]');
+  test("'Create one' link navigates to /auth/choose-role", async ({ page }) => {
+    const link = page.locator('a[href="/auth/choose-role"]');
     await expect(link).toBeVisible({ timeout: 10_000 });
   });
 
-  test("'Forgot password' link navigates to /forgot-password", async ({ page }) => {
-    const link = page.locator('a[href="/forgot-password"]');
+  test("'Forgot password' link navigates to /auth/forgot-password", async ({ page }) => {
+    const link = page.locator('a[href="/auth/forgot-password"]');
     await expect(link).toBeVisible({ timeout: 10_000 });
   });
 });
@@ -91,7 +91,7 @@ test.describe("Auth — Login with Mocked API", () => {
     // The full API integration is covered by the Chromium/Pixel5 runs.
     if (browserName === "webkit") {
       // On Safari/WebKit, verify Zod acceptance without network assertion
-      await page.goto("/login");
+      await page.goto("/auth/sign-in");
       await page.waitForLoadState("domcontentloaded");
       await page.locator("#login-email").fill("test@fashionistar.com");
       await page.locator("#login-password").fill("SecurePass1");
@@ -125,7 +125,7 @@ test.describe("Auth — Login with Mocked API", () => {
       });
     });
 
-    await page.goto("/login");
+    await page.goto("/auth/sign-in");
     await page.waitForLoadState("domcontentloaded");
     await page.locator("#login-email").fill("test@fashionistar.com");
     await page.locator("#login-password").fill("SecurePass1");
@@ -153,20 +153,20 @@ test.describe("Auth — Login with Mocked API", () => {
       });
     });
 
-    await page.goto("/login");
+    await page.goto("/auth/sign-in");
     await page.locator("#login-email").fill("wrong@test.com");
     await page.locator("#login-password").fill("WrongPass1");
     await page.locator("#login-submit-btn").click();
     await page.waitForTimeout(1500);
     // No crash — page should still be on /login or have a toast
-    expect(page.url()).toContain("login");
+    expect(page.url()).toContain("/auth/sign-in");
   });
 });
 
 // ── OTP Page ─────────────────────────────────────────────────────────────────
 test.describe("Auth — OTP Verify Page", () => {
   test("OTP page renders 6 digit input boxes", async ({ page }) => {
-    await page.goto("/verify-otp");
+    await page.goto("/auth/verify-otp");
     await page.waitForLoadState("domcontentloaded");
     // Check for OTP inputs
     const inputs = page.locator('[id^="otp-input-"]');
@@ -175,7 +175,7 @@ test.describe("Auth — OTP Verify Page", () => {
   });
 
   test("OTP: paste fills all 6 boxes", async ({ page }) => {
-    await page.goto("/verify-otp");
+    await page.goto("/auth/verify-otp");
     await page.waitForLoadState("domcontentloaded");
     const firstInput = page.locator("#otp-input-0");
     await expect(firstInput).toBeVisible({ timeout: 10_000 });
@@ -195,7 +195,7 @@ test.describe("Auth — OTP Verify Page", () => {
   });
 
   test("OTP verify button is disabled with empty inputs", async ({ page }) => {
-    await page.goto("/verify-otp");
+    await page.goto("/auth/verify-otp");
     await page.waitForLoadState("domcontentloaded");
     const btn = page.locator("#otp-verify-btn");
     await expect(btn).toBeDisabled({ timeout: 10_000 });
@@ -211,7 +211,7 @@ test.describe("Auth — Concurrency", () => {
     const pages = await Promise.all(contexts.map((ctx) => ctx.newPage()));
     const results = await Promise.all(
       pages.map(async (p) => {
-        const res = await p.goto("/login");
+        const res = await p.goto("/auth/sign-in");
         return res?.status() ?? 0;
       })
     );

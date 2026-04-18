@@ -1,4 +1,3 @@
-import React from "react";
 import { trackOrder } from "@/features/orders/api/actions";
 
 const page = () => {

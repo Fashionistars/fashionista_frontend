@@ -1,6 +1,5 @@
 import TopBanner from "@/components/shared/utilities/TopBanner";
 import Image from "next/image";
-import React from "react";
 import DragAndDrop from "@/components/shared/utilities/DragAndDrop";
 
 interface VendorProp {
@@ -30,6 +29,7 @@ const page = () => {
             width={100}
             height={100}
             alt={vendor.vendor}
+            priority
             className="w-full h-full rounded-full "
           />
         </div>

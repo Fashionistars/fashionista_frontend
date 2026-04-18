@@ -11,6 +11,7 @@
  *  - ngrok-skip-browser-warning header in development
  */
 import ky, { type KyInstance } from "ky";
+import { readAccessToken } from "@/features/auth/lib/auth-session.client";
 
 // ── Async Client Instance ─────────────────────────────────────────────────────
 export const apiAsync: KyInstance = ky.create({
@@ -35,19 +36,9 @@ export const apiAsync: KyInstance = ky.create({
     beforeRequest: [
       (request) => {
         // Inject JWT Bearer token
-        if (typeof window !== "undefined") {
-          try {
-            const stored = sessionStorage.getItem("fashionistar-auth");
-            if (stored) {
-              const parsed = JSON.parse(stored);
-              const token: string | null = parsed?.state?.accessToken ?? null;
-              if (token) {
-                request.headers.set("Authorization", `Bearer ${token}`);
-              }
-            }
-          } catch {
-            // sessionStorage may be unavailable
-          }
+        const token = readAccessToken();
+        if (token) {
+          request.headers.set("Authorization", `Bearer ${token}`);
         }
 
         // Skip ngrok browser warning page in development

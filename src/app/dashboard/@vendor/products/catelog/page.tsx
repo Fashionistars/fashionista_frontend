@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -197,7 +196,7 @@ const page = async () => {
     <div className="">
       <div className="md:w-[100%] lg:w-[75%] h-20 md:h-[122px] fixed top-0 right-0 hidden md:flex justify-between items-center bg-white px-6">
         <div className="flex items-center gap-2 ">
-          <Link href="/dashboard">
+          <Link href="/vendor/dashboard">
             <svg
               width="24"
               height="24"
@@ -252,7 +251,7 @@ const page = async () => {
               Export
             </button>
             <Link
-              href="/dashboard/products"
+              href="/vendor/products"
               className="bg-[#fda600] hover:bg-black flex items-center font-satoshi font-medium text-black hover:text-[#fda600] transition-colors duration-150 grow-0  px-5 py-2.5"
             >
               Create New

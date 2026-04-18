@@ -113,7 +113,7 @@ export default function Form() {
       <div className="bg-[#fff] rounded-[10px] p-[15px] md:p-6  w-full h-fit relative pb-10 ">
         <ul className="flex items-center justify-between md:justify-end left-0 absolute -top-12 md:top-6 md:right-6 md:gap-5 font-satoshi">
           <Link
-            href="/dashboard/products"
+            href="/vendor/products"
             className={`font-medium text-[11px] md:text-sm text-black px-1 md:px-2 py-3 ${
               !step ? "bg-[#fda600]" : ""
             } `}
@@ -121,7 +121,7 @@ export default function Form() {
             Basic Information
           </Link>
           <Link
-            href="/dashboard/products?step=prices"
+            href="/vendor/products?step=prices"
             className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
               step == "prices" && "bg-[#fda600]"
             }`}
@@ -129,7 +129,7 @@ export default function Form() {
             Prices
           </Link>
           <Link
-            href="/dashboard/products?step=category"
+            href="/vendor/products?step=category"
             className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
               step == "category" && "bg-[#fda600]"
             }`}
@@ -137,7 +137,7 @@ export default function Form() {
             Category
           </Link>
           <Link
-            href="/dashboard/products?step=gallery"
+            href="/vendor/products?step=gallery"
             className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
               step == "gallery" && "bg-[#fda600]"
             }`}
@@ -145,7 +145,7 @@ export default function Form() {
             Gallery
           </Link>
           <Link
-            href="/dashboard/products?step=specification"
+            href="/vendor/products?step=specification"
             className={`font-medium text-[11px]  md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
               step == "specification" && "bg-[#fda600]"
             }`}
@@ -153,7 +153,7 @@ export default function Form() {
             Specification
           </Link>
           <Link
-            href="/dashboard/products?step=sizes"
+            href="/vendor/products?step=sizes"
             className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
               step == "sizes" && "bg-[#fda600]"
             }`}
@@ -161,7 +161,7 @@ export default function Form() {
             Size
           </Link>
           <Link
-            href="/dashboard/products?step=color"
+            href="/vendor/products?step=color"
             className={`font-medium text-[11px] md:text-sm transition-colors text-black px-1.5 md:px-2 py-3 ${
               step == "color" && "bg-[#fda600]"
             }`}

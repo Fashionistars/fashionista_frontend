@@ -1,6 +1,6 @@
 "use client";
 import { NewProductType } from "@/types";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
 

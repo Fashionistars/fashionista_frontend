@@ -1,9 +1,8 @@
 /**
- * Product Cache Layer — Next.js 15 Stable API
+ * Product Cache Layer — Next.js 16 Stable API
  *
- * Uses `unstable_cache` from next/cache (stable in Next.js 15.x).
- * The canary-only 'use cache' directive + cacheTag + cacheLife are
- * commented out until we upgrade to Next.js Canary/16.
+ * Uses `unstable_cache` from next/cache for pragmatic route-level caching.
+ * The repo still relies on this while broader cache-components adoption is phased in.
  *
  * Provides:
  *   - getCachedProducts   — paginated product listing (5min revalidation)

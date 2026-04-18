@@ -1,5 +1,4 @@
 import Image from "next/image";
-import React from "react";
 
 const page = () => {
   return (
@@ -111,7 +110,13 @@ const page = () => {
             </div>
           </form>
           <div className="hidden md:flex">
-            <Image src="/girl2.svg" alt="" />
+            <Image
+              src="/girl2.svg"
+              alt="Fashionistar customer support"
+              width={420}
+              height={560}
+              className="h-auto w-auto max-w-full"
+            />
           </div>
         </div>
       </div>

@@ -1,14 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
 
 /* ══════════════════════════════════════════════════════════════════════════════
    FASHIONISTAR AI — Global CSS Design System
-   Tailwind CSS v3.4 + Shadcn/ui CSS Variable System
+   Tailwind CSS v4 + Shadcn/ui CSS Variable System
    ══════════════════════════════════════════════════════════════════════════════ */
 
 @layer base {
   :root {
+    --font-inter:
+      "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui,
+      sans-serif;
+    --font-raleway:
+      "Raleway", "Trebuchet MS", "Gill Sans", system-ui, sans-serif;
+
     /* ── Shadcn/ui CSS Variables — Light Mode ─────────────────────────────── */
     --background: 46 33% 94%; /* #F4F3EC — Cream background */
     --foreground: 0 0% 20%; /* #333333 — Dark text */

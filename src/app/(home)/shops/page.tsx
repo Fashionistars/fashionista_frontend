@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import data, { data2 } from "@/lib/utils/mock-data";

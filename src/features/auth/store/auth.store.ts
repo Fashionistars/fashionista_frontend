@@ -6,6 +6,11 @@
  */
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import {
+  buildAuthSessionMirror,
+  clearMirrorCookies,
+  syncMirrorCookies,
+} from "@/features/auth/lib/auth-session.client";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 export interface AuthUser {
@@ -74,12 +79,31 @@ export const useAuthStore = create<AuthState>()(
       pendingOTPEmail: undefined,
       pendingOTPPhone: undefined,
 
-      setToken: (token) => set({ accessToken: token, isAuthenticated: true }),
+      setToken: (token) =>
+        set((state) => {
+          const nextState = { ...state, accessToken: token, isAuthenticated: true };
+          syncMirrorCookies(buildAuthSessionMirror(nextState));
+          return nextState;
+        }),
 
       setTokens: (access, refresh) =>
-        set({ accessToken: access, refreshToken: refresh, isAuthenticated: true }),
+        set((state) => {
+          const nextState = {
+            ...state,
+            accessToken: access,
+            refreshToken: refresh,
+            isAuthenticated: true,
+          };
+          syncMirrorCookies(buildAuthSessionMirror(nextState));
+          return nextState;
+        }),
 
-      setUser: (user) => set({ user }),
+      setUser: (user) =>
+        set((state) => {
+          const nextState = { ...state, user };
+          syncMirrorCookies(buildAuthSessionMirror(nextState));
+          return nextState;
+        }),
 
       setPendingOTP: ({ email, phone }) =>
         set({ pendingOTPEmail: email, pendingOTPPhone: phone }),
@@ -87,24 +111,30 @@ export const useAuthStore = create<AuthState>()(
       setLoading: (loading) => set({ isLoading: loading }),
 
       logout: () =>
-        set({
-          accessToken: null,
-          refreshToken: null,
-          user: null,
-          isAuthenticated: false,
-          pendingOTPEmail: undefined,
-          pendingOTPPhone: undefined,
+        set(() => {
+          clearMirrorCookies();
+          return {
+            accessToken: null,
+            refreshToken: null,
+            user: null,
+            isAuthenticated: false,
+            pendingOTPEmail: undefined,
+            pendingOTPPhone: undefined,
+          };
         }),
 
       // clearAuth is an alias for logout — same behaviour
       clearAuth: () =>
-        set({
-          accessToken: null,
-          refreshToken: null,
-          user: null,
-          isAuthenticated: false,
-          pendingOTPEmail: undefined,
-          pendingOTPPhone: undefined,
+        set(() => {
+          clearMirrorCookies();
+          return {
+            accessToken: null,
+            refreshToken: null,
+            user: null,
+            isAuthenticated: false,
+            pendingOTPEmail: undefined,
+            pendingOTPPhone: undefined,
+          };
         }),
     }),
     {
@@ -123,6 +153,9 @@ export const useAuthStore = create<AuthState>()(
         pendingOTPEmail: state.pendingOTPEmail,
         pendingOTPPhone: state.pendingOTPPhone,
       }),
+      onRehydrateStorage: () => (state) => {
+        syncMirrorCookies(buildAuthSessionMirror(state));
+      },
     },
   ),
 );

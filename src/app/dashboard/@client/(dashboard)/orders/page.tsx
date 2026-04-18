@@ -1,12 +1,13 @@
 // @ts-nocheck
-import React from "react";
 import Link from "next/link";
+import { connection } from "next/server";
 import { PageProps } from "@/types";
 import { Search, CircleArrowDown } from "lucide-react";
 import { Suspense } from "react";
-import OrderTable from "@/app/components/OrderTable";
+import { OrderTable } from "@/features/orders/components";
 
 const page = async (props: PageProps) => {
+  await connection();
   const order = props.searchParams?.order;
   const order_history = [
     {

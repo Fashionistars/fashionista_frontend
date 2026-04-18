@@ -7,7 +7,6 @@
  * QueryClient configured with enterprise defaults.
  */
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useState } from "react";
 
 export function QueryProvider({ children }: { children: React.ReactNode }) {
@@ -40,8 +39,8 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      {/* DevTools — only rendered in development (tree-shaken in build) */}
-      <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" />
+      {/* Devtools are intentionally disabled here because Turbopack was
+          chunk-failing on the async devtools bundle during auth testing. */}
     </QueryClientProvider>
   );
 }

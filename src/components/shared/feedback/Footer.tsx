@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -89,7 +88,7 @@ const Footer = () => {
             <li>
               <Link
                 className="font-satoshi text-[15px] leading-5 md:font-medium md:text-[20px] md:leading-[27px] text-[#A1A1A1]"
-                href="/login"
+                href="/auth/sign-in"
               >
                 Sign In
               </Link>
@@ -105,7 +104,7 @@ const Footer = () => {
             <li>
               <Link
                 className="font-satoshi text-[15px] leading-5 md:font-medium md:text-[20px] md:leading-[27px] text-[#A1A1A1]"
-                href="/login"
+                href="/wishlist"
               >
                 My Wishlist
               </Link>
@@ -113,7 +112,7 @@ const Footer = () => {
             <li>
               <Link
                 className="font-satoshi text-[15px] leading-5 md:font-medium md:text-[20px] md:leading-[27px] text-[#A1A1A1]"
-                href="/login"
+                href="/auth/sign-in?returnUrl=%2Fclient%2Fdashboard%2Forders%2Ftrack-order"
               >
                 Track My Order
               </Link>
@@ -121,7 +120,7 @@ const Footer = () => {
             <li>
               <Link
                 className="font-satoshi text-[15px] leading-5 md:font-medium md:text-[20px] md:leading-[27px] text-[#A1A1A1]"
-                href="/login"
+                href="/contact-us"
               >
                 Contact Us
               </Link>
@@ -129,7 +128,7 @@ const Footer = () => {
             <li>
               <Link
                 className="font-satoshi text-[15px] leading-5 md:font-medium md:text-[20px] md:leading-[27px] text-[#A1A1A1]"
-                href="/login"
+                href="/contact-us"
               >
                 Delivery Information
               </Link>
@@ -137,7 +136,7 @@ const Footer = () => {
             <li>
               <Link
                 className="font-satoshi text-[15px] leading-5 md:font-medium md:text-[20px] md:leading-[27px] text-[#A1A1A1]"
-                href="/login"
+                href="/about-us"
               >
                 About Us
               </Link>

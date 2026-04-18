@@ -17,6 +17,15 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from "axios";
 import { toast } from "sonner";
+import {
+  buildAuthSessionMirror,
+  clearMirrorCookies,
+  clearStoredAuthState,
+  patchStoredAuthState,
+  readAccessToken,
+  readRefreshToken,
+  syncMirrorCookies,
+} from "@/features/auth/lib/auth-session.client";
 
 // ── Circuit Breaker State ─────────────────────────────────────────────────────
 let circuitOpen = false;
@@ -60,20 +69,9 @@ apiSync.interceptors.request.use(
       ) as never;
     }
 
-    // Inject auth token from sessionStorage (avoiding SSR issues)
-    if (typeof window !== "undefined") {
-      try {
-        const stored = sessionStorage.getItem("fashionistar-auth");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          const token = parsed?.state?.accessToken;
-          if (token && config.headers) {
-            config.headers.Authorization = `Bearer ${token}`;
-          }
-        }
-      } catch {
-        // sessionStorage might not be available in all contexts
-      }
+    const token = readAccessToken();
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
     // Skip ngrok browser warning page in development
@@ -160,19 +158,7 @@ apiSync.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Get refresh token from sessionStorage
-        let refreshToken: string | null = null;
-        if (typeof window !== "undefined") {
-          try {
-            const stored = sessionStorage.getItem("fashionistar-auth");
-            if (stored) {
-              const parsed = JSON.parse(stored);
-              refreshToken = parsed?.state?.refreshToken ?? null;
-            }
-          } catch {
-            // ignore
-          }
-        }
+        const refreshToken = readRefreshToken();
 
         // Only attempt refresh if we have a refresh token
         if (!refreshToken) {
@@ -192,25 +178,11 @@ apiSync.interceptors.response.use(
         // {access: "..."} OR {success: true, data: {access: "..."}}
         const newToken: string = data.access || data.data?.access;
 
-        // Update Zustand store
-        if (typeof window !== "undefined") {
-          try {
-            const stored = sessionStorage.getItem("fashionistar-auth");
-            if (stored) {
-              const parsed = JSON.parse(stored);
-              if (parsed?.state) {
-                parsed.state.accessToken = newToken;
-                parsed.state.isAuthenticated = true;
-                sessionStorage.setItem(
-                  "fashionistar-auth",
-                  JSON.stringify(parsed),
-                );
-              }
-            }
-          } catch {
-            // ignore
-          }
-        }
+        patchStoredAuthState({
+          accessToken: newToken,
+          isAuthenticated: true,
+        });
+        syncMirrorCookies(buildAuthSessionMirror());
 
         onRefreshed(newToken);
         if (originalRequest.headers) {
@@ -220,7 +192,8 @@ apiSync.interceptors.response.use(
       } catch (refreshError) {
         // Refresh truly failed for an authenticated request — force logout
         if (typeof window !== "undefined") {
-          sessionStorage.removeItem("fashionistar-auth");
+          clearStoredAuthState();
+          clearMirrorCookies();
           window.location.href = "/auth/sign-in"; // Canonical sign-in URL
         }
         return Promise.reject(refreshError);

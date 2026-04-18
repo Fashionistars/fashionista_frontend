@@ -1,4 +1,3 @@
-import React from "react";
 import BarChart from "@/components/ui/compounds/Charts";
 import { ChartOptions, ChartData } from "chart.js";
 import Image from "next/image";

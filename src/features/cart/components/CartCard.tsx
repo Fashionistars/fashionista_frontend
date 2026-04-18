@@ -1,6 +1,5 @@
 // @ts-nocheck
 import Image from "next/image";
-import React from "react";
 import { CardProps } from "@/core/types";
 
 interface CartProp {

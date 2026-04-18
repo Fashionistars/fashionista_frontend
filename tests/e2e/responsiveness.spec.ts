@@ -26,7 +26,7 @@ const BREAKPOINTS = [
 
 const PAGES = [
   { name: "Home", path: "/" },
-  { name: "Login", path: "/login" },
+  { name: "Login", path: "/auth/sign-in" },
 ];
 
 for (const bp of BREAKPOINTS) {
