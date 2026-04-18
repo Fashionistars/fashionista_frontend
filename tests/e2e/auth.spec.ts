@@ -52,9 +52,11 @@ test.describe("Auth — Login Page", () => {
     await page.locator("#login-email").fill("not-an-email");
     await page.locator("#login-password").fill("ValidPass1");
     await page.locator("#login-submit-btn").click();
-    await page.waitForTimeout(500);
-    const errorText = await page.locator("p.text-destructive").first().textContent();
-    expect(errorText?.toLowerCase()).toMatch(/email|invalid/i);
+    const inlineError = page
+      .locator("p[role='alert']")
+      .filter({ hasText: /email|invalid/i })
+      .first();
+    await expect(inlineError).toBeVisible({ timeout: 10_000 });
   });
 
   test("Password field has show/hide toggle", async ({ page }) => {
@@ -69,7 +71,26 @@ test.describe("Auth — Login Page", () => {
   test("Google OAuth button is visible", async ({ page }) => {
     const googleBtn = page.locator("#google-auth-btn");
     await expect(googleBtn).toBeVisible({ timeout: 10_000 });
-    await expect(googleBtn).toContainText(/google/i);
+    await expect(googleBtn).toHaveAttribute("aria-label", /google/i);
+  });
+
+  test("Google sign-in does not log duplicate GIS initialization warnings", async ({
+    page,
+  }) => {
+    const consoleMessages: string[] = [];
+    page.on("console", (message) => {
+      consoleMessages.push(message.text());
+    });
+
+    await page.goto("/auth/sign-in");
+    await page.waitForLoadState("domcontentloaded");
+    await page.waitForTimeout(2_000);
+
+    expect(
+      consoleMessages.some((message) =>
+        message.includes("google.accounts.id.initialize() is called multiple times"),
+      ),
+    ).toBe(false);
   });
 
   test("'Create one' link navigates to /auth/choose-role", async ({ page }) => {
@@ -199,6 +220,22 @@ test.describe("Auth — OTP Verify Page", () => {
     await page.waitForLoadState("domcontentloaded");
     const btn = page.locator("#otp-verify-btn");
     await expect(btn).toBeDisabled({ timeout: 10_000 });
+  });
+});
+
+test.describe("Auth — Navbar Account Dropdown", () => {
+  test("Guest account dropdown opens from the desktop navbar", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    await page.waitForLoadState("domcontentloaded");
+
+    const trigger = page.locator('button[aria-controls="account-options-panel"]:visible').first();
+    await expect(trigger).toBeVisible({ timeout: 10_000 });
+    await trigger.click();
+
+    const panel = page.locator("#account-options-panel");
+    await expect(panel).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator("#nav-signin-link")).toBeVisible({ timeout: 10_000 });
   });
 });
 
