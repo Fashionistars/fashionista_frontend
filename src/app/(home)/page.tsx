@@ -123,7 +123,7 @@ export default async function Home(props: PageProps) {
           src="/man.png"
           alt=""
           width={500}
-          height={500}
+          height={582}
           className="w-[200px] md:w-[370px] lg:w-[500px] h-auto absolute left-0 md:left-6 bottom-0"
           style={{ height: "auto" }}
         />
