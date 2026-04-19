@@ -135,14 +135,13 @@ export function PasswordResetForm() {
             Try again
           </button>
         </p>
-        <button
-          type="button"
+        <a
           id="back-to-login-btn"
-          onClick={() => router.push("/auth/sign-in")}
+          href="/auth/sign-in"
           className="text-sm text-primary font-semibold hover:underline"
         >
           ← Back to login
-        </button>
+        </a>
       </div>
     );
   }
@@ -274,13 +273,9 @@ export function PasswordResetForm() {
       {/* ── Footer ───────────────────────────────────────────────────── */}
       <p className="text-center text-sm text-muted-foreground">
         Remember your password?{" "}
-        <button
-          type="button"
-          onClick={() => router.push("/auth/sign-in")}
-          className="text-primary font-semibold hover:underline"
-        >
+        <a href="/auth/sign-in" className="text-primary font-semibold hover:underline">
           Sign in
-        </button>
+        </a>
       </p>
     </form>
   );

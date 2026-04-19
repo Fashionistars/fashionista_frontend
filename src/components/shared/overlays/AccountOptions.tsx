@@ -22,6 +22,7 @@
  */
 
 import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -107,28 +108,39 @@ function MenuAction({
   label,
   Icon,
   onNavigate,
+  useDocumentNavigation = false,
 }: {
   id: string;
   href: string;
   label: string;
   Icon: React.ComponentType<{ className?: string }>;
-  onNavigate: () => void;
+  onNavigate?: () => void;
+  useDocumentNavigation?: boolean;
 }) {
-  const router = useRouter();
-
-  return (
-    <button
-      id={id}
-      type="button"
-      onClick={() => {
-        onNavigate();
-        router.push(href);
-      }}
-      className={linkCls}
-    >
+  const content = (
+    <>
       <Icon className={iconCls} />
       {label}
-    </button>
+    </>
+  );
+
+  if (useDocumentNavigation) {
+    return (
+      <a id={id} href={href} className={linkCls}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link
+      id={id}
+      href={href}
+      onClick={onNavigate}
+      className={linkCls}
+    >
+      {content}
+    </Link>
   );
 }
 
@@ -179,13 +191,15 @@ function AdminMenu({ close }: { close: () => void }) {
 }
 
 function GuestPanel({
-  close,
   pathname,
 }: {
-  close: () => void;
   pathname: string;
 }) {
-  const signInHref = `/auth/sign-in?returnUrl=${encodeURIComponent(pathname)}`;
+  // Guest auth links use document navigation because the dropdown unmount and
+  // auth-shell hydration can interrupt client-only transitions on first click.
+  const signInHref = pathname.startsWith("/auth")
+    ? "/auth/sign-in"
+    : `/auth/sign-in?returnUrl=${encodeURIComponent(pathname)}`;
   const trackingHref = `/auth/sign-in?returnUrl=${encodeURIComponent("/client/dashboard/orders/track-order")}`;
 
   return (
@@ -193,10 +207,10 @@ function GuestPanel({
       <p className="mb-1 border-b border-border/50 pb-3 text-xs text-muted-foreground">
         Sign in to access your account
       </p>
-      <MenuAction id="nav-signin-link" href={signInHref} label="Sign In" Icon={LogIn} onNavigate={close} />
-      <MenuAction id="nav-register-client-link" href="/auth/choose-role" label="Create Account" Icon={UserPlus} onNavigate={close} />
-      <MenuAction id="nav-order-tracking-guest" href={trackingHref} label="Track an Order" Icon={PackageSearch} onNavigate={close} />
-      <MenuAction id="nav-register-vendor-link" href="/auth/sign-up?role=vendor" label="Become a Vendor" Icon={UserRoundCheck} onNavigate={close} />
+      <MenuAction id="nav-signin-link" href={signInHref} label="Sign In" Icon={LogIn} useDocumentNavigation />
+      <MenuAction id="nav-register-client-link" href="/auth/choose-role" label="Create Account" Icon={UserPlus} useDocumentNavigation />
+      <MenuAction id="nav-order-tracking-guest" href={trackingHref} label="Track an Order" Icon={PackageSearch} useDocumentNavigation />
+      <MenuAction id="nav-register-vendor-link" href="/auth/sign-up?role=vendor" label="Become a Vendor" Icon={UserRoundCheck} useDocumentNavigation />
     </div>
   );
 }
@@ -343,7 +357,7 @@ const AccountOptions = ({
           </div>
         </>
       ) : (
-        <GuestPanel close={close} pathname={pathname} />
+        <GuestPanel pathname={pathname} />
       )}
     </div>
   );

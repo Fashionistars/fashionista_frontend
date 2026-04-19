@@ -70,6 +70,7 @@ const page = () => {
               width={100}
               height={100}
               alt={vendor.vendor}
+              priority
               className="w-full h-full rounded-full "
             />
           </div>

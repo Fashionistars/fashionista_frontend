@@ -1,8 +1,5 @@
 "use client";
 
-import type { KeyboardEvent } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ArrowRight, ShoppingBag, Store } from "lucide-react";
 
 function RoleCard({
@@ -18,25 +15,10 @@ function RoleCard({
   href: string;
   Icon: typeof Store;
 }) {
-  const router = useRouter();
-
-  const navigate = () => {
-    router.push(href);
-  };
-
-  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      navigate();
-    }
-  };
-
   return (
-    <button
-      type="button"
+    <a
+      href={href}
       id={id}
-      onPointerDown={navigate}
-      onKeyDown={handleKeyDown}
       className="
         group flex w-full items-center gap-5 rounded-2xl border-2 border-border
         bg-muted/20 p-5 text-left transition-all duration-200
@@ -53,7 +35,7 @@ function RoleCard({
         </p>
       </div>
       <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
-    </button>
+    </a>
   );
 }
 
@@ -94,12 +76,12 @@ export function ChooseRoleOptions() {
 
           <p className="mt-8 text-center text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link
+            <a
               href="/auth/sign-in"
               className="font-semibold text-primary hover:underline"
             >
               Sign in
-            </Link>
+            </a>
           </p>
         </div>
       </div>

@@ -83,8 +83,8 @@ export default function VendorLayout({
             <Link href="/vendor/dashboard" className="flex items-center gap-3">
               <Image
                 src="/logo.svg"
-                width={55}
-                height={56}
+                width={78}
+                height={76}
                 alt="Fashionistar"
                 className="h-[42px] w-[42px]"
                 style={{ width: "auto", height: "auto" }}

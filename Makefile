@@ -20,6 +20,7 @@ RED     := \033[0;31m
 BOLD    := \033[1m
 NC      := \033[0m
 PNPM    := pnpm.cmd
+NGROK   := $(PNPM) dlx ngrok
 POWERSHELL := powershell -NoProfile -ExecutionPolicy Bypass -Command
 RM_BUILD_ARTIFACTS := $(POWERSHELL) "Remove-Item -LiteralPath '.next','out','.turbo' -Recurse -Force -ErrorAction SilentlyContinue; exit 0"
 RM_DEPS_AND_CACHE := $(POWERSHELL) "Remove-Item -LiteralPath 'node_modules','pnpm-lock.yaml','.next','.turbo','.pnpm-store' -Recurse -Force -ErrorAction SilentlyContinue; exit 0"
@@ -307,8 +308,9 @@ tunnel-ngrok: ## 🌐 ngrok (global token, use only when backend ngrok is stoppe
 
 tunnel-ngrok-fe: ## 🌐 Dedicated frontend ngrok tunnel via ngrok-frontend.yml
 	@echo "$(CYAN)Starting dedicated frontend ngrok tunnel on port 3000...$(NC)"
-	@echo "$(YELLOW)Using ngrok-frontend.yml and NGROK_FRONTEND_TOKEN from .env.local$(NC)"
-	ngrok start --all --config ngrok-frontend.yml
+	@echo "$(YELLOW)Using project-local ngrok via pnpm dlx and the token from .env.local$(NC)"
+	$(NGROK) config check --config ngrok-frontend.yml
+	$(NGROK) start fashionista-frontend --config ngrok-frontend.yml --authtoken "$(NGROK_FRONTEND_TOKEN)"
 
 tunnel-url: ## 🔍 Print active tunnel URLs (ngrok inspector)
 	@echo "$(CYAN)Active ngrok tunnels:$(NC)"

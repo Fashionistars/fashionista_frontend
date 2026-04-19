@@ -25,10 +25,10 @@ const NewNavbar = () => {
         <Image
           src="/logo.svg"
           alt="Fashionistar Logo"
-          width={55}
-          height={56}
-          className="w-10 h-10 md:w-[55px] md:h-[56px]"
-          style={{ width: "auto", height: "auto" }}
+          width={78}
+          height={76}
+          className="w-10 md:w-[55px] h-auto"
+          style={{ height: "auto" }}
         />
         <h2 className="font-bon_foyage text-2xl md:text-4xl text-[#333]">
           Fashionistar

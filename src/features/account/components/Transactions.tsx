@@ -158,7 +158,7 @@ const Transactions = () => {
       <nav className="flex justify-between items-center py-8">
         <div className="space-x-5">
           <Link
-            href="/wallet"
+            href="/client/dashboard/wallet"
             className={`${
               !options
                 ? "bg-[#fda600] text-black"

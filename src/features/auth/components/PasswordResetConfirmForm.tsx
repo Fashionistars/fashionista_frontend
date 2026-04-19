@@ -7,7 +7,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Eye, EyeOff, Loader2, Lock, ShieldCheck, KeyRound } from "lucide-react";
 import {
@@ -155,9 +154,9 @@ export function PasswordResetConfirmForm(props: PasswordResetConfirmFormProps) {
           <FieldError message={errors.otp?.message as string} />
           <p className="text-xs text-muted-foreground">
             Didn&apos;t receive the SMS?{" "}
-            <Link href="/auth/forgot-password" className="text-primary hover:underline font-medium">
+            <a href="/auth/forgot-password" className="text-primary hover:underline font-medium">
               Request a new code
-            </Link>
+            </a>
           </p>
         </div>
       )}
@@ -245,9 +244,9 @@ export function PasswordResetConfirmForm(props: PasswordResetConfirmFormProps) {
       {isEmailMode && (
         <p className="text-center text-xs text-muted-foreground">
           Remembered your password?{" "}
-          <Link href="/auth/sign-in" className="text-primary hover:underline font-medium">
+          <a href="/auth/sign-in" className="text-primary hover:underline font-medium">
             Sign in
-          </Link>
+          </a>
         </p>
       )}
     </form>

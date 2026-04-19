@@ -13,11 +13,13 @@ interface blogProps {
 const BlogCard = ({ blog }: blogProps) => {
   return (
     <div className="w-full h-[450px] rounded-[20px] bg-white px-2 py-3">
-      <div className="w-full h-[60%] flex bg-gray-50 rounded-[20px] items-start">
+      <div className="relative w-full h-[60%] flex bg-gray-50 rounded-[20px] items-start overflow-hidden">
         <Image
           src={blog.image}
-          alt=""
-          className="w-full h-full aspect-video object-cover bg-top rounded-xl "
+          alt={blog.title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover bg-top rounded-xl"
         />
       </div>
       <div className="w-full h-[40%] flex flex-col justify-between py-2 bg-white">

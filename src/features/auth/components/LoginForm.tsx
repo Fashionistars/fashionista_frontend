@@ -12,7 +12,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import Link from "next/link";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, Mail, Lock } from "lucide-react";
 import { useState } from "react";
@@ -245,9 +244,9 @@ export function LoginForm() {
           <label htmlFor="login-password" className="text-sm font-medium text-foreground">
             Password
           </label>
-          <Link href="/auth/forgot-password" className="text-xs text-primary hover:underline">
+          <a href="/auth/forgot-password" className="text-xs text-primary hover:underline">
             Forgot password?
-          </Link>
+          </a>
         </div>
         <div className="relative" suppressHydrationWarning>
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
@@ -315,9 +314,9 @@ export function LoginForm() {
       {/* ── Footer ───────────────────────────────────────────────────── */}
       <p className="text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{" "}
-        <Link href="/auth/choose-role" className="text-primary font-semibold hover:underline">
+        <a href="/auth/choose-role" className="text-primary font-semibold hover:underline">
           Create one
-        </Link>
+        </a>
       </p>
     </form>
   );

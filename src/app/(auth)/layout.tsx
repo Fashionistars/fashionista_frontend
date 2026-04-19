@@ -8,8 +8,8 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         <div className=" flex items-center">
           <Image
             src="/logo.svg"
-            width={55}
-            height={54}
+            width={78}
+            height={76}
             alt="logo"
             className=""
             style={{ width: "auto", height: "auto" }}

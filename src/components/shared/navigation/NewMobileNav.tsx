@@ -40,10 +40,10 @@ const NewMobileNav = () => {
         <Image
           src="/logo.svg"
           alt="Fashionistar Logo"
-          width={40}
-          height={40}
-          className="w-10 h-10 "
-          style={{ width: "auto", height: "auto" }}
+          width={78}
+          height={76}
+          className="w-10 h-auto"
+          style={{ height: "auto" }}
         />
         <h2 className="font-bon_foyage text-2xl text-[#333]">Fashionistar</h2>
       </div>
@@ -87,10 +87,10 @@ const NewMobileNav = () => {
             <Image
               src="/logo.svg"
               alt="Fashionistar Logo"
-              width={40}
-              height={40}
-              className="w-10 h-10 "
-              style={{ width: "auto", height: "auto" }}
+              width={78}
+              height={76}
+              className="w-10 h-auto"
+              style={{ height: "auto" }}
             />
             <h2 className="font-bon_foyage text-2xl text-[#fff]">
               Fashionistar
@@ -379,11 +379,11 @@ const NewMobileNav = () => {
               </Link>
 
               <Link
-                href="/pages"
+                href="/blog"
                 className="flex items-center gap-2 font-raleway font-medium text-lg text-[#141414]"
               >
                 <MessageSquare />
-                Pages
+                Blog
               </Link>
             </div>
             <Link

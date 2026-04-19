@@ -13,11 +13,11 @@ const NewFooter = () => {
           <div className="flex items-center gap-2 w-1/2 md:w-fit">
             <Image
               src="/logo.svg"
-              width={55}
-              height={55}
+              width={78}
+              height={76}
               alt="Fashionistar Logo"
-              className="w-10 h-10 md:w-[55px] md:h-[56px]"
-              style={{ width: "auto", height: "auto" }}
+              className="w-10 md:w-[55px] h-auto"
+              style={{ height: "auto" }}
             />
             <h2 className="font-bon_foyage text-4xl text-[#333]">
               Fashionistar

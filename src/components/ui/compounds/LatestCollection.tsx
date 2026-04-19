@@ -168,7 +168,7 @@ const LatestCollection = async ({
           Vintage Clothings
         </Link>
         <Link
-          href="/latest"
+          href="/collections"
           scroll={false}
           className={` lg:hidden text-[#fda600] bg-white px-4 py-2 md:py-3 rounded-[100px] border-[#fda600] border text-sm font-semibold font-raleway hover:bg-[#fda600] hover:text-white transition-colors duration-300 ease-in-out`}
         >
