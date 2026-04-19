@@ -6,7 +6,7 @@ import Image from "next/image";
 const DragAndDrop = () => {
   const [preview, setPreview] = useState<string | ArrayBuffer | null>(null);
 
-  const onDrop = useCallback((acceptedFiles: any) => {
+  const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log("Files", acceptedFiles);
     const file = new FileReader();
 
@@ -37,6 +37,8 @@ const DragAndDrop = () => {
         <Image
           src={preview as string}
           alt="Preview"
+          width={475}
+          height={300}
           className="w-full h-full object-cover"
         />
       ) : (

@@ -152,6 +152,18 @@ function renderWithLinks(
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function AuthAlert({
+  ...props
+}: AuthAlertProps) {
+  const displayMessage = props.parsed?.message ?? props.message ?? "";
+
+  if (!displayMessage) {
+    return null;
+  }
+
+  return <AuthAlertContent key={displayMessage} {...props} />;
+}
+
+function AuthAlertContent({
   variant,
   message,
   parsed,
@@ -167,16 +179,6 @@ export function AuthAlert({
   // Resolve display content
   const displayMessage = parsed?.message ?? message ?? "";
   const links: ParsedApiError["links"] = parsed?.links ?? [];
-
-  // ── KEY FIX: Reset visibility whenever the error message changes ────────────
-  // Without this, if user dismisses the alert then a new error arrives,
-  // visible stays false because React does NOT re-mount (same tree position).
-  useEffect(() => {
-    if (displayMessage) {
-      setVisible(true);
-      setProgress(100);
-    }
-  }, [displayMessage]);
 
   // Auto-dismiss with countdown progress bar
   useEffect(() => {

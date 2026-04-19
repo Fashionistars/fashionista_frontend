@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,17 +9,26 @@ import { RoleGuard } from "@/features/auth/components/RoleGuard";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [openPathname, setOpenPathname] = useState<string | null>(null);
   const pathname = usePathname();
-  useEffect(() => {
+  const isMenuOpen = isOpen && openPathname === pathname;
+
+  const openMenu = () => {
+    setOpenPathname(pathname);
+    setIsOpen(true);
+  };
+
+  const closeMenu = () => {
     setIsOpen(false);
-  }, [pathname]);
+    setOpenPathname(null);
+  };
   return (
     <RoleGuard requiredRole="admin">
       <div className="flex flex-col">
       <div className="p-[11px] w-full bg-[#F4F3EC]">
         <div className="flex items-center justify-between px-2.5 bg-[#EDE7D9] rounded-[5px] h-[50px] lg:hidden">
           <button
-            onClick={() => setIsOpen(true)}
+            onClick={openMenu}
             className="w-[34px] h-[34px] flex justify-center  items-center bg-[#F4F3EC] border-[0.8px] border-black rounded-full"
           >
             <Image src="/menu.svg" alt="" width={24} height={24} />
@@ -93,11 +102,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       <div
         className={`w-full lg:left-0 md:w-[40%] lg:w-[25%] z-50 h-screen bg-[#141414] fixed top-0 transition-all duration-300 ${
-          isOpen ? "left-0" : "left-[-100%]"
+          isMenuOpen ? "left-0" : "left-[-100%]"
         }`}
       >
         <button
-          onClick={() => setIsOpen(false)}
+          onClick={closeMenu}
           className=" w-8 h-8 flex justify-center items-center absolute top-2 right-2 md:hidden"
         >
           <svg

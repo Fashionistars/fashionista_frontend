@@ -19,5 +19,5 @@ export const trackOrder = async (formdata: FormData) => {
       `/client/order/tracking/${data?.order_id}`,
     );
     console.log(tracking);
-  } catch (error) {}
+  } catch {}
 };

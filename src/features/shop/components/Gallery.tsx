@@ -153,9 +153,15 @@ const Gallery = ({
     );
   };
 
+  // This adapter keeps the legacy server action validation flow while
+  // satisfying the App Router form contract of Promise<void>.
+  const handleGallerySubmit = async (formData: FormData): Promise<void> => {
+    await GalleryAction(formData);
+  };
+
   return (
     <form
-      action={GalleryAction as any}
+      action={handleGallerySubmit}
       id="gallery"
       className="w-full space-y-10"
     >

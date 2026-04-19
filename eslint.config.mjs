@@ -1,7 +1,7 @@
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
 
-export default [
+const eslintConfig = [
   {
     name: "fashionistar/ignores",
   },
@@ -18,8 +18,11 @@ export default [
       "next-env.d.ts",
       "fix_*.js",
       "fix_*.mjs",
+      "suppress_*.js",
     ],
   },
   ...nextCoreWebVitals,
   ...nextTypescript,
 ];
+
+export default eslintConfig;

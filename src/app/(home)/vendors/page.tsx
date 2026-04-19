@@ -1,9 +1,9 @@
 import VendorCard from "@/components/ui/compounds/VendorCard";
-// import { vendor } from "@/lib/utils/mock-data";
+import type { VendorProp } from "@/core/types";
 import { getAllVendors } from "@/core/services/api";
 
 const page = async () => {
-  const vendors = ((await getAllVendors()) || []) as any[];
+  const vendors: VendorProp[] = (await getAllVendors()) || [];
   const vendor_list = vendors.map((vendor) => (
     <VendorCard vendorProp={vendor} key={vendor.id} />
   ));

@@ -21,7 +21,7 @@
  *     identity, which keeps the trigger responsive in both navbars.
  */
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
@@ -56,6 +56,7 @@ import {
 import { normalizeCanonicalRole } from "@/features/auth/lib/auth-routing";
 import { logout as logoutFn } from "@/features/auth/services/auth.service";
 import { useAuthStore } from "@/features/auth/store/auth.store";
+import { useIsHydrated } from "@/lib/react/useIsHydrated";
 
 type RoleGroup = "client" | "vendor" | "admin" | "guest";
 
@@ -227,17 +228,13 @@ const AccountOptions = ({
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const user = useAuthStore((state) => state.user);
   const clearAuth = useAuthStore((state) => state.clearAuth);
-  const [hydrated, setHydrated] = useState(false);
+  const hydrated = useIsHydrated();
   const closeRef = useRef(onClose);
   const hasSeenInitialPath = useRef(false);
 
   useEffect(() => {
     closeRef.current = onClose;
   }, [onClose]);
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
 
   useEffect(() => {
     if (!hasSeenInitialPath.current) {

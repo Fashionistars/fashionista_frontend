@@ -12,6 +12,8 @@ import { Eye, EyeOff, Loader2, Lock, ShieldCheck, KeyRound } from "lucide-react"
 import {
   PasswordResetConfirmEmailSchema,
   PasswordResetConfirmPhoneSchema,
+  type PasswordResetConfirmEmailPayload,
+  type PasswordResetConfirmPhonePayload,
 } from "@/features/auth/schemas/auth.schemas";
 import {
   confirmPasswordResetEmail,
@@ -33,6 +35,9 @@ interface PhoneModeProps {
 }
 
 type PasswordResetConfirmFormProps = EmailModeProps | PhoneModeProps;
+type PasswordResetConfirmValues =
+  | PasswordResetConfirmEmailPayload
+  | PasswordResetConfirmPhonePayload;
 
 // ── Unified Form ──────────────────────────────────────────────────────────────
 
@@ -103,13 +108,17 @@ export function PasswordResetConfirmForm(props: PasswordResetConfirmFormProps) {
     },
   });
 
-  // Dynamically attach the mutation logic
-  const mutate = isEmailMode ? emailMutation.mutate : phoneMutation.mutate;
   const isPending = isEmailMode ? emailMutation.isPending : phoneMutation.isPending;
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: PasswordResetConfirmValues) => {
     setErrorMsg(null);
-    mutate(data as any);
+
+    if (isEmailMode) {
+      emailMutation.mutate(data as PasswordResetConfirmEmailPayload);
+      return;
+    }
+
+    phoneMutation.mutate(data as PasswordResetConfirmPhonePayload);
   };
 
   return (

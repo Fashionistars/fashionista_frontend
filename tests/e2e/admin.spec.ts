@@ -28,6 +28,10 @@ const ADMIN_EMAIL =
   process.env.DJANGO_SUPERUSER_EMAIL || "admin@fashionistar.com";
 const ADMIN_PASS = process.env.DJANGO_SUPERUSER_PASSWORD || "admin123";
 
+function formatSkipReason(error: unknown): string {
+  return `ngrok dropped: ${String(error).slice(0, 80)}`;
+}
+
 /** Check if backend is reachable with a 5s timeout */
 async function isBackendOnline(): Promise<boolean> {
   try {
@@ -62,8 +66,8 @@ test.describe("Pillar 2 — Django Admin Panel E2E", () => {
         waitUntil: "domcontentloaded",
         timeout: 45_000,
       });
-    } catch (e: any) {
-      test.skip(true, `ngrok dropped: ${String(e).slice(0, 80)}`);
+    } catch (e: unknown) {
+      test.skip(true, formatSkipReason(e));
       return;
     }
     // Treat any non-2xx/3xx response as backend offline/unreachable — skip gracefully.
@@ -85,8 +89,8 @@ test.describe("Pillar 2 — Django Admin Panel E2E", () => {
         waitUntil: "domcontentloaded",
         timeout: 45_000,
       });
-    } catch (e: any) {
-      test.skip(true, `ngrok dropped: ${String(e).slice(0, 80)}`);
+    } catch (e: unknown) {
+      test.skip(true, formatSkipReason(e));
       return;
     }
     const usernameField = page
@@ -106,8 +110,8 @@ test.describe("Pillar 2 — Django Admin Panel E2E", () => {
         waitUntil: "domcontentloaded",
         timeout: 45_000,
       });
-    } catch (e: any) {
-      test.skip(true, `ngrok dropped: ${String(e).slice(0, 80)}`);
+    } catch (e: unknown) {
+      test.skip(true, formatSkipReason(e));
       return;
     }
 
@@ -137,8 +141,8 @@ test.describe("Pillar 2 — Django Admin Panel E2E", () => {
         waitUntil: "domcontentloaded",
         timeout: 45_000,
       });
-    } catch (e: any) {
-      test.skip(true, `ngrok dropped: ${String(e).slice(0, 80)}`);
+    } catch (e: unknown) {
+      test.skip(true, formatSkipReason(e));
       return;
     }
     expect([200, 401, 403]).toContain(res?.status() ?? 0);
@@ -151,8 +155,8 @@ test.describe("Pillar 2 — Django Admin Panel E2E", () => {
         waitUntil: "domcontentloaded",
         timeout: 45_000,
       });
-    } catch (e: any) {
-      test.skip(true, `ngrok dropped: ${String(e).slice(0, 80)}`);
+    } catch (e: unknown) {
+      test.skip(true, formatSkipReason(e));
       return;
     }
     expect(page.url()).toContain("admin");
@@ -165,8 +169,8 @@ test.describe("Pillar 2 — Django Admin Panel E2E", () => {
         headers: { "ngrok-skip-browser-warning": "true" },
         timeout: 15_000,
       });
-    } catch (e: any) {
-      test.skip(true, `ngrok dropped: ${String(e).slice(0, 80)}`);
+    } catch (e: unknown) {
+      test.skip(true, formatSkipReason(e));
       return;
     }
     expect(res.status()).toBe(200);
@@ -198,8 +202,8 @@ test.describe("Pillar 2 — Admin Concurrency", () => {
           })
         )
       );
-    } catch (e: any) {
-      test.skip(true, `ngrok dropped: ${String(e).slice(0, 80)}`);
+    } catch (e: unknown) {
+      test.skip(true, formatSkipReason(e));
       return;
     }
     const statuses = responses.map((r) => r.status());

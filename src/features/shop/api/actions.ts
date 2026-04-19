@@ -68,7 +68,7 @@ export const GalleryAction = async (formdata: FormData) => {
   }
   redirect("/dashboard/products?step=specification");
 };
-export const SpecificationAction = async (prev: any, formdata: FormData) => {
+export const SpecificationAction = async (prev: unknown, formdata: FormData) => {
   void prev;
   const data = Object.fromEntries(formdata.entries());
 
@@ -81,7 +81,7 @@ export const SpecificationAction = async (prev: any, formdata: FormData) => {
   }
   redirect("/dashboard/products?step=sizes");
 };
-export const SizesAction = async (prev: any, formdata: FormData) => {
+export const SizesAction = async (prev: unknown, formdata: FormData) => {
   void prev;
   const newData = {
     sizes: {

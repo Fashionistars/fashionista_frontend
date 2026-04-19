@@ -73,9 +73,17 @@ const BasicInformation = ({
     updateNewProductField({ [e.target.name]: e.target.value });
   };
 
+  // This adapter keeps the legacy server action validation flow while
+  // satisfying the App Router form contract of Promise<void>.
+  const handleBasicInformationSubmit = async (
+    formData: FormData,
+  ): Promise<void> => {
+    await BasicInformationAction(formData);
+  };
+
   return (
     <form
-      action={BasicInformationAction as any}
+      action={handleBasicInformationSubmit}
       id="basic"
       className="flex flex-col gap-8 w-full shrink-0"
     >

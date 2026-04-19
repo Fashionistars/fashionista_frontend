@@ -14,9 +14,16 @@ const Category = ({
   ) => {
     updateNewProductField({ [e.target.name]: e.target.value });
   };
+
+  // This adapter keeps the legacy server action validation flow while
+  // satisfying the App Router form contract of Promise<void>.
+  const handleCategorySubmit = async (formData: FormData): Promise<void> => {
+    await CategoryAction(formData);
+  };
+
   return (
     <form
-      action={CategoryAction as any}
+      action={handleCategorySubmit}
       id="category"
       className="space-y-10 w-full"
     >

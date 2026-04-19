@@ -56,7 +56,7 @@ export default async function Home(props: PageProps) {
         </p>
         <div className="flex items-center gap-2">
           <p className="font-raleway font-semibold text-lg md:text-2xl text-black">
-            {formatCurrency((deal as any).new_price || deal.price)}
+            {formatCurrency(deal.price)}
           </p>
           <p className="font-raleway font-semibold  md:text-xl line-through text-[#848484]">
             {formatCurrency(deal.price)}
@@ -104,7 +104,7 @@ export default async function Home(props: PageProps) {
       </div>
 
       <ShopByCategory />
-      <LatestCollection searchParams={searchParams as any} />
+      <LatestCollection searchParams={searchParams} />
       <div className=" w-full h-[593px] bg-[#fda600] md:h-[746px] relative p-10 md:p-14 lg:p-24 flex flex-col gap-5 md:gap-10 items-center">
         <p className="font-raleway font-semibold text-xl text-black">
           SENATOR OUTFITS

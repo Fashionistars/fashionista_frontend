@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -7,19 +7,28 @@ import AdminTopBanner from "@/components/shared/utilities/AdminTopBanner";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [openPathname, setOpenPathname] = useState<string | null>(null);
   const pathname = usePathname();
-  useEffect(() => {
+  const isMenuOpen = isOpen && openPathname === pathname;
+
+  const openMenu = () => {
+    setOpenPathname(pathname);
+    setIsOpen(true);
+  };
+
+  const closeMenu = () => {
     setIsOpen(false);
-  }, [pathname]);
+    setOpenPathname(null);
+  };
   return (
     <div className="flex flex-col">
       <div className="p-[11px] w-full bg-[#F4F3EC]">
         <div className="flex items-center justify-between px-2.5 bg-[#EDE7D9] rounded-[5px] h-[50px] lg:hidden">
           <button
-            onClick={() => setIsOpen(true)}
+            onClick={openMenu}
             className="w-[34px] h-[34px] flex justify-center  items-center bg-[#F4F3EC] border-[0.8px] border-black rounded-full"
           >
-            <Image src="/menu.svg" alt="" />
+            <Image src="/menu.svg" alt="Open menu" width={34} height={34} />
           </button>
           <div className="flex items-center">
             <Image
@@ -27,7 +36,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               width={55}
               height={55}
               alt="logo"
-              className="w-[39px] h-[38px]"
+              className="w-[39px] h-auto"
+              style={{ height: "auto" }}
             />
             <h2 className="font-bon_foyage px-3 text-[25px] leading-[25px] text-black">
               Fashionistar
@@ -89,11 +99,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       <div
         className={`w-full lg:left-0 md:w-[40%] lg:w-[25%] z-50 h-screen bg-[#141414] fixed top-0 transition-all duration-300 ${
-          isOpen ? "left-0" : "left-[-100%]"
+          isMenuOpen ? "left-0" : "left-[-100%]"
         }`}
       >
         <button
-          onClick={() => setIsOpen(false)}
+          onClick={closeMenu}
           className=" w-8 h-8 flex justify-center items-center absolute top-2 right-2 md:hidden"
         >
           <svg
@@ -119,7 +129,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             width={55}
             height={55}
             alt="logo"
-            className="w-[55px] h-[54px]"
+            className="w-[55px] h-auto"
+            style={{ height: "auto" }}
           />
           <h2 className="font-bon_foyage px-3 text-4xl leading-9 text-white">
             Fashionistar
@@ -146,14 +157,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   <path
                     d="M6.01398 2.26909L2.42065 5.06909C1.82065 5.53576 1.33398 6.52909 1.33398 7.28243V12.2224C1.33398 13.7691 2.59398 15.0358 4.14065 15.0358H11.8607C13.4073 15.0358 14.6673 13.7691 14.6673 12.2291V7.37576C14.6673 6.56909 14.1273 5.53576 13.4673 5.07576L9.34732 2.18909C8.41398 1.53576 6.91398 1.56909 6.01398 2.26909Z"
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M8 12.3691V10.3691"
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
                 Dashboard
@@ -220,22 +231,22 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     d="M5.66663 9.875C5.66663 11.155 6.71996 12.2083 7.99996 12.2083C9.27996 12.2083 10.3333 11.155 10.3333 9.875"
                     stroke="currentColor"
                     stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M5.87329 1.70825L3.45996 4.12825"
                     stroke="currentColor"
                     stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M10.1267 1.70825L12.54 4.12825"
                     stroke="currentColor"
                     stroke-miterlimit="10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M1.33337 5.60824C1.33337 4.3749 1.99337 4.2749 2.81337 4.2749H13.1867C14.0067 4.2749 14.6667 4.3749 14.6667 5.60824C14.6667 7.04157 14.0067 6.94157 13.1867 6.94157H2.81337C1.99337 6.94157 1.33337 7.04157 1.33337 5.60824Z"
@@ -244,7 +255,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   <path
                     d="M2.33337 7.04175L3.27337 12.8017C3.48671 14.0951 4.00004 15.0417 5.90671 15.0417H9.92671C12 15.0417 12.3067 14.1351 12.5467 12.8817L13.6667 7.04175"
                     stroke="currentColor"
-                    stroke-linecap="round"
+                    strokeLinecap="round"
                   />
                 </svg>
                 Orders
