@@ -414,7 +414,13 @@ const page = () => {
       </section>
       <section className="relative min-h-[220px]">
         <div className="relative min-h-[220px] w-full">
-          <Image src="/bg.svg" alt="" fill sizes="100vw" className="w-full" />
+          <Image
+            src="/bg.svg"
+            alt=""
+            fill
+            sizes="(max-width: 768px) 100vw, 85vw"
+            className="object-cover"
+          />
         </div>
         <div className="absolute top-0 left-0 bg-[#fda600]/70 w-full h-full flex items-center justify-around">
           <div className="flex flex-col items-center gap-[2px]">

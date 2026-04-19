@@ -141,6 +141,7 @@ const nextConfig = {
     },
   ],
   redirects: async () => [
+    { source: "/auth", destination: "/auth/sign-in", permanent: true },
     { source: "/login", destination: "/auth/sign-in", permanent: true },
     { source: "/register", destination: "/auth/choose-role", permanent: true },
     { source: "/signup", destination: "/auth/choose-role", permanent: true },
@@ -178,7 +179,12 @@ const nextConfig = {
       permanent: true,
     },
     { source: "/shop", destination: "/shops", permanent: true },
+    { source: "/latest", destination: "/collections", permanent: true },
     { source: "/location", destination: "/contact-us", permanent: true },
+    { source: "/pages", destination: "/blog", permanent: true },
+    { source: "/client", destination: "/client/dashboard", permanent: true },
+    { source: "/wallet", destination: "/client/dashboard/wallet", permanent: true },
+    { source: "/orders", destination: "/vendor/orders", permanent: true },
     {
       source: "/client/settings",
       destination: "/client/dashboard/account-details",

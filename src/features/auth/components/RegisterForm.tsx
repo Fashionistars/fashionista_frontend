@@ -14,7 +14,6 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import Link from "next/link";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, Mail, User } from "lucide-react";
 import { useState } from "react";
@@ -367,9 +366,9 @@ export function RegisterForm({ role = "client" }: RegisterFormProps) {
       {/* ── Footer ───────────────────────────────────────────────────── */}
       <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link href="/auth/sign-in" className="text-primary font-semibold hover:underline">
+        <a href="/auth/sign-in" className="text-primary font-semibold hover:underline">
           Sign in
-        </Link>
+        </a>
       </p>
     </form>
   );

@@ -10,6 +10,7 @@ const AUTH_PAGES = new Set([
 ]);
 
 const LEGACY_REDIRECTS = new Map<string, string>([
+  ["/auth", "/auth/sign-in"],
   ["/login", "/auth/sign-in"],
   ["/register", "/auth/choose-role"],
   ["/signup", "/auth/choose-role"],
@@ -19,7 +20,12 @@ const LEGACY_REDIRECTS = new Map<string, string>([
   ["/forgot-password", "/auth/forgot-password"],
   ["/reset-password", "/auth/forgot-password"],
   ["/shop", "/shops"],
+  ["/latest", "/collections"],
   ["/location", "/contact-us"],
+  ["/pages", "/blog"],
+  ["/client", "/client/dashboard"],
+  ["/wallet", "/client/dashboard/wallet"],
+  ["/orders", "/vendor/orders"],
   ["/client/settings", "/client/dashboard/account-details"],
 ]);
 

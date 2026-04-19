@@ -93,14 +93,39 @@ test.describe("Auth — Login Page", () => {
     ).toBe(false);
   });
 
+  test("Register page also stays free of duplicate GIS initialization warnings", async ({
+    page,
+  }) => {
+    const consoleMessages: string[] = [];
+    page.on("console", (message) => {
+      consoleMessages.push(message.text());
+    });
+
+    await page.goto("/auth/sign-up?role=vendor");
+    await page.waitForLoadState("domcontentloaded");
+    await page.waitForTimeout(2_000);
+
+    expect(
+      consoleMessages.some((message) =>
+        message.includes("google.accounts.id.initialize() is called multiple times"),
+      ),
+    ).toBe(false);
+  });
+
   test("'Create one' link navigates to /auth/choose-role", async ({ page }) => {
     const link = page.locator('a[href="/auth/choose-role"]');
     await expect(link).toBeVisible({ timeout: 10_000 });
+    await link.click();
+    await page.waitForURL(/\/auth\/choose-role$/, { timeout: 10_000 });
+    await expect(page.locator("#choose-role-vendor")).toBeVisible({ timeout: 10_000 });
   });
 
   test("'Forgot password' link navigates to /auth/forgot-password", async ({ page }) => {
     const link = page.locator('a[href="/auth/forgot-password"]');
     await expect(link).toBeVisible({ timeout: 10_000 });
+    await link.click();
+    await page.waitForURL(/\/auth\/forgot-password$/, { timeout: 10_000 });
+    await expect(page.locator("#reset-submit-btn")).toBeVisible({ timeout: 10_000 });
   });
 });
 
@@ -221,6 +246,19 @@ test.describe("Auth — OTP Verify Page", () => {
     const btn = page.locator("#otp-verify-btn");
     await expect(btn).toBeDisabled({ timeout: 10_000 });
   });
+
+  test("Email confirm reset page resolves on the canonical dynamic route", async ({
+    page,
+  }) => {
+    const response = await page.goto(
+      "/auth/forgot-password/confirm-email/demo-user/demo-token",
+    );
+
+    expect(response?.status()).toBe(200);
+    await expect(page.locator("#pw-reset-submit")).toBeVisible({
+      timeout: 10_000,
+    });
+  });
 });
 
 test.describe("Auth — Navbar Account Dropdown", () => {
@@ -236,6 +274,62 @@ test.describe("Auth — Navbar Account Dropdown", () => {
     const panel = page.locator("#account-options-panel");
     await expect(panel).toBeVisible({ timeout: 10_000 });
     await expect(page.locator("#nav-signin-link")).toBeVisible({ timeout: 10_000 });
+  });
+
+  test("Guest dropdown sign-in link navigates on the first click", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    await page.waitForLoadState("domcontentloaded");
+
+    await page
+      .locator('button[aria-controls="account-options-panel"]:visible')
+      .first()
+      .click();
+    await page.locator("#nav-signin-link").click();
+
+    await page.waitForURL(/\/auth\/sign-in/, { timeout: 10_000 });
+    await expect(page.locator("#login-submit-btn")).toBeVisible({
+      timeout: 10_000,
+    });
+  });
+});
+
+test.describe("Auth — Public Link Navigation", () => {
+  test("Choose-role vendor card navigates on the first click", async ({ page }) => {
+    await page.goto("/auth/choose-role");
+    await page.waitForLoadState("domcontentloaded");
+
+    await page.locator("#choose-role-vendor").click();
+    await page.waitForURL(/\/auth\/sign-up\?role=vendor$/, { timeout: 10_000 });
+    await expect(page.locator("#register-submit-btn")).toBeVisible({
+      timeout: 10_000,
+    });
+  });
+
+  test("Choose-role sign-in footer navigates on the first click", async ({ page }) => {
+    await page.goto("/auth/choose-role");
+    await page.waitForLoadState("domcontentloaded");
+
+    await page.getByRole("link", { name: /sign in/i }).click();
+    await page.waitForURL(/\/auth\/sign-in$/, { timeout: 10_000 });
+    await expect(page.locator("#login-submit-btn")).toBeVisible({
+      timeout: 10_000,
+    });
+  });
+
+  test("Register footer sign-in link navigates on the first click", async ({
+    page,
+  }) => {
+    await page.goto("/auth/sign-up?role=client");
+    await page.waitForLoadState("domcontentloaded");
+
+    await page.getByRole("link", { name: /sign in/i }).click();
+    await page.waitForURL(/\/auth\/sign-in$/, { timeout: 10_000 });
+    await expect(page.locator("#login-submit-btn")).toBeVisible({
+      timeout: 10_000,
+    });
   });
 });
 

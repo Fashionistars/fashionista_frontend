@@ -36,12 +36,12 @@ const Hero = () => {
               </button>
             </div>
           </form>
-          <button
-            type="button"
-            className="w-[144px] h-[43px] font-semibold font-raleway rounded-[100px] bg-[#01454a] text-white shrink-0"
+          <Link
+            href="/shops"
+            className="w-[144px] h-[43px] font-semibold font-raleway rounded-[100px] bg-[#01454a] text-white shrink-0 inline-flex items-center justify-center"
           >
             Shop now
-          </button>
+          </Link>
         </div>
         {/*  w-[270px] h-[300px] md:w-[505px] md:h-[550px] */}
         <div className="absolute -right-3 -bottom-5 lg:right-0 lg:bottom-0">

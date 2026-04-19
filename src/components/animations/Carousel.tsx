@@ -54,7 +54,14 @@ const Slider = () => {
         </div>
         <div className="relative flex justify-center">
           <div className="z-10 absolute -top-12">
-            <Image src={slide.image} alt="" className="w-full h-full" />
+            <Image
+              src={slide.image}
+              alt=""
+              width={720}
+              height={720}
+              className="w-full h-full"
+              style={{ width: "auto", height: "auto" }}
+            />
           </div>
         </div>
       </div>

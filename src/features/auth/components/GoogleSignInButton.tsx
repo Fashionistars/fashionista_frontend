@@ -49,6 +49,8 @@ declare global {
         };
       };
     };
+    __fashionistarGoogleScriptPromise?: Promise<void>;
+    __fashionistarGoogleIdentityInitialized?: boolean;
   }
 }
 
@@ -64,6 +66,10 @@ function loadGoogleIdentityScript(): Promise<void> {
 
   if (window.google?.accounts?.id) {
     return Promise.resolve();
+  }
+
+  if (window.__fashionistarGoogleScriptPromise) {
+    return window.__fashionistarGoogleScriptPromise;
   }
 
   if (googleScriptPromise) {
@@ -96,6 +102,7 @@ function loadGoogleIdentityScript(): Promise<void> {
     document.head.appendChild(script);
   });
 
+  window.__fashionistarGoogleScriptPromise = googleScriptPromise;
   return googleScriptPromise;
 }
 
@@ -194,7 +201,8 @@ function RenderedGoogleButton({
           return;
         }
 
-        if (!hasInitializedGoogleIdentity) {
+        // Persist GIS init state on window so Fast Refresh does not reinitialize it.
+        if (!window.__fashionistarGoogleIdentityInitialized && !hasInitializedGoogleIdentity) {
           window.google.accounts.id.initialize({
             client_id: clientId,
             callback: (response) => {
@@ -204,6 +212,7 @@ function RenderedGoogleButton({
             cancel_on_tap_outside: true,
           });
 
+          window.__fashionistarGoogleIdentityInitialized = true;
           hasInitializedGoogleIdentity = true;
         }
 

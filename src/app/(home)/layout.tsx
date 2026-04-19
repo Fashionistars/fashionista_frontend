@@ -5,10 +5,8 @@ import NewMobileNav from "@/components/shared/navigation/NewMobileNav";
 
 export default function Home({
   children,
-  modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
 }>) {
   return (
     <>
@@ -18,7 +16,9 @@ export default function Home({
             <div className="hidden md:flex justify-between items-center gap-3  font-raleway font-bold md:w-1/2 lg:w-[25%]">
               <Link href="/about-us">About Us</Link>
               <Link href="/wishlist">Wishlist</Link>
-              <Link href="#">Tracking Order</Link>
+              <Link href="/auth/sign-in?returnUrl=%2Fclient%2Fdashboard%2Forders%2Ftrack-order">
+                Tracking Order
+              </Link>
             </div>
             <div className="hidden md:flex justify-end md:w-1/2 lg:w-[30%] lg:order-3 gap-4 ">
               <div className="flex items-center gap-2 text-[#BBBBBB]">
@@ -178,8 +178,7 @@ export default function Home({
           <NewNavbar />
         </header>
         <section>{children}</section>
-        {/* @modal parallel slot — renders auth forms as glassmorphism overlays */}
-        {modal}
+        {/* Canonical auth now always renders on dedicated /auth/* pages. */}
       </main>
       {/* <Footer /> */}
       <NewFooter />
