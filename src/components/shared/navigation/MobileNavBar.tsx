@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -8,14 +8,23 @@ import { usePathname } from "next/navigation";
 const MobileNavBar = () => {
   const pathname = usePathname();
   const [showNav, setShowNav] = useState<boolean>(false);
-  useEffect(() => {
+  const [openPathname, setOpenPathname] = useState<string | null>(null);
+  const isNavOpen = showNav && openPathname === pathname;
+
+  const openNav = () => {
+    setOpenPathname(pathname);
+    setShowNav(true);
+  };
+
+  const closeNav = () => {
     setShowNav(false);
-  }, [pathname]);
+    setOpenPathname(null);
+  };
   return (
     <div className="flex justify-between items-center bg-[#F1D858] rounded-[5px] md:hidden px-1">
       <div
         className={`absolute top-0 w-full transition-all ease-in-out duration-150  flex flex-col justify-between min-h-screen bg-[#fff] z-50 ${
-          showNav ? "left-0" : "-left-[100%]"
+          isNavOpen ? "left-0" : "-left-[100%]"
         }`}
       >
         <div className="flex justify-between items-center py-6 px-5 border-b border-[#d9d9d9]">
@@ -26,7 +35,7 @@ const MobileNavBar = () => {
             </h2>
           </div>
           <button
-            onClick={() => setShowNav(false)}
+            onClick={closeNav}
             className=" w-6 h-6 flex justify-center items-center"
           >
             <svg
@@ -78,7 +87,10 @@ const MobileNavBar = () => {
           </div>
         </div>
 
-        <nav className="z-50 relative flex  flex-col gap-4 justify-between px-4 font-satoshi w-full h-1/2">
+        <nav
+          onClick={closeNav}
+          className="z-50 relative flex  flex-col gap-4 justify-between px-4 font-satoshi w-full h-1/2"
+        >
           <Link
             href="/"
             className={`text-[#282828] leading-5 ${
@@ -263,7 +275,7 @@ const MobileNavBar = () => {
         </div>
       </div>
       <button
-        onClick={() => setShowNav(true)}
+        onClick={openNav}
         className="w-[34px] h-[34px] flex justify-center  items-center bg-[#F4F3EC] border-[0.8px] border-black rounded-full"
       >
         <Image src="/menu.svg" alt="menu" width={24} height={24} />

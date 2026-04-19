@@ -1,27 +1,34 @@
-// @ts-nocheck
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import logo from "../../../../public/logo.svg";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import menu from "../../../../public/menu.svg";
-import Modal from "@/app/components/Modal";
 import { RoleGuard } from "@/features/auth/components/RoleGuard";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [openPathname, setOpenPathname] = useState<string | null>(null);
   const pathname = usePathname();
-  useEffect(() => {
+  const isMenuOpen = isOpen && openPathname === pathname;
+
+  const openMenu = () => {
+    setOpenPathname(pathname);
+    setIsOpen(true);
+  };
+
+  const closeMenu = () => {
     setIsOpen(false);
-  }, [pathname]);
+    setOpenPathname(null);
+  };
   return (
     <RoleGuard requiredRole="vendor">
       <div className="flex flex-col">
       <div className="p-[11px] w-full bg-[#F4F3EC]">
         <div className="flex items-center justify-between px-2.5 bg-[#EDE7D9] rounded-[5px] h-[50px] lg:hidden">
           <button
-            onClick={() => setIsOpen(true)}
+            onClick={openMenu}
             className="w-[34px] h-[34px] flex justify-center  items-center bg-[#F4F3EC] border-[0.8px] border-black rounded-full"
           >
             <Image src={menu} alt="" />
@@ -88,11 +95,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       <div
         className={`w-full lg:left-0 md:w-[40%] lg:w-[25%] z-50 h-screen bg-[#141414] fixed top-0 transition-all duration-300 ${
-          isOpen ? "left-0" : "left-[-100%]"
+          isMenuOpen ? "left-0" : "left-[-100%]"
         }`}
       >
         <button
-          onClick={() => setIsOpen(false)}
+          onClick={closeMenu}
           className=" w-8 h-8 flex justify-center items-center absolute top-2 right-2 md:hidden"
         >
           <svg
@@ -273,17 +280,17 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                       <path
                         d="M18.0989 21.0512L18.0989 21.0512C17.2758 21.2342 16.261 21.3 15.024 21.3H12C11.282 21.3 10.7 20.718 10.7 20V12C10.7 11.282 11.282 10.7 12 10.7H20C20.718 10.7 21.3 11.282 21.3 12V15.024C21.3 16.261 21.2342 17.2758 21.0512 18.0989L21.0512 18.0989C20.8674 18.9258 20.5617 19.5776 20.0696 20.0696C19.5776 20.5617 18.9258 20.8674 18.0989 21.0512Z"
                         stroke="currentColor"
-                        stroke-width="1.4"
+                        strokeWidth="1.4"
                       />
                       <path
                         d="M2.94885 18.0989L2.94885 18.0989C2.76589 17.2758 2.7 16.261 2.7 15.024V12C2.7 11.282 3.28202 10.7 4 10.7H6C6.71798 10.7 7.3 11.282 7.3 12V19.976C7.3 20.7413 6.70376 21.2097 6.14455 21.1017C6.06302 21.0859 5.98166 21.069 5.90054 21.0511C5.07399 20.8673 4.42237 20.5616 3.9304 20.0696C3.43835 19.5776 3.1326 18.9258 2.94885 18.0989Z"
                         stroke="currentColor"
-                        stroke-width="1.4"
+                        strokeWidth="1.4"
                       />
                       <path
                         d="M5.74914 2.26681L5.90071 2.94885C5.07393 3.13259 4.42217 3.43834 3.9301 3.9304C3.43805 4.42246 3.1323 5.07421 2.94856 5.90098L5.74914 2.26681ZM5.74914 2.26681L5.90072 2.94885C6.72397 2.76588 7.73865 2.7 8.9757 2.7H15.0237C16.2607 2.7 17.2754 2.76588 18.0987 2.94885C18.9254 3.1326 19.5772 3.43834 20.0692 3.9304L20.0693 3.93044M5.74914 2.26681L20.0693 3.93044M20.0693 3.93044C20.5613 4.42236 20.8669 5.07391 21.0508 5.90054M20.0693 3.93044L21.0508 5.90054M21.0508 5.90054C21.0688 5.98166 21.0857 6.06302 21.1014 6.14455L21.0508 5.90054ZM4.05803 7.3C3.28095 7.3 2.79315 6.68327 2.90537 6.10806L21.1015 6.14466C21.2094 6.70384 20.741 7.3 19.9757 7.3H4.05803ZM2.90537 6.10804C2.9189 6.03871 2.93329 5.9697 2.94855 5.90101L2.90537 6.10804Z"
                         stroke="currentColor"
-                        stroke-width="1.4"
+                        strokeWidth="1.4"
                       />
                     </svg>
                     Catelog

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Image from "next/image";
 import { CardProps } from "@/core/types";
 
@@ -9,7 +8,7 @@ const CartCard = ({ data }: CartProp) => {
   return (
     <div>
       <div>
-        <Image src={data.image} alt="" />
+        <Image src={data.image} alt={data.title} width={160} height={160} />
       </div>
       <div>
         <div>

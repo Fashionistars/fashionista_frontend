@@ -11,10 +11,12 @@ interface CollectionsProps {
 const LatestCollection = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams:
+    | Promise<{ [key: string]: string | string[] | undefined }>
+    | { [key: string]: string | string[] | undefined };
 }) => {
-  // Next.js 16 app routes hand searchParams in as a promise here.
-  const resolvedParams = await searchParams;
+  // Next.js 16 app routes may hand searchParams in as a promise.
+  const resolvedParams = await Promise.resolve(searchParams);
 
   // Mock collections for development
   const mockCollections: CollectionsProps[] = [

@@ -1,37 +1,27 @@
-// @ts-nocheck
-/* eslint-disable */
 "use client";
-import React, {
-  useState,
-  useRef,
-  useCallback,
-  KeyboardEvent,
-  useMemo,
-} from "react";
+import React, { useState, useRef, useCallback, KeyboardEvent } from "react";
 
-const VerificationInput: React.FC = () => {
-  const [values, setValues] = useState<string[]>([]);
-  const boxRefs = [
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-  ];
+const OTP_INPUT_COUNT = 4;
+
+const VerificationInput = () => {
+  const [values, setValues] = useState<string[]>(
+    Array.from({ length: OTP_INPUT_COUNT }, () => ""),
+  );
+  const boxRefs = useRef<Array<HTMLInputElement | null>>([]);
 
   const handleInput = useCallback(
     (
       e: React.FormEvent<HTMLInputElement>,
       currentIndex: number,
       nextIndex: number,
-      prevIndex: number,
     ) => {
       const { value } = e.currentTarget;
       if (
         value.length === 1 &&
-        nextIndex < boxRefs.length &&
-        boxRefs[nextIndex].current
+        nextIndex < boxRefs.current.length &&
+        boxRefs.current[nextIndex]
       ) {
-        boxRefs[nextIndex]?.current?.focus();
+        boxRefs.current[nextIndex]?.focus();
       }
       setValues((prev) => {
         const newValues = [...prev];
@@ -48,14 +38,15 @@ const VerificationInput: React.FC = () => {
       currentIndex: number,
       prevIndex: number,
     ) => {
+      void currentIndex;
       if (
         e.key === "Backspace" &&
         prevIndex >= 0 &&
-        prevIndex < boxRefs.length &&
-        boxRefs[prevIndex].current &&
+        prevIndex < boxRefs.current.length &&
+        boxRefs.current[prevIndex] &&
         e.currentTarget.value === ""
       ) {
-        boxRefs[prevIndex]?.current?.focus();
+        boxRefs.current[prevIndex]?.focus();
       }
     },
     [boxRefs],
@@ -65,15 +56,17 @@ const VerificationInput: React.FC = () => {
 
   return (
     <div className="flex justify-between space-x-2 w-full">
-      {boxRefs.map((boxRef, index) => (
+      {values.map((value, index) => (
         <input
           key={index}
           type="text"
           maxLength={1}
           className="w-[120px] h-[80px] text-center text-[32px] font-bold font-satoshi border-[1.5px] border-[#d9d9d9] outline-none rounded-[15px]"
-          ref={boxRef}
-          value={values[index] || ""}
-          onInput={(e) => handleInput(e, index, index + 1, index - 1)}
+          ref={(node) => {
+            boxRefs.current[index] = node;
+          }}
+          value={value}
+          onInput={(e) => handleInput(e, index, index + 1)}
           onKeyDown={(e) => handleKeyDown(e, index, index - 1)}
         />
       ))}

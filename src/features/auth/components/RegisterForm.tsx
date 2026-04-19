@@ -57,7 +57,6 @@ export function RegisterForm({ role = "client" }: RegisterFormProps) {
     control,
     formState: { errors },
     setValue,
-    watch,
   } = useForm<RegisterPayload>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -73,9 +72,9 @@ export function RegisterForm({ role = "client" }: RegisterFormProps) {
 
   const { mutate, isPending } = useMutation({
     mutationFn: register,
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       setApiError(null);
-      const identifier = mode === "email" ? watch("email") : watch("phone");
+      const identifier = mode === "email" ? variables.email : variables.phone;
       setPendingOTP(
         mode === "email" ? { email: identifier } : { phone: identifier },
       );

@@ -1,22 +1,10 @@
-// @ts-nocheck
 import Link from "next/link";
 import TopBanner from "@/components/shared/utilities/TopBanner";
 import BarChart from "@/components/ui/compounds/Charts";
 import { ChartOptions, ChartData } from "chart.js";
-import { fetchWithAuth } from "@/lib/api/fetchAuth";
 import { getVendor } from "@/core/services/api";
 
 const page = async () => {
-  const getVendorStats = async () => {
-    try {
-      const vendorStat = await fetchWithAuth("/vendor/dashboard");
-      return vendorStat;
-    } catch {
-      return null;
-    }
-  };
-  // const vendorStat = await getVendorStats();
-  // console.log(vendorStat);
   const vendor = await getVendor();
   void vendor;
 

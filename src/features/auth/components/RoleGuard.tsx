@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { AuthHydrationGate } from "@/features/auth/components/AuthHydrationGate";
 import { getCanonicalDashboardPath, isRoleAllowed, normalizeCanonicalRole } from "@/features/auth/lib/auth-routing";
 import type { CanonicalRole } from "@/features/auth/lib/auth.types";
 import { useAuthStore } from "@/features/auth/store/auth.store";
+import { useIsHydrated } from "@/lib/react/useIsHydrated";
 
 interface RoleGuardProps {
   requiredRole: CanonicalRole | CanonicalRole[];
@@ -21,7 +22,7 @@ export function RoleGuard({
 }: RoleGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [ready, setReady] = useState(false);
+  const hydrated = useIsHydrated();
   const accessToken = useAuthStore((state) => state.accessToken);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const user = useAuthStore((state) => state.user);
@@ -32,11 +33,7 @@ export function RoleGuard({
   );
 
   useEffect(() => {
-    setReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!ready) {
+    if (!hydrated) {
       return;
     }
 
@@ -50,9 +47,9 @@ export function RoleGuard({
     }
   }, [
     accessToken,
+    hydrated,
     isAuthenticated,
     pathname,
-    ready,
     requiredRole,
     role,
     router,
@@ -60,7 +57,7 @@ export function RoleGuard({
     user?.role,
   ]);
 
-  if (!ready || !isAuthenticated || !accessToken || !isRoleAllowed(requiredRole, role)) {
+  if (!hydrated || !isAuthenticated || !accessToken || !isRoleAllowed(requiredRole, role)) {
     return <>{fallback}</>;
   }
 

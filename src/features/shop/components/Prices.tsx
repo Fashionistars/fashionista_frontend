@@ -18,9 +18,18 @@ const Prices = ({
   };
   console.log("New Product details", newProductFields);
 
-  const pricesFormAction = PricesAction as any;
+  // This adapter keeps the legacy server action validation flow while
+  // satisfying the App Router form contract of Promise<void>.
+  const handlePricesSubmit = async (formData: FormData): Promise<void> => {
+    await PricesAction(formData);
+  };
+
   return (
-    <form id="prices" action={pricesFormAction} className="space-y-10 w-full">
+    <form
+      id="prices"
+      action={handlePricesSubmit}
+      className="space-y-10 w-full"
+    >
       <div className="space-y-2">
         <h2 className="font-satoshi font-medium text-lg leading-6 text-black">
           Prices
@@ -62,7 +71,7 @@ const Prices = ({
             type="text"
             name="shipping_amount"
             className="border-[1.5px] border-[#D9D9D9] h-[60px] rounded-[70px] w-full px-3 outline-none text-[#000]"
-            value={1000}
+            value="1000"
             readOnly
           />
           <span className="font-satoshi font-medium text-xs text-[#555555]">

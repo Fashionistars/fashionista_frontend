@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -43,10 +43,18 @@ export default function VendorLayout({
   const router = useRouter();
   const logout = useAuthStore((state) => state.logout);
   const [isOpen, setIsOpen] = useState(false);
+  const [openPathname, setOpenPathname] = useState<string | null>(null);
+  const isMenuOpen = isOpen && openPathname === pathname;
 
-  useEffect(() => {
+  const openMenu = () => {
+    setOpenPathname(pathname);
+    setIsOpen(true);
+  };
+
+  const closeMenu = () => {
     setIsOpen(false);
-  }, [pathname]);
+    setOpenPathname(null);
+  };
 
   const handleLogout = () => {
     logout();
@@ -59,24 +67,24 @@ export default function VendorLayout({
         <button
           type="button"
           aria-label="Open vendor navigation"
-          onClick={() => setIsOpen(true)}
+          onClick={openMenu}
           className="fixed left-4 top-4 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white text-black shadow-sm lg:hidden"
         >
           <Menu className="h-5 w-5" />
         </button>
 
-        {isOpen ? (
+        {isMenuOpen ? (
           <button
             type="button"
             aria-label="Close vendor navigation"
-            onClick={() => setIsOpen(false)}
+            onClick={closeMenu}
             className="fixed inset-0 z-40 bg-black/35 lg:hidden"
           />
         ) : null}
 
         <aside
           className={`fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col bg-[#141414] text-white transition-transform duration-200 lg:translate-x-0 ${
-            isOpen ? "translate-x-0" : "-translate-x-full"
+            isMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
           <div className="flex items-center justify-between border-b border-white/10 px-6 py-6">
@@ -96,7 +104,7 @@ export default function VendorLayout({
             <button
               type="button"
               aria-label="Close vendor navigation"
-              onClick={() => setIsOpen(false)}
+              onClick={closeMenu}
               className="rounded-full border border-white/10 p-2 text-white lg:hidden"
             >
               <X className="h-4 w-4" />

@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import axios from "axios";
 import axiosInstance from "./axiosInstance";
 
 export const fetchWithAuth = async (
@@ -23,8 +24,8 @@ export const fetchWithAuth = async (
       data,
     });
     return response.data;
-  } catch (error: any) {
-    if (error.response && error.response.status === 401) {
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
       try {
         const refreshResponse = await axiosInstance.post("/auth/refresh", {
           refresh: refreshToken,

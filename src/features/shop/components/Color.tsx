@@ -1,8 +1,25 @@
 "use client";
 import { NewProductType } from "@/types";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
+
+function getStoredImagePath() {
+  if (typeof window === "undefined") {
+    return "";
+  }
+
+  try {
+    const storedImageData = localStorage.getItem("image_1");
+    const parsedImageData = storedImageData
+      ? (JSON.parse(storedImageData) as { path?: string })
+      : null;
+
+    return parsedImageData?.path ?? "";
+  } catch {
+    return "";
+  }
+}
 
 const Color = ({
   newProductFields,
@@ -11,23 +28,16 @@ const Color = ({
   newProductFields: NewProductType;
   updateNewProductField: (fields: Partial<NewProductFieldTypes>) => void;
 }) => {
-  const [preview, setPreview] = useState<string | undefined>(undefined);
-  const [fileName, setFileName] = useState<string>("");
+  const [preview, setPreview] = useState<string | undefined>(
+    getStoredImagePath() || undefined,
+  );
+  const [fileName, setFileName] = useState<string>(() => {
+    const storedImagePath = getStoredImagePath();
+    return storedImagePath.split("/").pop() || "";
+  });
   void preview;
   void fileName;
   void setFileName;
-
-  // Load the image preview from local storage on initial render
-  useEffect(() => {
-    const storedImageData = localStorage.getItem("image_1");
-    const parsedImageData = storedImageData
-      ? JSON.parse(storedImageData)
-      : null;
-    if (parsedImageData?.path) {
-      setPreview(parsedImageData.path);
-      setFileName(parsedImageData.path.split("/").pop() || "No file chosen");
-    }
-  }, []);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {

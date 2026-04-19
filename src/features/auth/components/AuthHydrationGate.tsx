@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useIsHydrated } from "@/lib/react/useIsHydrated";
 
 interface AuthHydrationGateProps {
   children: React.ReactNode;
@@ -11,11 +11,7 @@ export function AuthHydrationGate({
   children,
   fallback = null,
 }: AuthHydrationGateProps) {
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
+  const hydrated = useIsHydrated();
 
   if (!hydrated) {
     return <>{fallback}</>;
