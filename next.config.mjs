@@ -5,6 +5,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 });
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000";
+const distDir = process.env.NEXT_DIST_DIR || ".next";
 
 function unique(values) {
   return [...new Set(values.filter(Boolean))];
@@ -100,7 +101,9 @@ const imageRemotePatterns = unique([
 ]);
 
 /** @type {import('next').NextConfig} */
+// Force Turbopack environment variable reload!
 const nextConfig = {
+  distDir,
   cacheComponents: true,
   allowedDevOrigins,
   experimental: {

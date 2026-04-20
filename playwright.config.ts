@@ -1,5 +1,14 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const baseURL =
+  process.env.PLAYWRIGHT_BASE_URL ??
+  process.env.NEXT_PUBLIC_FRONTEND_TUNNEL_URL ??
+  "http://localhost:3000";
+
+const webServerUrl = process.env.PLAYWRIGHT_WEB_SERVER_URL ?? "http://localhost:3000";
+const webServerCommand = process.env.PLAYWRIGHT_WEB_SERVER_COMMAND ?? "pnpm dev";
+const skipWebServer = process.env.PLAYWRIGHT_SKIP_WEB_SERVER === "1";
+
 /**
  * Playwright Configuration — Enterprise E2E Testing
  *
@@ -31,10 +40,7 @@ export default defineConfig({
 
   use: {
     /* Base URL — localtunnel in production simulation, localhost in dev */
-    baseURL:
-      process.env.PLAYWRIGHT_BASE_URL ??
-      process.env.NEXT_PUBLIC_FRONTEND_TUNNEL_URL ??
-      "http://localhost:3000",
+    baseURL,
 
     trace: "on-first-retry",
     screenshot: "only-on-failure",
@@ -69,11 +75,13 @@ export default defineConfig({
   ],
 
   /* Auto-start dev server when running tests locally */
-  webServer: {
-    command: "pnpm dev",
-    url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000, // 2 minutes for Turbopack cold start
-    stderr: "pipe",
-  },
+  webServer: skipWebServer
+    ? undefined
+    : {
+        command: webServerCommand,
+        url: webServerUrl,
+        reuseExistingServer: !process.env.CI,
+        timeout: 120 * 1000, // 2 minutes for Turbopack cold start
+        stderr: "pipe",
+      },
 });
