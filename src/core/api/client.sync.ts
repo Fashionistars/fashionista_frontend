@@ -17,6 +17,7 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from "axios";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 import {
   buildAuthSessionMirror,
   clearMirrorCookies,
@@ -77,6 +78,14 @@ apiSync.interceptors.request.use(
     // Skip ngrok browser warning page in development
     if (process.env.NODE_ENV === "development" && config.headers) {
       config.headers["ngrok-skip-browser-warning"] = "true";
+    }
+
+    // Inject Idempotency-Key for write operations
+    const method = config.method?.toUpperCase();
+    if (method && ["POST", "PUT", "PATCH"].includes(method)) {
+      if (config.headers && !config.headers["X-Idempotency-Key"] && !config.headers["x-idempotency-key"]) {
+        config.headers["X-Idempotency-Key"] = uuidv4();
+      }
     }
 
     return config;
