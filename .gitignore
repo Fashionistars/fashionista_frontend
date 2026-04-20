@@ -37,3 +37,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Live Reset Build Output
+.next-live-reset
+.next-live-reset/
