@@ -12,6 +12,7 @@
  */
 import ky, { type KyInstance } from "ky";
 import { readAccessToken } from "@/features/auth/lib/auth-session.client";
+import { v4 as uuidv4 } from "uuid";
 
 // ── Async Client Instance ─────────────────────────────────────────────────────
 export const apiAsync: KyInstance = ky.create({
@@ -44,6 +45,13 @@ export const apiAsync: KyInstance = ky.create({
         // Skip ngrok browser warning page in development
         if (process.env.NODE_ENV === "development") {
           request.headers.set("ngrok-skip-browser-warning", "true");
+        }
+        // Inject Idempotency-Key for write operations
+        const method = request.method.toUpperCase();
+        if (["POST", "PUT", "PATCH"].includes(method)) {
+          if (!request.headers.has("X-Idempotency-Key") && !request.headers.has("x-idempotency-key")) {
+            request.headers.set("X-Idempotency-Key", uuidv4());
+          }
         }
       },
     ],
