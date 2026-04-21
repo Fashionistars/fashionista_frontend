@@ -57,9 +57,9 @@ const Hero = () => {
       </div>
       {/* Carousel btn */}
       <div className="gap-2 md:gap-4 z-30 w-full -mt-20 md:mt-0 p-5 flex justify-center lg:justify-normal lg:flex-col ">
-        <div className="w-2.5 h-2.5 md:w-6 md:h-6 rounded-full bg-white md:bg-[#01454A] border-2 border[#d9d9d9] shadow" />
-        <div className="w-2.5 h-2.5 md:w-6 md:h-6 rounded-full bg-transparent md:bg-[#f5f5f5] border-2 border[#d9d9d9] shadow" />
-        <div className="w-2.5 h-2.5 md:w-6 md:h-6 rounded-full bg-transparent md:bg-[#f5f5f5] border-2 border[#d9d9d9] shadow" />
+        <div className="w-2.5 h-2.5 md:w-6 md:h-6 rounded-full bg-white md:bg-[#01454A] border-2 border-[#d9d9d9] shadow" />
+        <div className="w-2.5 h-2.5 md:w-6 md:h-6 rounded-full bg-transparent md:bg-[#f5f5f5] border-2 border-[#d9d9d9] shadow" />
+        <div className="w-2.5 h-2.5 md:w-6 md:h-6 rounded-full bg-transparent md:bg-[#f5f5f5] border-2 border-[#d9d9d9] shadow" />
       </div>
     </div>
   );
