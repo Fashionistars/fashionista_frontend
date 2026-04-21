@@ -9,7 +9,7 @@ const NewFooter = () => {
       className=" bg-white pt-8 md:pt-20"
     >
       <div className="w-full  px-8 md:px-12 lg:px-20 flex flex-col md:flex-row justify-between gap-10 md:gap-0 items-center">
-        <div className="w-full md:w-[46%] border-b border-[#D9D9D9D] md:border-none py-8 flex flex-col gap-5 items-center md:items-start">
+        <div className="w-full md:w-[46%] border-b border-[#D9D9D9] md:border-none py-8 flex flex-col gap-5 items-center md:items-start">
           <div className="flex items-center gap-2 w-1/2 md:w-fit">
             <Image
               src="/logo.svg"
@@ -30,7 +30,7 @@ const NewFooter = () => {
             collections.
           </p>
         </div>
-        <div className=" border-b border-[#D9D9D9D]  md:border-none pb-8 w-full md:w-[46%] space-y-5 ">
+        <div className=" border-b border-[#D9D9D9]  md:border-none pb-8 w-full md:w-[46%] space-y-5 ">
           <p className="font-raleway text-center md:text-left font-semibold text-2xl leading-10 text-black ">
             SIGN UP FOR EMAILS
           </p>

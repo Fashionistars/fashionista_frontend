@@ -85,7 +85,7 @@ const page = () => {
           </span>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-fluid py-10 px-2 md:px-20 gap-4 ">
-          <div className="hover:bg-[#fda600] transition-colors max--[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
+          <div className="hover:bg-[#fda600] transition-colors duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
             <svg
               className="text-[#fda600] w-[35px] h-[36px] md:w-[70px]  md:h-[70px] group-hover:text-black transition-colors duration-300"
               width="35"
@@ -130,7 +130,7 @@ const page = () => {
               mauris elit fames amet.
             </p>
           </div>
-          <div className="hover:bg-[#fda600] transition-colors max--[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
+          <div className="hover:bg-[#fda600] transition-colors duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
             <svg
               className="text-[#fda600] w-[35px] h-[36px] md:w-[70px]  md:h-[70px] group-hover:text-black transition-colors duration-300"
               width="36"
@@ -170,7 +170,7 @@ const page = () => {
               mauris elit fames amet.
             </p>
           </div>
-          <div className="hover:bg-[#fda600] transition-colors max--[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
+          <div className="hover:bg-[#fda600] transition-colors duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
             <svg
               className="text-[#fda600] w-[35px] h-[36px] md:w-[70px]  md:h-[70px] group-hover:text-black transition-colors duration-300"
               width="36"
@@ -214,7 +214,7 @@ const page = () => {
               mauris elit fames amet.
             </p>
           </div>
-          <div className="hover:bg-[#fda600] transition-colors max--[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
+          <div className="hover:bg-[#fda600] transition-colors duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
             <svg
               className="text-[#fda600] w-[35px] h-[36px] md:w-[70px]  md:h-[70px] group-hover:text-black transition-colors duration-300"
               width="36"
@@ -259,7 +259,7 @@ const page = () => {
               mauris elit fames amet.
             </p>
           </div>
-          <div className="hover:bg-[#fda600] transition-colors max--[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
+          <div className="hover:bg-[#fda600] transition-colors duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
             <svg
               className="text-[#fda600] w-[35px] h-[36px] md:w-[70px]  md:h-[70px] group-hover:text-black transition-colors duration-300"
               width="35"
@@ -317,7 +317,7 @@ const page = () => {
               mauris elit fames amet.
             </p>
           </div>
-          <div className="hover:bg-[#fda600]   transition-colors max--[393px] duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
+          <div className="hover:bg-[#fda600]   transition-colors duration-300 group flex flex-col gap-3 justify-center items-center border-[0.5px] border-[#fda600] rounded-[5px] h-[222px] md:h-[444px] px-4">
             <svg
               className="text-[#fda600] w-[35px] h-[36px] md:w-[70px]  md:h-[70px] group-hover:text-black transition-colors duration-300"
               width="36"
