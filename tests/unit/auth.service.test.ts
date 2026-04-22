@@ -35,7 +35,6 @@ const {
   register,
   verifyOTP,
   logout,
-  revokeSession,
   requestPasswordReset,
 } = await import('@/features/auth/services/auth.service')
 
@@ -47,7 +46,7 @@ const BASE = 'http://localhost:8000'
 
 const handlers = [
   // POST /api/v1/auth/login/
-  http.post(`${BASE}/api/v1/auth/login/`, async ({ request }) => {
+  http.post(`${BASE}/api/v1/auth/login/`, async ({ request }: { request: Request }) => {
     const body = await request.json() as Record<string, string>
     if (body.password === 'wrong-password') {
       return HttpResponse.json(
@@ -81,7 +80,7 @@ const handlers = [
   }),
 
   // POST /api/v1/auth/register/
-  http.post(`${BASE}/api/v1/auth/register/`, async ({ request }) => {
+  http.post(`${BASE}/api/v1/auth/register/`, async ({ request }: { request: Request }) => {
     const body = await request.json() as Record<string, string>
     if (body.email === 'duplicate@fashionistar.io') {
       return HttpResponse.json(
@@ -102,7 +101,7 @@ const handlers = [
   }),
 
   // POST /api/v1/auth/verify-otp/
-  http.post(`${BASE}/api/v1/auth/verify-otp/`, async ({ request }) => {
+  http.post(`${BASE}/api/v1/auth/verify-otp/`, async ({ request }: { request: Request }) => {
     const body = await request.json() as Record<string, string>
     if (body.otp === '000000') {
       return HttpResponse.json(
@@ -135,7 +134,9 @@ const handlers = [
   }),
 
   // DELETE /api/v1/auth/sessions/:sessionId/
-  http.delete(`${BASE}/api/v1/auth/sessions/:sessionId/`, ({ params }) => {
+  http.delete(
+    `${BASE}/api/v1/auth/sessions/:sessionId/`,
+    ({ params }: { params: { sessionId?: string } }) => {
     if (params.sessionId === '99999999-dead-0000-0000-000000000000') {
       return HttpResponse.json(
         { status: 'error', message: 'Session not found.' },
@@ -143,7 +144,8 @@ const handlers = [
       )
     }
     return HttpResponse.json({ status: 'success', message: 'Session revoked successfully.' })
-  }),
+    },
+  ),
 
   // POST /api/v1/password/reset-request/
   http.post(`${BASE}/api/v1/password/reset-request/`, () => {

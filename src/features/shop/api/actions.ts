@@ -35,7 +35,7 @@ export const BasicInformationAction = async (formdata: FormData) => {
       errors: validated.error.flatten().fieldErrors,
     };
   }
-  redirect("/dashboard/products?step=prices");
+  redirect("/vendor/products?step=prices");
 };
 export const PricesAction = async (formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
@@ -46,7 +46,7 @@ export const PricesAction = async (formdata: FormData) => {
       errors: validated.error.flatten().fieldErrors,
     };
   }
-  redirect("/dashboard/products?step=category");
+  redirect("/vendor/products?step=category");
 };
 export const CategoryAction = async (formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
@@ -56,7 +56,7 @@ export const CategoryAction = async (formdata: FormData) => {
       errors: validated.error.flatten().fieldErrors,
     };
   }
-  redirect("/dashboard/products?step=gallery");
+  redirect("/vendor/products?step=gallery");
 };
 export const GalleryAction = async (formdata: FormData) => {
   const data = Object.fromEntries(formdata.entries());
@@ -66,7 +66,7 @@ export const GalleryAction = async (formdata: FormData) => {
       errors: validated.error.flatten().fieldErrors,
     };
   }
-  redirect("/dashboard/products?step=specification");
+  redirect("/vendor/products?step=specification");
 };
 export const SpecificationAction = async (prev: unknown, formdata: FormData) => {
   void prev;
@@ -79,7 +79,7 @@ export const SpecificationAction = async (prev: unknown, formdata: FormData) => 
       errors: validated.error.flatten().fieldErrors,
     };
   }
-  redirect("/dashboard/products?step=sizes");
+  redirect("/vendor/products?step=sizes");
 };
 export const SizesAction = async (prev: unknown, formdata: FormData) => {
   void prev;
@@ -96,7 +96,7 @@ export const SizesAction = async (prev: unknown, formdata: FormData) => {
       errors: validated.error.flatten().fieldErrors,
     };
   }
-  redirect("/dashboard/products?step=color");
+  redirect("/vendor/products?step=color");
 };
 
 export const newProduct = async (formdata: FormData | object) => {

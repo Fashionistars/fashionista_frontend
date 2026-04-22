@@ -188,11 +188,6 @@ const nextConfig = {
     { source: "/client", destination: "/client/dashboard", permanent: true },
     { source: "/wallet", destination: "/client/dashboard/wallet", permanent: true },
     { source: "/orders", destination: "/vendor/orders", permanent: true },
-    {
-      source: "/client/settings",
-      destination: "/client/dashboard/account-details",
-      permanent: true,
-    },
   ],
   rewrites: async () => ({
     beforeFiles: [
@@ -201,8 +196,8 @@ const nextConfig = {
         destination: `${backendUrl}/api/v1/:path*`,
       },
       {
-        source: "/api/v2/:path*",
-        destination: `${backendUrl}/api/v2/:path*`,
+        source: "/api/v1/ninja/:path*",
+        destination: `${backendUrl}/api/v1/ninja/:path*`,
       },
     ],
   }),
