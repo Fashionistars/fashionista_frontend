@@ -1,1 +1,5 @@
-export { default } from "@/app/dashboard/@vendor/payments/page";
+import { VendorPaymentsView } from "@/features/vendor";
+
+export default function VendorPaymentsPage() {
+  return <VendorPaymentsView />;
+}

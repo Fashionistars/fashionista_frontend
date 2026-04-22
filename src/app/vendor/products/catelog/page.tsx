@@ -1,1 +1,5 @@
-export { default } from "@/app/dashboard/@vendor/products/catelog/page";
+import { VendorProductCatalogView } from "@/features/vendor";
+
+export default function VendorCatalogPage() {
+  return <VendorProductCatalogView />;
+}

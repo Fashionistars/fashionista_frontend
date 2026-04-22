@@ -1,1 +1,5 @@
-export { default } from "@/app/dashboard/@vendor/customers/page";
+import { VendorCustomersView } from "@/features/vendor";
+
+export default function VendorCustomersPage() {
+  return <VendorCustomersView />;
+}
