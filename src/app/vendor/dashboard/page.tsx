@@ -1,1 +1,5 @@
-export { default } from "@/app/dashboard/@vendor/page";
+import { VendorDashboardView } from "@/features/vendor";
+
+export default function VendorDashboardPage() {
+  return <VendorDashboardView />;
+}
