@@ -66,7 +66,7 @@ const page = () => {
         </div>
         <div className="flex items-center gap-4 ">
           <Link
-            href="/dashboard/products"
+            href="/vendor/products"
             className="bg-[#fda600] hover:bg-black flex items-center font-satoshi font-medium text-black hover:text-[#fda600] transition-colors duration-150 grow-0  px-5 py-2.5"
           >
             Create New

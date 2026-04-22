@@ -26,7 +26,6 @@ const LEGACY_REDIRECTS = new Map<string, string>([
   ["/client", "/client/dashboard"],
   ["/wallet", "/client/dashboard/wallet"],
   ["/orders", "/vendor/orders"],
-  ["/client/settings", "/client/dashboard/account-details"],
 ]);
 
 function getDashboardPath(roleCookie?: string | null) {

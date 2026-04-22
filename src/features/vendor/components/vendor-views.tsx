@@ -5,13 +5,10 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
-  BadgeCheck,
   ChartColumn,
-  CreditCard,
   MapPin,
   Package,
   Store,
-  Users,
   Wallet,
 } from "lucide-react";
 

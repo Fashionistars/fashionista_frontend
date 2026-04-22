@@ -2,7 +2,7 @@
  * ASYNC API CLIENT — Ky + Django Ninja
  *
  * Used for: AI Measurement, Search, Analytics, Streaming, High-concurrency ops
- * Base URL: NEXT_PUBLIC_API_V2_URL (e.g. .../api/v1/ninja)
+ * Base URL: NEXT_PUBLIC_API_NINJA_URL (e.g. .../api/v1/ninja)
  *
  * Features:
  *  - 60s timeout for AI/streaming operations
@@ -16,7 +16,10 @@ import { v4 as uuidv4 } from "uuid";
 
 // ── Async Client Instance ─────────────────────────────────────────────────────
 export const apiAsync: KyInstance = ky.create({
-  prefixUrl: process.env.NEXT_PUBLIC_API_V2_URL,
+  prefixUrl:
+    process.env.NEXT_PUBLIC_API_NINJA_URL ??
+    process.env.NEXT_PUBLIC_API_V1_NINJA_URL ??
+    "/api/v1/ninja",
   timeout: 60_000, // 60s for AI / streaming ops
   credentials: "include",
   headers: {
