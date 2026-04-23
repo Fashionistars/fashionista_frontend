@@ -29,11 +29,6 @@ const phoneFieldSchema = z
     },
   );
 
-const passwordFieldSchema = z
-  .string()
-  .min(8, "Password must be at least 8 characters")
-  .max(128, "Password is too long");
-
 // ── Login ─────────────────────────────────────────────────────────────────────
 // Backend serializer field is `email_or_phone` (accepts email OR phone in E.164)
 export const LoginSchema = z.object({
@@ -139,7 +134,11 @@ export const RegisterSchema = z
       .min(2, "Last name must be at least 2 characters")
       .max(50, "Last name is too long")
       .regex(/^[a-zA-Z\s'-]+$/, "Last name can only contain letters, spaces, hyphens or apostrophes"),
-    password: passwordFieldSchema,
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .regex(/[0-9]/, "Password must contain at least one number"),
     password_confirm: z.string().min(8, "Please confirm your password"),
     // role is passed as a prop from the route searchParam, not user-editable
     role: z.enum(["vendor", "client"]).optional().default("client"),
@@ -205,14 +204,18 @@ export type PasswordResetRequestPayload = z.infer<
 // ── Password Reset Confirm (Email — uidb64 + token from URL) ──────────────────
 export const PasswordResetConfirmEmailSchema = z
   .object({
-    new_password: passwordFieldSchema,
-    new_password_confirm: z.string().min(8),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .regex(/[0-9]/, "Password must contain at least one number"),
+    password2: z.string().min(8),
     uidb64: z.string().min(1),
     token: z.string().min(1),
   })
-  .refine((d) => d.new_password === d.new_password_confirm, {
+  .refine((d) => d.password === d.password2, {
     message: "Passwords do not match",
-    path: ["new_password_confirm"],
+    path: ["password2"],
   });
 
 export type PasswordResetConfirmEmailPayload = z.infer<
@@ -222,8 +225,12 @@ export type PasswordResetConfirmEmailPayload = z.infer<
 // ── Password Reset Confirm (Phone — OTP only, no phone field) ─────────────────
 export const PasswordResetConfirmPhoneSchema = z
   .object({
-    otp: z.string().length(6, "OTP must be exactly 6 digits").regex(/^\d+$/),
-    new_password: passwordFieldSchema,
+    otp: z.string().min(4).max(6).regex(/^\d+$/),
+    new_password: z
+      .string()
+      .min(8)
+      .regex(/[A-Z]/, "Needs uppercase letter")
+      .regex(/[0-9]/, "Needs a number"),
     new_password_confirm: z.string().min(8),
   })
   .refine((d) => d.new_password === d.new_password_confirm, {
@@ -239,12 +246,16 @@ export type PasswordResetConfirmPhonePayload = z.infer<
 export const ChangePasswordSchema = z
   .object({
     old_password: z.string().min(8, "Current password is required"),
-    new_password: passwordFieldSchema,
-    new_password_confirm: z.string().min(8),
+    new_password: z
+      .string()
+      .min(8)
+      .regex(/[A-Z]/, "Needs uppercase letter")
+      .regex(/[0-9]/, "Needs a number"),
+    confirm_password: z.string().min(8),
   })
-  .refine((d) => d.new_password === d.new_password_confirm, {
+  .refine((d) => d.new_password === d.confirm_password, {
     message: "Passwords do not match",
-    path: ["new_password_confirm"],
+    path: ["confirm_password"],
   })
   .refine((d) => d.old_password !== d.new_password, {
     message: "New password must differ from current password",

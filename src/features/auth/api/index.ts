@@ -1,14 +1,9 @@
 /**
- * Auth API exports — TanStack Query era
- *
- * All auth operations are now in:
- *   src/features/auth/services/auth.service.ts
- *
- * This file kept for backward compatibility with any old imports.
+ * Auth API barrel — re-exports all auth service functions
+ * for backward-compatible imports from "@/features/auth/api"
  */
-
-// Re-export everything from the new service layer
 export {
+  // Core auth
   login,
   register,
   verifyOTP,
@@ -16,6 +11,15 @@ export {
   googleAuth,
   logout,
   refreshToken,
+  // Profile
+  getMe,
+  // Session management
+  getSessions,
+  revokeSession,
+  revokeOtherSessions,
+  // Login activity
+  getLoginEvents,
+  // Password management
   requestPasswordReset,
   confirmPasswordResetEmail,
   confirmPasswordResetPhone,
