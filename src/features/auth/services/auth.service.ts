@@ -25,6 +25,24 @@ import type {
 } from "@/features/auth/schemas/auth.schemas";
 import { LoginResponseSchema } from "@/features/auth/schemas/auth.schemas";
 import type { AuthSession, LoginEvent } from "@/features/auth/store/auth.store";
+import {
+  AuthUserSchema,
+  type AuthUserProfile,
+} from "@/features/auth/schemas/security.schemas";
+
+// ── Me (Profile) ─────────────────────────────────────────────────────────────
+/**
+ * GET /api/v1/auth/me/
+ * Rehydrates Zustand user state on page refresh. Validates response shape.
+ */
+export async function getMe(): Promise<AuthUserProfile> {
+  const { data } = await apiSync.get(AUTH_ENDPOINTS.ME);
+  const payload = typeof data === 'object' && data !== null && 'data' in data
+    ? (data as { data: unknown }).data
+    : data;
+  return AuthUserSchema.parse(payload);
+}
+
 
 // ── Login ─────────────────────────────────────────────────────────────────────
 /**
