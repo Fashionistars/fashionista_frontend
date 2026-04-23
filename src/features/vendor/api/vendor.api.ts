@@ -1,18 +1,50 @@
+// features/vendor/api/vendor.api.ts
+/**
+ * Vendor API Client — Full Production Contract.
+ *
+ * Aligns exactly with backend /api/v1/vendor/* (DRF sync) and
+ * /api/v1/ninja/vendor/* (Ninja async) endpoints.
+ *
+ * All responses are validated with Zod schemas before returning.
+ * apiSync  → Axios (DRF sync endpoints, standard REST)
+ * apiAsync → Ky   (Ninja async endpoints, high-throughput)
+ */
 import { apiAsync } from "@/core/api/client.async";
 import { apiSync } from "@/core/api/client.sync";
 import {
+  VendorAnalyticsSummarySchema,
+  VendorChartResponseSchema,
+  VendorCouponListSchema,
   VendorDashboardSchema,
+  VendorEarningTrackerSchema,
+  VendorOrderListSchema,
+  VendorOrderSchema,
+  VendorPayoutSchema,
+  VendorPinSetSchema,
+  VendorPinVerifySchema,
+  VendorProductCreateSchema,
+  VendorProductListSchema,
+  VendorProductUpdateSchema,
   VendorProfileSchema,
+  VendorReviewItemSchema,
+  VendorReviewListSchema,
   VendorSetupSchema,
   VendorSetupStateSchema,
 } from "@/features/vendor/schemas/vendor.schemas";
 import type {
   VendorDashboard,
+  VendorOrderStatus,
+  VendorPayoutPayload,
+  VendorPinSetPayload,
+  VendorPinVerifyPayload,
+  VendorProductCreatePayload,
+  VendorProductUpdatePayload,
   VendorProfile,
   VendorSetupPayload,
   VendorSetupState,
 } from "@/features/vendor/types/vendor.types";
 
+// ── Helper — unwrap { status, data } envelope ─────────────────────────────────
 function unwrapData<T>(payload: unknown): T {
   if (payload && typeof payload === "object" && "data" in payload) {
     return (payload as { data: T }).data;
@@ -20,12 +52,21 @@ function unwrapData<T>(payload: unknown): T {
   return payload as T;
 }
 
+// ── Vendor API Object ─────────────────────────────────────────────────────────
 export const vendorApi = {
+
+  // ── Profile ────────────────────────────────────────────────────────────────
   async getProfile(): Promise<VendorProfile> {
     const { data } = await apiSync.get("/v1/vendor/profile/");
     return VendorProfileSchema.parse(unwrapData<VendorProfile>(data));
   },
 
+  async updateProfile(payload: Partial<VendorSetupPayload>): Promise<VendorProfile> {
+    const { data } = await apiSync.patch("/v1/vendor/profile/", payload);
+    return VendorProfileSchema.parse(unwrapData<VendorProfile>(data));
+  },
+
+  // ── Setup / Onboarding ─────────────────────────────────────────────────────
   async getSetupState(): Promise<VendorSetupState> {
     const { data } = await apiSync.get("/v1/vendor/setup/");
     return VendorSetupStateSchema.parse(unwrapData<VendorSetupState>(data));
@@ -41,7 +82,6 @@ export const vendorApi = {
       profile: VendorProfile;
       setup_state: VendorSetupState | null;
     }>(data);
-
     return {
       profile: VendorProfileSchema.parse(unwrapped.profile),
       setup_state: unwrapped.setup_state
@@ -50,8 +90,147 @@ export const vendorApi = {
     };
   },
 
+  // ── Payout ─────────────────────────────────────────────────────────────────
+  async savePayout(payload: VendorPayoutPayload): Promise<{ message: string }> {
+    VendorPayoutSchema.parse(payload);
+    const { data } = await apiSync.post("/v1/vendor/payout/", payload);
+    return data as { message: string };
+  },
+
+  // ── PIN ────────────────────────────────────────────────────────────────────
+  async setPin(payload: VendorPinSetPayload): Promise<{ message: string }> {
+    VendorPinSetSchema.parse(payload);
+    const { data } = await apiSync.post("/v1/vendor/pin/set/", payload);
+    return data as { message: string };
+  },
+
+  async verifyPin(payload: VendorPinVerifyPayload): Promise<{ valid: boolean }> {
+    VendorPinVerifySchema.parse(payload);
+    const { data } = await apiSync.post("/v1/vendor/pin/verify/", payload);
+    return data as { valid: boolean };
+  },
+
+  // ── Dashboard (Async / Ninja) ──────────────────────────────────────────────
   async getDashboard(): Promise<VendorDashboard> {
     const data = await apiAsync.get("vendor/dashboard/").json();
     return VendorDashboardSchema.parse(data);
+  },
+
+  // ── Analytics ─────────────────────────────────────────────────────────────
+  async getAnalyticsSummary() {
+    const { data } = await apiSync.get("/v1/vendor/analytics/");
+    return VendorAnalyticsSummarySchema.parse(unwrapData(data));
+  },
+
+  async getRevenueChart() {
+    const { data } = await apiSync.get("/v1/vendor/analytics/revenue/");
+    return VendorChartResponseSchema.parse(data);
+  },
+
+  async getOrderChart() {
+    const { data } = await apiSync.get("/v1/vendor/analytics/orders/");
+    return VendorChartResponseSchema.parse(data);
+  },
+
+  async getProductChart() {
+    const { data } = await apiSync.get("/v1/vendor/analytics/products/");
+    return VendorChartResponseSchema.parse(data);
+  },
+
+  async getTopCategories() {
+    const { data } = await apiSync.get("/v1/vendor/analytics/categories/");
+    return data;
+  },
+
+  async getPaymentDistribution() {
+    const { data } = await apiSync.get("/v1/vendor/analytics/distribution/");
+    return data;
+  },
+
+  async getCustomerBehavior() {
+    const { data } = await apiSync.get("/v1/vendor/analytics/customers/");
+    return data;
+  },
+
+  // ── Products ───────────────────────────────────────────────────────────────
+  async getProducts() {
+    const { data } = await apiSync.get("/v1/vendor/products/");
+    return VendorProductListSchema.parse(data);
+  },
+
+  async filterProducts(params?: { status?: string; ordering?: string }) {
+    const { data } = await apiSync.get("/v1/vendor/products/filter/", { params });
+    return VendorProductListSchema.parse(data);
+  },
+
+  async getLowStockProducts() {
+    const { data } = await apiSync.get("/v1/vendor/products/low-stock/");
+    return VendorProductListSchema.parse(data);
+  },
+
+  async getTopSellingProducts() {
+    const { data } = await apiSync.get("/v1/vendor/products/top/");
+    return VendorProductListSchema.parse(data);
+  },
+
+  async createProduct(payload: VendorProductCreatePayload): Promise<{ pid: string; title: string }> {
+    VendorProductCreateSchema.parse(payload);
+    const { data } = await apiSync.post("/v1/vendor/products/create/", payload);
+    return unwrapData<{ pid: string; title: string }>(data);
+  },
+
+  async updateProduct(pid: string, payload: VendorProductUpdatePayload): Promise<{ message: string }> {
+    VendorProductUpdateSchema.parse(payload);
+    const { data } = await apiSync.patch(`/v1/vendor/products/${pid}/edit/`, payload);
+    return data as { message: string };
+  },
+
+  async deleteProduct(pid: string): Promise<{ message: string }> {
+    const { data } = await apiSync.delete(`/v1/vendor/products/${pid}/delete/`);
+    return data as { message: string };
+  },
+
+  // ── Orders ─────────────────────────────────────────────────────────────────
+  async getOrders() {
+    const { data } = await apiSync.get("/v1/vendor/orders/");
+    return VendorOrderListSchema.parse(data);
+  },
+
+  async getOrder(orderId: number) {
+    const { data } = await apiSync.get(`/v1/vendor/orders/${orderId}/`);
+    return VendorOrderSchema.parse(unwrapData(data));
+  },
+
+  async getOrderStatusCounts() {
+    const { data } = await apiSync.get("/v1/vendor/orders/status-counts/");
+    return data;
+  },
+
+  async updateOrderStatus(orderId: number, order_status: VendorOrderStatus): Promise<{ message: string }> {
+    const { data } = await apiSync.patch(`/v1/vendor/orders/${orderId}/status/`, { order_status });
+    return data as { message: string };
+  },
+
+  // ── Earnings ───────────────────────────────────────────────────────────────
+  async getEarnings() {
+    const { data } = await apiSync.get("/v1/vendor/earnings/");
+    return VendorEarningTrackerSchema.parse(unwrapData(data));
+  },
+
+  // ── Reviews ────────────────────────────────────────────────────────────────
+  async getReviews() {
+    const { data } = await apiSync.get("/v1/vendor/reviews/");
+    return VendorReviewListSchema.parse(data);
+  },
+
+  async getReview(reviewId: number) {
+    const { data } = await apiSync.get(`/v1/vendor/reviews/${reviewId}/`);
+    return VendorReviewItemSchema.parse(unwrapData(data));
+  },
+
+  // ── Coupons ────────────────────────────────────────────────────────────────
+  async getCoupons() {
+    const { data } = await apiSync.get("/v1/vendor/coupons/");
+    return VendorCouponListSchema.parse(data);
   },
 };

@@ -1,3 +1,7 @@
+// features/client/types/client.types.ts
+// Aligned with: /api/v1/client/* backend contracts
+
+// ── Address ───────────────────────────────────────────────────────────────────
 export interface ClientAddress {
   id: string;
   label: string;
@@ -11,6 +15,19 @@ export interface ClientAddress {
   is_default: boolean;
 }
 
+export interface ClientAddressCreatePayload {
+  label: string;
+  full_name: string;
+  phone: string;
+  street_address: string;
+  city: string;
+  state: string;
+  country?: string;
+  postal_code?: string;
+  is_default?: boolean;
+}
+
+// ── Profile ───────────────────────────────────────────────────────────────────
 export interface ClientProfile {
   id: string;
   user_id: string;
@@ -30,6 +47,19 @@ export interface ClientProfile {
   addresses: ClientAddress[];
 }
 
+export interface ClientProfileUpdatePayload {
+  bio?: string;
+  default_shipping_address?: string;
+  state?: string;
+  country?: string;
+  preferred_size?: string;
+  style_preferences?: string[];
+  favourite_colours?: string[];
+  email_notifications_enabled?: boolean;
+  sms_notifications_enabled?: boolean;
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────────
 export interface ClientDashboardAnalytics {
   total_orders: number;
   total_spent_ngn: number;
@@ -51,14 +81,85 @@ export interface ClientDashboard {
   ai_recommendations: unknown[];
 }
 
-export interface ClientProfileUpdatePayload {
-  bio?: string;
-  default_shipping_address?: string;
-  state?: string;
-  country?: string;
-  preferred_size?: string;
-  style_preferences?: string[];
-  favourite_colours?: string[];
-  email_notifications_enabled?: boolean;
-  sms_notifications_enabled?: boolean;
+// ── Orders ────────────────────────────────────────────────────────────────────
+export type OrderPaymentStatus = "paid" | "pending" | "failed";
+export type OrderFulfillmentStatus = "Pending" | "Processing" | "Shipped" | "Fulfilled" | "Cancelled";
+
+export interface ClientOrderItem {
+  id: number;
+  product_title: string;
+  product_pid: string;
+  vendor_name: string;
+  qty: number;
+  price: number;
+  subtotal: number;
+  image?: string;
+}
+
+export interface ClientOrder {
+  id: number;
+  oid: string;
+  order_status: OrderFulfillmentStatus;
+  payment_status: OrderPaymentStatus;
+  total_price: number;
+  date: string;
+  items?: ClientOrderItem[];
+}
+
+// ── Wishlist ──────────────────────────────────────────────────────────────────
+export interface WishlistItem {
+  id: number;
+  product: {
+    id: string;
+    pid: string;
+    title: string;
+    price: number;
+    old_price?: number;
+    image?: string;
+    vendor_name?: string;
+    slug?: string;
+  };
+}
+
+export type WishlistToggleAction = "added" | "removed";
+
+export interface WishlistToggleResponse {
+  status: string;
+  message: string;
+  action: WishlistToggleAction;
+}
+
+// ── Reviews ───────────────────────────────────────────────────────────────────
+export interface ProductReview {
+  id: number;
+  user_email?: string;
+  rating: number;
+  review: string;
+  date: string;
+}
+
+export interface ReviewCreatePayload {
+  product_id: string;
+  rating: number;
+  review?: string;
+}
+
+// ── Wallet ────────────────────────────────────────────────────────────────────
+export interface WalletBalance {
+  balance: string; // decimal string from backend
+}
+
+export interface WalletTransferPayload {
+  receiver_id: string;
+  amount: string;
+  transaction_password: string;
+}
+
+export interface WalletTransferResponse {
+  status: string;
+  message: string;
+  data: {
+    sender_balance: string;
+    receiver_balance: string;
+  };
 }
