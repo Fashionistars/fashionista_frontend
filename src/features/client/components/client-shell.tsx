@@ -5,16 +5,19 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
+  Heart,
   LayoutDashboard,
   LogOut,
   MapPin,
   Menu,
   Package,
   PackageSearch,
+  Settings,
   UserRound,
   Wallet,
   X,
 } from "lucide-react";
+
 
 import { RoleGuard } from "@/features/auth/components/RoleGuard";
 import { useAuthStore } from "@/features/auth/store/auth.store";
@@ -28,12 +31,14 @@ const clientNavItems = [
     Icon: PackageSearch,
   },
   { href: "/client/dashboard/address", label: "Address", Icon: MapPin },
+  { href: "/client/dashboard/wishlist", label: "Wishlist", Icon: Heart },
+  { href: "/client/dashboard/wallet", label: "Wallet", Icon: Wallet },
   {
     href: "/client/dashboard/account-details",
     label: "Account Details",
     Icon: UserRound,
   },
-  { href: "/client/dashboard/wallet", label: "Wallet", Icon: Wallet },
+  { href: "/client/dashboard/settings", label: "Settings", Icon: Settings },
 ];
 
 const isActivePath = (pathname: string, href: string) =>

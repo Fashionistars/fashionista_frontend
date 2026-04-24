@@ -13,10 +13,12 @@ import {
   Package,
   Settings,
   Store,
+  Tag,
   Users,
   Wallet,
   X,
 } from "lucide-react";
+
 
 import { RoleGuard } from "@/features/auth/components/RoleGuard";
 import { useAuthStore } from "@/features/auth/store/auth.store";
@@ -30,6 +32,7 @@ const vendorNavItems = [
   { href: "/vendor/payments", label: "Payments", Icon: CreditCard },
   { href: "/vendor/customers", label: "Customers", Icon: Users },
   { href: "/vendor/wallet", label: "Wallet", Icon: Wallet },
+  { href: "/vendor/coupons", label: "Coupons", Icon: Tag },
   { href: "/vendor/settings", label: "Settings", Icon: Settings },
 ];
 
