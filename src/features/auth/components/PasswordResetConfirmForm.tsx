@@ -35,9 +35,13 @@ interface PhoneModeProps {
 }
 
 type PasswordResetConfirmFormProps = EmailModeProps | PhoneModeProps;
-type PasswordResetConfirmValues =
-  | PasswordResetConfirmEmailPayload
-  | PasswordResetConfirmPhonePayload;
+type PasswordResetConfirmValues = {
+  uidb64?: string;
+  token?: string;
+  otp?: string;
+  new_password: string;
+  new_password_confirm: string;
+};
 
 // ── Unified Form ──────────────────────────────────────────────────────────────
 
@@ -73,7 +77,7 @@ export function PasswordResetConfirmForm(props: PasswordResetConfirmFormProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<PasswordResetConfirmValues>({
     resolver: zodResolver(
       isEmailMode ? PasswordResetConfirmEmailSchema : PasswordResetConfirmPhoneSchema
     ),

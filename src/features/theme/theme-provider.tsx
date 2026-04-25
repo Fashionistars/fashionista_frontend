@@ -21,15 +21,17 @@
  *   manager while keeping every call-site's import path unchanged.
  */
 
-import { useTheme as useNextTheme, type Theme } from "next-themes";
+import { useTheme as useNextTheme } from "next-themes";
 import { useCallback, type PropsWithChildren } from "react";
+
+export type FashionistarTheme = "light" | "dark" | "system";
 
 // ── Exported hook (drop-in replacement, same shape as before) ─────────────────
 
 export interface ThemeContextValue {
-  theme: Theme;
+  theme: FashionistarTheme | string;
   resolvedTheme: "light" | "dark";
-  setTheme: (theme: Theme) => void;
+  setTheme: (theme: FashionistarTheme | string) => void;
   switchTheme: () => void;
 }
 
@@ -42,7 +44,7 @@ export function useTheme(): ThemeContextValue {
   }, [resolvedTheme, systemTheme, setTheme]);
 
   return {
-    theme: (theme ?? "system") as Theme,
+    theme: theme ?? "system",
     resolvedTheme: ((resolvedTheme ?? "light") as "light" | "dark"),
     setTheme,
     switchTheme,

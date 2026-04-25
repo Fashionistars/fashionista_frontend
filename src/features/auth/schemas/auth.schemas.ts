@@ -204,18 +204,18 @@ export type PasswordResetRequestPayload = z.infer<
 // ── Password Reset Confirm (Email — uidb64 + token from URL) ──────────────────
 export const PasswordResetConfirmEmailSchema = z
   .object({
-    password: z
+    new_password: z
       .string()
       .min(8, "Password must be at least 8 characters")
       .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
       .regex(/[0-9]/, "Password must contain at least one number"),
-    password2: z.string().min(8),
+    new_password_confirm: z.string().min(8),
     uidb64: z.string().min(1),
     token: z.string().min(1),
   })
-  .refine((d) => d.password === d.password2, {
+  .refine((d) => d.new_password === d.new_password_confirm, {
     message: "Passwords do not match",
-    path: ["password2"],
+    path: ["new_password_confirm"],
   });
 
 export type PasswordResetConfirmEmailPayload = z.infer<
