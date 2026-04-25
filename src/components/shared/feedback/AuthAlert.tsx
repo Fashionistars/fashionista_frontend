@@ -118,21 +118,24 @@ function renderWithLinks(
   if (!links || links.length === 0) return text;
   const parts: React.ReactNode[] = [];
   let remaining = text;
-  for (const link of links) {
+  // Use entries() so each link gets a unique index — prevents duplicate React
+  // keys when the same href appears in more than one rendered sentence.
+  for (const [linkIdx, link] of links.entries()) {
     const idx = remaining.indexOf(link.text);
     if (idx === -1) continue;
     if (idx > 0) parts.push(remaining.slice(0, idx));
     const isInternal = link.href.startsWith("/");
+    const uniqueKey = `${link.href}-${linkIdx}`;
     if (isInternal) {
       parts.push(
-        <Link key={link.href} href={link.href} className={linkClass}>
+        <Link key={uniqueKey} href={link.href} className={linkClass}>
           {link.text}
         </Link>,
       );
     } else {
       parts.push(
         <a
-          key={link.href}
+          key={uniqueKey}
           href={link.href}
           target="_blank"
           rel="noopener noreferrer"
