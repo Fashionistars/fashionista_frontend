@@ -229,10 +229,13 @@ export async function requestPasswordReset(
 export async function confirmPasswordResetEmail(
   payload: PasswordResetConfirmEmailPayload,
 ): Promise<{ message: string }> {
-  const { uidb64, token, ...body } = payload;
+  const { uidb64, token, new_password, new_password_confirm } = payload;
   const { data } = await apiSync.post(
     PASSWORD_ENDPOINTS.RESET_CONFIRM_EMAIL(uidb64, token),
-    body,
+    {
+      password: new_password,
+      password2: new_password_confirm,
+    },
   );
   return data;
 }

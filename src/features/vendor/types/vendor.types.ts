@@ -10,6 +10,7 @@ export type VendorOnboardingStatus =
 
 export type ProductStatus = "published" | "draft" | "disabled" | "in-review";
 export type OrderStatus = "Pending" | "Processing" | "Shipped" | "Fulfilled" | "Cancelled";
+export type VendorOrderStatus = OrderStatus;
 export type PaymentStatus = "paid" | "pending" | "failed";
 
 // ── Setup State ───────────────────────────────────────────────────────────────
