@@ -1,9 +1,9 @@
-import ShopByCategory from "@/components/ui/compounds/ShopByCategory";
+import { CatalogCategoryGrid } from "@/features/catalog";
 
 export default function CategoriesPage() {
   return (
     <div className="bg-background">
-      <ShopByCategory />
+      <CatalogCategoryGrid showCta={false} />
     </div>
   );
 }

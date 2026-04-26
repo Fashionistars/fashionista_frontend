@@ -1,4 +1,4 @@
-import LatestCollection from "@/components/ui/compounds/LatestCollection";
+import { CatalogCollectionGrid } from "@/features/catalog";
 
 export default async function CollectionsPage({
   searchParams,
@@ -7,7 +7,7 @@ export default async function CollectionsPage({
 }) {
   return (
     <div className="bg-background">
-      <LatestCollection searchParams={searchParams} />
+      <CatalogCollectionGrid searchParams={searchParams} showCta={false} />
     </div>
   );
 }
