@@ -1,10 +1,10 @@
-import type { CatalogCategory, CatalogCollection } from "../types/catalog.types";
+import type { CatalogBlogPost, CatalogCategory, CatalogCollection } from "../types/catalog.types";
 
 const now = "2026-04-26T00:00:00.000Z";
 
 export const fallbackCatalogCategories: CatalogCategory[] = [
   {
-    id: 1,
+    id: "fallback-category-1",
     name: "Minimalist",
     title: "Minimalist",
     slug: "minimalist",
@@ -16,7 +16,7 @@ export const fallbackCatalogCategories: CatalogCategory[] = [
     updated_at: now,
   },
   {
-    id: 2,
+    id: "fallback-category-2",
     name: "Gowns",
     title: "Gowns",
     slug: "gowns",
@@ -28,7 +28,7 @@ export const fallbackCatalogCategories: CatalogCategory[] = [
     updated_at: now,
   },
   {
-    id: 3,
+    id: "fallback-category-3",
     name: "Vintage",
     title: "Vintage",
     slug: "vintage",
@@ -43,7 +43,7 @@ export const fallbackCatalogCategories: CatalogCategory[] = [
 
 export const fallbackCatalogCollections: CatalogCollection[] = [
   {
-    id: 1,
+    id: "fallback-collection-1",
     name: "Wedding Edit",
     title: "Wedding Edit",
     slug: "wedding-edit",
@@ -59,7 +59,7 @@ export const fallbackCatalogCollections: CatalogCollection[] = [
     updated_at: now,
   },
   {
-    id: 2,
+    id: "fallback-collection-2",
     name: "Native Essentials",
     title: "Native Essentials",
     slug: "native-essentials",
@@ -75,7 +75,7 @@ export const fallbackCatalogCollections: CatalogCollection[] = [
     updated_at: now,
   },
   {
-    id: 3,
+    id: "fallback-collection-3",
     name: "Vintage Finds",
     title: "Vintage Finds",
     slug: "vintage-finds",
@@ -87,6 +87,61 @@ export const fallbackCatalogCollections: CatalogCollection[] = [
     background_image: null,
     background_image_url: "",
     background_cloudinary_url: null,
+    created_at: now,
+    updated_at: now,
+  },
+];
+
+export const fallbackCatalogBlogPosts: CatalogBlogPost[] = [
+  {
+    id: "fallback-blog-1",
+    author: null,
+    author_name: "Fashionistar Editorial",
+    category: null,
+    category_name: "Measurements",
+    title: "How Digital Body Measurements Help Tailors Deliver Better Fits",
+    slug: "digital-body-measurements-tailor-fit",
+    excerpt:
+      "A practical look at how accurate measurements reduce costly remakes and improve client trust.",
+    content:
+      "Fashionistar uses digital measurement workflows to help clients share precise sizing with tailors and fashion designers.",
+    featured_image: "/gown.svg",
+    featured_image_cloudinary_url: null,
+    image_url: "/gown.svg",
+    status: "published",
+    tags: ["measurements", "tailoring", "fit"],
+    seo_title: "Digital Body Measurements For Better Tailor Fit",
+    seo_description:
+      "Learn how Fashionistar digital measurements improve tailoring accuracy and reduce fashion production errors.",
+    is_featured: true,
+    published_at: now,
+    view_count: 0,
+    created_at: now,
+    updated_at: now,
+  },
+  {
+    id: "fallback-blog-2",
+    author: null,
+    author_name: "Fashionistar Editorial",
+    category: null,
+    category_name: "Marketplace",
+    title: "Choosing The Right Tailor For Custom Fashion Orders",
+    slug: "choosing-right-tailor-custom-orders",
+    excerpt:
+      "What clients should check before placing custom clothing orders with marketplace vendors.",
+    content:
+      "Strong vendor profiles, clear measurements, delivery expectations, and payment protection all help clients order with confidence.",
+    featured_image: "/minimalist.svg",
+    featured_image_cloudinary_url: null,
+    image_url: "/minimalist.svg",
+    status: "published",
+    tags: ["marketplace", "vendors", "orders"],
+    seo_title: "How To Choose The Right Tailor Online",
+    seo_description:
+      "Fashionistar tips for selecting reliable tailors and fashion designers for custom clothing orders.",
+    is_featured: false,
+    published_at: now,
+    view_count: 0,
     created_at: now,
     updated_at: now,
   },

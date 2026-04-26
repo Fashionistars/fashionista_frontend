@@ -1,10 +1,16 @@
 import { apiSync } from "@/core/api/client.sync";
 import {
   CatalogBrandListSchema,
+  CatalogBlogPostListSchema,
   CatalogCategoryListSchema,
   CatalogCollectionListSchema,
 } from "../schemas/catalog.schemas";
-import type { CatalogBrand, CatalogCategory, CatalogCollection } from "../types/catalog.types";
+import type {
+  CatalogBlogPost,
+  CatalogBrand,
+  CatalogCategory,
+  CatalogCollection,
+} from "../types/catalog.types";
 
 function unwrapListPayload<T>(payload: unknown): T[] {
   if (Array.isArray(payload)) {
@@ -52,5 +58,10 @@ export const catalogApi = {
   async getCollections(): Promise<CatalogCollection[]> {
     const { data } = await apiSync.get("/v1/catalog/collections/");
     return CatalogCollectionListSchema.parse(unwrapListPayload<CatalogCollection>(data));
+  },
+
+  async getBlogPosts(): Promise<CatalogBlogPost[]> {
+    const { data } = await apiSync.get("/v1/catalog/blog/");
+    return CatalogBlogPostListSchema.parse(unwrapListPayload<CatalogBlogPost>(data));
   },
 };

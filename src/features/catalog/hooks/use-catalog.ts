@@ -28,3 +28,11 @@ export function useCatalogCollections() {
     staleTime: CATALOG_STALE_TIME_MS,
   });
 }
+
+export function useCatalogBlogPosts() {
+  return useQuery({
+    queryKey: ["catalog", "blog"],
+    queryFn: catalogApi.getBlogPosts,
+    staleTime: CATALOG_STALE_TIME_MS,
+  });
+}
