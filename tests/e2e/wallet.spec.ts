@@ -1,9 +1,9 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('Wallet & P2P Transfer End-to-End', () => {
+test.describe("Wallet & P2P Transfer End-to-End", () => {
   test.beforeEach(async ({ page }) => {
     // 1. Login as sender
-    await page.goto('/auth/login');
+    await page.goto("/auth/login");
     await page.fill('input[name="email"]', 'sender@fashionistar.ai');
     await page.fill('input[name="password"]', 'Password123!');
     await page.click('button[type="submit"]');
