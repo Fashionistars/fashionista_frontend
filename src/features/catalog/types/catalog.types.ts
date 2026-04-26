@@ -1,5 +1,5 @@
 export interface CatalogCategory {
-  id: number;
+  id: string;
   name: string;
   title: string;
   slug: string;
@@ -12,7 +12,7 @@ export interface CatalogCategory {
 }
 
 export interface CatalogBrand {
-  id: number;
+  id: string;
   name: string;
   title: string;
   slug: string;
@@ -26,7 +26,7 @@ export interface CatalogBrand {
 }
 
 export interface CatalogCollection {
-  id: number;
+  id: string;
   name: string;
   title: string;
   slug: string;
@@ -38,6 +38,30 @@ export interface CatalogCollection {
   background_image: string | null;
   background_image_url: string;
   background_cloudinary_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CatalogBlogPost {
+  id: string;
+  author: string | null;
+  author_name: string;
+  category: string | null;
+  category_name: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  featured_image: string | null;
+  featured_image_cloudinary_url: string | null;
+  image_url: string;
+  status: "draft" | "review" | "published" | "archived";
+  tags: string[];
+  seo_title: string;
+  seo_description: string;
+  is_featured: boolean;
+  published_at: string | null;
+  view_count: number;
   created_at: string;
   updated_at: string;
 }

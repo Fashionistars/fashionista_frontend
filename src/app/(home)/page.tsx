@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { data2 } from "@/lib/utils/mock-data";
 import Link from "next/link";
-import { Hero, ShopByCategory, LatestCollection } from "@/components";
+import { Hero } from "@/components";
+import { CatalogCategoryGrid, CatalogCollectionGrid } from "@/features/catalog";
 import type { PageProps } from "@/core/types";
 import { formatCurrency } from "@/lib/formatting";
 
@@ -103,8 +104,8 @@ export default async function Home(props: PageProps) {
         </form>
       </div>
 
-      <ShopByCategory />
-      <LatestCollection searchParams={searchParams} />
+      <CatalogCategoryGrid />
+      <CatalogCollectionGrid searchParams={searchParams} />
       <div className=" w-full h-[593px] bg-[#fda600] md:h-[746px] relative p-10 md:p-14 lg:p-24 flex flex-col gap-5 md:gap-10 items-center">
         <p className="font-raleway font-semibold text-xl text-black">
           SENATOR OUTFITS

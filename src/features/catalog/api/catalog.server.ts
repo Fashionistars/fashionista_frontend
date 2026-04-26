@@ -1,9 +1,16 @@
 import {
   CatalogBrandListSchema,
+  CatalogBlogPostListSchema,
+  CatalogBlogPostSchema,
   CatalogCategoryListSchema,
   CatalogCollectionListSchema,
 } from "../schemas/catalog.schemas";
-import type { CatalogBrand, CatalogCategory, CatalogCollection } from "../types/catalog.types";
+import type {
+  CatalogBlogPost,
+  CatalogBrand,
+  CatalogCategory,
+  CatalogCollection,
+} from "../types/catalog.types";
 
 const FALLBACK_TIMEOUT_MS = 3_000;
 
@@ -51,6 +58,32 @@ async function fetchCatalog<T>(path: string): Promise<T[]> {
   }
 }
 
+async function fetchCatalogItem<T>(path: string): Promise<T | null> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FALLBACK_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(`${apiBaseUrl()}${path}`, {
+      headers: {
+        Accept: "application/json",
+        "ngrok-skip-browser-warning": "true",
+      },
+      next: { revalidate: 300 },
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    return unwrapEnvelope<T>(await response.json());
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export async function getCatalogCategories(): Promise<CatalogCategory[]> {
   const payload = await fetchCatalog<CatalogCategory>("/api/v1/catalog/categories/");
   return CatalogCategoryListSchema.parse(payload);
@@ -64,4 +97,17 @@ export async function getCatalogBrands(): Promise<CatalogBrand[]> {
 export async function getCatalogCollections(): Promise<CatalogCollection[]> {
   const payload = await fetchCatalog<CatalogCollection>("/api/v1/catalog/collections/");
   return CatalogCollectionListSchema.parse(payload);
+}
+
+export async function getCatalogBlogPosts(): Promise<CatalogBlogPost[]> {
+  const payload = await fetchCatalog<CatalogBlogPost>("/api/v1/catalog/blog/");
+  return CatalogBlogPostListSchema.parse(payload);
+}
+
+export async function getCatalogBlogPostBySlug(slug: string): Promise<CatalogBlogPost | null> {
+  const payload = await fetchCatalogItem<CatalogBlogPost>(`/api/v1/catalog/blog/${slug}/`);
+  if (!payload) {
+    return null;
+  }
+  return CatalogBlogPostSchema.parse(payload);
 }
