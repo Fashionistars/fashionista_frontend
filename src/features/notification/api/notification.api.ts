@@ -1,9 +1,14 @@
 /**
  * @file notification.api.ts + schemas + hooks combined
  * @description Full notification slice implementation.
+ *
+ * Dual-endpoint strategy:
+ *   DRF (Axios) sync  → fetchNotifications (paginated)
+ *   Ninja async REST  → fetchUnreadBadgeCount (lightweight badge, fast)
  */
 import { z } from "zod";
 import { apiSync } from "@/core/api/client.sync";
+import axiosInstance from "@/lib/axios";
 import type { Notification, PaginatedNotifications, MarkReadResponse } from "./notification.types";
 
 // ─── Schemas ───────────────────────────────────────────────────────────────
@@ -45,4 +50,18 @@ export async function markAllNotificationsRead(): Promise<MarkReadResponse> {
     "/notifications/mark-all-read/",
   );
   return data;
+}
+
+/**
+ * Fetch unread badge count from the Ninja async endpoint.
+ *
+ * Uses /api/v1/ninja/notifications/unread-count/ for sub-50ms response.
+ * Suitable for high-frequency badge polling (every 30s) without the
+ * overhead of fetching the full notification feed.
+ */
+export async function fetchUnreadBadgeCount(): Promise<number> {
+  const { data } = await axiosInstance.get<{ unread_count: number }>(
+    "/api/v1/ninja/notifications/unread-count/"
+  );
+  return data.unread_count;
 }
