@@ -51,3 +51,15 @@ export {
   useUpdateTicketStatus,
   useEscalateTicket,
 } from "./hooks/use-support";
+
+export {
+  SupportTicketList,
+} from "./components/SupportTicketList";
+
+export {
+  TicketDetailPanel,
+} from "./components/TicketDetailPanel";
+
+export {
+  NewTicketModal,
+} from "./components/NewTicketModal";

@@ -16,7 +16,7 @@
 
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { chatKeys } from "../types/chat.types";
@@ -70,12 +70,12 @@ export function useChatWebSocket({
   onConnectionChange,
 }: UseChatWebSocketOptions): UseChatWebSocketReturn {
   const wsRef = useRef<WebSocket | null>(null);
-  const readyStateRef = useRef<WebSocketReadyState>("closed");
+  const [readyState, setReadyStateState] = useState<WebSocketReadyState>("closed");
   const queryClient = useQueryClient();
 
   const setReadyState = useCallback(
     (state: WebSocketReadyState) => {
-      readyStateRef.current = state;
+      setReadyStateState(state);
       onConnectionChange?.(state);
     },
     [onConnectionChange]
@@ -88,14 +88,26 @@ export function useChatWebSocket({
       if (!conversationId) return;
 
       // Update the paginated messages cache (page 1)
-      queryClient.setQueryData<{ messages: Message[]; has_more: boolean }>(
+      queryClient.setQueryData<{
+        messages: Message[];
+        has_more: boolean;
+        page: number;
+        total: number;
+      }>(
         chatKeys.messagesPage(conversationId, 1),
         (old) => {
-          if (!old) return old;
+          if (!old) {
+            return {
+              messages: [msg],
+              has_more: false,
+              page: 1,
+              total: 1,
+            };
+          }
           // De-duplicate: skip if message already exists
           const exists = old.messages.some((m) => m.id === msg.id);
           if (exists) return old;
-          return { ...old, messages: [msg, ...old.messages] };
+          return { ...old, messages: [msg, ...old.messages], total: old.total + 1 };
         }
       );
 
@@ -184,8 +196,8 @@ export function useChatWebSocket({
   }, []);
 
   return {
-    readyState: readyStateRef.current,
+    readyState,
     sendEvent,
-    isConnected: readyStateRef.current === "open",
+    isConnected: readyState === "open",
   };
 }

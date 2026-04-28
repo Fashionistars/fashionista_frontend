@@ -108,7 +108,12 @@ export function useCreateTicket() {
 export function useAddMessage(ticketId: string) {
   const queryClient = useQueryClient();
 
-  return useMutation<TicketMessage, Error, AddMessageInput>({
+  return useMutation<
+    TicketMessage,
+    Error,
+    AddMessageInput,
+    { snapshot?: SupportTicket }
+  >({
     mutationFn: (input) => addTicketMessage(ticketId, input),
 
     // Optimistically add a pending message to the thread

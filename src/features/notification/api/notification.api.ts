@@ -8,41 +8,42 @@
  */
 import { z } from "zod";
 import { apiSync } from "@/core/api/client.sync";
-import axiosInstance from "@/lib/axios";
-import type { Notification, PaginatedNotifications, MarkReadResponse } from "./notification.types";
+import apiAsync from "@/core/api/client.async";
+import type {
+  Notification,
+  PaginatedNotifications,
+  MarkReadResponse,
+} from "../types/notification.types";
 
 // ─── Schemas ───────────────────────────────────────────────────────────────
 
 const NotificationSchema = z.object({
-  id: z.string().uuid(),
+  id: z.number().int(),
   notification_type: z.string(),
   channel: z.enum(["in_app", "email", "push"]),
   title: z.string(),
-  message: z.string(),
-  action_url: z.string().url().nullable(),
+  body: z.string(),
+  metadata: z.record(z.unknown()),
   is_read: z.boolean(),
+  is_sent: z.boolean(),
+  read_at: z.string().datetime({ offset: true }).nullable().optional(),
+  sent_at: z.string().datetime({ offset: true }).nullable().optional(),
   created_at: z.string().datetime({ offset: true }),
 });
-
-export const PaginatedNotificationsSchema = z.object({
-  count: z.number().int().min(0),
-  next: z.string().nullable(),
-  previous: z.string().nullable(),
-  results: z.array(NotificationSchema),
-  unread_count: z.number().int().min(0),
-});
+export const NotificationListSchema = z.array(NotificationSchema);
 
 // ─── API Functions ─────────────────────────────────────────────────────────
 
 export async function fetchNotifications(page = 1): Promise<PaginatedNotifications> {
-  const { data } = await apiSync.get<PaginatedNotifications>(
+  const { data } = await apiSync.get<Notification[]>(
     `/notifications/?page=${page}`,
   );
-  return data;
+  return NotificationListSchema.parse(data);
 }
 
-export async function markNotificationRead(notifId: string): Promise<void> {
-  await apiSync.patch(`/notifications/${notifId}/read/`);
+export async function markNotificationRead(notifId: number): Promise<Notification> {
+  const { data } = await apiSync.get<Notification>(`/notifications/${notifId}/`);
+  return NotificationSchema.parse(data);
 }
 
 export async function markAllNotificationsRead(): Promise<MarkReadResponse> {
@@ -60,8 +61,8 @@ export async function markAllNotificationsRead(): Promise<MarkReadResponse> {
  * overhead of fetching the full notification feed.
  */
 export async function fetchUnreadBadgeCount(): Promise<number> {
-  const { data } = await axiosInstance.get<{ unread_count: number }>(
-    "/api/v1/ninja/notifications/unread-count/"
-  );
+  const data = await apiAsync.get("notifications/unread-count/").json<{
+    unread_count: number;
+  }>();
   return data.unread_count;
 }

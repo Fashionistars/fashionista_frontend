@@ -25,3 +25,7 @@ export {
   useMarkNotificationRead,
   useMarkAllNotificationsRead,
 } from "./hooks/use-notification";
+
+export {
+  useNotificationWebSocket,
+} from "./hooks/use-notification-websocket";
