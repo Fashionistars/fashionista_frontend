@@ -14,12 +14,14 @@ export {
   fetchNotifications,
   markNotificationRead,
   markAllNotificationsRead,
+  fetchUnreadBadgeCount,
 } from "./api/notification.api";
 
 export {
   notificationKeys,
   useNotifications,
   useUnreadNotificationCount,
+  useUnreadBadgeCount,
   useMarkNotificationRead,
   useMarkAllNotificationsRead,
 } from "./hooks/use-notification";

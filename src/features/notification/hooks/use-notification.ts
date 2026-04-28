@@ -1,6 +1,12 @@
 /**
  * @file use-notification.ts
  * @description TanStack Query hooks for the Notification domain.
+ *
+ * Dual-endpoint strategy:
+ *   DRF (Axios) sync REST → useNotifications (paginated feed)
+ *   Ninja async REST  → useUnreadBadgeCount (lightweight badge, 30s poll)
+ *
+ * Future: replace badge polling with WebSocket push via Django Channels.
  */
 "use client";
 
@@ -10,28 +16,57 @@ import {
   fetchNotifications,
   markNotificationRead,
   markAllNotificationsRead,
+  fetchUnreadBadgeCount,
 } from "../api/notification.api";
 
 export const notificationKeys = {
-  all: ["notification"] as const,
-  list: (page: number) => [...notificationKeys.all, "list", page] as const,
+  all:        ["notification"] as const,
+  list:       (page: number) => [...notificationKeys.all, "list", page] as const,
+  badgeCount: () => [...notificationKeys.all, "badge-count"] as const,
 } as const;
 
-/** Hook: paginated notification list. */
+// ─────────────────────────────────────────────────────────────────────────────
+// READ QUERIES
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Hook: paginated notification list (DRF sync endpoint). */
 export function useNotifications(page = 1) {
   return useQuery({
     queryKey: notificationKeys.list(page),
-    queryFn: () => fetchNotifications(page),
-    staleTime: 15_000,          // Re-fetch every 15s for near-real-time feel
-    refetchInterval: 30_000,    // Poll every 30s when window is active
+    queryFn:  () => fetchNotifications(page),
+    staleTime: 15_000,
+    refetchInterval: 30_000,
   });
 }
 
-/** Hook: derived unread count (from first page query). */
+/**
+ * Hook: lightweight unread badge count.
+ *
+ * Polls the Ninja async endpoint every 30s — significantly faster than
+ * a full notification feed fetch. Suitable for badge in top navigation.
+ *
+ * When WebSocket push is added, this poll can be disabled via
+ * `refetchInterval: false` and the badge updated via queryClient.setQueryData().
+ */
+export function useUnreadBadgeCount() {
+  return useQuery<number, Error>({
+    queryKey: notificationKeys.badgeCount(),
+    queryFn:  fetchUnreadBadgeCount,
+    staleTime:       20_000,
+    refetchInterval: 30_000,  // REST polling fallback — 30s
+    select: (data) => data,
+  });
+}
+
+/** Hook: derived unread count (from paginated feed query, fallback). */
 export function useUnreadNotificationCount() {
   const { data } = useNotifications(1);
   return data?.unread_count ?? 0;
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MUTATIONS
+// ─────────────────────────────────────────────────────────────────────────────
 
 /** Mutation: mark a single notification as read. */
 export function useMarkNotificationRead() {
@@ -40,6 +75,8 @@ export function useMarkNotificationRead() {
     mutationFn: (id: string) => markNotificationRead(id),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: notificationKeys.all });
+      // Also invalidate badge count
+      void qc.invalidateQueries({ queryKey: notificationKeys.badgeCount() });
     },
   });
 }
@@ -51,6 +88,7 @@ export function useMarkAllNotificationsRead() {
     mutationFn: markAllNotificationsRead,
     onSuccess: (res) => {
       void qc.invalidateQueries({ queryKey: notificationKeys.all });
+      void qc.invalidateQueries({ queryKey: notificationKeys.badgeCount() });
       if (res.marked > 0) {
         toast.success(`${res.marked} notifications marked as read.`);
       }
