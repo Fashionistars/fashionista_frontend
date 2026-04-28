@@ -25,7 +25,6 @@ export type {
   SendMessageInput,
   StartConversationInput,
   ConversationStatus,
-  MessageStatus,
   MessageType,
   WsEvent,
   WsEventType,
@@ -68,3 +67,19 @@ export type {
   UseChatWebSocketOptions,
   UseChatWebSocketReturn,
 } from "./hooks/use-chat-websocket";
+
+export {
+  ConversationList,
+} from "./components/ConversationList";
+
+export {
+  MessageThread,
+} from "./components/MessageThread";
+
+export {
+  MessageInput,
+} from "./components/MessageInput";
+
+export {
+  OfferCard,
+} from "./components/OfferCard";

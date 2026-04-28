@@ -5,37 +5,24 @@
  */
 
 export type NotificationChannel = "in_app" | "email" | "push";
-export type NotificationType =
-  | "order_placed"
-  | "order_confirmed"
-  | "order_shipped"
-  | "order_delivered"
-  | "order_cancelled"
-  | "payment_received"
-  | "escrow_released"
-  | "review_posted"
-  | "measurement_required"
-  | "custom";
+export type NotificationType = string;
 
 export interface Notification {
-  id: string;
+  id: number;
   notification_type: NotificationType;
   channel: NotificationChannel;
   title: string;
-  message: string;
-  action_url: string | null;
+  body: string;
+  metadata: Record<string, unknown>;
   is_read: boolean;
+  is_sent: boolean;
+  read_at?: string | null;
+  sent_at?: string | null;
   created_at: string;
 }
 
-export interface PaginatedNotifications {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: Notification[];
-  unread_count: number;
-}
+export type PaginatedNotifications = Notification[];
 
 export interface MarkReadResponse {
-  marked: number;   // number of notifications marked as read
+  marked_read: number;
 }

@@ -13,22 +13,22 @@ export type TicketStatus =
   | "open"
   | "in_review"
   | "awaiting_client"
-  | "escalated"
+  | "awaiting_vendor"
   | "resolved"
   | "closed";
 
-export type TicketPriority = "low" | "medium" | "high" | "critical";
+export type TicketPriority = "low" | "medium" | "high" | "urgent";
 
 export type TicketCategory =
   | "order_dispute"
   | "payment_issue"
   | "product_complaint"
-  | "shipping_problem"
+  | "vendor_conduct"
+  | "delivery_problem"
   | "refund_request"
-  | "account_issue"
   | "general";
 
-export type EscalationStatus = "open" | "in_progress" | "resolved" | "closed";
+export type EscalationStatus = "open" | "under_review" | "resolved" | "dismissed";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ENTITIES
@@ -84,6 +84,11 @@ export interface SupportTicketListItem {
   updated_at: string;
 }
 
+export interface TicketListFilters {
+  status?: TicketStatus;
+  category?: TicketCategory;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // API SHAPES
 // ─────────────────────────────────────────────────────────────────────────────
@@ -130,7 +135,7 @@ export const TICKET_STATUS_LABELS: Record<TicketStatus, string> = {
   open:             "Open",
   in_review:        "In Review",
   awaiting_client:  "Awaiting Your Response",
-  escalated:        "Escalated",
+  awaiting_vendor:  "Awaiting Vendor",
   resolved:         "Resolved",
   closed:           "Closed",
 };
@@ -139,7 +144,7 @@ export const TICKET_STATUS_COLORS: Record<TicketStatus, string> = {
   open:             "bg-blue-100 text-blue-800",
   in_review:        "bg-yellow-100 text-yellow-800",
   awaiting_client:  "bg-orange-100 text-orange-800",
-  escalated:        "bg-red-100 text-red-800",
+  awaiting_vendor:  "bg-teal-100 text-teal-800",
   resolved:         "bg-green-100 text-green-800",
   closed:           "bg-gray-100 text-gray-600",
 };
@@ -148,5 +153,5 @@ export const TICKET_PRIORITY_COLORS: Record<TicketPriority, string> = {
   low:      "bg-slate-100 text-slate-600",
   medium:   "bg-blue-100 text-blue-700",
   high:     "bg-amber-100 text-amber-800",
-  critical: "bg-red-100 text-red-900 font-semibold",
+  urgent:   "bg-red-100 text-red-900 font-semibold",
 };

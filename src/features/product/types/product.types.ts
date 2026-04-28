@@ -132,7 +132,7 @@ export interface ProductListItem {
   cover_image_url: string | null;  // Cloudinary secure_url
   price: string;                   // Decimal string
   old_price: string | null;
-  currency: string;                // "NGN"
+  currency?: string;               // "NGN"
   average_rating: number;
   review_count: number;
   requires_measurement: boolean;

@@ -18,7 +18,7 @@
 
 "use client";
 
-import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   fetchConversationFeed,
@@ -73,16 +73,11 @@ export function useMessages(
   conversationId: string | null,
   wsConnected = true
 ) {
-  return useInfiniteQuery<MessagePage, Error>({
-    queryKey:  chatKeys.messages(conversationId ?? ""),
-    queryFn:   ({ pageParam = 1 }) =>
-      fetchMessages(conversationId!, pageParam as number),
+  return useQuery<MessagePage, Error>({
+    queryKey:  chatKeys.messagesPage(conversationId ?? "", 1),
+    queryFn:   () => fetchMessages(conversationId!, 1),
     enabled:   !!conversationId,
-    getNextPageParam: (lastPage) =>
-      lastPage.has_more ? lastPage.page + 1 : undefined,
-    initialPageParam: 1,
     staleTime: 20_000,
-    // REST polling fallback — 10 second interval when WebSocket is down
     refetchInterval: wsConnected ? false : 10_000,
   });
 }
@@ -94,7 +89,12 @@ export function useMessages(
 export function useSendMessage(conversationId: string) {
   const queryClient = useQueryClient();
 
-  return useMutation<Message, Error, SendMessageInput>({
+  return useMutation<
+    Message,
+    Error,
+    SendMessageInput,
+    { previousData?: MessagePage }
+  >({
     mutationFn: (input) => sendMessage(conversationId, input),
 
     // 1. Optimistically add pending message to cache
@@ -104,18 +104,16 @@ export function useSendMessage(conversationId: string) {
 
       const pendingMessage: Message = {
         id:              `pending-${Date.now()}`,
-        conversation_id: conversationId,
-        sender_id:       "current-user",
-        sender_name:     "You",
-        sender_avatar:   null,
-        content:         variables.content,
+        body:            variables.body,
         message_type:    variables.message_type ?? "text",
-        status:          "sent",
-        attachments:     [],
-        offer_data:      null,
-        metadata:        {},
+        author_id:       "current-user",
+        author_name:     "You",
+        is_read_by_buyer: true,
+        is_read_by_vendor: false,
+        is_deleted:      false,
+        media:           null,
+        offer:           null,
         created_at:      new Date().toISOString(),
-        updated_at:      new Date().toISOString(),
         is_own:          true,
       };
 
@@ -128,7 +126,14 @@ export function useSendMessage(conversationId: string) {
       queryClient.setQueryData<MessagePage>(
         chatKeys.messagesPage(conversationId, 1),
         (old) => {
-          if (!old) return old;
+          if (!old) {
+            return {
+              messages: [pendingMessage],
+              has_more: false,
+              page: 1,
+              total: 1,
+            };
+          }
           return { ...old, messages: [pendingMessage, ...old.messages] };
         }
       );
@@ -146,7 +151,7 @@ export function useSendMessage(conversationId: string) {
           const messages = old.messages.map((m) =>
             m.id.startsWith("pending-") ? serverMessage : m
           );
-          return { ...old, messages };
+          return { ...old, messages, total: messages.length };
         }
       );
     },
@@ -179,12 +184,9 @@ export function useMarkConversationRead() {
         chatKeys.conversations(),
         (old) => {
           if (!old) return old;
-          return {
-            ...old,
-            conversations: old.conversations.map((conv: Conversation) =>
-              conv.id === conversationId ? { ...conv, unread_count: 0 } : conv
-            ),
-          };
+          return old.map((conv: Conversation) =>
+            conv.id === conversationId ? { ...conv, unread_count: 0 } : conv
+          );
         }
       );
     },

@@ -18,6 +18,7 @@ import {
   markAllNotificationsRead,
   fetchUnreadBadgeCount,
 } from "../api/notification.api";
+import { useNotificationWebSocket } from "./use-notification-websocket";
 
 export const notificationKeys = {
   all:        ["notification"] as const,
@@ -49,11 +50,13 @@ export function useNotifications(page = 1) {
  * `refetchInterval: false` and the badge updated via queryClient.setQueryData().
  */
 export function useUnreadBadgeCount() {
+  const { isConnected } = useNotificationWebSocket();
+
   return useQuery<number, Error>({
     queryKey: notificationKeys.badgeCount(),
     queryFn:  fetchUnreadBadgeCount,
     staleTime:       20_000,
-    refetchInterval: 30_000,  // REST polling fallback — 30s
+    refetchInterval: isConnected ? false : 30_000,
     select: (data) => data,
   });
 }
@@ -61,7 +64,10 @@ export function useUnreadBadgeCount() {
 /** Hook: derived unread count (from paginated feed query, fallback). */
 export function useUnreadNotificationCount() {
   const { data } = useNotifications(1);
-  return data?.unread_count ?? 0;
+  return (
+    data?.filter((notification: { is_read: boolean }) => !notification.is_read)
+      .length ?? 0
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -72,7 +78,7 @@ export function useUnreadNotificationCount() {
 export function useMarkNotificationRead() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => markNotificationRead(id),
+    mutationFn: (id: number) => markNotificationRead(id),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: notificationKeys.all });
       // Also invalidate badge count
@@ -89,8 +95,8 @@ export function useMarkAllNotificationsRead() {
     onSuccess: (res) => {
       void qc.invalidateQueries({ queryKey: notificationKeys.all });
       void qc.invalidateQueries({ queryKey: notificationKeys.badgeCount() });
-      if (res.marked > 0) {
-        toast.success(`${res.marked} notifications marked as read.`);
+      if (res.marked_read > 0) {
+        toast.success(`${res.marked_read} notifications marked as read.`);
       }
     },
   });

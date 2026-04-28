@@ -15,31 +15,21 @@ export type ConversationStatus =
   | "active"
   | "archived"
   | "blocked"
-  | "flagged"
-  | "closed";
-
-export type MessageStatus =
-  | "sent"
-  | "delivered"
-  | "read"
-  | "failed"
-  | "deleted";
+  | "escalated";
 
 export type MessageType =
   | "text"
-  | "image"
-  | "file"
-  | "system"
   | "offer"
-  | "custom_order_request";
+  | "image"
+  | "system"
+  | "delivery_confirm";
 
 export type OfferStatus =
   | "pending"
   | "accepted"
-  | "rejected"
-  | "countered"
+  | "declined"
   | "expired"
-  | "completed";
+  | "cancelled";
 
 export type WebSocketReadyState = "connecting" | "open" | "closed" | "error";
 
@@ -49,11 +39,8 @@ export type WebSocketReadyState = "connecting" | "open" | "closed" | "error";
 
 export interface Participant {
   id: string;
-  name: string;
+  full_name: string;
   avatar_url: string | null;
-  role: "buyer" | "vendor" | "moderator";
-  is_online: boolean;
-  last_seen: string | null;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -61,42 +48,43 @@ export interface Participant {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface Attachment {
-  url: string;
-  mime_type: string;
-  file_name: string;
-  size_bytes: number;
+  id: string;
+  image_url: string | null;
+  media_type: "image" | "video";
+  alt_text: string;
 }
 
 export interface OfferData {
-  amount: number;
+  id: string;
+  quantity: number;
+  offered_price: string;
   currency: string;
-  product_id: string | null;
-  product_name: string;
+  product_id: string;
+  product_title_snapshot: string;
   status: OfferStatus;
   expires_at: string | null;
+  responded_at: string | null;
+  notes: string;
+  created_at: string;
 }
 
 export interface Message {
   id: string;
-  conversation_id: string;
-  sender_id: string;
-  sender_name: string;
-  sender_avatar: string | null;
-  content: string;
+  body: string;
   message_type: MessageType;
-  status: MessageStatus;
-  attachments: Attachment[];
-  offer_data: OfferData | null;
-  metadata: Record<string, unknown>;
+  author_id: string | null;
+  author_name: string;
+  is_read_by_buyer: boolean;
+  is_read_by_vendor: boolean;
+  is_deleted: boolean;
+  media: Attachment | null;
+  offer: OfferData | null;
   created_at: string;
-  updated_at: string;
   is_own?: boolean; // Derived client-side from current user ID
 }
 
-// Optimistic message added before server confirms
-export interface PendingMessage extends Omit<Message, "id" | "status"> {
+export interface PendingMessage extends Omit<Message, "id"> {
   id: `pending-${string}`;
-  status: "sending";
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -105,48 +93,35 @@ export interface PendingMessage extends Omit<Message, "id" | "status"> {
 
 export interface Conversation {
   id: string;
-  order_id: string | null;
   product_id: string | null;
   status: ConversationStatus;
-  subject: string | null;
-  last_message: Message | null;
+  product_title_snapshot: string;
+  other_party_id: string;
+  other_party_name: string;
   last_message_at: string | null;
-  buyer: Participant;
-  vendor: Participant;
   unread_count: number;
-  created_at: string;
-  updated_at: string;
+  last_message_preview: string;
 }
 
-export interface ConversationDetail extends Conversation {
+export interface ConversationDetail {
   messages: Message[];
-  has_more_messages: boolean;
-  page: number;
 }
 
-export interface ConversationFeed {
-  conversations: Conversation[];
-  total: number;
-  unread_total: number;
-}
+export type ConversationFeed = Conversation[];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // API REQUEST / RESPONSE SHAPES
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface SendMessageInput {
-  content: string;
+  body: string;
   message_type?: MessageType;
-  attachments?: string[];  // Upload URLs
-  offer_data?: Partial<OfferData>;
-  metadata?: Record<string, unknown>;
 }
 
 export interface StartConversationInput {
   vendor_id: string;
-  subject?: string;
   product_id?: string;
-  order_id?: string;
+  product_title_snapshot?: string;
   initial_message?: string;
 }
 
@@ -192,6 +167,10 @@ export interface WsTypingPayload {
 export interface WsPresencePayload {
   user_id: string;
   is_online: boolean;
+}
+
+export interface WsNotificationPayload {
+  unread_count: number;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

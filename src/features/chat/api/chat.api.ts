@@ -10,7 +10,7 @@
  *   WebSocket unavailable → REST polling every 10s via refetchInterval
  */
 
-import axiosInstance from "@/lib/axios";
+import { apiSync } from "@/core/api/client.sync";
 import type {
   Conversation,
   ConversationFeed,
@@ -21,7 +21,7 @@ import type {
   StartConversationInput,
 } from "../types/chat.types";
 
-const BASE = "/api/v1/chat";
+const BASE = "/chat";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONVERSATIONS
@@ -32,9 +32,7 @@ const BASE = "/api/v1/chat";
  * Returns both conversations list and total unread count.
  */
 export async function fetchConversationFeed(): Promise<ConversationFeed> {
-  const { data } = await axiosInstance.get<ConversationFeed>(
-    `${BASE}/conversations/`
-  );
+  const { data } = await apiSync.get<ConversationFeed>(`${BASE}/conversations/`);
   return data;
 }
 
@@ -45,7 +43,7 @@ export async function fetchConversationFeed(): Promise<ConversationFeed> {
 export async function fetchConversationDetail(
   conversationId: string
 ): Promise<ConversationDetail> {
-  const { data } = await axiosInstance.get<ConversationDetail>(
+  const { data } = await apiSync.get<ConversationDetail>(
     `${BASE}/conversations/${conversationId}/`
   );
   return data;
@@ -58,8 +56,8 @@ export async function fetchConversationDetail(
 export async function startConversation(
   input: StartConversationInput
 ): Promise<Conversation> {
-  const { data } = await axiosInstance.post<Conversation>(
-    `${BASE}/conversations/`,
+  const { data } = await apiSync.post<Conversation>(
+    `${BASE}/conversations/start/`,
     input
   );
   return data;
@@ -80,11 +78,15 @@ export async function fetchMessages(
   conversationId: string,
   page: number = 1
 ): Promise<MessagePage> {
-  const { data } = await axiosInstance.get<MessagePage>(
-    `${BASE}/conversations/${conversationId}/messages/`,
-    { params: { page } }
+  const { data } = await apiSync.get<ConversationDetail>(
+    `${BASE}/conversations/${conversationId}/`
   );
-  return data;
+  return {
+    messages: data.messages,
+    has_more: false,
+    page,
+    total: data.messages.length,
+  };
 }
 
 /**
@@ -98,7 +100,7 @@ export async function sendMessage(
   conversationId: string,
   input: SendMessageInput
 ): Promise<Message> {
-  const { data } = await axiosInstance.post<Message>(
+  const { data } = await apiSync.post<Message>(
     `${BASE}/conversations/${conversationId}/messages/`,
     input
   );
@@ -114,7 +116,7 @@ export async function sendMessage(
 export async function markConversationRead(
   conversationId: string
 ): Promise<{ status: string; marked_read: number }> {
-  const { data } = await axiosInstance.post<{ status: string; marked_read: number }>(
+  const { data } = await apiSync.post<{ status: string; marked_read: number }>(
     `${BASE}/conversations/${conversationId}/read/`
   );
   return data;
@@ -131,11 +133,11 @@ export async function markConversationRead(
  * @param messageId - UUID of the offer message
  */
 export async function acceptOffer(
-  conversationId: string,
-  messageId: string
+  _conversationId: string,
+  offerId: string
 ): Promise<Message> {
-  const { data } = await axiosInstance.post<Message>(
-    `${BASE}/conversations/${conversationId}/messages/${messageId}/accept-offer/`
+  const { data } = await apiSync.post<Message>(
+    `${BASE}/offers/${offerId}/accept/`
   );
   return data;
 }
@@ -144,11 +146,11 @@ export async function acceptOffer(
  * Reject an offer message.
  */
 export async function rejectOffer(
-  conversationId: string,
-  messageId: string
+  _conversationId: string,
+  offerId: string
 ): Promise<Message> {
-  const { data } = await axiosInstance.post<Message>(
-    `${BASE}/conversations/${conversationId}/messages/${messageId}/reject-offer/`
+  const { data } = await apiSync.post<Message>(
+    `${BASE}/offers/${offerId}/decline/`
   );
   return data;
 }
