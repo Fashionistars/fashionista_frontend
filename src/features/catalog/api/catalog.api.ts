@@ -1,4 +1,4 @@
-import { apiSync } from "@/core/api/client.sync";
+import { apiAsync } from "@/core/api/client.async";
 import {
   CatalogBrandListSchema,
   CatalogBlogPostListSchema,
@@ -46,22 +46,22 @@ function unwrapListPayload<T>(payload: unknown): T[] {
 
 export const catalogApi = {
   async getCategories(): Promise<CatalogCategory[]> {
-    const { data } = await apiSync.get("/v1/catalog/categories/");
+    const data = await apiAsync.get("catalog/categories/").json();
     return CatalogCategoryListSchema.parse(unwrapListPayload<CatalogCategory>(data));
   },
 
   async getBrands(): Promise<CatalogBrand[]> {
-    const { data } = await apiSync.get("/v1/catalog/brands/");
+    const data = await apiAsync.get("catalog/brands/").json();
     return CatalogBrandListSchema.parse(unwrapListPayload<CatalogBrand>(data));
   },
 
   async getCollections(): Promise<CatalogCollection[]> {
-    const { data } = await apiSync.get("/v1/catalog/collections/");
+    const data = await apiAsync.get("catalog/collections/").json();
     return CatalogCollectionListSchema.parse(unwrapListPayload<CatalogCollection>(data));
   },
 
   async getBlogPosts(): Promise<CatalogBlogPost[]> {
-    const { data } = await apiSync.get("/v1/catalog/blog/");
+    const data = await apiAsync.get("catalog/blog/").json();
     return CatalogBlogPostListSchema.parse(unwrapListPayload<CatalogBlogPost>(data));
   },
 };

@@ -69,6 +69,16 @@ export function normalizeAuthUser(payload: unknown): AuthUser {
       nestedUser.has_vendor_profile,
       readBoolean(root.has_vendor_profile),
     ),
+    client_profile: isRecord(nestedUser.client_profile)
+      ? nestedUser.client_profile
+      : isRecord(root.client_profile)
+        ? root.client_profile
+        : null,
+    vendor_profile: isRecord(nestedUser.vendor_profile)
+      ? nestedUser.vendor_profile
+      : isRecord(root.vendor_profile)
+        ? root.vendor_profile
+        : null,
     avatar:
       readNullableString(nestedUser.avatar) ??
       readNullableString(root.avatar) ??

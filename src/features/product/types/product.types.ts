@@ -13,7 +13,7 @@
 // ENUM LITERALS
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type ProductStatus = "draft" | "published" | "archived" | "rejected";
+export type ProductStatus = "draft" | "pending" | "published" | "archived" | "rejected";
 export type ProductCondition = "new" | "used" | "refurbished";
 export type CouponType = "percentage" | "fixed" | "free_shipping";
 export type MediaType = "image" | "video";

@@ -2,20 +2,19 @@
  * @file cart.api.ts
  * @description Cart domain API client — Fashionistar frontend.
  *
- * All cart writes use `apiSync` (Axios → DRF) for strict transaction boundaries.
- * No Ninja async reads for cart — it's always user-specific session state.
+ * Cart reads use `apiAsync` (Ky → Ninja) for high-concurrency user state.
+ * Cart writes use `apiSync` (Axios → DRF) for strict transaction boundaries.
  */
 import { apiSync } from "@/core/api/client.sync";
+import { apiAsync } from "@/core/api/client.async";
 import {
   parseCartResponse,
   CartSchema,
-  CartItemSchema,
   CheckoutSessionSchema,
   SubmitCheckoutResponseSchema,
 } from "../schemas/cart.schemas";
 import type {
   Cart,
-  CartItem,
   CheckoutSession,
   SubmitCheckoutResponse,
   AddCartItemInput,
@@ -31,23 +30,27 @@ const BASE = "/cart";
 
 /** Fetch or create the current user's cart. */
 export async function fetchCart(): Promise<Cart> {
-  const { data } = await apiSync.get<unknown>(`${BASE}/`);
+  const data = await apiAsync.get("cart/").json();
   return parseCartResponse(CartSchema, data, "fetchCart");
 }
 
 /** Add a product/variant to the cart. */
-export async function addCartItem(input: AddCartItemInput): Promise<CartItem> {
-  const { data } = await apiSync.post<unknown>(`${BASE}/items/`, input);
-  return parseCartResponse(CartItemSchema, data, "addCartItem");
+export async function addCartItem(input: AddCartItemInput): Promise<Cart> {
+  const { data } = await apiSync.post<unknown>(`${BASE}/add/`, {
+    product_slug: input.product_slug ?? input.product_id,
+    variant_id: input.variant_id,
+    quantity: input.quantity,
+  });
+  return parseCartResponse(CartSchema, data, "addCartItem");
 }
 
 /** Update quantity of a cart item. */
 export async function updateCartItem(
   itemId: string,
   input: UpdateCartItemInput,
-): Promise<CartItem> {
-  const { data } = await apiSync.patch<unknown>(`${BASE}/items/${itemId}/`, input);
-  return parseCartResponse(CartItemSchema, data, "updateCartItem");
+): Promise<Cart> {
+  const { data } = await apiSync.patch<unknown>(`${BASE}/items/${itemId}/quantity/`, input);
+  return parseCartResponse(CartSchema, data, "updateCartItem");
 }
 
 /** Remove a cart item. */
@@ -59,13 +62,13 @@ export async function removeCartItem(itemId: string): Promise<void> {
 
 /** Apply a coupon code to the cart. Returns updated cart. */
 export async function applyCoupon(input: ApplyCouponInput): Promise<Cart> {
-  const { data } = await apiSync.post<unknown>(`${BASE}/coupon/apply/`, input);
+  const { data } = await apiSync.post<unknown>(`${BASE}/coupon/`, input);
   return parseCartResponse(CartSchema, data, "applyCoupon");
 }
 
 /** Remove the currently applied coupon. Returns updated cart. */
 export async function removeCoupon(): Promise<Cart> {
-  const { data } = await apiSync.delete<unknown>(`${BASE}/coupon/remove/`);
+  const { data } = await apiSync.delete<unknown>(`${BASE}/coupon/`);
   return parseCartResponse(CartSchema, data, "removeCoupon");
 }
 

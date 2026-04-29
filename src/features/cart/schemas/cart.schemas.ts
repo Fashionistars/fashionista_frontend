@@ -27,7 +27,7 @@ export const CartItemSchema = z.object({
 });
 
 export const CartSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string().uuid().nullable(),
   items: z.array(CartItemSchema),
   item_count: z.number().int().min(0),
   subtotal: z.string(),

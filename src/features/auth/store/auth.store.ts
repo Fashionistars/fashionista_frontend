@@ -27,6 +27,10 @@ export interface AuthUser {
   has_client_profile?: boolean;
   /** True when the backend confirms a provisioned vendor profile exists. */
   has_vendor_profile?: boolean;
+  /** Minimal backend client profile snapshot returned after auth. */
+  client_profile?: Record<string, unknown> | null;
+  /** Minimal backend vendor profile snapshot returned after auth. */
+  vendor_profile?: Record<string, unknown> | null;
   /** Cloudinary URL — null when user has no avatar uploaded yet */
   avatar?: string | null;
   date_joined?: string;

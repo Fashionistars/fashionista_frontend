@@ -89,7 +89,7 @@ export async function fetchProductReviews(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// VENDOR PRODUCT WRITES  (apiSync → DRF /api/v1/products/)
+// VENDOR PRODUCT WRITES  (apiSync → DRF product write routes)
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Create a new product (vendor only). */
@@ -137,13 +137,13 @@ export async function createProductReview(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// WISHLIST  (apiSync → DRF)
+// WISHLIST  (apiAsync → Ninja reads, apiSync → DRF writes)
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Fetch authenticated client's wishlist. */
 export async function fetchWishlist(): Promise<WishlistItem[]> {
-  const { data } = await apiSync.get<{ results: unknown[] }>("/products/wishlist/");
-  return (data.results ?? []).map((item) =>
+  const raw = await apiAsync.get("products/wishlist/").json<{ results: unknown[] }>();
+  return (raw.results ?? []).map((item) =>
     parseApiResponse(WishlistItemSchema, item, "fetchWishlist"),
   );
 }
@@ -163,13 +163,13 @@ export async function toggleWishlist(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// COUPON  (apiSync → DRF — vendor management)
+// COUPON  (apiAsync → Ninja reads, apiSync → DRF writes)
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Fetch vendor's own coupons. */
 export async function fetchVendorCoupons(): Promise<Coupon[]> {
-  const { data } = await apiSync.get<{ results: unknown[] }>("/products/coupons/");
-  return (data.results ?? []).map((item) =>
+  const raw = await apiAsync.get("products/coupons/").json<{ results: unknown[] }>();
+  return (raw.results ?? []).map((item) =>
     parseApiResponse(CouponSchema, item, "fetchVendorCoupons"),
   );
 }
