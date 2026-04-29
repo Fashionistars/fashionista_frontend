@@ -57,7 +57,7 @@ export const vendorApi = {
 
   // ── Profile ────────────────────────────────────────────────────────────────
   async getProfile(): Promise<VendorProfile> {
-    const { data } = await apiSync.get("/v1/vendor/profile/");
+    const data = await apiAsync.get("vendor/profile/").json();
     return VendorProfileSchema.parse(unwrapData<VendorProfile>(data));
   },
 
@@ -68,7 +68,7 @@ export const vendorApi = {
 
   // ── Setup / Onboarding ─────────────────────────────────────────────────────
   async getSetupState(): Promise<VendorSetupState> {
-    const { data } = await apiSync.get("/v1/vendor/setup/");
+    const data = await apiAsync.get("vendor/setup/").json();
     return VendorSetupStateSchema.parse(unwrapData<VendorSetupState>(data));
   },
 
