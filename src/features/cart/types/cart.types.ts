@@ -49,7 +49,7 @@ export interface CartItem {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface Cart {
-  id: string;
+  id: string | null;
   items: CartItem[];
   item_count: number;
   subtotal: string;
@@ -103,6 +103,7 @@ export interface CheckoutSession {
 
 export interface AddCartItemInput {
   product_id: string;
+  product_slug?: string;
   variant_id?: string;
   quantity: number;
 }

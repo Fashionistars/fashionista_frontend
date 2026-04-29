@@ -10,6 +10,8 @@ export interface PersistedAuthUserLike {
   is_staff?: boolean;
   has_client_profile?: boolean;
   has_vendor_profile?: boolean;
+  client_profile?: Record<string, unknown> | null;
+  vendor_profile?: Record<string, unknown> | null;
 }
 
 export interface PersistedAuthStateLike {

@@ -85,27 +85,27 @@ async function fetchCatalogItem<T>(path: string): Promise<T | null> {
 }
 
 export async function getCatalogCategories(): Promise<CatalogCategory[]> {
-  const payload = await fetchCatalog<CatalogCategory>("/api/v1/catalog/categories/");
+  const payload = await fetchCatalog<CatalogCategory>("/api/v1/ninja/catalog/categories/");
   return CatalogCategoryListSchema.parse(payload);
 }
 
 export async function getCatalogBrands(): Promise<CatalogBrand[]> {
-  const payload = await fetchCatalog<CatalogBrand>("/api/v1/catalog/brands/");
+  const payload = await fetchCatalog<CatalogBrand>("/api/v1/ninja/catalog/brands/");
   return CatalogBrandListSchema.parse(payload);
 }
 
 export async function getCatalogCollections(): Promise<CatalogCollection[]> {
-  const payload = await fetchCatalog<CatalogCollection>("/api/v1/catalog/collections/");
+  const payload = await fetchCatalog<CatalogCollection>("/api/v1/ninja/catalog/collections/");
   return CatalogCollectionListSchema.parse(payload);
 }
 
 export async function getCatalogBlogPosts(): Promise<CatalogBlogPost[]> {
-  const payload = await fetchCatalog<CatalogBlogPost>("/api/v1/catalog/blog/");
+  const payload = await fetchCatalog<CatalogBlogPost>("/api/v1/ninja/catalog/blog/");
   return CatalogBlogPostListSchema.parse(payload);
 }
 
 export async function getCatalogBlogPostBySlug(slug: string): Promise<CatalogBlogPost | null> {
-  const payload = await fetchCatalogItem<CatalogBlogPost>(`/api/v1/catalog/blog/${slug}/`);
+  const payload = await fetchCatalogItem<CatalogBlogPost>(`/api/v1/ninja/catalog/blog/${slug}/`);
   if (!payload) {
     return null;
   }

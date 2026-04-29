@@ -14,7 +14,8 @@ import { z } from "zod";
 // ENUM SCHEMAS
 // ─────────────────────────────────────────────────────────────────────────────
 
-const ProductStatusSchema = z.enum(["draft", "published", "archived", "rejected"]);
+const IdSchema = z.string();
+const ProductStatusSchema = z.enum(["draft", "pending", "published", "archived", "rejected"]);
 const ProductConditionSchema = z.enum(["new", "used", "refurbished"]);
 const CouponTypeSchema = z.enum(["percentage", "fixed", "free_shipping"]);
 const MediaTypeSchema = z.enum(["image", "video"]);
@@ -24,46 +25,46 @@ const MediaTypeSchema = z.enum(["image", "video"]);
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const ProductCategorySchema = z.object({
-  id: z.string().uuid(),
+  id: IdSchema,
   name: z.string(),
   slug: z.string(),
 });
 
 export const ProductBrandSchema = z.object({
-  id: z.string().uuid(),
+  id: IdSchema,
   name: z.string(),
   slug: z.string(),
   logo_url: z.string().url().nullable(),
 });
 
 export const ProductVendorSchema = z.object({
-  id: z.string().uuid(),
+  id: IdSchema,
   store_name: z.string(),
   slug: z.string(),
   avatar_url: z.string().url().nullable(),
 });
 
 export const ProductSizeSchema = z.object({
-  id: z.string().uuid(),
+  id: IdSchema,
   name: z.string(),
   abbreviation: z.string(),
   sort_order: z.number().int(),
 });
 
 export const ProductColorSchema = z.object({
-  id: z.string().uuid(),
+  id: IdSchema,
   name: z.string(),
   hex_code: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
 });
 
 export const ProductTagSchema = z.object({
-  id: z.string().uuid(),
+  id: IdSchema,
   name: z.string(),
   slug: z.string(),
 });
 
 export const ProductGalleryMediaSchema = z.object({
-  id: z.string().uuid(),
+  id: IdSchema,
   image_url: z.string().url(),
   media_type: MediaTypeSchema,
   alt_text: z.string(),
@@ -71,7 +72,7 @@ export const ProductGalleryMediaSchema = z.object({
 });
 
 export const ProductVariantSchema = z.object({
-  id: z.string().uuid(),
+  id: IdSchema,
   sku: z.string(),
   size: ProductSizeSchema.nullable(),
   color: ProductColorSchema.nullable(),
@@ -81,7 +82,7 @@ export const ProductVariantSchema = z.object({
 });
 
 export const ProductReviewSchema = z.object({
-  id: z.string().uuid(),
+  id: IdSchema,
   reviewer_name: z.string(),
   reviewer_avatar: z.string().url().nullable(),
   rating: z.number().int().min(1).max(5),
@@ -93,7 +94,7 @@ export const ProductReviewSchema = z.object({
 });
 
 export const CouponSchema = z.object({
-  id: z.string().uuid(),
+  id: IdSchema,
   code: z.string(),
   coupon_type: CouponTypeSchema,
   discount_value: z.string(),
@@ -110,7 +111,7 @@ export const CouponSchema = z.object({
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const ProductListItemSchema = z.object({
-  id: z.string().uuid(),
+  id: IdSchema,
   slug: z.string(),
   title: z.string(),
   sku: z.string(),
@@ -156,7 +157,7 @@ export const ProductDetailSchema = ProductListItemSchema.extend({
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const WishlistItemSchema = z.object({
-  id: z.string().uuid(),
+  id: IdSchema,
   product: ProductListItemSchema,
   created_at: z.string().datetime({ offset: true }),
 });

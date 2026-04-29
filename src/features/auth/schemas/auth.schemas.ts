@@ -29,6 +29,8 @@ const phoneFieldSchema = z
     },
   );
 
+const ProfileSnapshotSchema = z.record(z.unknown()).nullable().optional();
+
 // ── Login ─────────────────────────────────────────────────────────────────────
 // Backend serializer field is `email_or_phone` (accepts email OR phone in E.164)
 export const LoginSchema = z.object({
@@ -67,6 +69,8 @@ export const LoginResponseSchema = z.object({
   requires_otp:     z.boolean().optional().default(false),
   has_vendor_profile: z.boolean().optional().default(false),
   has_client_profile: z.boolean().optional().default(false),
+  vendor_profile: ProfileSnapshotSchema,
+  client_profile: ProfileSnapshotSchema,
 
   // ── Google OAuth response fields ──────────────────────────────────────
   status:  z.string().optional(),   // "success"
@@ -98,6 +102,8 @@ export const LoginResponseSchema = z.object({
       is_staff:    z.boolean().optional().default(false),
       has_vendor_profile: z.boolean().optional().default(false),
       has_client_profile: z.boolean().optional().default(false),
+      vendor_profile: ProfileSnapshotSchema,
+      client_profile: ProfileSnapshotSchema,
       avatar:      z.string().nullable().optional(),
       date_joined: z.string().optional().nullable(),
     })
