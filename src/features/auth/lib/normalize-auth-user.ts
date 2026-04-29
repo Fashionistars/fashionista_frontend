@@ -61,6 +61,14 @@ export function normalizeAuthUser(payload: unknown): AuthUser {
       readBoolean(root.is_verified, true),
     ),
     is_staff: isStaff,
+    has_client_profile: readBoolean(
+      nestedUser.has_client_profile,
+      readBoolean(root.has_client_profile),
+    ),
+    has_vendor_profile: readBoolean(
+      nestedUser.has_vendor_profile,
+      readBoolean(root.has_vendor_profile),
+    ),
     avatar:
       readNullableString(nestedUser.avatar) ??
       readNullableString(root.avatar) ??

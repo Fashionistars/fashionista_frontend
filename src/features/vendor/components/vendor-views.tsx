@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { Transactions } from "@/features/account/components";
+import { useAuthStore } from "@/features/auth/store/auth.store";
 import { MultiStep } from "@/features/shop/components";
 import {
   useSubmitVendorSetup,
@@ -80,8 +81,11 @@ function TextArea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
 
 export function VendorSetupView() {
   const router = useRouter();
+  const hasVendorProfile = useAuthStore(
+    (state) => state.user?.has_vendor_profile === true,
+  );
   const { data: setupState } = useVendorSetupState();
-  const { data: profile } = useVendorProfile();
+  const { data: profile } = useVendorProfile({ enabled: hasVendorProfile });
   const submitSetup = useSubmitVendorSetup();
   const [payload, setPayload] = useState<VendorSetupPayload>({
     store_name: "",

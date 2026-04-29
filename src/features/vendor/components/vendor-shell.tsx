@@ -46,6 +46,7 @@ export function VendorShell({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [openPathname, setOpenPathname] = useState<string | null>(null);
   const isMenuOpen = isOpen && openPathname === pathname;
+  const requiresVendorProfile = !pathname.startsWith("/vendor/setup");
 
   const openMenu = () => {
     setOpenPathname(pathname);
@@ -63,7 +64,7 @@ export function VendorShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <RoleGuard requiredRole="vendor">
+    <RoleGuard requiredRole="vendor" requireVendorProfile={requiresVendorProfile}>
       <div className="min-h-screen bg-[#F4F3EC] text-black lg:flex">
         <button
           type="button"
