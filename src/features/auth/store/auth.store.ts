@@ -23,6 +23,10 @@ export interface AuthUser {
   role?: string;
   is_verified: boolean;
   is_staff: boolean;
+  /** True when the backend confirms a provisioned client profile exists. */
+  has_client_profile?: boolean;
+  /** True when the backend confirms a provisioned vendor profile exists. */
+  has_vendor_profile?: boolean;
   /** Cloudinary URL — null when user has no avatar uploaded yet */
   avatar?: string | null;
   date_joined?: string;

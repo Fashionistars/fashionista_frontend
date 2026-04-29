@@ -159,10 +159,18 @@ function ClientMenu({ close }: { close: () => void }) {
   );
 }
 
-function VendorMenu({ close }: { close: () => void }) {
+function VendorMenu({
+  close,
+  hasVendorProfile,
+}: {
+  close: () => void;
+  hasVendorProfile: boolean;
+}) {
+  const dashboardHref = hasVendorProfile ? "/vendor/dashboard" : "/vendor/setup";
+
   return (
     <nav aria-label="Vendor account menu" className="flex flex-col gap-0.5 py-2">
-      <MenuAction id="nav-vendor-dashboard" href="/vendor/dashboard" label="Vendor Dashboard" Icon={LayoutDashboard} onNavigate={close} />
+      <MenuAction id="nav-vendor-dashboard" href={dashboardHref} label="Vendor Dashboard" Icon={LayoutDashboard} onNavigate={close} />
       <MenuAction id="nav-vendor-products" href="/vendor/products" label="Products" Icon={Package} onNavigate={close} />
       <MenuAction id="nav-vendor-orders" href="/vendor/orders" label="Orders" Icon={ShoppingBag} onNavigate={close} />
       <MenuAction id="nav-vendor-analytics" href="/vendor/analytics" label="Analytics" Icon={BarChart3} onNavigate={close} />
@@ -324,7 +332,10 @@ const AccountOptions = ({
           </div>
 
           {roleGroup === "vendor" ? (
-            <VendorMenu close={close} />
+            <VendorMenu
+              close={close}
+              hasVendorProfile={user?.has_vendor_profile === true}
+            />
           ) : roleGroup === "admin" ? (
             <AdminMenu close={close} />
           ) : (

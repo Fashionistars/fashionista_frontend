@@ -13,12 +13,16 @@ interface RoleGuardProps {
   requiredRole: CanonicalRole | CanonicalRole[];
   children: React.ReactNode;
   fallback?: React.ReactNode;
+  requireClientProfile?: boolean;
+  requireVendorProfile?: boolean;
 }
 
 export function RoleGuard({
   requiredRole,
   children,
   fallback = null,
+  requireClientProfile = false,
+  requireVendorProfile = false,
 }: RoleGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -31,6 +35,9 @@ export function RoleGuard({
     () => normalizeCanonicalRole(user?.role, user?.is_staff === true),
     [user?.is_staff, user?.role],
   );
+  const profileGateFailed =
+    (requireVendorProfile && user?.has_vendor_profile !== true) ||
+    (requireClientProfile && user?.has_client_profile !== true);
 
   useEffect(() => {
     if (!hydrated) {
@@ -44,12 +51,18 @@ export function RoleGuard({
 
     if (!isRoleAllowed(requiredRole, role)) {
       router.replace(getCanonicalDashboardPath(user?.role, user?.is_staff === true));
+      return;
+    }
+
+    if (profileGateFailed) {
+      router.replace(role === "vendor" ? "/vendor/setup" : "/client/dashboard");
     }
   }, [
     accessToken,
     hydrated,
     isAuthenticated,
     pathname,
+    profileGateFailed,
     requiredRole,
     role,
     router,
@@ -57,7 +70,13 @@ export function RoleGuard({
     user?.role,
   ]);
 
-  if (!hydrated || !isAuthenticated || !accessToken || !isRoleAllowed(requiredRole, role)) {
+  if (
+    !hydrated ||
+    !isAuthenticated ||
+    !accessToken ||
+    !isRoleAllowed(requiredRole, role) ||
+    profileGateFailed
+  ) {
     return <>{fallback}</>;
   }
 

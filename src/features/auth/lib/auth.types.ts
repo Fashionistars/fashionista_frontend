@@ -8,6 +8,8 @@ export interface AuthSessionMirror {
 export interface PersistedAuthUserLike {
   role?: string | null;
   is_staff?: boolean;
+  has_client_profile?: boolean;
+  has_vendor_profile?: boolean;
 }
 
 export interface PersistedAuthStateLike {
