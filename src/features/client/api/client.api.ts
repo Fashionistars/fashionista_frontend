@@ -43,7 +43,7 @@ export const clientApi = {
 
   // ── Profile ────────────────────────────────────────────────────────────────
   async getProfile(): Promise<ClientProfile> {
-    const { data } = await apiSync.get("/v1/client/profile/");
+    const data = await apiAsync.get("client/profile/").json();
     return ClientProfileSchema.parse(unwrapData<ClientProfile>(data));
   },
 
@@ -55,7 +55,7 @@ export const clientApi = {
 
   // ── Addresses ─────────────────────────────────────────────────────────────
   async getAddresses(): Promise<ClientAddress[]> {
-    const { data } = await apiSync.get("/v1/client/addresses/");
+    const data = await apiAsync.get("client/addresses/").json();
     return unwrapData<ClientAddress[]>(data);
   },
 

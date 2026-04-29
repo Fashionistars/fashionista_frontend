@@ -1,42 +1,7 @@
 import type { CanonicalRole } from "@/features/auth/lib/auth.types";
+import { normalizeCanonicalRole } from "@/features/auth/lib/auth-roles";
 
-const ADMIN_ROLES = new Set([
-  "admin",
-  "staff",
-  "support",
-  "editor",
-  "director",
-  "assistant",
-  "moderator",
-  "super_admin",
-  "super_staff",
-  "super_support",
-  "super_editor",
-  "super_director",
-  "super_assistant",
-  "super_moderator",
-]);
-
-export function normalizeCanonicalRole(
-  role?: string | null,
-  isStaff = false,
-): CanonicalRole | undefined {
-  const normalizedRole = (role ?? "").trim().toLowerCase();
-
-  if (isStaff || ADMIN_ROLES.has(normalizedRole)) {
-    return "admin";
-  }
-
-  if (normalizedRole.includes("vendor")) {
-    return "vendor";
-  }
-
-  if (normalizedRole.includes("client") || normalizedRole.includes("customer")) {
-    return "client";
-  }
-
-  return undefined;
-}
+export { normalizeCanonicalRole } from "@/features/auth/lib/auth-roles";
 
 export function getCanonicalDashboardPath(
   role?: string | null,

@@ -1,4 +1,4 @@
-import { apiSync } from "@/core/api/client.sync";
+import { apiAsync } from "@/core/api/client.async";
 import {
   BankOptionListSchema,
   CityOptionListSchema,
@@ -17,34 +17,40 @@ function unwrapData<T>(payload: unknown): T {
 
 export const referenceDataApi = {
   async getCountries(): Promise<CountryOption[]> {
-    const { data } = await apiSync.get("/v1/common/reference/countries/");
+    const data = await apiAsync.get("common/reference/countries/").json();
     return CountryOptionListSchema.parse(unwrapData(data));
   },
 
   async getStates(countryCode: string): Promise<StateOption[]> {
-    const { data } = await apiSync.get(`/v1/common/reference/countries/${countryCode}/states/`);
+    const data = await apiAsync.get(`common/reference/countries/${countryCode}/states/`).json();
     return StateOptionListSchema.parse(unwrapData(data));
   },
 
   async getLgas(countryCode: string, stateCode: string): Promise<LgaOption[]> {
-    const { data } = await apiSync.get(
-      `/v1/common/reference/countries/${countryCode}/states/${stateCode}/lgas/`,
-    );
+    const data = await apiAsync.get(
+      `common/reference/countries/${countryCode}/states/${stateCode}/lgas/`,
+    ).json();
     return LgaOptionListSchema.parse(unwrapData(data));
   },
 
   async getCities(countryCode: string, stateCode?: string, lgaCode?: string): Promise<CityOption[]> {
-    const { data } = await apiSync.get(`/v1/common/reference/countries/${countryCode}/cities/`, {
-      params: { state: stateCode, lga: lgaCode },
-    });
+    const searchParams: Record<string, string> = {};
+    if (stateCode) {
+      searchParams.state = stateCode;
+    }
+    if (lgaCode) {
+      searchParams.lga = lgaCode;
+    }
+    const data = await apiAsync.get(`common/reference/countries/${countryCode}/cities/`, {
+      searchParams,
+    }).json();
     return CityOptionListSchema.parse(unwrapData(data));
   },
 
   async getBanks(countryCode = "NG"): Promise<BankOption[]> {
-    const { data } = await apiSync.get("/v1/common/reference/banks/", {
-      params: { country: countryCode },
-    });
+    const data = await apiAsync.get("common/reference/banks/", {
+      searchParams: { country: countryCode },
+    }).json();
     return BankOptionListSchema.parse(unwrapData(data));
   },
 };
-
