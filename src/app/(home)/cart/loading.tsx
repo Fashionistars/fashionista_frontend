@@ -1,2 +1,6 @@
-import { PageSkeleton } from "@/components/shared/ui/Skeleton";
-export default function Loading() { return <PageSkeleton />; }
+import { CartPageSkeleton } from "@/features/cart";
+
+/** Instant PPR skeleton while CartPage client component hydrates. */
+export default function CartLoading() {
+  return <CartPageSkeleton />;
+}

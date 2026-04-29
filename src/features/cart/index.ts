@@ -54,3 +54,7 @@ export {
 
 // ── Zustand Stores ─────────────────────────────────────────────────────────
 export { useCartStore } from "./store/cart.store";
+
+// ── Components ─────────────────────────────────────────────────────────────
+export { default as CartPage } from "./components/CartPage";
+export { CartPageSkeleton } from "./components/CartPageSkeleton";
