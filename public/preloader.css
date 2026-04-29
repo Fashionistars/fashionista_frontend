@@ -1,0 +1,149 @@
+/* =============================================================================
+   FASHIONISTAR — STATIC PAGE PRELOADER
+   Lives entirely in /public/preloader.css — loaded via <link> in <head>.
+   Zero JavaScript. Zero DB fetch. Zero React hydration needed.
+   The preloader runs from the very first byte the browser receives.
+
+   Strategy:
+   1. <link rel="stylesheet" href="/preloader.css"> in <head> (before any JS)
+   2. <div id="fs-preloader"> injected at top of <body>
+   3. When Next.js hydrates, the React app adds class "app-ready" to <html>
+      which triggers the CSS exit animation and then display:none via pointer-events.
+   ============================================================================= */
+
+/* ── Reset & Layer ────────────────────────────────────────────────────────── */
+#fs-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+
+  /* Brand gradient — matches Fashionistar dark hero palette */
+  background: radial-gradient(
+    ellipse at 50% 60%,
+    #01454a 0%,
+    #012c30 55%,
+    #000f10 100%
+  );
+
+  /* Fade-out is triggered by .app-ready on <html> */
+  transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+  pointer-events: all;
+}
+
+/* ── Logo mark ────────────────────────────────────────────────────────────── */
+#fs-preloader .fs-logo-wrap {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 8px rgba(253, 166, 0, 0.12),
+              0 0 0 16px rgba(253, 166, 0, 0.06);
+  animation: fs-logo-pulse 2s ease-in-out infinite;
+}
+
+#fs-preloader .fs-logo-img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+/* ── Brand name ───────────────────────────────────────────────────────────── */
+#fs-preloader .fs-brand {
+  font-family: "Raleway", "Outfit", system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  opacity: 0;
+  animation: fs-brand-in 0.6s 0.3s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+}
+
+#fs-preloader .fs-brand span {
+  color: #fda600;
+}
+
+/* ── Tagline ──────────────────────────────────────────────────────────────── */
+#fs-preloader .fs-tagline {
+  font-family: "Satoshi", "Inter", system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  animation: fs-brand-in 0.6s 0.55s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+}
+
+/* ── Progress bar ─────────────────────────────────────────────────────────── */
+#fs-preloader .fs-progress-track {
+  width: 140px;
+  height: 2px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+#fs-preloader .fs-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #fda600 0%, #f5c518 100%);
+  border-radius: 9999px;
+  animation: fs-progress-fill 1.6s 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+/* ── Dot spinner ──────────────────────────────────────────────────────────── */
+#fs-preloader .fs-dots {
+  display: flex;
+  gap: 6px;
+}
+
+#fs-preloader .fs-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(253, 166, 0, 0.7);
+  animation: fs-dot-bounce 1.2s ease-in-out infinite;
+}
+
+#fs-preloader .fs-dots span:nth-child(1) { animation-delay: 0s; }
+#fs-preloader .fs-dots span:nth-child(2) { animation-delay: 0.18s; }
+#fs-preloader .fs-dots span:nth-child(3) { animation-delay: 0.36s; }
+
+/* ── Keyframes ────────────────────────────────────────────────────────────── */
+@keyframes fs-logo-pulse {
+  0%, 100% { box-shadow: 0 0 0 8px rgba(253,166,0,0.12), 0 0 0 16px rgba(253,166,0,0.06); }
+  50%       { box-shadow: 0 0 0 12px rgba(253,166,0,0.20), 0 0 0 24px rgba(253,166,0,0.08); }
+}
+
+@keyframes fs-brand-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fs-progress-fill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes fs-dot-bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40%            { transform: scale(1.0); opacity: 1.0; }
+}
+
+/* ── Exit: triggered when <html> has class "app-ready" ───────────────────── */
+.app-ready #fs-preloader {
+  opacity: 0;
+  transform: scale(1.04);
+  pointer-events: none;
+}

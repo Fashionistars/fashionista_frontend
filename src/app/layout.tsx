@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import { Providers } from "@/components/providers";
+import { PreloaderDismiss } from "@/components/shared/preloader/Preloader";
 
 import "./globals.css";
 
@@ -96,14 +97,72 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      suppressHydrationWarning // Required for next-themes
+      suppressHydrationWarning
       data-scroll-behavior="smooth"
       className={`${bonFoyage.variable} ${satoshi.variable}`}
     >
+      <head>
+        {/*
+         * ── Static Preloader CSS ──────────────────────────────────────────
+         * Loaded before any JS bundle — renders immediately from first byte.
+         * Lives in /public (static file server, zero DB, zero React needed).
+         * Cache-Control: immutable set in next.config.mjs headers rule.
+         */}
+        <link
+          rel="stylesheet"
+          href="/preloader.css"
+          // @ts-expect-error — fetchpriority is valid HTML but not yet in TS lib types
+          fetchpriority="high"
+        />
+
+        {/*
+         * ── Resource Hints — Media Performance ───────────────────────────
+         * Preconnect to Cloudinary CDN so the first image fetch is instant.
+         * DNS prefetch as fallback for older browsers.
+         */}
+        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+      </head>
+
       <body className="min-h-screen bg-background font-raleway antialiased">
+        {/*
+         * ── Static Preloader Shell ────────────────────────────────────────
+         * Server-rendered — visible on the very first paint before any JS.
+         * Styled entirely by /public/preloader.css (zero JS cost).
+         * Dismissed by <PreloaderDismiss> after React hydration.
+         */}
+        <div id="fs-preloader" role="status" aria-label="Loading Fashionistar">
+          <div className="fs-logo-wrap">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="Fashionistar"
+              className="fs-logo-img"
+              width={60}
+              height={60}
+            />
+          </div>
+          <p className="fs-brand">
+            FASHION<span>ISTAR</span>
+          </p>
+          <p className="fs-tagline">Perfect Fit, Every Time</p>
+          <div className="fs-progress-track">
+            <div className="fs-progress-bar" />
+          </div>
+          <div className="fs-dots" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+        </div>
+
+        {/* Dismiss preloader after React hydration — zero re-renders, RAF-based */}
+        <PreloaderDismiss />
+
         <Providers>
           {children}
-          {/* Global Toast Notifications — driven by auth service errors */}
+
+          {/* Global Toast Notifications */}
           <Toaster
             position="top-right"
             richColors

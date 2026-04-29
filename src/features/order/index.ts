@@ -51,3 +51,14 @@ export {
   useAdminOrders,
   useUpdateAdminDeliveryStatus,
 } from "./hooks/use-order";
+
+// ── Server Actions ─────────────────────────────────────────────────────────
+export {
+  getClientOrdersAction,
+  getOrderDetailAction,
+  trackOrderAction,
+} from "./api/order.server-actions";
+
+// ── Components ─────────────────────────────────────────────────────────────
+export { OrderTable, OrderList } from "./components";
+
