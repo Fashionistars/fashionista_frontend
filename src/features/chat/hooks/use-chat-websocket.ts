@@ -120,14 +120,13 @@ export function useChatWebSocket({
   // ── WebSocket Lifecycle ──────────────────────────────────────────────────
   useEffect(() => {
     if (!conversationId || !authToken) {
-      setReadyState("closed");
       return;
     }
 
     const url = buildWsUrl(conversationId, authToken);
     const ws = new WebSocket(url);
     wsRef.current = ws;
-    setReadyState("connecting");
+    window.queueMicrotask(() => setReadyState("connecting"));
 
     ws.onopen = () => {
       setReadyState("open");
@@ -196,8 +195,8 @@ export function useChatWebSocket({
   }, []);
 
   return {
-    readyState,
+    readyState: conversationId && authToken ? readyState : "closed",
     sendEvent,
-    isConnected: readyState === "open",
+    isConnected: Boolean(conversationId && authToken && readyState === "open"),
   };
 }

@@ -3,8 +3,7 @@ import { ChartOptions, ChartData } from "chart.js";
 import Image from "next/image";
 import { Suspense } from "react";
 
-import OrderList from "@/features/orders/components/OrderList";
-import { OrderProp } from "@/core/types";
+import { OrderList } from "@/features/order";
 
 interface MembersProp {
   image: string;
@@ -19,44 +18,6 @@ interface MarketingProp {
   platform: "facebook" | "instagram" | "twitter" | "google" | "tiktok";
   value: number;
 }
-const orders: OrderProp[] = [
-  {
-    id: 1,
-    date: "April 2, 2024",
-    customer_name: "Adam Smith",
-    address: "some where on earth",
-    payment_status: "pending",
-    order_status: "pending",
-    items: 4,
-  },
-  {
-    id: 2,
-    date: "April 20, 2024",
-    customer_name: "Adam Smith",
-    address: "some where on earth",
-    payment_status: "Paid",
-    order_status: "delivered",
-    items: 7,
-  },
-  {
-    id: 3,
-    date: "April 2, 2024",
-    customer_name: "Adam Smith",
-    address: "some where on earth",
-    payment_status: "pending",
-    order_status: "returned",
-    items: 1,
-  },
-  {
-    id: 4,
-    date: "May 12, 2024",
-    customer_name: "Michael Atafor",
-    address: "some where on earth",
-    payment_status: "Paid",
-    order_status: "pending",
-    items: 10,
-  },
-];
 const page = () => {
   const data: ChartData<"bar", number[], string> = {
     labels: [
@@ -381,7 +342,7 @@ const page = () => {
           Latest Orders
         </h2>
         <Suspense fallback={<div>Loading ...</div>}>
-          <OrderList orders={orders} />
+          <OrderList />
         </Suspense>
       </div>
     </div>

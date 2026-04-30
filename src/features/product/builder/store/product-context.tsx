@@ -7,7 +7,7 @@ import {
   useMemo,
   useContext,
 } from "react";
-import { NewProductType } from "@/types";
+import { NewProductType } from "@/core/types";
 import { NewProductFieldTypes } from "@/lib/validation/addProduct";
 
 const initialValue: NewProductType = {

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { getCatalogCollections } from "../api/catalog.server";
@@ -73,9 +74,11 @@ export default async function CatalogCollectionGrid({
             className="card-shadow card-shadow-hover group overflow-hidden rounded-lg border border-border bg-card text-card-foreground"
           >
             <div className="relative h-56 bg-[hsl(var(--brand-cream))]">
-              <img
+              <Image
                 src={item.image_url || item.image || "/gown.svg"}
                 alt={item.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
                 className="h-full w-full object-contain p-6"
               />
               <span className="absolute right-4 top-4 rounded-full bg-[hsl(var(--accent))] px-3 py-1 text-xs font-bold uppercase tracking-wide text-[hsl(var(--accent-foreground))]">

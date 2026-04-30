@@ -1,9 +1,8 @@
 /**
  * @file OrderList.tsx
  * @description Enterprise order list for admin dashboard.
- * Migrated from features/orders → features/order (canonical FSD).
- * Upgraded: live TanStack Query data via useAdminOrders(),
- *           row checkbox selection, bulk action support, paginated.
+ * Live TanStack Query data via useAdminOrders(),
+ * row checkbox selection, bulk action support, paginated.
  */
 "use client";
 import { useState } from "react";

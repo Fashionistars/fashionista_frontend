@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
   NewTicketModal,
@@ -17,17 +17,12 @@ export default function ClientSupportPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const ticketsQuery = useMyTickets();
-  const tickets = ticketsQuery.data ?? [];
+  const tickets = useMemo(() => ticketsQuery.data ?? [], [ticketsQuery.data]);
+  const selectedTicketId = activeTicketId ?? tickets[0]?.id ?? null;
 
-  useEffect(() => {
-    if (!activeTicketId && tickets.length > 0) {
-      setActiveTicketId(tickets[0].id);
-    }
-  }, [activeTicketId, tickets]);
-
-  const ticketDetailQuery = useTicketDetail(activeTicketId);
+  const ticketDetailQuery = useTicketDetail(selectedTicketId);
   const createTicketMutation = useCreateTicket();
-  const addMessageMutation = useAddMessage(activeTicketId ?? "");
+  const addMessageMutation = useAddMessage(selectedTicketId ?? "");
 
   return (
     <main className="space-y-6 px-4 py-6 md:px-6">
@@ -50,14 +45,14 @@ export default function ClientSupportPage() {
       <div className="grid gap-4 lg:grid-cols-[22rem,minmax(0,1fr)]">
         <SupportTicketList
           tickets={tickets}
-          activeTicketId={activeTicketId}
+          activeTicketId={selectedTicketId}
           onSelectTicket={setActiveTicketId}
         />
         <TicketDetailPanel
           ticket={ticketDetailQuery.data ?? null}
           isSending={addMessageMutation.isPending}
           onSendMessage={
-            activeTicketId
+            selectedTicketId
               ? async (body) => {
                   await addMessageMutation.mutateAsync({ body });
                 }

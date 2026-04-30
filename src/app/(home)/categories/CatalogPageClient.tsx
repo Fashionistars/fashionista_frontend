@@ -8,8 +8,9 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import ProductGrid from "@/features/product/components/ProductGrid";
+import { useCatalogBrands, useCatalogCategories } from "@/features/catalog";
 
 const ORDERINGS = [
   { value: "-created_at", label: "Newest" },
@@ -20,12 +21,14 @@ const ORDERINGS = [
 
 interface CatalogPageClientProps {
   category?: string;
+  brand?: string;
   search?: string;
   ordering?: string;
 }
 
 export default function CatalogPageClient({
   category,
+  brand,
   search,
   ordering = "-created_at",
 }: CatalogPageClientProps) {
@@ -45,6 +48,14 @@ export default function CatalogPageClient({
     },
     [router, pathname, sp],
   );
+
+  const { data: categories = [], isLoading: categoriesLoading } =
+    useCatalogCategories();
+  const { data: brands = [] } = useCatalogBrands();
+  const activeCategory = categories.find(
+    (item) => item.id === category || item.slug === category,
+  );
+  const activeBrand = brands.find((item) => item.id === brand || item.slug === brand);
 
   return (
     <div className="space-y-6">
@@ -86,16 +97,93 @@ export default function CatalogPageClient({
         </div>
       </div>
 
+      {/* Live catalog facets from /api/v1/ninja/catalog/* */}
+      <div className="space-y-4">
+        <div className="flex gap-2 overflow-x-auto pb-1 scroll-hide">
+          {categoriesLoading
+            ? Array.from({ length: 8 }).map((_, index) => (
+                <span
+                  key={index}
+                  className="h-10 w-28 shrink-0 rounded-full shimmer"
+                  aria-hidden="true"
+                />
+              ))
+            : categories.slice(0, 14).map((item) => {
+                const selected = item.id === category || item.slug === category;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => updateParam("category", selected ? null : item.id)}
+                    className={`shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                      selected
+                        ? "border-[hsl(var(--primary))] bg-[hsl(var(--primary))] text-primary-foreground"
+                        : "border-border bg-card text-foreground hover:border-[hsl(var(--accent))]"
+                    }`}
+                  >
+                    {item.title || item.name}
+                  </button>
+                );
+              })}
+        </div>
+
+        {brands.length > 0 && (
+          <div className="flex gap-2 overflow-x-auto pb-1 scroll-hide">
+            {brands.slice(0, 12).map((item) => {
+              const selected = item.id === brand || item.slug === brand;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => updateParam("brand", selected ? null : item.id)}
+                  className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
+                    selected
+                      ? "border-[hsl(var(--accent))] bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))]"
+                      : "border-border bg-background text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {item.title || item.name}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
       {/* Active filter chip */}
-      {category && (
-        <div className="flex items-center gap-2">
+      {(category || brand || search) && (
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm text-muted-foreground">Filtering by:</span>
-          <button
-            onClick={() => updateParam("category", null)}
-            className="flex items-center gap-1.5 rounded-full bg-[hsl(var(--accent))] px-3 py-1 text-xs font-bold text-[hsl(var(--accent-foreground))] transition hover:brightness-110"
-          >
-            {category} ×
-          </button>
+          {category && (
+            <button
+              type="button"
+              onClick={() => updateParam("category", null)}
+              className="flex items-center gap-1.5 rounded-full bg-[hsl(var(--accent))] px-3 py-1 text-xs font-bold text-[hsl(var(--accent-foreground))] transition hover:brightness-110"
+            >
+              {activeCategory?.title || activeCategory?.name || category}
+              <X size={12} />
+            </button>
+          )}
+          {brand && (
+            <button
+              type="button"
+              onClick={() => updateParam("brand", null)}
+              className="flex items-center gap-1.5 rounded-full bg-[hsl(var(--primary))] px-3 py-1 text-xs font-bold text-primary-foreground transition hover:brightness-110"
+            >
+              {activeBrand?.title || activeBrand?.name || brand}
+              <X size={12} />
+            </button>
+          )}
+          {search && (
+            <button
+              type="button"
+              onClick={() => updateParam("q", null)}
+              className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-xs font-bold text-foreground transition hover:border-[hsl(var(--accent))]"
+            >
+              {search}
+              <X size={12} />
+            </button>
+          )}
         </div>
       )}
 
@@ -103,6 +191,7 @@ export default function CatalogPageClient({
       <ProductGrid
         params={{
           category,
+          brand,
           search,
           ordering,
         }}

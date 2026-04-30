@@ -60,6 +60,7 @@ export function FashionImage({
   ...props
 }: FashionImageProps) {
   const [imgSrc, setImgSrc] = useState<string>(src ?? fallbackSrc);
+  void wrapperClassName;
 
   const handleError = () => setImgSrc(fallbackSrc);
 

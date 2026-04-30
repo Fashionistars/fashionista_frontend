@@ -1,23 +1,49 @@
-/**
- * @file Preloader.tsx
- * @description React shell for the static preloader.
- * - The <div id="fs-preloader"> HTML is rendered server-side in root layout.
- * - The CSS lives in /public/preloader.css (pure static, no JS bundle cost).
- * - This client component fires ONE effect after hydration to add "app-ready"
- *   to <html>, triggering the CSS exit animation.
- * - Zero state, zero fetch, zero re-render. Absolute minimum footprint.
- */
 "use client";
+
 import { useEffect } from "react";
 
+const PRELOADER_ID = "fs-preloader";
+
+/**
+ * Dismiss the static first-paint preloader after hydration.
+ *
+ * The preloader shell is rendered in the root layout and styled by
+ * `/public/preloader.css`, so this component only coordinates the exit class
+ * and cleanup without adding render state or network work.
+ */
 export function PreloaderDismiss() {
   useEffect(() => {
-    // Tiny delay lets the page paint first — avoids flash of un-styled content
-    const raf = requestAnimationFrame(() => {
-      document.documentElement.classList.add("app-ready");
-    });
-    return () => cancelAnimationFrame(raf);
+    const preloader = document.getElementById(PRELOADER_ID);
+    if (!preloader) return;
+
+    let timeoutId: number | undefined;
+    let rafId: number | undefined;
+
+    const dismiss = () => {
+      rafId = window.requestAnimationFrame(() => {
+        preloader.classList.add("fs-preloader--hidden");
+        timeoutId = window.setTimeout(() => {
+          preloader.remove();
+        }, 520);
+      });
+    };
+
+    const scheduleDismiss = () => {
+      timeoutId = window.setTimeout(dismiss, 450);
+    };
+
+    if (document.readyState === "complete") {
+      scheduleDismiss();
+    } else {
+      window.addEventListener("load", scheduleDismiss, { once: true });
+    }
+
+    return () => {
+      window.removeEventListener("load", scheduleDismiss);
+      if (timeoutId) window.clearTimeout(timeoutId);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
   }, []);
 
-  return null; // renders nothing — purely a side-effect component
+  return null;
 }

@@ -1,11 +1,11 @@
 "use client";
-import { NewProductType } from "@/types";
+import { NewProductType } from "@/core/types";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 // import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
 import Image from "next/image";
-import { GalleryAction } from "@/features/shop/api/actions";
+import { GalleryAction } from "../api/actions";
 const Gallery = ({
   newProductFields,
   updateNewProductField,

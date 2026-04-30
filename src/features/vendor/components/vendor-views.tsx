@@ -14,7 +14,7 @@ import {
 
 import { Transactions } from "@/features/account/components";
 import { useAuthStore } from "@/features/auth/store/auth.store";
-import { MultiStep } from "@/features/shop/components";
+import { MultiStep } from "@/features/product";
 import {
   useSubmitVendorSetup,
   useVendorDashboard,
@@ -104,6 +104,7 @@ export function VendorSetupView() {
 
   useEffect(() => {
     if (!profile) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate setup form from async vendor profile.
     setPayload((current) => ({
       ...current,
       store_name: profile.store_name || current.store_name,

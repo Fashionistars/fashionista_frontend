@@ -1,6 +1,6 @@
 /**
  * @file ProductDetailSkeleton.tsx
- * @description PPR shimmer skeleton for the product detail page.
+ * @description PPR shimmer skeleton for the product detail page.w
  */
 
 export function ProductDetailSkeleton() {

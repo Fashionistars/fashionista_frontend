@@ -7,6 +7,7 @@
  */
 import { apiSync } from "@/core/api/client.sync";
 import { apiAsync } from "@/core/api/client.async";
+import { unwrapApiData } from "@/core/api/response";
 import {
   parseCartResponse,
   CartSchema,
@@ -31,7 +32,7 @@ const BASE = "/cart";
 /** Fetch or create the current user's cart. */
 export async function fetchCart(): Promise<Cart> {
   const data = await apiAsync.get("cart/").json();
-  return parseCartResponse(CartSchema, data, "fetchCart");
+  return parseCartResponse(CartSchema, unwrapApiData(data), "fetchCart");
 }
 
 /** Add a product/variant to the cart. */

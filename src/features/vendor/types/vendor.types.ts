@@ -99,7 +99,7 @@ export interface VendorProductCreatePayload {
   sizes?: { name: string; price: number }[];
 }
 
-export interface VendorProductUpdatePayload extends Partial<VendorProductCreatePayload> {}
+export type VendorProductUpdatePayload = Partial<VendorProductCreatePayload>;
 
 // ── Orders ────────────────────────────────────────────────────────────────────
 export interface VendorOrderItem {

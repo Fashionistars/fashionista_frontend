@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { getCatalogBlogPosts } from "../api/catalog.server";
@@ -43,11 +44,14 @@ export default async function CatalogBlogList({
           href={`/blog/${featuredPost.slug}`}
           className="card-shadow card-shadow-hover group mb-8 grid overflow-hidden rounded-lg border border-border bg-card text-card-foreground md:grid-cols-[1.1fr_0.9fr]"
         >
-          <div className="min-h-[280px] bg-[hsl(var(--brand-cream))] md:min-h-[420px]">
-            <img
+          <div className="relative min-h-[280px] bg-[hsl(var(--brand-cream))] md:min-h-[420px]">
+            <Image
               src={featuredPost.image_url || featuredPost.featured_image || "/gown.svg"}
               alt={featuredPost.title}
+              fill
+              sizes="(max-width: 768px) 100vw, 55vw"
               className="h-full w-full object-contain p-8"
+              priority
             />
           </div>
           <div className="flex flex-col justify-center gap-4 p-6 md:p-10">
@@ -81,10 +85,12 @@ export default async function CatalogBlogList({
             href={`/blog/${post.slug}`}
             className="card-shadow card-shadow-hover group overflow-hidden rounded-lg border border-border bg-card text-card-foreground"
           >
-            <div className="h-52 bg-[hsl(var(--brand-cream))]">
-              <img
+            <div className="relative h-52 bg-[hsl(var(--brand-cream))]">
+              <Image
                 src={post.image_url || post.featured_image || "/minimalist.svg"}
                 alt={post.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
                 className="h-full w-full object-contain p-6"
               />
             </div>

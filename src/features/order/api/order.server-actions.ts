@@ -1,9 +1,7 @@
 /**
  * @file order.server-actions.ts
  * @description Next.js Server Actions for the Order domain.
- * Migrated from features/orders/api/actions.ts → features/order (canonical FSD).
- * Upgraded: uses apiSync client instead of raw fetchWithAuth,
- *           proper error handling, and typed returns.
+ * Uses canonical order API clients, proper error handling, and typed returns.
  */
 "use server";
 

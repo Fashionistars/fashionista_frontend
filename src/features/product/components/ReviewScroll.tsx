@@ -1,8 +1,7 @@
 /**
  * @file ReviewScroll.tsx
  * @description Horizontally scrollable review carousel.
- * Migrated from features/products → features/product (canonical FSD).
- * Upgraded: uses live `useProductReviews()` hook + canonical ProductReview type.
+ * Uses live `useProductReviews()` hook + canonical ProductReview type.
  */
 "use client";
 import { useRef } from "react";

@@ -1,9 +1,8 @@
 /**
  * @file OrderTable.tsx
  * @description Enterprise order table for vendor dashboard.
- * Migrated from features/orders → features/order (canonical FSD).
- * Upgraded: live TanStack Query data via useVendorOrders(),
- *           URL-state filter with nuqs, Suspense-safe, paginated.
+ * Live TanStack Query data via useVendorOrders(),
+ * URL-state filter with nuqs, Suspense-safe, paginated.
  */
 "use client";
 import Link from "next/link";

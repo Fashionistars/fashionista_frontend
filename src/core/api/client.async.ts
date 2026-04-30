@@ -2,17 +2,17 @@
  * ASYNC API CLIENT — Ky + Django Ninja
  *
  * Used for: AI Measurement, Search, Analytics, Streaming, High-concurrency ops
+ * Used for: Django-Ninja GET/HEAD reads under `/api/v1/ninja/*`.
  * Base URL: NEXT_PUBLIC_API_NINJA_URL (e.g. .../api/v1/ninja)
  *
  * Features:
  *  - 60s timeout for AI/streaming operations
- *  - Auto-retry: 3x on 408, 429, 500-504 with exponential backoff
+ *  - Auto-retry: read-only 3x on 408, 429, 500-504 with exponential backoff
  *  - Bearer token injection before each request
  *  - ngrok-skip-browser-warning header in development
  */
 import ky, { type KyInstance } from "ky";
 import { readAccessToken } from "@/features/auth/lib/auth-session.client";
-import { v4 as uuidv4 } from "uuid";
 
 // ── Async Client Instance ─────────────────────────────────────────────────────
 export const apiAsync: KyInstance = ky.create({
@@ -30,7 +30,7 @@ export const apiAsync: KyInstance = ky.create({
   // ── Auto-Retry Logic ─────────────────────────────────────────────────────
   retry: {
     limit: 3,
-    methods: ["get", "post", "put", "patch"],
+    methods: ["get", "head"],
     statusCodes: [408, 413, 429, 500, 502, 503, 504],
     backoffLimit: 5000,
   },
@@ -49,13 +49,8 @@ export const apiAsync: KyInstance = ky.create({
         if (process.env.NODE_ENV === "development") {
           request.headers.set("ngrok-skip-browser-warning", "true");
         }
-        // Inject Idempotency-Key for write operations
-        const method = request.method.toUpperCase();
-        if (["POST", "PUT", "PATCH"].includes(method)) {
-          if (!request.headers.has("X-Idempotency-Key") && !request.headers.has("x-idempotency-key")) {
-            request.headers.set("X-Idempotency-Key", uuidv4());
-          }
-        }
+        // Ninja writes are intentionally outside the canonical frontend client.
+        // Mutations use apiSync -> DRF so transaction/idempotency semantics stay sync.
       },
     ],
 

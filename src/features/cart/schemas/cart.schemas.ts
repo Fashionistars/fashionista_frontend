@@ -26,6 +26,12 @@ export const CartItemSchema = z.object({
   currency: z.string(),
 });
 
+export const AppliedCouponSchema = z.object({
+  code: z.string(),
+  coupon_type: z.string(),
+  discount_amount: z.string(),
+});
+
 export const CartSchema = z.object({
   id: z.string().uuid().nullable(),
   items: z.array(CartItemSchema),
@@ -33,12 +39,7 @@ export const CartSchema = z.object({
   subtotal: z.string(),
   currency: z.string(),
   expires_at: z.string().nullable(),
-});
-
-export const AppliedCouponSchema = z.object({
-  code: z.string(),
-  coupon_type: z.string(),
-  discount_amount: z.string(),
+  applied_coupon: AppliedCouponSchema.nullable().optional(),
 });
 
 export const CheckoutQuoteSchema = z.object({

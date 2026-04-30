@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { getCatalogCategories } from "../api/catalog.server";
@@ -33,10 +34,13 @@ export default async function CatalogCategoryGrid({
             href={`/categories/${item.slug}`}
             className="card-shadow card-shadow-hover group flex min-h-[165px] flex-col justify-between rounded-lg border border-border bg-card p-4 text-card-foreground focus-visible:ring-2 focus-visible:ring-[hsl(var(--accent))] md:min-h-[245px] md:p-6"
           >
-            <div className="flex h-20 items-center justify-center rounded-lg bg-[hsl(var(--brand-cream))] md:h-32">
-              <img
+            <div className="relative flex h-20 items-center justify-center rounded-lg bg-[hsl(var(--brand-cream))] md:h-32">
+              <Image
                 src={item.image_url || item.image || "/minimalist.svg"}
                 alt={item.title}
+                width={96}
+                height={96}
+                sizes="(max-width: 768px) 56px, 96px"
                 className="h-14 w-14 object-contain md:h-24 md:w-24"
               />
             </div>

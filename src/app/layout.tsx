@@ -1,5 +1,8 @@
+/* eslint-disable @next/next/no-css-tags, @next/next/no-img-element */
+
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import { Toaster } from "sonner";
 import { Providers } from "@/components/providers";
 import { PreloaderDismiss } from "@/components/shared/preloader/Preloader";
@@ -27,32 +30,43 @@ const satoshi = localFont({
 // ── Metadata (SEO) ────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
+    process.env.NEXT_PUBLIC_APP_URL ?? "https://www.fashionistar.net",
   ),
   title: {
     default: "FASHIONISTAR AI — Premium Fashion E-Commerce",
     template: "%s | FASHIONISTAR AI",
   },
+  applicationName: "FASHIONISTAR AI",
   description:
-    "Discover premium African fashion with AI-powered size recommendations, exclusive collections, and seamless checkout. Shop FASHIONISTAR AI.",
+    "FASHIONISTAR AI connects clients with professional tailors through AI-powered digital measurements, premium fashion commerce, secure payments, and real-time collaboration.",
   keywords: [
     "fashionistar",
     "african fashion",
     "ai measurements",
+    "digital body measurements",
+    "tailor marketplace",
+    "custom clothing",
     "premium clothing",
     "luxury fashion nigeria",
   ],
-  authors: [{ name: "FASHIONISTAR Team", url: "https://fashionistar.com" }],
+  authors: [{ name: "FASHIONISTAR Team", url: "https://fashionistar.net" }],
   creator: "FASHIONISTAR Engineering",
+  category: "Fashion E-Commerce",
   robots: { index: true, follow: true },
+  alternates: {
+    canonical: "/",
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
 
   // Open Graph — Social sharing
   openGraph: {
     type: "website",
-    url: "https://fashionistar.com",
+    url: "https://www.fashionistar.net",
     title: "FASHIONISTAR AI — Premium Fashion E-Commerce",
     description:
-      "AI-powered premium African fashion: perfect fits, exclusive collections.",
+      "AI-powered fashion commerce for perfect-fit custom clothing, tailor collaboration, and secure transactions.",
     siteName: "FASHIONISTAR AI",
     images: [
       {
@@ -74,7 +88,10 @@ export const metadata: Metadata = {
 
   // App Icons
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
     apple: "/apple-touch-icon.png",
   },
 };
@@ -94,6 +111,8 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+
   return (
     <html
       lang="en"
@@ -114,6 +133,12 @@ export default function RootLayout({
           // @ts-expect-error — fetchpriority is valid HTML but not yet in TS lib types
           fetchpriority="high"
         />
+        <link
+          rel="preload"
+          href="/preloader/fashionistar-ai-preloader.svg"
+          as="image"
+          type="image/svg+xml"
+        />
 
         {/*
          * ── Resource Hints — Media Performance ───────────────────────────
@@ -125,34 +150,59 @@ export default function RootLayout({
       </head>
 
       <body className="min-h-screen bg-background font-raleway antialiased">
+        {gaId ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="fashionistar-google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${gaId}', { anonymize_ip: true });
+              `}
+            </Script>
+          </>
+        ) : null}
+
         {/*
          * ── Static Preloader Shell ────────────────────────────────────────
          * Server-rendered — visible on the very first paint before any JS.
          * Styled entirely by /public/preloader.css (zero JS cost).
          * Dismissed by <PreloaderDismiss> after React hydration.
          */}
-        <div id="fs-preloader" role="status" aria-label="Loading Fashionistar">
-          <div className="fs-logo-wrap">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo.png"
-              alt="Fashionistar"
-              className="fs-logo-img"
-              width={60}
-              height={60}
-            />
-          </div>
-          <p className="fs-brand">
-            FASHION<span>ISTAR</span>
-          </p>
-          <p className="fs-tagline">Perfect Fit, Every Time</p>
-          <div className="fs-progress-track">
-            <div className="fs-progress-bar" />
-          </div>
-          <div className="fs-dots" aria-hidden="true">
-            <span />
-            <span />
-            <span />
+        <div id="fs-preloader" role="status" aria-label="Loading Fashionistar AI">
+          <div className="fs-preloader-inner">
+            <div className="fs-logo-wrap" aria-hidden="true">
+              <img
+                className="fs-logo-svg"
+                src="/preloader/fashionistar-ai-preloader.svg"
+                alt=""
+                width="256"
+                height="256"
+                fetchPriority="high"
+              />
+            </div>
+
+            <p className="fs-brand">
+              FASHION<span>ISTAR</span>
+            </p>
+
+            <p className="fs-tagline">
+              AI Precision • Perfect Fit • Seamless Fashion Commerce
+            </p>
+
+            <div className="fs-progress-track" aria-hidden="true">
+              <div className="fs-progress-bar" />
+            </div>
+
+            <div className="fs-dots" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </div>
           </div>
         </div>
 

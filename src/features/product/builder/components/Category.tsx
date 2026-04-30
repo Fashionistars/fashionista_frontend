@@ -1,6 +1,6 @@
-import { NewProductType } from "@/types";
+import { NewProductType } from "@/core/types";
 import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
-import { CategoryAction } from "@/features/shop/api/actions";
+import { CategoryAction } from "../api/actions";
 
 const Category = ({
   newProductFields,

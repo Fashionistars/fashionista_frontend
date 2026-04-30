@@ -1,9 +1,8 @@
 /**
  * @file WishlistTableCell.tsx
  * @description Wishlist table row component.
- * Migrated from features/products → features/product (canonical FSD).
- * Upgraded: uses canonical WishlistItem type, live useToggleWishlist(),
- *           optimized Next.js Image, and accessible action buttons.
+ * Uses canonical WishlistItem type, live useToggleWishlist(),
+ * optimized Next.js Image, and accessible action buttons.
  */
 "use client";
 import Image from "next/image";

@@ -1,4 +1,4 @@
-import NewProductContextProvider from "@/features/shop/store/product-context";
+import NewProductContextProvider from "@/features/product/builder/store/product-context";
 
 export default function VendorProductsLayout({
   children,

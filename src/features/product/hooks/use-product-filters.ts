@@ -2,7 +2,7 @@
  * @file use-product-filters.ts
  * @description Product filter URL state hook using Nuqs v2.
  *
- * Migrated from features/products → features/product (canonical).
+ * Canonical product slice hook.
  * URL state owns: search, category, brand, price range, sort, page.
  * These are bookmarkable and survive page refresh.
  *

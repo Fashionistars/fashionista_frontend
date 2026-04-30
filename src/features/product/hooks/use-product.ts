@@ -60,11 +60,15 @@ export const productKeys = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Hook: paginated product list with optional filters. */
-export function useProducts(params?: Parameters<typeof fetchProducts>[0]) {
+export function useProducts(
+  params?: Parameters<typeof fetchProducts>[0],
+  options?: Partial<UseQueryOptions<PaginatedProductList>>,
+) {
   return useQuery<PaginatedProductList>({
     queryKey: productKeys.list(params ?? {}),
     queryFn: () => fetchProducts(params),
     staleTime: 60_000, // 1 minute
+    ...options,
   });
 }
 

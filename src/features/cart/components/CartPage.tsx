@@ -21,7 +21,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Minus, Plus, Trash2, Tag, AlertTriangle, ShoppingBag, X } from "lucide-react";
+import {
+  AlertTriangle,
+  LockKeyhole,
+  Minus,
+  Plus,
+  ShoppingBag,
+  Tag,
+  Trash2,
+  X,
+} from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import {
   useCart,
@@ -359,8 +368,9 @@ export default function CartPage() {
             )}
 
             {/* Security badge */}
-            <p className="mt-4 text-center text-xs text-muted-foreground">
-              🔒 Secured by SSL — Paystack PCI-DSS compliant
+            <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-xs text-muted-foreground">
+              <LockKeyhole size={13} aria-hidden="true" />
+              Secured by SSL - Paystack PCI-DSS compliant
             </p>
           </div>
         </div>

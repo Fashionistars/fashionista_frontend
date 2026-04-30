@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { getProductDetailForMetadata } from "@/features/product/api/product.server";
 import { ProductDetailClient } from "./ProductDetailClient";
 import { ProductDetailSkeleton } from "./ProductDetailSkeleton";
 
@@ -15,15 +16,32 @@ export async function generateMetadata({
   params,
 }: ProductDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const cleanSlug = slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  const product = await getProductDetailForMetadata(slug);
+  const cleanSlug =
+    product?.title ??
+    slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  const description =
+    product?.description?.slice(0, 155) ||
+    `Shop ${cleanSlug} on FASHIONISTAR AI with AI-powered measurements, secure checkout, and direct tailor-client collaboration.`;
+  const image = product?.cover_image_url ?? "/og-image.png";
 
   return {
     title: cleanSlug,
-    description: `Shop ${cleanSlug} on FASHIONISTAR AI — premium African fashion with AI-powered size recommendations and secure Paystack checkout.`,
+    description,
+    alternates: {
+      canonical: `/products/${slug}`,
+    },
     openGraph: {
       title: `${cleanSlug} | FASHIONISTAR AI`,
-      description: `Premium African fashion — ${cleanSlug}. AI-powered measurements ensure your perfect fit.`,
+      description,
       type: "website",
+      images: [{ url: image, width: 1200, height: 630, alt: cleanSlug }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${cleanSlug} | FASHIONISTAR AI`,
+      description,
+      images: [image],
     },
   };
 }

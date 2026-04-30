@@ -14,6 +14,11 @@
 import { apiSync } from "@/core/api/client.sync";
 import { apiAsync } from "@/core/api/client.async";
 import {
+  buildSearchParams,
+  unwrapApiData,
+  unwrapResults,
+} from "@/core/api/response";
+import {
   parseApiResponse,
   PaginatedProductListSchema,
   ProductDetailSchema,
@@ -44,37 +49,48 @@ import type {
 /** Fetch paginated product listing (public). */
 export async function fetchProducts(params?: {
   page?: number;
+  page_size?: number;
   category?: string;
   brand?: string;
   search?: string;
   ordering?: string;
   is_featured?: boolean;
 }): Promise<PaginatedProductList> {
-  const searchParams = new URLSearchParams();
-  if (params?.page) searchParams.set("page", String(params.page));
-  if (params?.category) searchParams.set("category", params.category);
-  if (params?.brand) searchParams.set("brand", params.brand);
-  if (params?.search) searchParams.set("search", params.search);
-  if (params?.ordering) searchParams.set("ordering", params.ordering);
-  if (params?.is_featured) searchParams.set("is_featured", "true");
+  const searchParams = buildSearchParams({
+    page: params?.page,
+    page_size: params?.page_size,
+    category: params?.category,
+    brand: params?.brand,
+    search: params?.search,
+    ordering: params?.ordering,
+    is_featured: params?.is_featured,
+  });
 
   const raw = await apiAsync
-    .get(`products/${searchParams.toString() ? `?${searchParams}` : ""}`)
+    .get(`products/${searchParams ? `?${searchParams}` : ""}`)
     .json();
 
-  return parseApiResponse(PaginatedProductListSchema, raw, "fetchProducts");
+  return parseApiResponse(
+    PaginatedProductListSchema,
+    unwrapApiData(raw),
+    "fetchProducts",
+  );
 }
 
 /** Fetch single product detail by slug (public). */
 export async function fetchProductDetail(slug: string): Promise<ProductDetail> {
   const raw = await apiAsync.get(`products/${slug}/`).json();
-  return parseApiResponse(ProductDetailSchema, raw, "fetchProductDetail");
+  return parseApiResponse(
+    ProductDetailSchema,
+    unwrapApiData(raw),
+    "fetchProductDetail",
+  );
 }
 
 /** Fetch featured products (public). */
 export async function fetchFeaturedProducts(): Promise<ProductListItem[]> {
-  const raw = await apiAsync.get("products/featured/").json<{ results: unknown[] }>();
-  return (raw.results ?? []).map((item) =>
+  const raw = await apiAsync.get("products/featured/").json();
+  return unwrapResults(raw).map((item) =>
     parseApiResponse(ProductListItemSchema, item, "fetchFeaturedProducts"),
   );
 }
@@ -85,7 +101,11 @@ export async function fetchProductReviews(
   page = 1,
 ): Promise<PaginatedReviews> {
   const raw = await apiAsync.get(`products/${slug}/reviews/?page=${page}`).json();
-  return parseApiResponse(PaginatedReviewsSchema, raw, "fetchProductReviews");
+  return parseApiResponse(
+    PaginatedReviewsSchema,
+    unwrapApiData(raw),
+    "fetchProductReviews",
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -142,8 +162,8 @@ export async function createProductReview(
 
 /** Fetch authenticated client's wishlist. */
 export async function fetchWishlist(): Promise<WishlistItem[]> {
-  const raw = await apiAsync.get("products/wishlist/").json<{ results: unknown[] }>();
-  return (raw.results ?? []).map((item) =>
+  const raw = await apiAsync.get("products/wishlist/").json();
+  return unwrapResults(raw).map((item) =>
     parseApiResponse(WishlistItemSchema, item, "fetchWishlist"),
   );
 }
@@ -168,8 +188,8 @@ export async function toggleWishlist(
 
 /** Fetch vendor's own coupons. */
 export async function fetchVendorCoupons(): Promise<Coupon[]> {
-  const raw = await apiAsync.get("products/coupons/").json<{ results: unknown[] }>();
-  return (raw.results ?? []).map((item) =>
+  const raw = await apiAsync.get("products/coupons/").json();
+  return unwrapResults(raw).map((item) =>
     parseApiResponse(CouponSchema, item, "fetchVendorCoupons"),
   );
 }

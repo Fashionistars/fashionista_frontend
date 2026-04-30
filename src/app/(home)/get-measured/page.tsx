@@ -42,7 +42,7 @@ const page = () => {
               Your measurement here
             </p>
             <p className="px-2 md:px-4 py-3 bg-[#F4F5FB] rounded-[14px] font-satoshi text-lg md:text-2xl text-[#475367] flex-none grow">
-              A token of #1000 will be deducted from your balance from each
+              A token of #2000  OR  $2  EQUIVALENT   will be deducted from your balance from each
               measurement your take
             </p>
           </div>

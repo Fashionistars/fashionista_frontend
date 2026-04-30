@@ -28,7 +28,6 @@ export function useNotificationWebSocket(): UseNotificationWebSocketReturn {
 
   useEffect(() => {
     if (!token) {
-      setIsConnected(false);
       return;
     }
 
@@ -58,5 +57,5 @@ export function useNotificationWebSocket(): UseNotificationWebSocketReturn {
     return () => socket.close();
   }, [queryClient, token]);
 
-  return { isConnected };
+  return { isConnected: Boolean(token && isConnected) };
 }

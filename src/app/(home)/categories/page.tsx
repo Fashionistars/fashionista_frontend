@@ -20,6 +20,7 @@ interface CategoriesPageProps {
 export default async function CategoriesPage({ searchParams }: CategoriesPageProps) {
   const resolved = await searchParams;
   const category = typeof resolved.category === "string" ? resolved.category : undefined;
+  const brand = typeof resolved.brand === "string" ? resolved.brand : undefined;
   const search = typeof resolved.q === "string" ? resolved.q : undefined;
   const ordering = typeof resolved.ordering === "string" ? resolved.ordering : "-created_at";
 
@@ -44,6 +45,7 @@ export default async function CategoriesPage({ searchParams }: CategoriesPagePro
         <Suspense fallback={<ProductGridSkeleton count={12} />}>
           <CatalogPageClient
             category={category}
+            brand={brand}
             search={search}
             ordering={ordering}
           />

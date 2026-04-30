@@ -1,7 +1,6 @@
 /**
  * @file ReviewCard.tsx
  * @description Product review card component.
- * Migrated from features/products → features/product (canonical FSD path).
  * Updated to use canonical ProductReview type from product.types.ts.
  */
 import Image from "next/image";

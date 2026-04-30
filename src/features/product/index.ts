@@ -79,3 +79,6 @@ export { default as ProductCard } from "./components/ProductCard";
 export { default as ProductCardSkeleton, ProductGridSkeleton } from "./components/ProductCardSkeleton";
 export { default as ProductGrid } from "./components/ProductGrid";
 
+// ── Vendor Product Builder ─────────────────────────────────────────────────
+export { default as MultiStep } from "./builder/components/MultiStep";
+export { default as NewProductContextProvider } from "./builder/store/product-context";

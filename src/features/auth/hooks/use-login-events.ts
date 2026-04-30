@@ -66,11 +66,11 @@ export function useLoginEvents() {
 
   /** True when ANY failed login occurred in the last 24 hours */
   const hasAnomalies = useMemo(() => {
-    const threshold = Date.now() - ANOMALY_WINDOW_MS;
+    const threshold = (query.dataUpdatedAt || 0) - ANOMALY_WINDOW_MS;
     return events.some(
       (e) => !e.success && new Date(e.timestamp).getTime() > threshold,
     );
-  }, [events]);
+  }, [events, query.dataUpdatedAt]);
 
   /** Most recent successful login ISO timestamp — shown as "Last login: ..." */
   const lastSuccessAt = useMemo(() => {

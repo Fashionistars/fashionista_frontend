@@ -1,9 +1,9 @@
 "use client";
-import { NewProductType } from "@/types";
+import { NewProductType } from "@/core/types";
 import Image from "next/image";
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { BasicInformationAction } from "@/features/shop/api/actions";
+import { BasicInformationAction } from "../api/actions";
 import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
 // import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 

@@ -10,7 +10,6 @@ export function useReferenceLocation(countryCode = "NG") {
 
   useEffect(() => {
     let isMounted = true;
-    setIsLoading(true);
     loadCountryLocations(countryCode)
       .then((nextBundle) => {
         if (isMounted) setBundle(nextBundle);
@@ -35,4 +34,3 @@ export function useReferenceLocation(countryCode = "NG") {
     [bundle, isLoading],
   );
 }
-

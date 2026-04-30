@@ -210,6 +210,7 @@ export function ClientAccountDetailsView() {
 
   useEffect(() => {
     if (!profile) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate editable form after async profile read.
     setForm({
       bio: profile.bio || "",
       default_shipping_address: profile.default_shipping_address || "",

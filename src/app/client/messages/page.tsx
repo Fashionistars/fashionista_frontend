@@ -22,37 +22,36 @@ export default function ClientMessagesPage() {
   const [wsConnected, setWsConnected] = useState(false);
 
   const conversationsQuery = useConversations(wsConnected);
-  const conversations = conversationsQuery.data ?? [];
-
-  useEffect(() => {
-    if (!activeConversationId && conversations.length > 0) {
-      setActiveConversationId(conversations[0].id);
-    }
-  }, [activeConversationId, conversations]);
+  const conversations = useMemo(
+    () => conversationsQuery.data ?? [],
+    [conversationsQuery.data],
+  );
+  const selectedConversationId =
+    activeConversationId ?? conversations[0]?.id ?? null;
 
   const activeConversation = useMemo(
     () =>
-      conversations.find((conversation) => conversation.id === activeConversationId) ??
+      conversations.find((conversation) => conversation.id === selectedConversationId) ??
       null,
-    [activeConversationId, conversations],
+    [selectedConversationId, conversations],
   );
 
-  const messagesQuery = useMessages(activeConversationId, wsConnected);
-  const sendMessageMutation = useSendMessage(activeConversationId ?? "");
+  const messagesQuery = useMessages(selectedConversationId, wsConnected);
+  const sendMessageMutation = useSendMessage(selectedConversationId ?? "");
   const markReadMutation = useMarkConversationRead();
 
   useChatWebSocket({
-    conversationId: activeConversationId,
+    conversationId: selectedConversationId,
     authToken,
     onConnectionChange: (state) => setWsConnected(state === "open"),
   });
 
   useEffect(() => {
-    if (!activeConversationId) {
+    if (!selectedConversationId) {
       return;
     }
-    void markReadMutation.mutateAsync(activeConversationId);
-  }, [activeConversationId, markReadMutation]);
+    void markReadMutation.mutateAsync(selectedConversationId);
+  }, [selectedConversationId, markReadMutation]);
 
   return (
     <main className="space-y-6 px-4 py-6 md:px-6">
@@ -66,7 +65,7 @@ export default function ClientMessagesPage() {
       <div className="grid gap-4 lg:grid-cols-[22rem,minmax(0,1fr)]">
         <ConversationList
           conversations={conversations}
-          activeConversationId={activeConversationId}
+          activeConversationId={selectedConversationId}
           onSelectConversation={setActiveConversationId}
         />
 
@@ -88,7 +87,7 @@ export default function ClientMessagesPage() {
           <MessageInput
             disabled={!activeConversationId || sendMessageMutation.isPending}
             onSend={async (body) => {
-              if (!activeConversationId) {
+              if (!selectedConversationId) {
                 return;
               }
               await sendMessageMutation.mutateAsync({ body });

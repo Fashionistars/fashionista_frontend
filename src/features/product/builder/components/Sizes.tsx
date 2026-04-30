@@ -1,8 +1,8 @@
 "use client";
-import { NewProductType } from "@/types";
+import { NewProductType } from "@/core/types";
 import React, { useState, useActionState } from "react";
 import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
-import { SizesAction } from "@/features/shop/api/actions";
+import { SizesAction } from "../api/actions";
 
 const Sizes = ({
   newProductFields,

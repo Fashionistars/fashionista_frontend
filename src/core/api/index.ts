@@ -7,3 +7,9 @@
  */
 export { apiSync, default as syncClient } from "./client.sync";
 export { apiAsync, default as asyncClient } from "./client.async";
+export {
+  buildSearchParams,
+  unwrapApiData,
+  unwrapResults,
+  type PaginatedEnvelope,
+} from "./response";

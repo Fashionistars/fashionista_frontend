@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -83,10 +84,14 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
         </header>
 
         <div className="overflow-hidden rounded-lg border border-border bg-[hsl(var(--brand-cream))]">
-          <img
+          <Image
             src={post.image_url || post.featured_image || "/gown.svg"}
             alt={post.title}
+            width={1200}
+            height={700}
+            sizes="(max-width: 768px) 100vw, 896px"
             className="h-[320px] w-full object-contain p-8 md:h-[520px]"
+            priority
           />
         </div>
 

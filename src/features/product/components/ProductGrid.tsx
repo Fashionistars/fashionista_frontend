@@ -30,7 +30,10 @@ export default function ProductGrid({
   initialData,
   skeletonCount = 8,
 }: ProductGridProps) {
-  const { data, isLoading, isError, error } = useProducts(params);
+  const { data, isLoading, isError, error } = useProducts(
+    params,
+    initialData ? { initialData } : undefined,
+  );
 
   if (isLoading && !initialData) {
     return <ProductGridSkeleton count={skeletonCount} />;
