@@ -130,8 +130,7 @@ export default function RootLayout({
         <link
           rel="stylesheet"
           href="/preloader.css"
-          // @ts-expect-error — fetchpriority is valid HTML but not yet in TS lib types
-          fetchpriority="high"
+          fetchPriority="high"
         />
         <link
           rel="preload"
