@@ -49,6 +49,26 @@ export const CatalogCollectionSchema = z.object({
   updated_at: z.string(),
 });
 
+// A blog media item from the backend can be a full serializer object or just a URL string
+const BlogMediaItemSchema = z
+  .union([
+    z.object({
+      id: z.union([z.string(), z.number()]).transform(String).optional(),
+      image: z.string().nullable().optional(),
+      public_id: z.string().optional(),
+      image_url: z.string().nullable().optional().transform((v) => v ?? ""),
+      alt_text: z.string().optional(),
+      sort_order: z.number().optional(),
+      created_at: z.string().optional(),
+      updated_at: z.string().optional(),
+    }),
+    z.string(),
+  ])
+  .transform((item) => {
+    if (typeof item === "string") return item;
+    return item.image_url ?? item.image ?? "";
+  });
+
 export const CatalogBlogPostSchema = z
   .object({
     id: IdSchema,
@@ -63,7 +83,7 @@ export const CatalogBlogPostSchema = z
     featured_image: NullableStringSchema,
     featured_image_cloudinary_url: OptionalNullableStringSchema,
     featured_image_url: OptionalNullableStringSchema,
-    gallery_media: z.array(ImageUrlSchema).default([]),
+    gallery_media: z.array(BlogMediaItemSchema).default([]),
     status: z.enum(["draft", "review", "published", "archived"]),
     tags: z.array(z.string()).default([]),
     seo_title: z.string().nullable().transform((value) => value ?? ""),

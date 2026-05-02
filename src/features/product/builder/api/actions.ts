@@ -1,5 +1,4 @@
 "use server";
-import { PricesSchema } from "@/lib/validation/addProduct";
 import { fetchWithAuth } from "@/lib/api/fetchAuth";
 import {
   BasicInformationSchema,
@@ -7,7 +6,7 @@ import {
   GallerySchema,
   SizesSchema,
   SpecificationSchema,
-} from "@/lib/validation/addProduct";
+} from "@/features/product/builder/schemas";
 import { redirect } from "next/navigation";
 // const schema = z.object({
 //   image_1: z

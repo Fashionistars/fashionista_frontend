@@ -18,7 +18,7 @@ function apiBaseUrl() {
   return process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://127.0.0.1:8000";
 }
 
-function unwrapEnvelope<T>(payload: unknown): unknown {
+function unwrapEnvelope(payload: unknown): unknown {
   if (payload && typeof payload === "object" && "data" in payload) {
     const data = (payload as { data: unknown }).data;
     if (data && typeof data === "object" && "results" in data) {

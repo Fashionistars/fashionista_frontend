@@ -47,7 +47,7 @@ const Sizes = ({
             <input
               type="text"
               name="size"
-              defaultValue={newProductFields.sizes.size}
+              defaultValue={newProductFields.sizes?.size ?? ""}
               onChange={(e) =>
                 updateNewProductField({
                   ...newProductFields,
@@ -67,7 +67,7 @@ const Sizes = ({
             <input
               type="text"
               name="size_price"
-              defaultValue={newProductFields.sizes.price}
+              defaultValue={newProductFields.sizes?.price ?? ""}
               onChange={(e) =>
                 updateNewProductField({
                   ...newProductFields,

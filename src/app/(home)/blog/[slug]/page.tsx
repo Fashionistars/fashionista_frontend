@@ -38,9 +38,16 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
   };
 }
 
+// Allow slugs not pre-generated to render at request time (never 404)
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
-  const posts = await getCatalogBlogPosts();
-  return posts.slice(0, 50).map((post) => ({ slug: post.slug }));
+  try {
+    const posts = await getCatalogBlogPosts();
+    return posts.slice(0, 50).map((post) => ({ slug: post.slug }));
+  } catch {
+    return [];
+  }
 }
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {

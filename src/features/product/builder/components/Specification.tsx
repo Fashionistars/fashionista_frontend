@@ -66,7 +66,7 @@ const Specification = ({
                   },
                 })
               }
-              defaultValue={newProductFields.specification.content}
+              defaultValue={newProductFields.specification?.content ?? ""}
               className="rounded-[70px] text-black border-[#D9D9D9] border-[1.5px] w-full h-[60px] outline-none px-3"
             />
           </div>

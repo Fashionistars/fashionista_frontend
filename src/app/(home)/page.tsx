@@ -18,8 +18,8 @@ type ReviewProps = {
 };
 
 export default async function Home(props: PageProps) {
-  const { searchParams } = props;
-
+  // Next.js 16: searchParams is a Promise
+  void props; // searchParams consumed client-side via CatalogCollectionGrid's useSearchParams
   // Static deal cards (legacy – kept for layout)
   const dealList = data2.map((deal) => (
     <div
@@ -129,7 +129,7 @@ export default async function Home(props: PageProps) {
       </section>
 
       {/* ── Live Collection Grid ───────────────────────────────────── */}
-      <CatalogCollectionGrid searchParams={searchParams} />
+      <CatalogCollectionGrid />
 
       {/* ── Campaign Banner ───────────────────────────────────────── */}
       <div className=" w-full h-[593px] bg-[#fda600] md:h-[746px] relative p-10 md:p-14 lg:p-24 flex flex-col gap-5 md:gap-10 items-center">
