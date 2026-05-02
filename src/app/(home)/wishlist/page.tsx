@@ -3,28 +3,20 @@ import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, ShoppingCart, Trash2, AlertCircle } from "lucide-react";
-import { useWishlist, useToggleWishlist, useAddCartItem } from "@/features/product";
+import { useWishlist, useToggleWishlist } from "@/features/product";
+import type { WishlistItem } from "@/features/product";
 import { ProductGridSkeleton } from "@/features/product";
+import { useAddCartItem } from "@/features/cart";
 
 // ── Wishlist Item Card ───────────────────────────────────────────────────────
-function WishlistCard({
-  item,
-}: {
-  item: {
-    id: string;
-    product_id: string;
-    product_name: string;
-    product_slug: string;
-    product_price: string;
-    product_image: string;
-    product_image_url?: string;
-  };
-}) {
+function WishlistCard({ item }: { item: WishlistItem }) {
   const toggleWishlist = useToggleWishlist();
   const addToCart = useAddCartItem();
 
-  const imageSrc = item.product_image_url || item.product_image || "/gown.svg";
-  const price = parseFloat(item.product_price || "0");
+  // WishlistItem wraps a nested ProductListItem
+  const product = item.product;
+  const imageSrc = product.cover_image_url || "/gown.svg";
+  const price = parseFloat(String(product.price ?? 0));
 
   return (
     <div
@@ -32,10 +24,13 @@ function WishlistCard({
       className="group relative bg-white rounded-2xl overflow-hidden border border-[#F0F2F5] flex flex-col"
     >
       {/* Image */}
-      <Link href={`/products/${item.product_slug}`} className="relative h-52 block bg-[#F8F9FC]">
+      <Link
+        href={`/products/${product.slug}`}
+        className="relative h-52 block bg-[#F8F9FC]"
+      >
         <Image
           src={imageSrc}
-          alt={item.product_name}
+          alt={product.title}
           fill
           sizes="(max-width: 768px) 50vw, 25vw"
           className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
@@ -45,10 +40,10 @@ function WishlistCard({
       {/* Body */}
       <div className="p-4 flex flex-col gap-3 flex-1">
         <Link
-          href={`/products/${item.product_slug}`}
+          href={`/products/${product.slug}`}
           className="font-raleway font-semibold text-base text-[#141414] line-clamp-2 hover:text-[#fda600] transition-colors"
         >
-          {item.product_name}
+          {product.title}
         </Link>
         <p className="font-raleway font-bold text-lg text-[#01454A]">
           ₦{price.toLocaleString("en-NG")}
@@ -59,7 +54,7 @@ function WishlistCard({
           <button
             type="button"
             onClick={() =>
-              addToCart.mutate({ product_id: item.product_id, quantity: 1 })
+              addToCart.mutate({ product_id: product.id, quantity: 1 })
             }
             disabled={addToCart.isPending}
             className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-[#01454A] text-white text-sm font-semibold font-raleway rounded-full hover:bg-[#01454A]/90 transition-colors disabled:opacity-60"
@@ -69,9 +64,7 @@ function WishlistCard({
           </button>
           <button
             type="button"
-            onClick={() =>
-              toggleWishlist.mutate({ product_id: item.product_id })
-            }
+            onClick={() => toggleWishlist.mutate(product.slug)}
             disabled={toggleWishlist.isPending}
             aria-label="Remove from wishlist"
             className="p-2.5 rounded-full border border-[#F56630] text-[#F56630] hover:bg-[#F56630] hover:text-white transition-colors disabled:opacity-60"
@@ -87,7 +80,7 @@ function WishlistCard({
 // ── Main Wishlist Client ─────────────────────────────────────────────────────
 function WishlistClient() {
   const { data, isLoading, isError } = useWishlist();
-  const items = data ?? [];
+  const items: WishlistItem[] = data ?? [];
 
   if (isLoading) return <ProductGridSkeleton count={4} />;
 
@@ -121,7 +114,7 @@ function WishlistClient() {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-      {items.map((item: any) => (
+      {items.map((item) => (
         <WishlistCard key={item.id} item={item} />
       ))}
     </div>
