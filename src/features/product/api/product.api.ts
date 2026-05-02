@@ -62,6 +62,7 @@ export async function fetchProducts(params?: {
     page_size: params?.page_size,
     category: params?.category,
     brand: params?.brand,
+    collection: params?.collection,
     search: params?.search,
     ordering: params?.ordering,
     is_featured: params?.is_featured,

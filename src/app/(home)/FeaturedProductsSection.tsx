@@ -2,18 +2,22 @@
 import { useFeaturedProducts } from "@/features/product";
 import ProductCard from "@/features/product/components/ProductCard";
 import { ProductGridSkeleton } from "@/features/product";
+import type { ProductListItem } from "@/features/product";
 import { Package } from "lucide-react";
 
 /**
  * FeaturedProductsSection
  * ─────────────────────────────────────────────────────────────────
- * Live featured products from the Ninja /products/?featured=true endpoint.
+ * Live featured products from the Ninja /products/?is_featured=true endpoint.
  * Rendered inside a Suspense boundary on the home page.
  * Shows up to 4 products in a responsive grid.
+ *
+ * NOTE: useFeaturedProducts returns ProductListItem[] (not paginated).
  */
 export default function FeaturedProductsSection() {
   const { data, isLoading, isError } = useFeaturedProducts();
-  const products = data?.results?.slice(0, 4) ?? [];
+  // useFeaturedProducts returns ProductListItem[] directly (not paginated)
+  const products: ProductListItem[] = (data ?? []).slice(0, 4);
 
   if (isLoading) return <ProductGridSkeleton count={4} />;
 
