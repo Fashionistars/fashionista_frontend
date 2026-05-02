@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Image from "next/image";
 import Link from "next/link";
-import type { VendorProp } from "@/core/types";
 interface VendorCardProp {
   vendorProp: VendorProp;
 }

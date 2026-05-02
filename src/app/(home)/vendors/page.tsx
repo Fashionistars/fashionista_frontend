@@ -1,5 +1,4 @@
 import VendorCard from "@/components/ui/compounds/VendorCard";
-import type { VendorProp } from "@/core/types";
 import { getAllVendors } from "@/core/services/api";
 
 const page = async () => {

@@ -45,9 +45,6 @@
       "@/lib/*": [
         "./src/lib/*"
       ],
-      "@/types/*": [
-        "./src/core/types/*"
-      ],
       "@/hooks/*": [
         "./src/core/hooks/*"
       ],

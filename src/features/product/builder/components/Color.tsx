@@ -1,8 +1,6 @@
 "use client";
-import { NewProductType } from "@/core/types";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
 
 function getStoredImagePath() {
   if (typeof window === "undefined") {

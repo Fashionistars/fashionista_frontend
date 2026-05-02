@@ -1,4 +1,3 @@
-import { OrderProp } from "@/core/types";
 import Link from "next/link";
 
 const page = () => {

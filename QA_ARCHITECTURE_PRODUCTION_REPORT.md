@@ -88,7 +88,7 @@ import { AppIcons } from "@/lib/icons";
 
 **Why:** Single source of truth prevents future version incompatibilities
 
-### 3. **Next.js 15 Turbopack Optimization**
+### 3. **Next.js 16 Turbopack Optimization**
 
 **Principle:** Leverage Turbopack for 10x faster builds (400ms vs 4000ms).
 

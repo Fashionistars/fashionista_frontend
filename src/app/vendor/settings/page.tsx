@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { RoleGuard } from "@/features/auth/components/RoleGuard";
 import { VendorSettingsView } from "@/features/vendor/components/vendor-settings-view";
 
 export const metadata: Metadata = {
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function VendorSettingsPage() {
-  return <VendorSettingsView />;
+  return (
+    <RoleGuard requiredRole="vendor">
+      <VendorSettingsView />
+    </RoleGuard>
+  );
 }

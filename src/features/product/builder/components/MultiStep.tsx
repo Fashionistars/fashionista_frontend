@@ -1,11 +1,9 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-// createNewProduct available from '@/lib/utils/helpers' when product API is wired
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { FormSchema } from "@/lib/validation/addProduct";
 import { newProduct } from "../api/actions";
 import Prices from "./Prices";
 import BasicInformation from "./BasicInformation";

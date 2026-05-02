@@ -6,7 +6,7 @@
  * All types are parsed/validated by the Zod schemas in `schemas/product.schemas.ts`
  * before being consumed by hooks or components.
  *
- * Source of truth: `apps/product/serializers/product_serializers.py`
+ * Source of truth: `apps/product/serializers/product_serializers.py` FOR DRF SYNC API ENDPOINTS AND `apps/product/schema/product_schemas.py` FOR DJANGO-NINJA ASYNC API SCHEMAS
  */
 
 // ─────────────────────────────────────────────────────────────────────────────

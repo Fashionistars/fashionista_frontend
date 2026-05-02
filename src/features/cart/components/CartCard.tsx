@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { CardProps } from "@/core/types";
 
 interface CartProp {
   data: CardProps & { quantity: number };

@@ -1,4 +1,3 @@
-import type { VendorProp } from "@/core/types";
 
 const VENDOR_DIRECTORY_PATH = "/api/v1/ninja/vendor/directory/";
 const REQUEST_TIMEOUT_MS = 3_000;

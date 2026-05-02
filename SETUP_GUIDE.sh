@@ -20,7 +20,7 @@ echo "🔧 Next Steps:"
 echo ""
 echo "1️⃣  Install Dependencies"
 echo "   cd fashionista_frontend"
-echo "   npm install --legacy-peer-deps"
+echo "   pnpm install --legacy-peer-deps"
 echo ""
 
 echo "2️⃣  Fix Package.json if needed"

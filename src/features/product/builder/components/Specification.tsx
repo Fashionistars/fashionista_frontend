@@ -1,6 +1,4 @@
 "use client";
-import { NewProductType } from "@/core/types";
-import { NewProductFieldTypes } from "@/lib/validation/schemas/addProduct";
 import { useActionState } from "react";
 import { SpecificationAction } from "../api/actions";
 

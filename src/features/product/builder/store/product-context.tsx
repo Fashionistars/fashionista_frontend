@@ -7,8 +7,6 @@ import {
   useMemo,
   useContext,
 } from "react";
-import { NewProductType } from "@/core/types";
-import { NewProductFieldTypes } from "@/lib/validation/addProduct";
 
 const initialValue: NewProductType = {
   image_1: undefined as unknown as File,

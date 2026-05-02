@@ -3,7 +3,6 @@ import { data2 } from "@/lib/utils/mock-data";
 import Link from "next/link";
 import { Hero } from "@/components";
 import { CatalogCategoryGrid, CatalogCollectionGrid } from "@/features/catalog";
-import type { PageProps } from "@/core/types";
 import { formatCurrency } from "@/lib/formatting";
 import { Suspense } from "react";
 import FeaturedProductsSection from "./FeaturedProductsSection";

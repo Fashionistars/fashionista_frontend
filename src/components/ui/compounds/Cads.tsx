@@ -1,5 +1,4 @@
 import Image from "next/image";
-import type { CardProps } from "@/core/types";
 type dataProps = {
   data: CardProps & { timer: string };
 };
