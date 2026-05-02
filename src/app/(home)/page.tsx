@@ -5,6 +5,9 @@ import { Hero } from "@/components";
 import { CatalogCategoryGrid, CatalogCollectionGrid } from "@/features/catalog";
 import type { PageProps } from "@/core/types";
 import { formatCurrency } from "@/lib/formatting";
+import { Suspense } from "react";
+import FeaturedProductsSection from "./FeaturedProductsSection";
+import { ProductGridSkeleton } from "@/features/product";
 
 type ReviewProps = {
   id: string;
@@ -13,10 +16,11 @@ type ReviewProps = {
   rating: number;
   name: string;
 };
+
 export default async function Home(props: PageProps) {
   const { searchParams } = props;
 
-  // For immediate rendering, use mock data for deals
+  // Static deal cards (legacy – kept for layout)
   const dealList = data2.map((deal) => (
     <div
       key={deal.image}
@@ -67,7 +71,7 @@ export default async function Home(props: PageProps) {
     </div>
   ));
 
-  // Mock review list for immediate rendering
+  // Mock review list
   const mockReviews: ReviewProps[] = [
     {
       id: "1",
@@ -96,7 +100,6 @@ export default async function Home(props: PageProps) {
               className="w-2/3 h-full outline-none bg-inherit placeholder:not-italic placeholder:font-raleway placeholder:font-medium placeholder:text-xl placeholder:text-[#333] text-[#333]"
               placeholder="Enter Email Address"
             />
-
             <button className="w-1/3 lg:min-h-[66px] h-full rounded-r-[100px] bg-[#01454a] text-white shrink-0 text-sm lg:text-xl font-bold font-raleway">
               Join Waitlist
             </button>
@@ -104,8 +107,31 @@ export default async function Home(props: PageProps) {
         </form>
       </div>
 
+      {/* ── Live Category Grid ─────────────────────────────────────── */}
       <CatalogCategoryGrid />
+
+      {/* ── Live Featured Products (replaces mock) ────────────────── */}
+      <section className="px-5 py-10 md:px-10 lg:px-20 space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="font-bon_foyage text-4xl md:text-5xl text-[#333]">
+            Featured Products
+          </h2>
+          <Link
+            href="/categories"
+            className="font-raleway text-sm font-semibold text-[#01454A] hover:text-[#fda600] transition-colors"
+          >
+            View all →
+          </Link>
+        </div>
+        <Suspense fallback={<ProductGridSkeleton count={4} />}>
+          <FeaturedProductsSection />
+        </Suspense>
+      </section>
+
+      {/* ── Live Collection Grid ───────────────────────────────────── */}
       <CatalogCollectionGrid searchParams={searchParams} />
+
+      {/* ── Campaign Banner ───────────────────────────────────────── */}
       <div className=" w-full h-[593px] bg-[#fda600] md:h-[746px] relative p-10 md:p-14 lg:p-24 flex flex-col gap-5 md:gap-10 items-center">
         <p className="font-raleway font-semibold text-xl text-black">
           SENATOR OUTFITS
@@ -136,6 +162,8 @@ export default async function Home(props: PageProps) {
           className="w-[200px] h-[321px] md:w-[350px] md:h-[550px] lg:w-[592px] lg:h-[758px] absolute right-0 bottom-0 object-cover"
         />
       </div>
+
+      {/* ── Deals of the Week ─────────────────────────────────────── */}
       <div className="px-5 py-10 md:p-10 lg:p-20 space-y-5 md:space-y-10">
         <div className="flex flex-wrap justify-center md:justify-normal items-center gap-5 lg:gap-20">
           <h3 className="font-bon_foyage whitespace-nowrap text-center text-5xl leading-[48px] text-[#333]">
@@ -175,8 +203,8 @@ export default async function Home(props: PageProps) {
           {dealList}
         </div>
       </div>
-      {/* Reviews section */}
 
+      {/* ── Reviews ───────────────────────────────────────────────── */}
       <div className="px-5 py-10 md:p-10 lg:p-20 space-y-5">
         <h2 className="font-bon_foyage text-5xl text-[#333]">Our Reviews</h2>
         <div className="flex md:flex-wrap items-center lg:p-5 overflow-hidden gap-10 md:gap-3 lg:gap-6 justify-between">
@@ -195,11 +223,9 @@ export default async function Home(props: PageProps) {
               />
               <div className="flex flex-col items-center md:items-start gap-2.5">
                 <span className="text-[#fda600] text-xl">★★★★★</span>
-
                 <p className="font-raleway text-center md:text-left text-xl text-[#333] flex-none  self-stretch grow-0   w-full">
                   {review.text}
                 </p>
-
                 <p className="font-raleway font-semibold text-2xl text-black ">
                   {review.name}
                 </p>

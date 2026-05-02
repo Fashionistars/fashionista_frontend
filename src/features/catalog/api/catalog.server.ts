@@ -18,21 +18,21 @@ function apiBaseUrl() {
   return process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://127.0.0.1:8000";
 }
 
-function unwrapEnvelope<T>(payload: unknown): T {
+function unwrapEnvelope<T>(payload: unknown): unknown {
   if (payload && typeof payload === "object" && "data" in payload) {
     const data = (payload as { data: unknown }).data;
     if (data && typeof data === "object" && "results" in data) {
-      return (data as { results: T }).results;
+      return (data as { results: unknown }).results;
     }
-    return data as T;
+    return data;
   }
   if (payload && typeof payload === "object" && "results" in payload) {
-    return (payload as { results: T }).results;
+    return (payload as { results: unknown }).results;
   }
-  return payload as T;
+  return payload;
 }
 
-async function fetchCatalog<T>(path: string): Promise<T[]> {
+async function fetchCatalog(path: string): Promise<unknown[]> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), FALLBACK_TIMEOUT_MS);
 
@@ -46,11 +46,11 @@ async function fetchCatalog<T>(path: string): Promise<T[]> {
       signal: controller.signal,
     });
 
-    if (!response.ok) {
-      return [];
-    }
+    if (!response.ok) return [];
 
-    return unwrapEnvelope<T[]>(await response.json());
+    const raw = await response.json();
+    const unwrapped = unwrapEnvelope(raw);
+    return Array.isArray(unwrapped) ? unwrapped : [];
   } catch {
     return [];
   } finally {
@@ -58,7 +58,7 @@ async function fetchCatalog<T>(path: string): Promise<T[]> {
   }
 }
 
-async function fetchCatalogItem<T>(path: string): Promise<T | null> {
+async function fetchCatalogItem(path: string): Promise<unknown | null> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), FALLBACK_TIMEOUT_MS);
 
@@ -72,11 +72,8 @@ async function fetchCatalogItem<T>(path: string): Promise<T | null> {
       signal: controller.signal,
     });
 
-    if (!response.ok) {
-      return null;
-    }
-
-    return unwrapEnvelope<T>(await response.json());
+    if (!response.ok) return null;
+    return unwrapEnvelope(await response.json());
   } catch {
     return null;
   } finally {
@@ -84,30 +81,55 @@ async function fetchCatalogItem<T>(path: string): Promise<T | null> {
   }
 }
 
+// ── Public server functions ─────────────────────────────────────────────────
+
 export async function getCatalogCategories(): Promise<CatalogCategory[]> {
-  const payload = await fetchCatalog<CatalogCategory>("/api/v1/ninja/catalog/categories/");
-  return CatalogCategoryListSchema.parse(payload);
+  const raw = await fetchCatalog("/api/v1/ninja/catalog/categories/");
+  const result = CatalogCategoryListSchema.safeParse(raw);
+  if (!result.success) {
+    console.warn("[catalog.server] getCatalogCategories parse error:", result.error.flatten());
+    return [];
+  }
+  return result.data;
 }
 
 export async function getCatalogBrands(): Promise<CatalogBrand[]> {
-  const payload = await fetchCatalog<CatalogBrand>("/api/v1/ninja/catalog/brands/");
-  return CatalogBrandListSchema.parse(payload);
+  const raw = await fetchCatalog("/api/v1/ninja/catalog/brands/");
+  const result = CatalogBrandListSchema.safeParse(raw);
+  if (!result.success) {
+    console.warn("[catalog.server] getCatalogBrands parse error:", result.error.flatten());
+    return [];
+  }
+  return result.data;
 }
 
 export async function getCatalogCollections(): Promise<CatalogCollection[]> {
-  const payload = await fetchCatalog<CatalogCollection>("/api/v1/ninja/catalog/collections/");
-  return CatalogCollectionListSchema.parse(payload);
+  const raw = await fetchCatalog("/api/v1/ninja/catalog/collections/");
+  const result = CatalogCollectionListSchema.safeParse(raw);
+  if (!result.success) {
+    console.warn("[catalog.server] getCatalogCollections parse error:", result.error.flatten());
+    return [];
+  }
+  return result.data;
 }
 
 export async function getCatalogBlogPosts(): Promise<CatalogBlogPost[]> {
-  const payload = await fetchCatalog<CatalogBlogPost>("/api/v1/ninja/catalog/blog/");
-  return CatalogBlogPostListSchema.parse(payload);
+  const raw = await fetchCatalog("/api/v1/ninja/catalog/blog/");
+  const result = CatalogBlogPostListSchema.safeParse(raw);
+  if (!result.success) {
+    console.warn("[catalog.server] getCatalogBlogPosts parse error:", result.error.flatten());
+    return [];
+  }
+  return result.data;
 }
 
 export async function getCatalogBlogPostBySlug(slug: string): Promise<CatalogBlogPost | null> {
-  const payload = await fetchCatalogItem<CatalogBlogPost>(`/api/v1/ninja/catalog/blog/${slug}/`);
-  if (!payload) {
+  const raw = await fetchCatalogItem(`/api/v1/ninja/catalog/blog/${slug}/`);
+  if (!raw) return null;
+  const result = CatalogBlogPostSchema.safeParse(raw);
+  if (!result.success) {
+    console.warn("[catalog.server] getCatalogBlogPostBySlug parse error:", result.error.flatten());
     return null;
   }
-  return CatalogBlogPostSchema.parse(payload);
+  return result.data;
 }

@@ -1,117 +1,169 @@
+"use client";
+import { Suspense } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { Heart, ShoppingCart, Trash2, AlertCircle } from "lucide-react";
+import { useWishlist, useToggleWishlist, useAddCartItem } from "@/features/product";
+import { ProductGridSkeleton } from "@/features/product";
 
-/**
- * Wishlist Page
- *
- * FIX: Removed the axios.get("http://localhost:3000/wishlist") self-call
- * that was causing a recursive loop (server component calling itself = infinite hang).
- * Wishlist data will be loaded client-side via TanStack Query once the API endpoint
- * exists. For now renders a clean placeholder that does NOT hang.
- */
-const WishlistPage = () => {
-  // TODO: Replace with real API call via TanStack Query (client component)
-  // const { data: wishlist } = useQuery({ queryKey: ['wishlist'], queryFn: fetchWishlist })
-  const wishlist: Array<{ id: string; title: string; price: string; status: string }> = [];
+// ── Wishlist Item Card ───────────────────────────────────────────────────────
+function WishlistCard({
+  item,
+}: {
+  item: {
+    id: string;
+    product_id: string;
+    product_name: string;
+    product_slug: string;
+    product_price: string;
+    product_image: string;
+    product_image_url?: string;
+  };
+}) {
+  const toggleWishlist = useToggleWishlist();
+  const addToCart = useAddCartItem();
+
+  const imageSrc = item.product_image_url || item.product_image || "/gown.svg";
+  const price = parseFloat(item.product_price || "0");
 
   return (
-    <div className="py-10 px-5 md:px-24 space-y-5">
+    <div
+      style={{ boxShadow: "0px 2px 16px 0px #0000001A" }}
+      className="group relative bg-white rounded-2xl overflow-hidden border border-[#F0F2F5] flex flex-col"
+    >
+      {/* Image */}
+      <Link href={`/products/${item.product_slug}`} className="relative h-52 block bg-[#F8F9FC]">
+        <Image
+          src={imageSrc}
+          alt={item.product_name}
+          fill
+          sizes="(max-width: 768px) 50vw, 25vw"
+          className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
+        />
+      </Link>
+
+      {/* Body */}
+      <div className="p-4 flex flex-col gap-3 flex-1">
+        <Link
+          href={`/products/${item.product_slug}`}
+          className="font-raleway font-semibold text-base text-[#141414] line-clamp-2 hover:text-[#fda600] transition-colors"
+        >
+          {item.product_name}
+        </Link>
+        <p className="font-raleway font-bold text-lg text-[#01454A]">
+          ₦{price.toLocaleString("en-NG")}
+        </p>
+
+        {/* Actions */}
+        <div className="flex gap-2 mt-auto">
+          <button
+            type="button"
+            onClick={() =>
+              addToCart.mutate({ product_id: item.product_id, quantity: 1 })
+            }
+            disabled={addToCart.isPending}
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-[#01454A] text-white text-sm font-semibold font-raleway rounded-full hover:bg-[#01454A]/90 transition-colors disabled:opacity-60"
+          >
+            <ShoppingCart size={16} />
+            {addToCart.isPending ? "Adding…" : "Add to Cart"}
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              toggleWishlist.mutate({ product_id: item.product_id })
+            }
+            disabled={toggleWishlist.isPending}
+            aria-label="Remove from wishlist"
+            className="p-2.5 rounded-full border border-[#F56630] text-[#F56630] hover:bg-[#F56630] hover:text-white transition-colors disabled:opacity-60"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Main Wishlist Client ─────────────────────────────────────────────────────
+function WishlistClient() {
+  const { data, isLoading, isError } = useWishlist();
+  const items = data ?? [];
+
+  if (isLoading) return <ProductGridSkeleton count={4} />;
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
+        <AlertCircle size={48} className="text-red-400" />
+        <p className="font-raleway text-lg text-[#475367]">
+          Could not load your wishlist. Please try again later.
+        </p>
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-6">
+        <Heart size={64} className="text-[#D9D9D9]" />
+        <p className="font-raleway text-xl text-[#475367] text-center max-w-md">
+          Nothing here yet! Find something you love and add it to your wishlist.
+        </p>
+        <Link
+          href="/categories"
+          className="px-8 py-3 rounded-full bg-[#01454A] text-white font-semibold font-raleway hover:bg-[#012e32] transition-colors"
+        >
+          Browse Products
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+      {items.map((item: any) => (
+        <WishlistCard key={item.id} item={item} />
+      ))}
+    </div>
+  );
+}
+
+// ── Page Export ──────────────────────────────────────────────────────────────
+export default function WishlistPage() {
+  return (
+    <div className="py-10 px-5 md:px-10 lg:px-24 space-y-8">
+      {/* Breadcrumb */}
       <div className="flex items-center justify-between">
-        <div className="font-raleway font-medium text-[#475367]">
-          <Link href="/" className="hover:text-[#fda600] transition-colors">Home</Link>
-          {" "}&gt;{" "}
+        <div className="font-raleway font-medium text-[#475367] text-sm">
+          <Link href="/" className="hover:text-[#fda600] transition-colors">
+            Home
+          </Link>{" "}
+          &gt;{" "}
           <span className="text-[#fda600]">Wishlist</span>
         </div>
         <Link
           href="/get-measured"
-          className="w-[9rem] h-[2.7rem] rounded-[100px] flex justify-center items-center bg-[#01454A] text-white text-[15px] leading-[17px] font-semibold font-raleway"
+          className="px-6 py-2.5 rounded-full bg-[#01454A] text-white text-sm font-semibold font-raleway hover:bg-[#012e32] transition-colors"
         >
           Get Measured
         </Link>
       </div>
 
+      {/* Header */}
       <div>
-        <h2 className="font-raleway font-bold text-[2rem] leading-[43px] text-black flex items-center gap-2">
+        <h1 className="font-bon_foyage text-4xl md:text-5xl text-[#141414] flex items-center gap-3">
           Your Wishlist
-          <span className="py-1.5 px-3 rounded-[40px] text-white bg-[#F56630] font-bold text-lg">
-            {wishlist.length}
-          </span>
-        </h2>
-        <p className="font-raleway text-2xl text-[#475367]">
-          {wishlist.length === 0
-            ? "Your wishlist is empty. Browse products and save your favourites!"
-            : `Your Wishlist contains ${wishlist.length} product${wishlist.length !== 1 ? "s" : ""}`}
+          <Heart size={36} className="text-[#fda600]" />
+        </h1>
+        <p className="font-raleway text-base text-[#475367] mt-2">
+          Save items you love and come back for them anytime.
         </p>
       </div>
 
-      {wishlist.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-6">
-          <div className="text-6xl">🛍️</div>
-          <p className="font-raleway text-xl text-[#475367] text-center max-w-md">
-            Nothing here yet! Find something you love and add it to your wishlist.
-          </p>
-          <Link
-            href="/"
-            className="px-8 py-3 rounded-full bg-[#01454A] text-white font-semibold font-raleway hover:bg-[#012e32] transition-colors"
-          >
-            Browse Products
-          </Link>
-        </div>
-      ) : (
-        <div>
-          <div className="flex items-center justify-between py-2">
-            <p className="text-[#1D2329] font-bold text-2xl leading-10 py-2.5 pr-[30px] border-b-2 border-[#F56630]">
-              Wishlist
-            </p>
-            <p className="text-[#586283] py-3 px-6 rounded-full border border-[#F0F2F5] bg-white shadow">
-              see more &gt;
-            </p>
-          </div>
-          <div>
-            <table className="min-w-full divide-y divide-slate-300">
-              <thead className="divide-y-2 divide-red-500">
-                <tr>
-                  <th className="font-raleway font-medium text-[#1D2329] text-left px-5 py-2.5">
-                    Product&apos;s Name
-                  </th>
-                  <th className="font-raleway font-medium text-[#1D2329] text-left px-5 py-2.5">
-                    Price
-                  </th>
-                  <th className="font-raleway font-medium text-[#1D2329] text-left px-5 py-2.5">
-                    Status
-                  </th>
-                  <th className="font-raleway font-medium text-[#1D2329] text-left px-5 py-2.5">
-                    Action
-                  </th>
-                  <th className="font-raleway font-medium text-[#1D2329] text-left px-5 py-2.5">
-                    Remove
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {wishlist.map((item) => (
-                  <tr key={item.id}>
-                    <td className="px-5 py-3 font-raleway">{item.title}</td>
-                    <td className="px-5 py-3 font-raleway">{item.price}</td>
-                    <td className="px-5 py-3 font-raleway">{item.status}</td>
-                    <td className="px-5 py-3">
-                      <button className="px-4 py-1.5 bg-[#01454A] text-white rounded-full text-sm font-raleway">
-                        Add to Cart
-                      </button>
-                    </td>
-                    <td className="px-5 py-3">
-                      <button className="px-4 py-1.5 text-[#F56630] border border-[#F56630] rounded-full text-sm font-raleway hover:bg-[#F56630] hover:text-white transition-colors">
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+      {/* Live wishlist grid via TanStack Query */}
+      <Suspense fallback={<ProductGridSkeleton count={4} />}>
+        <WishlistClient />
+      </Suspense>
     </div>
   );
-};
-
-export default WishlistPage;
+}

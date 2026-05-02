@@ -1,21 +1,8 @@
 /**
- * components/shared/feedback/index.ts
+ * components/shared/feedback/index.ts — Canonical Barrel
  *
- * Purpose:
- *   Exports shared feedback components for use by feature slices via
- *   '@/components/shared/feedback'.
- *
- * Exported Symbols:
- *   - Footer: legacy public footer
- *   - NewFooter: newer public footer
- *
- * Dependencies:
- *   - All components rely on React 19's "react" import for useActionState
- *   - Some components use cn() utility; ensure @/lib/utils is properly aliased
- *
- * Usage Example:
- *   import { Footer, NewFooter } from "@/components/shared/feedback";
+ * NewFooter is the canonical footer component (merged from legacy Footer).
+ * Legacy Footer.tsx has been deleted after merge into NewFooter.
  */
 
-export { default as Footer } from "./Footer";
 export { default as NewFooter } from "./NewFooter";

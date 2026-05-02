@@ -52,6 +52,7 @@ export async function fetchProducts(params?: {
   page_size?: number;
   category?: string;
   brand?: string;
+  collection?: string;
   search?: string;
   ordering?: string;
   is_featured?: boolean;
