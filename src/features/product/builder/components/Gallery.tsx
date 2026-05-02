@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 // import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import Image from "next/image";
+import type { NewProductType, NewProductFieldTypes } from "../schemas";
 import { GalleryAction } from "../api/actions";
 const Gallery = ({
   newProductFields,

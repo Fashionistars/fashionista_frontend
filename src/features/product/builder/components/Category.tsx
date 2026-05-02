@@ -1,3 +1,4 @@
+import type { NewProductType, NewProductFieldTypes } from "../schemas";
 import { CategoryAction } from "../api/actions";
 
 const Category = ({

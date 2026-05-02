@@ -16,6 +16,7 @@ import { useAddProductContext } from "../store/product-context";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { FormSchema } from "../schemas";
 
 type Inputs = z.infer<typeof FormSchema>;
 

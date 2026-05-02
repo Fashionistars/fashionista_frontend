@@ -4,6 +4,7 @@ import {
   BasicInformationSchema,
   CategorySchema,
   GallerySchema,
+  PricesSchema,
   SizesSchema,
   SpecificationSchema,
 } from "@/features/product/builder/schemas";

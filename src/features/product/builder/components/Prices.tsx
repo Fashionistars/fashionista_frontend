@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import type { NewProductType, NewProductFieldTypes } from "../schemas";
 import { PricesAction } from "../api/actions";
 
 const Prices = ({

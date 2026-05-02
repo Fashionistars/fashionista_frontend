@@ -7,6 +7,7 @@ import {
   useMemo,
   useContext,
 } from "react";
+import type { NewProductType, NewProductFieldTypes } from "../schemas";
 
 const initialValue: NewProductType = {
   image_1: undefined as unknown as File,

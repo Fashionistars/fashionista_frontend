@@ -1,5 +1,6 @@
 "use client";
 import { useActionState } from "react";
+import type { NewProductType, NewProductFieldTypes } from "../schemas";
 import { SpecificationAction } from "../api/actions";
 
 const Specification = ({
