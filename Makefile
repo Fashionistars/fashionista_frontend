@@ -9,7 +9,7 @@ include .env.local
 export
 endif
 
-.PHONY: help install dev build start clean lint test docker-build docker-up docker-down tunnel tunnel-frontend tunnel-url tunel-lt-fixed tunnel-ssh tunnel-ngrok tunnel-ngrok-fe refresh-install
+.PHONY: help install dev dev-stable build start clean lint test docker-build docker-up docker-down tunnel tunnel-frontend tunnel-url tunel-lt-fixed tunnel-ssh tunnel-ngrok tunnel-ngrok-fe refresh-install
 .DEFAULT_GOAL := help
 
 # ─── Colors ───
@@ -20,11 +20,15 @@ RED     := \033[0;31m
 BOLD    := \033[1m
 NC      := \033[0m
 PNPM    := pnpm.cmd
-NGROK   := $(PNPM) dlx ngrok
+NGROK   := $(PNPM) dlx --package ngrok ngrok
 POWERSHELL := powershell -NoProfile -ExecutionPolicy Bypass -Command
 RM_BUILD_ARTIFACTS := $(POWERSHELL) "Remove-Item -LiteralPath '.next','out','.turbo' -Recurse -Force -ErrorAction SilentlyContinue; exit 0"
 RM_DEPS_AND_CACHE := $(POWERSHELL) "Remove-Item -LiteralPath 'node_modules','pnpm-lock.yaml','.next','.turbo','.pnpm-store' -Recurse -Force -ErrorAction SilentlyContinue; exit 0"
 PNPM_INSTALL := $(PNPM) install --store-dir .pnpm-store
+NEXT_DEV_HOST ?= 127.0.0.1
+NEXT_DEV_PORT ?= 3000
+NEXT_DEV_MEMORY_MB ?= 3072
+NEXT_DEV_ENV := $$env:NODE_OPTIONS='--max-old-space-size=$(NEXT_DEV_MEMORY_MB)'; $$env:NEXT_TELEMETRY_DISABLED='1'; $$env:NEXT_DISABLE_SOURCEMAPS='1';
 
 ##@ Help
 
@@ -47,9 +51,14 @@ install: ## Install Node.js dependencies with pnpm
 
 dev: ## Start Next.js development server (Turbopack — port 3000)
 	@echo "$(CYAN)Starting Next.js dev server with Turbopack...$(NC)"
-	@echo "$(YELLOW)  Node memory: 4096MB (via .npmrc node-options)$(NC)"
-	@echo "$(YELLOW)  URL: http://localhost:3000$(NC)"
-	$(PNPM) exec next dev --turbo
+	@echo "$(YELLOW)  Node memory cap: $(NEXT_DEV_MEMORY_MB)MB$(NC)"
+	@echo "$(YELLOW)  URL: http://$(NEXT_DEV_HOST):$(NEXT_DEV_PORT)$(NC)"
+	$(POWERSHELL) "$(NEXT_DEV_ENV) $(PNPM) exec next dev --turbo --hostname $(NEXT_DEV_HOST) --port $(NEXT_DEV_PORT)"
+
+dev-stable: ## Start Next.js development server without Turbopack fallback
+	@echo "$(CYAN)Starting Next.js dev server without Turbopack...$(NC)"
+	@echo "$(YELLOW)  Use this fallback if Turbopack is too heavy on this laptop.$(NC)"
+	$(POWERSHELL) "$(NEXT_DEV_ENV) $(PNPM) exec next dev --hostname $(NEXT_DEV_HOST) --port $(NEXT_DEV_PORT)"
 
 build: ## Build production bundle
 	@echo "$(CYAN)Building for production...$(NC)"
@@ -304,11 +313,15 @@ tunnel-ngrok: ## 🌐 ngrok (global token, use only when backend ngrok is stoppe
 	@echo "$(YELLOW)⚠ WARNING: Free ngrok only supports 1 tunnel at a time.$(NC)"
 	@echo "$(YELLOW)  Stop backend ngrok first, or use 'make tunnel' instead.$(NC)"
 	@echo ""
-	ngrok http 3000
+	$(NGROK) http 3000
 
 tunnel-ngrok-fe: ## 🌐 Dedicated frontend ngrok tunnel via ngrok-frontend.yml
 	@echo "$(CYAN)Starting dedicated frontend ngrok tunnel on port 3000...$(NC)"
 	@echo "$(YELLOW)Using project-local ngrok via pnpm dlx and the token from .env.local$(NC)"
+	@if [ -z "$(NGROK_FRONTEND_TOKEN)" ]; then \
+		echo "$(RED)✗ NGROK_FRONTEND_TOKEN is missing in .env.local$(NC)"; \
+		exit 1; \
+	fi
 	$(NGROK) config check --config ngrok-frontend.yml
 	$(NGROK) start fashionista-frontend --config ngrok-frontend.yml --authtoken "$(NGROK_FRONTEND_TOKEN)"
 
