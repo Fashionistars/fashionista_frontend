@@ -145,8 +145,21 @@ export interface ReviewCreatePayload {
 }
 
 // ── Wallet ────────────────────────────────────────────────────────────────────
+/** Minimal balance response from /api/v1/client/wallet/balance/ */
 export interface WalletBalance {
   balance: string; // decimal string from backend
+}
+
+/**
+ * Extended wallet dashboard type.
+ * The frontend derives `total_amount_ngn`, `balance_ngn`, `transaction_count`
+ * from the balance endpoint + transactions list for rendering wallet cards.
+ */
+export interface WalletDashboardData {
+  balance_ngn: number;
+  total_amount_ngn: number;
+  transaction_count: number;
+  transactions: import("@/features/account/components/Transactions").Transaction[];
 }
 
 export interface WalletTransferPayload {

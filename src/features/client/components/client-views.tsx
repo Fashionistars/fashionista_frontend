@@ -10,10 +10,12 @@ import {
   useClientProfile,
   useUpdateClientProfile,
 } from "@/features/client/hooks/use-client-profile";
+import { useClientWalletBalance } from "@/features/client/hooks/use-client-wallet";
 import type {
   ClientAddress,
   ClientProfileUpdatePayload,
 } from "@/features/client/types/client.types";
+
 
 type ClientCardProps = {
   title: string;
@@ -512,40 +514,51 @@ export function ClientOrdersView() {
 }
 
 export function ClientWalletView() {
+  const { data: walletData, isLoading: walletLoading } = useClientWalletBalance();
+
+  const totalAmount   = walletData?.total_amount_ngn ?? 0;
+  const balance       = walletData?.balance_ngn ?? 0;
+  const txCount       = walletData?.transaction_count ?? 0;
+  const transactions  = walletData?.transactions ?? [];
+
   return (
     <div className="space-y-8 py-4">
       <div>
         <h1 className="font-bon_foyage text-5xl text-black">Wallet</h1>
         <p className="mt-3 max-w-3xl text-base leading-7 text-[#5A6465]">
-          Wallet history now lives in the client feature slice and keeps the old
-          visual structure without leaving the old route logic behind.
+          Manage your balance, request withdrawals, and review your full
+          financial history — all from one place.
         </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
         <ClientCard
           title="Total amount"
-          value="NGN 180,050"
-          hint="Historical wallet movement."
+          value={walletLoading ? "—" : `NGN ${totalAmount.toLocaleString("en-NG")}`}
+          hint="Historical wallet movement across all transactions."
         />
         <ClientCard
           title="Available balance"
-          value="NGN 42,500"
-          hint="Spendable wallet balance."
+          value={walletLoading ? "—" : `NGN ${balance.toLocaleString("en-NG")}`}
+          hint="Spendable wallet balance ready for withdrawal."
         />
         <ClientCard
-          title="Saved transactions"
-          value="12"
-          hint="Transactions rendered from the shared account feature."
+          title="Transactions"
+          value={walletLoading ? "—" : String(txCount)}
+          hint="All financial events on this account."
         />
       </div>
 
-      <div className="rounded-[32px] bg-white p-8 shadow-card_shadow">
-        <Transactions />
-      </div>
+      {/* Full wallet dashboard: withdrawal form + transaction table + FAQ */}
+      <Transactions
+        transactions={transactions}
+        isLoading={walletLoading}
+        showWalletDashboard
+      />
     </div>
   );
 }
+
 
 export function ClientTrackOrderView() {
   return (
