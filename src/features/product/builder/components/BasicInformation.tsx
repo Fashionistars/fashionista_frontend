@@ -3,6 +3,7 @@ import Image from "next/image";
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { BasicInformationAction } from "../api/actions";
+import type { NewProductType, NewProductFieldTypes } from "../schemas";
 // import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 
 const BasicInformation = ({

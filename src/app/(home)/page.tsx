@@ -16,7 +16,7 @@ type ReviewProps = {
   name: string;
 };
 
-export default async function Home(props: PageProps) {
+export default async function Home(props: { searchParams?: Promise<Record<string, string>> }) {
   // Next.js 16: searchParams is a Promise
   void props; // searchParams consumed client-side via CatalogCollectionGrid's useSearchParams
   // Static deal cards (legacy – kept for layout)

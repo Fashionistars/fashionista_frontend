@@ -105,6 +105,10 @@ export function LoginForm() {
         ...data.user,
         id: (data.user as unknown as { user_id?: string }).user_id ?? "",
         role: data.user.role ?? data.role,
+        // Coerce null → undefined so AuthUser types are satisfied
+        email: data.user.email ?? undefined,
+        phone: data.user.phone ?? undefined,
+        date_joined: data.user.date_joined ?? undefined,
       });
     } else {
       // Fallback: flat-response shape (unlikely for Google but handled for safety)
@@ -112,8 +116,8 @@ export function LoginForm() {
         id: data.user_id ?? "",
         email: data.identifying_info?.includes("@") ? data.identifying_info : undefined,
         phone: data.identifying_info?.startsWith("+") ? data.identifying_info : undefined,
-        first_name: data.first_name ?? "User",
-        last_name: data.last_name ?? "",
+        first_name: "User",
+        last_name: "",
         role: data.role,
         is_verified: true,
         is_staff: (data.role ?? "").toLowerCase() === "admin" ||
@@ -163,6 +167,10 @@ export function LoginForm() {
           ...data.user,
           id: (data.user as unknown as { user_id?: string }).user_id ?? data.user_id ?? "",
           role: data.user.role ?? data.role,
+          // Coerce null → undefined so AuthUser types are satisfied
+          email: data.user.email ?? undefined,
+          phone: data.user.phone ?? undefined,
+          date_joined: data.user.date_joined ?? undefined,
         });
       } else {
         setUser({

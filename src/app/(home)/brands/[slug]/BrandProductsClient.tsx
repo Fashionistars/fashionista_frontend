@@ -1,7 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
-import { ProductCard, ProductGridSkeleton } from "@/features/product";
+import { ProductGridSkeleton } from "@/features/product";
 import { useCatalogBrands } from "@/features/catalog";
 
 interface BrandProductsClientProps {
