@@ -294,6 +294,12 @@ tunnel-ngrok: ## 🌐 ngrok (global token, use only when backend ngrok is stoppe
 	@echo ""
 	ngrok http 3000
 
+tunnel-ngrok-fe: ## 🌐 Dedicated frontend ngrok tunnel via ngrok-frontend.yml
+	@echo "$(CYAN)Starting dedicated frontend ngrok tunnel on port 3000...$(NC)"
+	@echo "$(YELLOW)Using project-local ngrok via pnpm dlx and the token from .env.local$(NC)"
+	$(NGROK) config check --config ngrok-frontend.yml
+	$(NGROK) start fashionista-frontend --config ngrok-frontend.yml --authtoken "$(NGROK_FRONTEND_TOKEN)"
+
 tunnel-url: ## 🔍 Print active tunnel URLs (ngrok inspector)
 	@echo "$(CYAN)Active ngrok tunnels:$(NC)"
 	@curl -s http://127.0.0.1:4040/api/tunnels 2>/dev/null | \
