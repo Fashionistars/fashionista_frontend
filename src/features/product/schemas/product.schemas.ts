@@ -4,194 +4,412 @@
  *
  * Every backend API response is parsed through these schemas before entering
  * TanStack Query cache. Failures are thrown loudly in development and silently
- * logged in production with a fallback.
+ * logged in production.
  *
- * Design rule: schema names mirror the TypeScript interface names with `Schema` suffix.
+ * ────────────────────────────────────────────────────────────────────────────
+ * Design rules:
+ *  1. Schema names mirror TypeScript interface names with a `Schema` suffix.
+ *  2. All URL fields use z.string().nullable() — Cloudinary URLs may be null
+ *     when a field is optional and not yet uploaded.
+ *  3. Decimal fields from Django (price, commission) are z.string() to prevent
+ *     float precision loss.
+ *  4. All schemas use .passthrough() so unknown backend fields don't throw.
+ * ────────────────────────────────────────────────────────────────────────────
  */
 import { z } from "zod";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ENUM SCHEMAS
+// PRIMITIVES
 // ─────────────────────────────────────────────────────────────────────────────
 
-const IdSchema = z.string();
-const ProductStatusSchema = z.enum(["draft", "pending", "published", "archived", "rejected"]);
-const ProductConditionSchema = z.enum(["new", "used", "refurbished"]);
-const CouponTypeSchema = z.enum(["percentage", "fixed", "free_shipping"]);
-const MediaTypeSchema = z.enum(["image", "video"]);
+const IdSchema = z.string().uuid();
+const DecimalStrSchema = z.string().regex(/^\d+(\.\d+)?$/, "Invalid decimal");
+const IsoDateSchema = z.string().datetime({ offset: true });
+const NullableUrlSchema = z.string().nullable();
+
+export const ProductStatusSchema = z.enum([
+  "draft",
+  "pending",
+  "published",
+  "archived",
+  "rejected",
+]);
+
+export const MediaTypeSchema = z.enum(["image", "video"]);
+export const ProductConditionSchema = z.enum(["new", "used", "refurbished"]);
+
+export const CouponDiscountTypeSchema = z.enum([
+  "percentage",
+  "fixed",
+  "free_shipping",
+]);
+
+export const InventoryReasonSchema = z.enum([
+  "sale",
+  "return",
+  "adjustment",
+  "restock",
+  "damaged",
+  "reserved",
+]);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // NESTED SCHEMAS
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const ProductCategorySchema = z.object({
-  id: IdSchema,
-  name: z.string(),
-  slug: z.string(),
-});
+export const ProductCategorySchema = z
+  .object({
+    id: IdSchema,
+    name: z.string(),
+    slug: z.string(),
+    image_url: NullableUrlSchema.optional(),
+  })
+  .passthrough();
 
-export const ProductBrandSchema = z.object({
-  id: IdSchema,
-  name: z.string(),
-  slug: z.string(),
-  logo_url: z.string().url().nullable(),
-});
+export const ProductBrandSchema = z
+  .object({
+    id: IdSchema,
+    name: z.string(),
+    slug: z.string(),
+    logo_url: NullableUrlSchema,
+  })
+  .passthrough();
 
-export const ProductVendorSchema = z.object({
-  id: IdSchema,
-  store_name: z.string(),
-  slug: z.string(),
-  avatar_url: z.string().url().nullable(),
-});
+export const ProductVendorSchema = z
+  .object({
+    id: IdSchema,
+    store_name: z.string(),
+    slug: z.string().nullable().optional(),
+    avatar_url: NullableUrlSchema,
+    is_verified: z.boolean().default(false),
+  })
+  .passthrough();
 
-export const ProductSizeSchema = z.object({
-  id: IdSchema,
-  name: z.string(),
-  abbreviation: z.string(),
-  sort_order: z.number().int(),
-});
+export const ProductSizeSchema = z
+  .object({
+    id: IdSchema,
+    name: z.string(),
+  })
+  .passthrough();
 
-export const ProductColorSchema = z.object({
-  id: IdSchema,
-  name: z.string(),
-  hex_code: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
-});
+export const ProductColorSchema = z
+  .object({
+    id: IdSchema,
+    name: z.string(),
+    hex_code: z.string(),
+  })
+  .passthrough();
 
-export const ProductTagSchema = z.object({
-  id: IdSchema,
-  name: z.string(),
-  slug: z.string(),
-});
+export const ProductTagSchema = z
+  .object({
+    id: IdSchema,
+    name: z.string(),
+    slug: z.string(),
+  })
+  .passthrough();
 
-export const ProductGalleryMediaSchema = z.object({
-  id: IdSchema,
-  image_url: z.string().url(),
-  media_type: MediaTypeSchema,
-  alt_text: z.string(),
-  ordering: z.number().int(),
-});
+export const ProductSpecificationSchema = z
+  .object({
+    id: IdSchema,
+    title: z.string(),
+    content: z.string(),
+  })
+  .passthrough();
 
-export const ProductVariantSchema = z.object({
-  id: IdSchema,
-  sku: z.string(),
-  size: ProductSizeSchema.nullable(),
-  color: ProductColorSchema.nullable(),
-  price_override: z.string().nullable(),
-  stock: z.number().int().min(0),
-  is_active: z.boolean(),
-});
-
-export const ProductReviewSchema = z.object({
-  id: IdSchema,
-  reviewer_name: z.string(),
-  reviewer_avatar: z.string().url().nullable(),
-  rating: z.number().int().min(1).max(5),
-  comment: z.string(),
-  vendor_reply: z.string().nullable(),
-  helpful_count: z.number().int().min(0),
-  is_verified_purchase: z.boolean(),
-  created_at: z.string().datetime({ offset: true }),
-});
-
-export const CouponSchema = z.object({
-  id: IdSchema,
-  code: z.string(),
-  coupon_type: CouponTypeSchema,
-  discount_value: z.string(),
-  min_order_amount: z.string(),
-  max_uses: z.number().int().nullable(),
-  uses_count: z.number().int(),
-  valid_from: z.string().datetime({ offset: true }),
-  valid_until: z.string().datetime({ offset: true }).nullable(),
-  is_active: z.boolean(),
-});
+export const ProductFaqSchema = z
+  .object({
+    id: IdSchema,
+    question: z.string(),
+    answer: z.string(),
+  })
+  .passthrough();
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PRODUCT LIST ITEM (lightweight)
+// GALLERY MEDIA
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const ProductListItemSchema = z.object({
-  id: IdSchema,
-  slug: z.string(),
-  title: z.string(),
-  sku: z.string(),
-  cover_image_url: z.string().url().nullable(),
-  price: z.string(),
-  old_price: z.string().nullable(),
-  currency: z.string().default("NGN"),
-  average_rating: z.number().min(0).max(5),
-  review_count: z.number().int().min(0),
-  requires_measurement: z.boolean(),
-  status: ProductStatusSchema,
-  is_featured: z.boolean(),
-  vendor: ProductVendorSchema,
-  category: ProductCategorySchema,
-});
+export const ProductGalleryMediaSchema = z
+  .object({
+    id: IdSchema,
+    media_url: NullableUrlSchema,
+    thumbnail_url: NullableUrlSchema,
+    media_type: MediaTypeSchema,
+    alt_text: z.string().default(""),
+    ordering: z.number().int(),
+  })
+  .passthrough();
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PRODUCT DETAIL (full)
+// VARIANT
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const ProductDetailSchema = ProductListItemSchema.extend({
-  description: z.string(),
-  condition: ProductConditionSchema,
-  weight_kg: z.string().nullable(),
-  brand: ProductBrandSchema.nullable(),
-  tags: z.array(ProductTagSchema),
-  sizes: z.array(ProductSizeSchema),
-  colors: z.array(ProductColorSchema),
-  gallery: z.array(ProductGalleryMediaSchema),
-  variants: z.array(ProductVariantSchema),
-  specifications: z.array(z.object({ label: z.string(), value: z.string() })),
-  faqs: z.array(z.object({ question: z.string(), answer: z.string() })),
-  commission_rate: z.string(),
-  stock_count: z.number().int().min(0),
-  views_count: z.number().int().min(0),
-  published_at: z.string().datetime({ offset: true }).nullable(),
-  created_at: z.string().datetime({ offset: true }),
-  updated_at: z.string().datetime({ offset: true }),
-});
+export const ProductVariantSchema = z
+  .object({
+    id: IdSchema,
+    sku: z.string(),
+    size: ProductSizeSchema.nullable(),
+    color: ProductColorSchema.nullable(),
+    price_override: DecimalStrSchema.nullable(),
+    stock_qty: z.number().int().min(0),
+    is_active: z.boolean(),
+    image_url: NullableUrlSchema.optional(),
+  })
+  .passthrough();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// REVIEW
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const ProductReviewSchema = z
+  .object({
+    id: IdSchema,
+    reviewer_display: z.string(),
+    reviewer_avatar_url: NullableUrlSchema,
+    product_title: z.string().nullable().optional(),
+    rating: z.number().int().min(1).max(5),
+    review: z.string(),
+    reply: z.string().default(""),
+    helpful_votes: z.number().int().min(0),
+    active: z.boolean().default(true),
+    moderated: z.boolean().default(false),
+    created_at: IsoDateSchema,
+  })
+  .passthrough();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// COUPON
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const CouponSchema = z
+  .object({
+    id: IdSchema,
+    code: z.string(),
+    discount_type: CouponDiscountTypeSchema,
+    discount_value: DecimalStrSchema,
+    minimum_order: DecimalStrSchema,
+    maximum_discount: DecimalStrSchema.nullable().optional(),
+    usage_limit: z.number().int().nullable(),
+    usage_count: z.number().int(),
+    active: z.boolean(),
+    valid_from: IsoDateSchema,
+    valid_to: IsoDateSchema.nullable(),
+  })
+  .passthrough();
+
+export const CouponValidateResultSchema = z
+  .object({
+    coupon_id: IdSchema,
+    code: z.string(),
+    discount_type: CouponDiscountTypeSchema,
+    discount_amount: DecimalStrSchema,
+  })
+  .passthrough();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INVENTORY LOG
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const ProductInventoryLogSchema = z
+  .object({
+    id: IdSchema,
+    quantity_delta: z.number().int(),
+    quantity_before: z.number().int().min(0),
+    quantity_after: z.number().int().min(0),
+    reason: z.string(),
+    reference_id: z.string().default(""),
+    note: z.string().default(""),
+    actor_name: z.string().default("System"),
+    created_at: IsoDateSchema,
+  })
+  .passthrough();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PRODUCT LIST ITEM (catalog card — .only() projection from backend)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const ProductListItemSchema = z
+  .object({
+    id: IdSchema,
+    title: z.string(),
+    slug: z.string(),
+    sku: z.string(),
+    price: DecimalStrSchema,
+    old_price: DecimalStrSchema.nullable(),
+    discount_percentage: z.number().min(0).max(100).default(0),
+    currency: z.string().default("NGN"),
+    image_url: NullableUrlSchema,
+    in_stock: z.boolean(),
+    stock_qty: z.number().int().min(0),
+    featured: z.boolean().default(false),
+    hot_deal: z.boolean().default(false),
+    digital: z.boolean().default(false),
+    rating: z.number().min(0).max(5).default(0),
+    review_count: z.number().int().min(0).default(0),
+    computed_review_count: z.number().int().min(0).default(0),
+    computed_avg_rating: z.number().min(0).max(5).default(0),
+    category_name: z.string().nullable().optional(),
+    category_slug: z.string().nullable().optional(),
+    brand_name: z.string().nullable().optional(),
+    brand_slug: z.string().nullable().optional(),
+    vendor_name: z.string().nullable().optional(),
+    vendor_slug: z.string().nullable().optional(),
+    requires_measurement: z.boolean().default(false),
+    is_customisable: z.boolean().default(false),
+    sizes: z.array(ProductSizeSchema).default([]),
+    colors: z.array(ProductColorSchema).default([]),
+    created_at: IsoDateSchema,
+  })
+  .passthrough();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PRODUCT DETAIL (full — PDP)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const ProductDetailSchema = z
+  .object({
+    id: IdSchema,
+    title: z.string(),
+    slug: z.string(),
+    sku: z.string(),
+    description: z.string(),
+    short_description: z.string().default(""),
+    price: DecimalStrSchema,
+    old_price: DecimalStrSchema.nullable(),
+    discount_percentage: z.number().min(0).max(100).default(0),
+    currency: z.string().default("NGN"),
+    shipping_amount: DecimalStrSchema.default("0.00"),
+    image_url: NullableUrlSchema,
+    cover_image_url: NullableUrlSchema.optional(),
+    gallery: z.array(ProductGalleryMediaSchema).default([]),
+    in_stock: z.boolean(),
+    stock_qty: z.number().int().min(0),
+    max_stock: z.number().int().nullable().optional(),
+    views: z.number().int().min(0).default(0),
+    orders_count: z.number().int().min(0).default(0),
+    rating: z.number().min(0).max(5).default(0),
+    review_count: z.number().int().min(0).default(0),
+    computed_review_count: z.number().int().min(0).default(0),
+    computed_avg_rating: z.number().min(0).max(5).default(0),
+    featured: z.boolean().default(false),
+    hot_deal: z.boolean().default(false),
+    digital: z.boolean().default(false),
+    requires_measurement: z.boolean().default(false),
+    is_customisable: z.boolean().default(false),
+    sizes: z.array(ProductSizeSchema).default([]),
+    colors: z.array(ProductColorSchema).default([]),
+    tags: z.array(ProductTagSchema).default([]),
+    specifications: z.array(ProductSpecificationSchema).default([]),
+    faqs: z.array(ProductFaqSchema).default([]),
+    variants: z.array(ProductVariantSchema).default([]),
+    status: ProductStatusSchema,
+    category_name: z.string().nullable().optional(),
+    category_slug: z.string().nullable().optional(),
+    sub_category_name: z.string().nullable().optional(),
+    brand_name: z.string().nullable().optional(),
+    brand_slug: z.string().nullable().optional(),
+    vendor_id: IdSchema.nullable().optional(),
+    vendor_name: z.string().nullable().optional(),
+    vendor_slug: z.string().nullable().optional(),
+    vendor_is_verified: z.boolean().default(false),
+    commission_rate: DecimalStrSchema.default("0.00"),
+    created_at: IsoDateSchema,
+    updated_at: IsoDateSchema,
+  })
+  .passthrough();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BUNDLE (single-roundtrip PDP response)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const ProductDetailBundleSchema = z
+  .object({
+    product: ProductDetailSchema.nullable(),
+    reviews: z.array(ProductReviewSchema).default([]),
+    in_wishlist: z.boolean().default(false),
+    review_count: z.number().int().min(0).default(0),
+    avg_rating: z.number().min(0).max(5).default(0),
+  })
+  .passthrough();
 
 // ─────────────────────────────────────────────────────────────────────────────
 // WISHLIST
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const WishlistItemSchema = z.object({
-  id: IdSchema,
-  product: ProductListItemSchema,
-  created_at: z.string().datetime({ offset: true }),
-});
+export const WishlistItemSchema = z
+  .object({
+    id: IdSchema,
+    product: ProductListItemSchema,
+    created_at: IsoDateSchema,
+  })
+  .passthrough();
+
+export const WishlistToggleResultSchema = z
+  .object({
+    added: z.boolean(),
+    message: z.string().default(""),
+  })
+  .passthrough();
+
+export const WishlistBulkStatusSchema = z
+  .object({
+    statuses: z.record(z.string(), z.boolean()),
+  })
+  .passthrough();
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PAGINATED ENVELOPES
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const PaginatedProductListSchema = z.object({
-  count: z.number().int().min(0),
-  next: z.string().url().nullable(),
-  previous: z.string().url().nullable(),
-  results: z.array(ProductListItemSchema),
+function paginatedSchema<T>(itemSchema: z.ZodType<T>) {
+  return z.object({
+    count: z.number().int().min(0),
+    next: z.string().nullable(),
+    previous: z.string().nullable(),
+    results: z.array(itemSchema),
+  });
+}
+
+export const PaginatedProductListSchema = paginatedSchema(ProductListItemSchema);
+export const PaginatedReviewsSchema = paginatedSchema(ProductReviewSchema);
+export const PaginatedInventoryLogsSchema = paginatedSchema(ProductInventoryLogSchema);
+export const PaginatedWishlistSchema = paginatedSchema(WishlistItemSchema);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FORM VALIDATION SCHEMAS (client-side forms)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const CreateReviewFormSchema = z.object({
+  rating: z.number().int().min(1, "Please give a rating").max(5),
+  review: z
+    .string()
+    .min(10, "Review must be at least 10 characters")
+    .max(2000, "Review is too long"),
+  idempotency_key: z.string().uuid().optional(),
 });
 
-export const PaginatedReviewsSchema = z.object({
-  count: z.number().int().min(0),
-  next: z.string().url().nullable(),
-  previous: z.string().url().nullable(),
-  results: z.array(ProductReviewSchema),
+export const InventoryAdjustFormSchema = z.object({
+  quantity_delta: z
+    .number()
+    .int()
+    .refine((n) => n !== 0, "Delta cannot be zero"),
+  reason: z.string().min(2),
+  reference_id: z.string().optional(),
+  note: z.string().max(500).optional(),
 });
 
-export const ToggleWishlistResponseSchema = z.object({
-  added: z.boolean(),
-  wishlisted: z.boolean(),
+export const CouponValidateFormSchema = z.object({
+  code: z.string().min(3, "Enter a valid coupon code").toUpperCase(),
+  order_subtotal: z.number().positive("Order total must be positive"),
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PARSE HELPER — fails loudly in dev, logs + falls back in prod
+// PARSE HELPER — throws in dev, logs in prod
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Parse a backend response through a Zod schema.
- * Throws in development; logs error and returns `undefined` in production.
+ * Parse a backend API response through a Zod schema.
+ * Development: throws with full error details for fast feedback.
+ * Production: logs error and returns raw data cast to avoid blank screens.
  */
 export function parseApiResponse<T>(
   schema: z.ZodType<T>,
@@ -205,8 +423,8 @@ export function parseApiResponse<T>(
       console.error(msg, result.error.flatten(), data);
       throw new Error(msg);
     }
-    console.error(msg);
-    // In production, attempt to return raw data cast — hooks handle undefined
+    console.warn(msg);
+    // Return raw data in production to prevent blank screens
     return data as T;
   }
   return result.data;

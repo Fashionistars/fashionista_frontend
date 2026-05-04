@@ -1,4 +1,10 @@
 export { catalogApi } from "./api/catalog.api";
+export { productCatalogApi } from "./api/product-catalog.api";
+export type {
+  CatalogProductCard,
+  PaginatedProductsResponse,
+  ViewLogPayload,
+} from "./api/product-catalog.api";
 export {
   getCatalogBlogPostBySlug,
   getCatalogBlogPosts,
@@ -15,5 +21,10 @@ export {
   useCatalogCategories,
   useCatalogCollections,
 } from "./hooks/use-catalog";
+export {
+  useCatalogProducts,
+  useFeaturedProducts,
+  useProductSearchSuggest,
+} from "./hooks/use-catalog-products";
 export * from "./schemas/catalog.schemas";
 export * from "./types/catalog.types";

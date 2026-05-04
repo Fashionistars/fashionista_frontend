@@ -13,11 +13,12 @@
  *  - Accordion: Description, Specs, FAQs
  *  - Review list via useProductReviews
  *  - Measurement gate warning if requires_measurement
+ *  - Fire-and-forget view-log analytics (POST /products/{slug}/view-log/)
  */
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Heart,
   ShoppingBag,
@@ -33,6 +34,7 @@ import {
 } from "lucide-react";
 import { useProductDetail, useProductReviews, useToggleWishlist } from "@/features/product";
 import { useAddCartItem } from "@/features/cart/hooks/use-cart";
+import { productCatalogApi } from "@/features/catalog";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { ProductDetailSkeleton } from "./ProductDetailSkeleton";
 
@@ -77,7 +79,31 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
 
-  if (isLoading) return <ProductDetailSkeleton />;
+  // ── Fire-and-forget view-log analytics ─────────────────────────────────
+  // Fires once per slug, never blocks render, never throws to the user.
+  // Guarded by a ref to prevent double-fires in React Strict Mode.
+  const viewLogged = useRef(false);
+  useEffect(() => {
+    if (viewLogged.current || !slug) return;
+    viewLogged.current = true;
+
+    const ua = navigator.userAgent.toLowerCase();
+    const device_type = /tablet|ipad|playbook|silk/i.test(ua)
+      ? "tablet"
+      : /mobi|android|iphone|ipod|windows phone/i.test(ua)
+      ? "mobile"
+      : "desktop";
+
+    void productCatalogApi.logProductView(slug, {
+      device_type,
+      referrer: typeof document !== "undefined" ? document.referrer || undefined : undefined,
+      session_key:
+        typeof sessionStorage !== "undefined"
+          ? (sessionStorage.getItem("fashionistar_session") ?? undefined)
+          : undefined,
+    });
+  }, [slug]);
+  // ───────────────────────────────────────────────────────────────────────
 
   if (isError || !product) {
     return (
