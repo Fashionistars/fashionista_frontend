@@ -1,5 +1,5 @@
-import { ClientWalletView } from "@/features/client";
+import { WalletOverviewView } from "@/features/wallet";
 
 export default function ClientWalletPage() {
-  return <ClientWalletView />;
+  return <WalletOverviewView title="Client Wallet" />;
 }

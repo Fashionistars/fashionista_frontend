@@ -1,5 +1,5 @@
-import { VendorPaymentsView } from "@/features/vendor";
+import { PaymentOverviewView } from "@/features/payment";
 
 export default function VendorPaymentsPage() {
-  return <VendorPaymentsView />;
+  return <PaymentOverviewView title="Vendor Payments" />;
 }

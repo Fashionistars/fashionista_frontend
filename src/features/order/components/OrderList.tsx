@@ -17,9 +17,10 @@ import type { OrderListItem, OrderStatus } from "../types/order.types";
 
 const STATUS_TABS: { label: string; value: string }[] = [
   { label: "All", value: "" },
-  { label: "Pending", value: "pending" },
-  { label: "In Production", value: "in_production" },
+  { label: "Pending", value: "pending_payment" },
+  { label: "Processing", value: "processing" },
   { label: "Delivered", value: "delivered" },
+  { label: "Completed", value: "completed" },
   { label: "Returned", value: "refunded" },
 ];
 

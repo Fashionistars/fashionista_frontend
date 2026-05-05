@@ -22,22 +22,26 @@ const PAYMENT_STATUS_STYLES: Record<string, string> = {
 };
 
 const ORDER_STATUS_STYLES: Record<string, string> = {
-  pending: "text-yellow-600",
-  confirmed: "text-blue-600",
-  in_production: "text-indigo-600",
+  pending_payment: "text-yellow-600",
+  payment_confirmed: "text-blue-600",
+  processing: "text-indigo-600",
   shipped: "text-purple-600",
+  out_for_delivery: "text-purple-600",
   delivered: "text-emerald-600",
+  completed: "text-emerald-700",
   cancelled: "text-red-500",
+  refund_requested: "text-orange-600",
   refunded: "text-slate-500",
   disputed: "text-orange-600",
 };
 
 const ORDER_STATUS_TABS: { label: string; value: string }[] = [
   { label: "All", value: "" },
-  { label: "Pending", value: "pending" },
-  { label: "In Production", value: "in_production" },
+  { label: "Pending", value: "pending_payment" },
+  { label: "Processing", value: "processing" },
   { label: "Shipped", value: "shipped" },
   { label: "Delivered", value: "delivered" },
+  { label: "Completed", value: "completed" },
   { label: "Returned", value: "refunded" },
 ];
 

@@ -5,37 +5,49 @@
 import { z } from "zod";
 
 const OrderStatusSchema = z.enum([
-  "pending", "confirmed", "in_production",
-  "shipped", "delivered", "cancelled", "refunded", "disputed",
+  "pending_payment",
+  "payment_confirmed",
+  "processing",
+  "shipped",
+  "out_for_delivery",
+  "delivered",
+  "completed",
+  "cancelled",
+  "refund_requested",
+  "refunded",
+  "disputed",
 ]);
 const EscrowStatusSchema = z.enum(["held", "released", "refunded", "disputed"]);
 const PaymentStatusSchema = z.enum(["unpaid", "paid", "failed", "refunded"]);
 
 export const OrderItemSnapshotSchema = z.object({
-  id: z.string().uuid(),
-  product_id: z.string().uuid(),
+  id: z.union([z.string(), z.number()]).transform(String),
+  product_id: z.union([z.string(), z.number()]).optional().transform((value) => String(value ?? "")),
   product_title: z.string(),
-  product_sku: z.string(),
-  product_cover_image_url: z.string().url().nullable(),
-  vendor_id: z.string().uuid(),
-  vendor_name: z.string(),
-  variant_id: z.string().uuid().nullable(),
-  size_label: z.string().nullable(),
-  color_label: z.string().nullable(),
+  product_sku: z.string().optional().default(""),
+  product_cover_image_url: z.string().nullable().optional().default(null),
+  vendor_id: z.union([z.string(), z.number()]).optional().transform((value) => String(value ?? "")),
+  vendor_name: z.string().optional().default(""),
+  variant_id: z.union([z.string(), z.number()]).nullable().optional().transform((value) => value === null || value === undefined ? null : String(value)),
+  size_label: z.string().nullable().optional().default(null),
+  color_label: z.string().nullable().optional().default(null),
   quantity: z.number().int().min(1),
   unit_price: z.string(),
   line_total: z.string(),
-  commission_rate: z.string(),
-  currency_code: z.string(),
-  requires_measurement: z.boolean(),
+  commission_rate: z.string().optional().default("0.00"),
+  currency_code: z.string().optional().default("NGN"),
+  requires_measurement: z.boolean().optional().default(false),
 });
 
 export const OrderStatusHistorySchema = z.object({
-  id: z.string().uuid(),
-  status: OrderStatusSchema,
-  notes: z.string(),
-  actor_name: z.string().nullable(),
-  created_at: z.string().datetime({ offset: true }),
+  id: z.union([z.string(), z.number()]).transform(String),
+  status: OrderStatusSchema.optional(),
+  from_status: z.string().nullable().optional(),
+  to_status: z.string().nullable().optional(),
+  note: z.string().optional().default(""),
+  notes: z.string().optional().default(""),
+  actor_name: z.string().nullable().optional().default(null),
+  created_at: z.string(),
 });
 
 export const OrderDeliveryTrackingSchema = z.object({
@@ -58,7 +70,7 @@ export const OrderRefundRequestSchema = z.object({
 });
 
 export const OrderListItemSchema = z.object({
-  id: z.string().uuid(),
+  id: z.union([z.string(), z.number()]).transform(String),
   order_number: z.string(),
   status: OrderStatusSchema,
   payment_status: PaymentStatusSchema,
@@ -68,24 +80,24 @@ export const OrderListItemSchema = z.object({
   final_total: z.string(),
   currency: z.string(),
   requires_measurement: z.boolean(),
-  created_at: z.string().datetime({ offset: true }),
+  created_at: z.string(),
 });
 
 export const OrderDetailSchema = OrderListItemSchema.extend({
-  buyer_name: z.string(),
-  buyer_email: z.string().email(),
-  buyer_phone: z.string().nullable(),
-  buyer_address: z.record(z.unknown()),
+  buyer_name: z.string().optional().default(""),
+  buyer_email: z.string().optional().default(""),
+  buyer_phone: z.string().nullable().optional().default(null),
+  buyer_address: z.record(z.unknown()).optional().default({}),
   items: z.array(OrderItemSnapshotSchema),
   status_history: z.array(OrderStatusHistorySchema),
-  delivery_tracking: OrderDeliveryTrackingSchema.nullable(),
-  refund_request: OrderRefundRequestSchema.nullable(),
-  notes: z.string(),
-  idempotency_key: z.string(),
-  paid_at: z.string().datetime({ offset: true }).nullable(),
-  delivered_at: z.string().datetime({ offset: true }).nullable(),
-  cancelled_at: z.string().datetime({ offset: true }).nullable(),
-  updated_at: z.string().datetime({ offset: true }),
+  delivery_tracking: OrderDeliveryTrackingSchema.nullable().optional().default(null),
+  refund_request: OrderRefundRequestSchema.nullable().optional().default(null),
+  notes: z.string().optional().default(""),
+  idempotency_key: z.string().optional().default(""),
+  paid_at: z.string().nullable().optional().default(null),
+  delivered_at: z.string().nullable().optional().default(null),
+  cancelled_at: z.string().nullable().optional().default(null),
+  updated_at: z.string(),
 });
 
 export const PaginatedOrderListSchema = z.object({

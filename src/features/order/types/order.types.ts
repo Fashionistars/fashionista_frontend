@@ -9,12 +9,15 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type OrderStatus =
-  | "pending"
-  | "confirmed"
-  | "in_production"
+  | "pending_payment"
+  | "payment_confirmed"
+  | "processing"
   | "shipped"
+  | "out_for_delivery"
   | "delivered"
+  | "completed"
   | "cancelled"
+  | "refund_requested"
   | "refunded"
   | "disputed";
 
@@ -52,7 +55,10 @@ export interface OrderItemSnapshot {
 
 export interface OrderStatusHistory {
   id: string;
-  status: OrderStatus;
+  status?: OrderStatus;
+  from_status?: string | null;
+  to_status?: string | null;
+  note?: string;
   notes: string;
   actor_name: string | null;         // SET_NULL on user delete
   created_at: string;
@@ -144,7 +150,7 @@ export interface CancelOrderInput {
 }
 
 export interface VendorProductionStatusInput {
-  status: "confirmed" | "in_production" | "shipped";
+  status: "payment_confirmed" | "processing" | "shipped";
   notes?: string;
 }
 

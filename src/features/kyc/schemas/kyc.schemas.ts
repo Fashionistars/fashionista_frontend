@@ -1,0 +1,29 @@
+/**
+ * @file kyc.schemas.ts
+ * @description Zod schemas for KYC payloads.
+ */
+import { z } from "zod";
+
+export const KycSubmissionSchema = z.object({
+  id: z.string(),
+  status: z.enum(["pending", "in_review", "approved", "rejected", "resubmit"]),
+  provider_reference: z.string().optional().default(""),
+  review_notes: z.string().optional().default(""),
+  submitted_at: z.string().optional().default(""),
+  reviewed_at: z.string().nullable().optional().default(null),
+  updated_at: z.string().optional().default(""),
+});
+
+export function parseKycResponse<T>(schema: z.ZodType<T>, data: unknown, ctx: string): T {
+  const result = schema.safeParse(data);
+  if (!result.success) {
+    const message = `[Zod/KYC] Schema mismatch in ${ctx}: ${result.error.message}`;
+    if (process.env.NODE_ENV === "development") {
+      console.error(message, result.error.flatten(), data);
+      throw new Error(message);
+    }
+    console.error(message);
+    return data as T;
+  }
+  return result.data;
+}

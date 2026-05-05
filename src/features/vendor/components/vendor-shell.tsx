@@ -6,11 +6,13 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   BarChart3,
+  ClipboardCheck,
   CreditCard,
   LayoutDashboard,
   LogOut,
   Menu,
   Package,
+  ReceiptText,
   Settings,
   Store,
   Tag,
@@ -30,8 +32,10 @@ const vendorNavItems = [
   { href: "/vendor/products/catelog", label: "Catalog", Icon: Package },
   { href: "/vendor/analytics", label: "Analytics", Icon: BarChart3 },
   { href: "/vendor/payments", label: "Payments", Icon: CreditCard },
+  { href: "/vendor/transactions", label: "Transactions", Icon: ReceiptText },
   { href: "/vendor/customers", label: "Customers", Icon: Users },
   { href: "/vendor/wallet", label: "Wallet", Icon: Wallet },
+  { href: "/vendor/kyc", label: "KYC", Icon: ClipboardCheck },
   { href: "/vendor/coupons", label: "Coupons", Icon: Tag },
   { href: "/vendor/settings", label: "Settings", Icon: Settings },
 ];

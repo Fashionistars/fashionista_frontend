@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
+  ClipboardCheck,
+  CreditCard,
   Heart,
   LayoutDashboard,
   LogOut,
@@ -12,6 +14,7 @@ import {
   Menu,
   Package,
   PackageSearch,
+  ReceiptText,
   Settings,
   UserRound,
   Wallet,
@@ -33,6 +36,13 @@ const clientNavItems = [
   { href: "/client/dashboard/address", label: "Address", Icon: MapPin },
   { href: "/client/dashboard/wishlist", label: "Wishlist", Icon: Heart },
   { href: "/client/dashboard/wallet", label: "Wallet", Icon: Wallet },
+  { href: "/client/dashboard/payments", label: "Payments", Icon: CreditCard },
+  {
+    href: "/client/dashboard/transactions",
+    label: "Transactions",
+    Icon: ReceiptText,
+  },
+  { href: "/client/dashboard/kyc", label: "KYC", Icon: ClipboardCheck },
   {
     href: "/client/dashboard/account-details",
     label: "Account Details",
