@@ -1,4 +1,4 @@
-/**
+    /**
  * @file select.tsx
  * @description Fashionistar Select primitive — Shadcn-compatible API.
  * A controlled native <select> wrapper with our glassmorphism design system.
