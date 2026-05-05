@@ -15,7 +15,7 @@ export default function CollectionProductsClient({
 }: CollectionProductsClientProps) {
   return (
     <ProductGrid
-      params={{ search: collectionSlug, page: 1 }}
+      params={{ q: collectionSlug, page: 1 }}
       skeletonCount={8}
     />
   );

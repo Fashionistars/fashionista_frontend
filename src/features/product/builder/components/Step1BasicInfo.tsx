@@ -11,7 +11,7 @@
  * Tags use a combobox multi-select with search debounce.
  */
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { ProductBuilderFormValues } from "../schemas/builder.schemas";
 
@@ -34,7 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { X, Loader2 } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────────────────────

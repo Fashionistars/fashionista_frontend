@@ -13,7 +13,7 @@
  * or above the form (mobile) so the vendor can review before confirming.
  */
 
-import React from "react";
+
 import { useFormContext } from "react-hook-form";
 import type { ProductBuilderFormValues } from "../schemas/builder.schemas";
 import {
@@ -113,7 +113,6 @@ function Flag({ icon, label, color }: { icon: string; label: string; color: stri
 
 export function Step8Publish() {
   const form = useFormContext<ProductBuilderFormValues>();
-  const { isSubmitting } = useBuilderContext();
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">

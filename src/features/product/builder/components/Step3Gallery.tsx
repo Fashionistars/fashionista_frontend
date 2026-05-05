@@ -19,23 +19,20 @@
  *  - Graceful fallback for non-Cloudinary environments
  */
 
-import React, { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { ProductBuilderFormValues, GalleryItem } from "../schemas/builder.schemas";
 import {
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { FashionistarImage, FashionistarVideo } from "@/components/ui/media";
 import { cn } from "@/lib/utils";
 import {
   ImagePlus,
-  Video,
   Trash2,
   Star,
   GripVertical,
@@ -322,15 +319,23 @@ export function Step3Gallery() {
                 >
                   {/* Thumbnail */}
                   {item.media_type === "video" ? (
-                    <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
-                      <Video className="w-8 h-8 text-white/40" />
-                    </div>
+                    <FashionistarVideo
+                      src={item.secure_url}
+                      publicId={item.public_id}
+                      ariaLabel={item.alt_text ?? "Product gallery video"}
+                      showControls={false}
+                      muted
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <FashionistarImage
+                      publicId={item.public_id}
                       src={item.secure_url}
                       alt={item.alt_text ?? "Gallery item"}
-                      className="w-full h-full object-cover"
+                      transformation="thumbnail"
+                      aspectRatio="1"
+                      className="w-full h-full rounded-none"
+                      imgClassName="w-full h-full object-cover"
                     />
                   )}
 

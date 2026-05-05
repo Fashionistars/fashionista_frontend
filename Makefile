@@ -9,7 +9,7 @@ include .env.local
 export
 endif
 
-.PHONY: help install dev build start clean lint test docker-build docker-up docker-down tunnel tunnel-frontend tunnel-url tunel-lt-fixed tunnel-ssh tunnel-ngrok
+.PHONY: help install dev dev-stable build start clean lint test docker-build docker-up docker-down tunnel tunnel-frontend tunnel-url tunel-lt-fixed tunnel-ssh tunnel-ngrok tunnel-ngrok-fe
 .DEFAULT_GOAL := help
 
 # ─── Colors ───
@@ -19,6 +19,13 @@ YELLOW  := \033[0;33m
 RED     := \033[0;31m
 BOLD    := \033[1m
 NC      := \033[0m
+
+PNPM ?= pnpm.cmd
+NGROK ?= $(PNPM) dlx --package ngrok@4 ngrok
+NEXT_DEV_HOST ?= 0.0.0.0
+NEXT_DEV_PORT ?= 3000
+NEXT_DEV_MEMORY_MB ?= 3072
+NEXT_DEV_ENV = NODE_OPTIONS=--max-old-space-size=$(NEXT_DEV_MEMORY_MB)
 
 ##@ Help
 
@@ -41,9 +48,13 @@ install: ## Install Node.js dependencies with pnpm
 
 dev: ## Start Next.js development server (Turbopack — port 3000)
 	@echo "$(CYAN)Starting Next.js dev server with Turbopack...$(NC)"
-	@echo "$(YELLOW)  Node memory: 4096MB (via .npmrc node-options)$(NC)"
-	@echo "$(YELLOW)  URL: http://localhost:3000$(NC)"
-	pnpm exec next dev --turbo
+	@echo "$(YELLOW)  Node memory: $(NEXT_DEV_MEMORY_MB)MB$(NC)"
+	@echo "$(YELLOW)  URL: http://localhost:$(NEXT_DEV_PORT)$(NC)"
+	$(NEXT_DEV_ENV) $(PNPM) exec next dev --turbo --hostname $(NEXT_DEV_HOST) --port $(NEXT_DEV_PORT)
+
+dev-stable: ## Start Next.js dev server without Turbopack (fallback for live QA)
+	@echo "$(CYAN)Starting Next.js dev server without Turbopack...$(NC)"
+	$(NEXT_DEV_ENV) $(PNPM) exec next dev --hostname $(NEXT_DEV_HOST) --port $(NEXT_DEV_PORT)
 
 build: ## Build production bundle
 	@echo "$(CYAN)Building for production...$(NC)"
@@ -292,11 +303,12 @@ tunnel-ngrok: ## 🌐 ngrok (global token, use only when backend ngrok is stoppe
 	@echo "$(YELLOW)⚠ WARNING: Free ngrok only supports 1 tunnel at a time.$(NC)"
 	@echo "$(YELLOW)  Stop backend ngrok first, or use 'make tunnel' instead.$(NC)"
 	@echo ""
-	ngrok http 3000
+	$(NGROK) http 3000
 
 tunnel-ngrok-fe: ## 🌐 Dedicated frontend ngrok tunnel via ngrok-frontend.yml
 	@echo "$(CYAN)Starting dedicated frontend ngrok tunnel on port 3000...$(NC)"
 	@echo "$(YELLOW)Using project-local ngrok via pnpm dlx and the token from .env.local$(NC)"
+	@test -n "$(NGROK_FRONTEND_TOKEN)" || (echo "$(RED)NGROK_FRONTEND_TOKEN is missing from .env.local$(NC)" && exit 1)
 	$(NGROK) config check --config ngrok-frontend.yml
 	$(NGROK) start fashionista-frontend --config ngrok-frontend.yml --authtoken "$(NGROK_FRONTEND_TOKEN)"
 

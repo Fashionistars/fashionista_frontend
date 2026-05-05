@@ -192,7 +192,7 @@ export default function CatalogPageClient({
         params={{
           category,
           brand,
-          search,
+          q: search,
           ordering,
         }}
         skeletonCount={12}

@@ -97,49 +97,57 @@ export type Step1Values = z.infer<typeof Step1Schema>;
 // STEP 2 — PRICING & STOCK
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const Step2Schema = z
-  .object({
-    /** Selling price in the selected currency. */
-    price: MoneySchema,
+/**
+ * Step2BaseSchema — the raw object without superRefine, used for .merge()
+ * in the composite ProductBuilderFormSchema (ZodEffects is incompatible with .merge()).
+ */
+export const Step2BaseSchema = z.object({
+  /** Selling price in the selected currency. */
+  price: MoneySchema,
 
-    /** Strike-through price (before discount). Must be > price when provided. */
-    old_price: OptionalMoneySchema,
+  /** Strike-through price (before discount). Must be > price when provided. */
+  old_price: OptionalMoneySchema,
 
-    /** ISO-4217 currency code. Platform default: NGN. */
-    currency: z.string().length(3, "Currency must be a 3-letter ISO code").default("NGN"),
+  /** ISO-4217 currency code. Platform default: NGN. */
+  currency: z.string().length(3, "Currency must be a 3-letter ISO code").default("NGN"),
 
-    /** Physical stock quantity. */
-    stock_qty: QtySchema.min(1, "Stock must be at least 1 unit"),
+  /** Physical stock quantity. */
+  stock_qty: QtySchema.min(1, "Stock must be at least 1 unit"),
 
-    /**
-     * Whether this product requires a body measurement before ordering.
-     * True = tailored/made-to-measure item.
-     */
-    requires_measurement: z.boolean().default(false),
+  /**
+   * Whether this product requires a body measurement before ordering.
+   * True = tailored/made-to-measure item.
+   */
+  requires_measurement: z.boolean().default(false),
 
-    /** True if the customer can send customisation notes. */
-    is_customisable: z.boolean().default(false),
+  /** True if the customer can send customisation notes. */
+  is_customisable: z.boolean().default(false),
 
-    /** Flat shipping amount added to cart total. */
-    shipping_amount: OptionalMoneySchema,
+  /** Flat shipping amount added to cart total. */
+  shipping_amount: OptionalMoneySchema,
 
-    /** Delivery courier UUID — optional; platform default used when absent. */
-    courier_id: FKIdSchema,
-  })
-  .superRefine((data, ctx) => {
-    // old_price must be strictly greater than selling price when provided
-    if (data.old_price && data.old_price !== "") {
-      const oldP = parseFloat(data.old_price);
-      const current = parseFloat(data.price);
-      if (!isNaN(oldP) && !isNaN(current) && oldP <= current) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["old_price"],
-          message: "Original price must be higher than the current price",
-        });
-      }
+  /** Delivery courier UUID — optional; platform default used when absent. */
+  courier_id: FKIdSchema,
+});
+
+/**
+ * Step2Schema — for standalone step-level validation (includes old_price cross-check).
+ * NOT used in .merge() — use Step2BaseSchema there instead.
+ */
+export const Step2Schema = Step2BaseSchema.superRefine((data, ctx) => {
+  // old_price must be strictly greater than selling price when provided
+  if (data.old_price && data.old_price !== "") {
+    const oldP = parseFloat(data.old_price);
+    const current = parseFloat(data.price);
+    if (!isNaN(oldP) && !isNaN(current) && oldP <= current) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["old_price"],
+        message: "Original price must be higher than the current price",
+      });
     }
-  });
+  }
+});
 
 export type Step2Values = z.infer<typeof Step2Schema>;
 
@@ -358,7 +366,7 @@ export type Step8Values = z.infer<typeof Step8Schema>;
  *  - cover_image_public_id is required when publish_intent === "pending"
  *  - stock_qty sum from variants must not exceed product-level stock
  */
-export const ProductBuilderFormSchema = Step1Schema.merge(Step2Schema)
+export const ProductBuilderFormSchema = Step1Schema.merge(Step2BaseSchema)
   .merge(Step3Schema)
   .merge(Step4Schema)
   .merge(Step5Schema)
@@ -366,6 +374,19 @@ export const ProductBuilderFormSchema = Step1Schema.merge(Step2Schema)
   .merge(Step7Schema)
   .merge(Step8Schema)
   .superRefine((data, ctx) => {
+    // old_price must be strictly greater than selling price when provided
+    if (data.old_price && data.old_price !== "") {
+      const oldP = parseFloat(data.old_price as string);
+      const current = parseFloat(data.price);
+      if (!isNaN(oldP) && !isNaN(current) && oldP <= current) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["old_price"],
+          message: "Original price must be higher than the current price",
+        });
+      }
+    }
+
     // Require cover image when submitting for review
     if (data.publish_intent === "pending" && !data.cover_image_public_id) {
       ctx.addIssue({
@@ -376,9 +397,10 @@ export const ProductBuilderFormSchema = Step1Schema.merge(Step2Schema)
     }
 
     // Variant stock sum validation
-    if (data.variants && data.variants.length > 0) {
-      const variantTotal = data.variants.reduce((sum, v) => sum + (v.stock_qty ?? 0), 0);
-      if (variantTotal > data.stock_qty) {
+    const variants = data.variants as Array<{ stock_qty?: number }> | undefined;
+    if (variants && variants.length > 0) {
+      const variantTotal = variants.reduce((sum: number, v) => sum + (v.stock_qty ?? 0), 0);
+      if (variantTotal > (data.stock_qty as number)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["stock_qty"],
@@ -413,7 +435,7 @@ export const BUILDER_STEPS: StepMeta[] = [
   { step: 5, label: "Variants",         icon: "Layers",       description: "Define SKU-level price and stock per variation" },
   { step: 6, label: "Specifications",   icon: "ListChecks",   description: "Add material, care, and technical specs" },
   { step: 7, label: "FAQs",             icon: "HelpCircle",   description: "Add frequently asked questions" },
-  { step: 8, label: "Publish",          icon: "SendHorizontal","description: \"Configure visibility and SEO, then publish" },
+  { step: 8, label: "Publish",          icon: "SendHorizontal", description: "Configure visibility and SEO, then publish" },
 ] as const;
 
 /** Total number of builder steps — used for progress calculation. */

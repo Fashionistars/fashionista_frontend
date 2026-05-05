@@ -14,11 +14,16 @@ import { unstable_cache } from "next/cache";
 
 const BACKEND_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000";
+const NINJA_URL =
+  process.env.NEXT_PUBLIC_API_NINJA_URL ||
+  process.env.NEXT_PUBLIC_API_V1_NINJA_URL ||
+  `${BACKEND_URL}/api/v1/ninja`;
 
 // ── Shared fetch helper ───────────────────────────────────────────────────────
-async function fetchFromBackend<T>(path: string, fallback: T): Promise<T> {
+async function fetchFromNinja<T>(path: string, fallback: T): Promise<T> {
   try {
-    const res = await fetch(`${BACKEND_URL}/api${path}`, {
+    const base = NINJA_URL.endsWith("/") ? NINJA_URL : `${NINJA_URL}/`;
+    const res = await fetch(new URL(path.replace(/^\//, ""), base), {
       headers: {
         "Content-Type": "application/json",
         "ngrok-skip-browser-warning": "true",
@@ -27,7 +32,8 @@ async function fetchFromBackend<T>(path: string, fallback: T): Promise<T> {
     });
 
     if (!res.ok) return fallback;
-    return res.json() as Promise<T>;
+    const json = await res.json();
+    return (json?.data ?? json) as T;
   } catch {
     return fallback;
   }
@@ -36,7 +42,9 @@ async function fetchFromBackend<T>(path: string, fallback: T): Promise<T> {
 // ── Products ─────────────────────────────────────────────────────────────────
 export const getCachedProducts = unstable_cache(
   async (category: string = "all", page: number = 1) => {
-    return fetchFromBackend(`/v1/products/?category=${category}&page=${page}`, {
+    const params = new URLSearchParams({ page: String(page) });
+    if (category !== "all") params.set("category", category);
+    return fetchFromNinja(`products/?${params.toString()}`, {
       results: [],
       count: 0,
     });
@@ -51,8 +59,8 @@ export const getCachedProducts = unstable_cache(
 // ── Single Product ────────────────────────────────────────────────────────────
 export const getCachedProduct = unstable_cache(
   async (slug: string) => {
-    return fetchFromBackend<Record<string, unknown> | null>(
-      `/v1/products/${slug}/`,
+    return fetchFromNinja<Record<string, unknown> | null>(
+      `products/${slug}/`,
       null,
     );
   },
@@ -66,7 +74,7 @@ export const getCachedProduct = unstable_cache(
 // ── Categories ────────────────────────────────────────────────────────────────
 export const getCachedCategories = unstable_cache(
   async () => {
-    return fetchFromBackend<unknown[]>("/v1/categories/", []);
+    return fetchFromNinja<unknown[]>("catalog/categories/", []);
   },
   ["categories"],
   {
@@ -78,7 +86,7 @@ export const getCachedCategories = unstable_cache(
 // ── Collections ───────────────────────────────────────────────────────────────
 export const getCachedCollections = unstable_cache(
   async () => {
-    return fetchFromBackend<unknown[]>("/v1/collections/", []);
+    return fetchFromNinja<unknown[]>("catalog/collections/", []);
   },
   ["collections"],
   {

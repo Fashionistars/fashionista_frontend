@@ -15,7 +15,7 @@ interface VendorStoreClientProps {
  */
 export default function VendorStoreClient({ vendorSlug }: VendorStoreClientProps) {
   const { data, isLoading, isError } = useProducts({
-    search: vendorSlug.replace(/-/g, " "),
+    vendor: vendorSlug,
   });
 
   // useProducts returns PaginatedProductList | undefined — extract results array

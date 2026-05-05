@@ -2,6 +2,14 @@
  * @file ReviewCard.tsx
  * @description Product review card component.
  * Updated to use canonical ProductReview type from product.types.ts.
+ *
+ * Canonical field mapping:
+ *  reviewer_name  → reviewer_display
+ *  reviewer_avatar → reviewer_avatar_url
+ *  comment        → review
+ *  helpful_count  → helpful_votes
+ *  vendor_reply   → reply
+ *  is_verified_purchase → removed (not in backend schema)
  */
 import Image from "next/image";
 import type { ProductReview } from "../types/product.types";
@@ -31,10 +39,10 @@ const ReviewCard = ({ review, showReply = false }: ReviewCardProps) => {
     <article className="flex flex-col gap-3">
       {/* Reviewer info + rating */}
       <div className="flex items-center gap-3 md:gap-4">
-        {review.reviewer_avatar ? (
+        {review.reviewer_avatar_url ? (
           <Image
-            src={review.reviewer_avatar}
-            alt={`${review.reviewer_name}'s avatar`}
+            src={review.reviewer_avatar_url}
+            alt={`${review.reviewer_display}'s avatar`}
             width={49}
             height={49}
             className="w-9 h-9 md:w-[49px] md:h-[49px] rounded-full object-cover flex-shrink-0"
@@ -42,21 +50,16 @@ const ReviewCard = ({ review, showReply = false }: ReviewCardProps) => {
         ) : (
           <div className="w-9 h-9 md:w-[49px] md:h-[49px] rounded-full bg-[#01454A]/10 flex items-center justify-center flex-shrink-0">
             <span className="text-[#01454A] font-semibold text-sm">
-              {review.reviewer_name.charAt(0).toUpperCase()}
+              {review.reviewer_display.charAt(0).toUpperCase()}
             </span>
           </div>
         )}
         <div className="flex flex-col gap-0.5">
           <p className="font-satoshi font-medium text-sm md:text-base text-black leading-tight">
-            {review.reviewer_name}
+            {review.reviewer_display}
           </p>
           <div className="flex items-center gap-2">
             <StarRating rating={review.rating} />
-            {review.is_verified_purchase && (
-              <span className="text-[10px] md:text-xs text-[#01454A] font-medium">
-                ✓ Verified Purchase
-              </span>
-            )}
           </div>
         </div>
         <time
@@ -73,22 +76,22 @@ const ReviewCard = ({ review, showReply = false }: ReviewCardProps) => {
 
       {/* Review comment */}
       <p className="font-satoshi text-[11px] leading-relaxed md:text-base text-[#282828]">
-        {review.comment}
+        {review.review}
       </p>
 
-      {/* Helpful count */}
-      {review.helpful_count > 0 && (
+      {/* Helpful votes */}
+      {review.helpful_votes > 0 && (
         <p className="text-xs text-gray-400">
-          {review.helpful_count} {review.helpful_count === 1 ? "person" : "people"} found this helpful
+          {review.helpful_votes} {review.helpful_votes === 1 ? "person" : "people"} found this helpful
         </p>
       )}
 
       {/* Vendor reply */}
-      {showReply && review.vendor_reply && (
+      {showReply && review.reply && (
         <div className="ml-4 pl-4 border-l-2 border-[#FDA600]/40 mt-1">
           <p className="text-xs font-semibold text-[#01454A] mb-1">Vendor Reply</p>
           <p className="font-satoshi text-[11px] md:text-sm text-[#282828]">
-            {review.vendor_reply}
+            {review.reply}
           </p>
         </div>
       )}

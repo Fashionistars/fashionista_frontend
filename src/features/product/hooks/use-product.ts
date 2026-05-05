@@ -52,7 +52,6 @@ import {
 } from "../api/product.api";
 import type {
   PaginatedProductList,
-  PaginatedReviews,
   PaginatedInventoryLogs,
   ProductDetail,
   ProductDetailBundle,

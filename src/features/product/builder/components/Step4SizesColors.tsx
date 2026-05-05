@@ -9,7 +9,7 @@
  * Color swatches rendered with hex_code previews.
  */
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { ProductBuilderFormValues } from "../schemas/builder.schemas";
 import {

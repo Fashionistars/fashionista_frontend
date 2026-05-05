@@ -8,7 +8,7 @@
  * On PDP, these render as a Radix accordion.
  */
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useFormContext, useFieldArray } from "react-hook-form";
 import type { ProductBuilderFormValues } from "../schemas/builder.schemas";
 import {
@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { Plus, Trash2, ChevronDown, HelpCircle } from "lucide-react";
 

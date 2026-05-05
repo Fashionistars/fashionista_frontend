@@ -11,7 +11,7 @@
  *  - Drag-to-reorder via keyboard-accessible handles
  */
 
-import React from "react";
+
 import { useFormContext, useFieldArray } from "react-hook-form";
 import type { ProductBuilderFormValues } from "../schemas/builder.schemas";
 import {
@@ -20,16 +20,15 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { Plus, Trash2, GripVertical, ListChecks } from "lucide-react";
 
 export function Step6Specifications() {
   const form = useFormContext<ProductBuilderFormValues>();
-  const { fields, append, remove, move } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "specifications",
   });

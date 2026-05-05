@@ -1,9 +1,10 @@
-import NewProductContextProvider from "@/features/product/builder/store/product-context";
+import type { ReactNode } from "react";
+import { VendorProductBuilderWrapper } from "./VendorProductBuilderWrapper";
 
 export default function VendorProductsLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
-  return <NewProductContextProvider>{children}</NewProductContextProvider>;
+  return <VendorProductBuilderWrapper>{children}</VendorProductBuilderWrapper>;
 }

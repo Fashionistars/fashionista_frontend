@@ -107,7 +107,7 @@ export async function getProductDetailForMetadata(
   );
   if (!raw) return null;
   const parsed = ProductDetailSchema.safeParse(unwrapApiData(raw));
-  return parsed.success ? parsed.data : null;
+  return parsed.success ? (parsed.data as ProductDetail) : null;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -136,7 +136,7 @@ export async function getProductBundleServer(
   );
   if (!raw) return null;
   const parsed = ProductDetailBundleSchema.safeParse(unwrapApiData(raw));
-  return parsed.success ? parsed.data : null;
+  return parsed.success ? (parsed.data as ProductDetailBundle) : null;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

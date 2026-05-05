@@ -11,7 +11,7 @@
  *  - Accessible: role="navigation", aria-current="step"
  */
 
-import React from "react";
+
 import { CheckCircle2, Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BUILDER_STEPS } from "../schemas/builder.schemas";
@@ -40,7 +40,7 @@ export function BuilderStepper() {
 
       {/* ── Step list ── */}
       <ol className="flex items-start gap-1 overflow-x-auto pb-2 scrollbar-none">
-        {BUILDER_STEPS.map(({ step, label, icon, description }) => {
+        {BUILDER_STEPS.map(({ step, label, description }) => {
           const isCompleted = step < currentStep;
           const isActive = step === currentStep;
 

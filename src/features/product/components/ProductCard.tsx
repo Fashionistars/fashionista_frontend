@@ -61,7 +61,7 @@ export default function ProductCard({
   const { mutate: addToCart, isPending: cartLoading } = useAddCartItem();
 
   const imageUrl =
-    !imgErr && product.cover_image_url ? product.cover_image_url : "/gown.svg";
+    !imgErr && product.image_url ? product.image_url : "/gown.svg";
 
   const hasDiscount =
     product.old_price && parseFloat(product.old_price) > parseFloat(product.price);
@@ -158,7 +158,7 @@ export default function ProductCard({
       <Link href={`/products/${product.slug}`} className="flex flex-col gap-2 p-4 flex-1">
         {/* Vendor name */}
         <span className="text-xs font-semibold uppercase tracking-wide text-[hsl(var(--primary))]">
-          {product.vendor?.store_name ?? "FASHIONISTAR"}
+          {product.vendor_name ?? "FASHIONISTAR"}
         </span>
 
         {/* Product title */}
@@ -167,7 +167,7 @@ export default function ProductCard({
         </h3>
 
         {/* Star rating */}
-        <StarRating rating={product.average_rating} count={product.review_count} />
+        <StarRating rating={product.computed_avg_rating} count={product.review_count} />
 
         {/* Price row */}
         <div className="flex items-center gap-2 mt-auto pt-2">

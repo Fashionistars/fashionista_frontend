@@ -8,6 +8,12 @@
 import { apiSync } from "@/core/api/client.sync";
 import { apiAsync } from "@/core/api/client.async";
 import { unwrapApiData } from "@/core/api/response";
+import { readAccessToken } from "@/features/auth/lib/auth-session.client";
+import {
+  anonymousSessionHeaders,
+  anonymousSessionPayload,
+  getFashionistarSessionKey,
+} from "../lib/anonymous-session";
 import {
   parseCartResponse,
   CartSchema,
@@ -27,11 +33,28 @@ import type {
 
 const BASE = "/cart";
 
+function guestOptions() {
+  if (readAccessToken()) return {};
+  return {
+    headers: anonymousSessionHeaders(),
+  };
+}
+
+function guestPayload() {
+  return readAccessToken() ? {} : anonymousSessionPayload();
+}
+
 // ── CART ─────────────────────────────────────────────────────────────────────
 
 /** Fetch or create the current user's cart. */
 export async function fetchCart(): Promise<Cart> {
-  const data = await apiAsync.get("cart/").json();
+  const sessionKey = readAccessToken() ? undefined : getFashionistarSessionKey();
+  const data = await apiAsync
+    .get("cart/", {
+      ...guestOptions(),
+      searchParams: sessionKey ? { session_key: sessionKey } : undefined,
+    })
+    .json();
   return parseCartResponse(CartSchema, unwrapApiData(data), "fetchCart");
 }
 
@@ -41,6 +64,7 @@ export async function addCartItem(input: AddCartItemInput): Promise<Cart> {
     product_slug: input.product_slug ?? input.product_id,
     variant_id: input.variant_id,
     quantity: input.quantity,
+    ...guestPayload(),
   });
   return parseCartResponse(CartSchema, data, "addCartItem");
 }
@@ -50,26 +74,40 @@ export async function updateCartItem(
   itemId: string,
   input: UpdateCartItemInput,
 ): Promise<Cart> {
-  const { data } = await apiSync.patch<unknown>(`${BASE}/items/${itemId}/quantity/`, input);
+  const { data } = await apiSync.patch<unknown>(
+    `${BASE}/items/${itemId}/quantity/`,
+    { ...input, ...guestPayload() },
+    guestOptions(),
+  );
   return parseCartResponse(CartSchema, data, "updateCartItem");
 }
 
 /** Remove a cart item. */
 export async function removeCartItem(itemId: string): Promise<void> {
-  await apiSync.delete(`${BASE}/items/${itemId}/`);
+  await apiSync.delete(`${BASE}/items/${itemId}/`, {
+    ...guestOptions(),
+    params: guestPayload(),
+  });
 }
 
 // ── COUPON ───────────────────────────────────────────────────────────────────
 
 /** Apply a coupon code to the cart. Returns updated cart. */
 export async function applyCoupon(input: ApplyCouponInput): Promise<Cart> {
-  const { data } = await apiSync.post<unknown>(`${BASE}/coupon/`, input);
+  const { data } = await apiSync.post<unknown>(
+    `${BASE}/coupon/`,
+    { ...input, ...guestPayload() },
+    guestOptions(),
+  );
   return parseCartResponse(CartSchema, data, "applyCoupon");
 }
 
 /** Remove the currently applied coupon. Returns updated cart. */
 export async function removeCoupon(): Promise<Cart> {
-  const { data } = await apiSync.delete<unknown>(`${BASE}/coupon/`);
+  const { data } = await apiSync.delete<unknown>(`${BASE}/coupon/`, {
+    ...guestOptions(),
+    params: guestPayload(),
+  });
   return parseCartResponse(CartSchema, data, "removeCoupon");
 }
 

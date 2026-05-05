@@ -28,18 +28,16 @@ const WishlistTableCell = ({ item, onAddToCart }: WishlistTableCellProps) => {
     onAddToCart?.(product.id);
   };
 
-  const isInStock =
-    product.status === "published" &&
-    !product.requires_measurement; // simplistic — variant check in cart flow
+  const isInStock = product.in_stock && !product.requires_measurement;
 
   return (
     <tr className="border-t border-slate-200 hover:bg-slate-50 transition-colors">
       {/* Product image + title */}
       <td className="flex items-center gap-3 py-4 md:px-4">
         <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-          {product.cover_image_url ? (
+          {product.image_url ? (
             <Image
-              src={product.cover_image_url}
+              src={product.image_url}
               alt={product.title}
               fill
               sizes="(max-width: 768px) 56px, 64px"

@@ -15,7 +15,7 @@ function WishlistCard({ item }: { item: WishlistItem }) {
 
   // WishlistItem wraps a nested ProductListItem
   const product = item.product;
-  const imageSrc = product.cover_image_url || "/gown.svg";
+  const imageSrc = product.image_url || "/gown.svg";
   const price = parseFloat(String(product.price ?? 0));
 
   return (
@@ -80,7 +80,7 @@ function WishlistCard({ item }: { item: WishlistItem }) {
 // ── Main Wishlist Client ─────────────────────────────────────────────────────
 function WishlistClient() {
   const { data, isLoading, isError } = useWishlist();
-  const items: WishlistItem[] = data ?? [];
+  const items: WishlistItem[] = data?.results ?? [];
 
   if (isLoading) return <ProductGridSkeleton count={4} />;
 

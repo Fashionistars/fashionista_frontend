@@ -36,7 +36,7 @@ import { useProductDetail, useProductReviews, useToggleWishlist } from "@/featur
 import { useAddCartItem } from "@/features/cart/hooks/use-cart";
 import { productCatalogApi } from "@/features/catalog";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { ProductDetailSkeleton } from "./ProductDetailSkeleton";
+
 
 interface ProductDetailClientProps {
   slug: string;
@@ -70,7 +70,7 @@ function AccordionItem({
 }
 
 export function ProductDetailClient({ slug }: ProductDetailClientProps) {
-  const { data: product, isLoading, isError } = useProductDetail(slug);
+  const { data: product, isError } = useProductDetail(slug);
   const { data: reviewsData } = useProductReviews(slug, 1);
   const { mutate: toggleWishlist } = useToggleWishlist();
   const { mutate: addToCart, isPending: cartLoading } = useAddCartItem();
@@ -96,7 +96,7 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
 
     void productCatalogApi.logProductView(slug, {
       device_type,
-      referrer: typeof document !== "undefined" ? document.referrer || undefined : undefined,
+      referrer_url: typeof document !== "undefined" ? document.referrer || undefined : undefined,
       session_key:
         typeof sessionStorage !== "undefined"
           ? (sessionStorage.getItem("fashionistar_session") ?? undefined)
@@ -122,7 +122,7 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
 
   const images =
     product.gallery?.length
-      ? product.gallery.map((g) => g.image_url)
+      ? product.gallery.map((g) => g.media_url ?? "/gown.svg")
       : product.cover_image_url
       ? [product.cover_image_url]
       : ["/gown.svg"];
@@ -132,7 +132,7 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
     ? parseFloat(selectedVariant.price_override)
     : parseFloat(product.price);
 
-  const inStock = selectedVariant ? selectedVariant.stock > 0 : product.stock_count > 0;
+  const inStock = selectedVariant ? selectedVariant.stock_qty > 0 : product.stock_qty > 0;
 
   const handleAddToCart = () => {
     if (!inStock) return;
@@ -152,9 +152,12 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
       <nav className="mb-6 flex items-center gap-2 text-xs text-muted-foreground">
         <Link href="/" className="hover:text-foreground transition">Home</Link>
         <span>/</span>
-        <Link href="/categories" className="hover:text-foreground transition">
-          {product.category?.name ?? "Categories"}
-        </Link>
+        <Link
+              href={`/categories/${product.category_slug ?? ""}`}
+              className="hover:text-foreground transition"
+            >
+              {product.category_name ?? "Categories"}
+            </Link>
         <span>/</span>
         <span className="text-foreground line-clamp-1">{product.title}</span>
       </nav>
@@ -212,13 +215,13 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
           {/* Vendor + category */}
           <div className="flex items-center justify-between">
             <Link
-              href={`/shops/${product.vendor?.slug}`}
+              href={`/shops/${product.vendor_slug ?? ""}`}
               className="text-xs font-bold uppercase tracking-widest text-[hsl(var(--primary))] hover:opacity-80"
             >
-              {product.vendor?.store_name}
+              {product.vendor_name}
             </Link>
             <span className="text-xs text-muted-foreground">
-              {product.category?.name}
+              {product.category_name}
             </span>
           </div>
 
@@ -234,14 +237,14 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
                 <Star
                   key={i}
                   size={14}
-                  fill={i < Math.floor(product.average_rating) ? "hsl(var(--accent))" : "none"}
+                  fill={i < Math.floor(product.computed_avg_rating) ? "hsl(var(--accent))" : "none"}
                   stroke="hsl(var(--accent))"
                   strokeWidth={1.5}
                 />
               ))}
             </div>
             <span className="text-sm text-muted-foreground">
-              {product.average_rating.toFixed(1)} ({product.review_count} reviews)
+              {product.computed_avg_rating.toFixed(1)} ({product.computed_review_count} reviews)
             </span>
           </div>
 
@@ -281,16 +284,16 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
                   <button
                     key={v.id}
                     onClick={() => setSelectedVariantId(v.id)}
-                    disabled={!v.is_active || v.stock === 0}
+                    disabled={!v.is_active || v.stock_qty === 0}
                     className={`rounded-lg border px-4 py-2 text-sm font-semibold transition ${
                       selectedVariantId === v.id
                         ? "border-[hsl(var(--accent))] bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))]"
-                        : v.stock === 0 || !v.is_active
+                        : v.stock_qty === 0 || !v.is_active
                         ? "border-border bg-muted text-muted-foreground line-through cursor-not-allowed opacity-50"
                         : "border-border hover:border-[hsl(var(--accent))] hover:text-[hsl(var(--accent))]"
                     }`}
                   >
-                    {v.size?.abbreviation ?? v.color?.name ?? v.sku}
+                    {v.size?.name ?? v.color?.name ?? v.sku}
                   </button>
                 ))}
               </div>
@@ -362,8 +365,8 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
                 <dl className="space-y-2">
                   {product.specifications.map((s, i) => (
                     <div key={i} className="flex justify-between">
-                      <dt className="font-medium text-foreground">{s.label}</dt>
-                      <dd>{s.value}</dd>
+                      <dt className="font-medium text-foreground">{s.title}</dt>
+                      <dd>{s.content}</dd>
                     </div>
                   ))}
                 </dl>
@@ -396,21 +399,21 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
                 className="rounded-2xl border border-border bg-card p-5 shadow-[var(--card-shadow)]"
               >
                 <div className="mb-3 flex items-start gap-3">
-                  {r.reviewer_avatar ? (
+                  {r.reviewer_avatar_url ? (
                     <Image
-                      src={r.reviewer_avatar}
-                      alt={r.reviewer_name}
+                      src={r.reviewer_avatar_url}
+                      alt={r.reviewer_display}
                       width={40}
                       height={40}
                       className="h-10 w-10 rounded-full object-cover"
                     />
                   ) : (
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[hsl(var(--primary))] text-sm font-bold text-primary-foreground">
-                      {r.reviewer_name[0]}
+                      {r.reviewer_display[0]}
                     </div>
                   )}
                   <div>
-                    <p className="text-sm font-semibold text-foreground">{r.reviewer_name}</p>
+                    <p className="text-sm font-semibold text-foreground">{r.reviewer_display}</p>
                     <div className="flex items-center gap-1">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
@@ -420,18 +423,13 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
                           stroke="hsl(var(--accent))"
                         />
                       ))}
-                      {r.is_verified_purchase && (
-                        <span className="ml-1 text-xs font-semibold text-[hsl(var(--success))]">
-                          ✓ Verified
-                        </span>
-                      )}
                     </div>
                   </div>
                   <span className="ml-auto text-xs text-muted-foreground">
                     {formatDate(r.created_at)}
                   </span>
                 </div>
-                <p className="text-sm leading-6 text-foreground">{r.comment}</p>
+                <p className="text-sm leading-6 text-foreground">{r.review}</p>
               </div>
             ))}
           </div>

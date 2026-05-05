@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
   ChartColumn,
@@ -14,7 +15,15 @@ import {
 
 import { Transactions } from "@/features/account/components";
 import { useAuthStore } from "@/features/auth/store/auth.store";
-import { MultiStep } from "@/features/product";
+import {
+  ProductBuilder,
+  ProductBuilderProvider,
+  publishProduct,
+  useCreateProduct,
+  useUpdateProduct,
+  productKeys,
+} from "@/features/product";
+import type { ProductBuilderFormValues } from "@/features/product";
 import {
   useSubmitVendorSetup,
   useVendorDashboard,
@@ -633,8 +642,105 @@ export function VendorOrderDetailView({ orderOid }: { orderOid: string }) {
 }
 
 export function VendorProductComposerView() {
+  const router = useRouter();
+  const qc = useQueryClient();
+
+  // Pull the vendor id from the auth store — used for draft namespacing
+  const vendorId = useAuthStore((s) => s.user?.id ?? "anonymous");
+
+  // We track the created product slug in a ref so the submit handler can
+  // call updateProduct / publishProduct after the initial create.
+  const productSlugRef = useRef<string | null>(null);
+
+  const createMutation = useCreateProduct();
+  const updateMutation = useUpdateProduct(productSlugRef.current ?? "");
+
+  /**
+   * Called by ProductBuilderProvider when the vendor clicks
+   * "Save Draft" or "Submit for Review" on Step 8.
+   */
+  const handleBuilderSubmit = async (
+    values: ProductBuilderFormValues,
+    productId: string | null,
+  ) => {
+    // Generate a stable idempotency key only on first creation
+    const idempotencyKey =
+      productId ?? (typeof crypto !== "undefined" ? crypto.randomUUID() : Date.now().toString());
+
+    // Zod superRefine wraps Step2Schema in ZodEffects — the merged type loses
+    // precision on optional array/boolean fields. These casts are safe because
+    // Zod has already validated the shape before onSubmit fires.
+    const sizeIds   = (values.size_ids ?? [])   as string[];
+    const colorIds  = (values.color_ids ?? [])  as string[];
+    const tagIds    = (values.tag_ids ?? [])     as string[];
+    const hotDeal   = (values.hot_deal ?? false)  as boolean;
+    const isDigital = (values.digital ?? false)   as boolean;
+
+    // ── 1. Create or update the product record ───────────────────────────────
+    let savedSlug: string | null = productSlugRef.current;
+
+    if (!productSlugRef.current) {
+      // First-time save → CREATE
+      const created = await createMutation.mutateAsync({
+        title: values.title,
+        description: values.description,
+        short_description: values.short_description ?? "",
+        price: values.price,
+        old_price: values.old_price ?? undefined,
+        currency: values.currency ?? "NGN",
+        shipping_amount: values.shipping_amount ?? "0.00",
+        stock_qty: values.stock_qty as number,
+        requires_measurement: values.requires_measurement as boolean,
+        is_customisable: values.is_customisable as boolean,
+        category_id: values.category_id,
+        sub_category_id: values.sub_category_id ?? undefined,
+        brand_id: values.brand_id ?? undefined,
+        size_ids: sizeIds,
+        color_ids: colorIds,
+        tag_ids: tagIds,
+        hot_deal: hotDeal,
+        digital: isDigital,
+        idempotency_key: idempotencyKey,
+      });
+      savedSlug = created.slug;
+      productSlugRef.current = savedSlug;
+    } else {
+      // Subsequent save → PATCH
+      await updateMutation.mutateAsync({
+        title: values.title,
+        description: values.description,
+        short_description: values.short_description ?? "",
+        price: values.price,
+        old_price: values.old_price ?? undefined,
+        currency: values.currency ?? "NGN",
+        shipping_amount: values.shipping_amount ?? "0.00",
+        stock_qty: values.stock_qty as number,
+        requires_measurement: values.requires_measurement as boolean,
+        is_customisable: values.is_customisable as boolean,
+        category_id: values.category_id,
+        sub_category_id: values.sub_category_id ?? undefined,
+        brand_id: values.brand_id ?? undefined,
+        size_ids: sizeIds,
+        color_ids: colorIds,
+        tag_ids: tagIds,
+        hot_deal: hotDeal,
+        digital: isDigital,
+      });
+    }
+
+    // ── 2. Submit for review if publish_intent === "pending" ─────────────────
+    if (values.publish_intent === "pending" && savedSlug) {
+      await publishProduct(savedSlug);
+    }
+
+    // ── 3. Invalidate catalog cache + redirect ───────────────────────────────
+    void qc.invalidateQueries({ queryKey: productKeys.lists() });
+    router.push("/vendor/products/catelog");
+  };
+
   return (
     <div className="space-y-5 py-4">
+      {/* ── Page header ── */}
       <div className="flex items-center justify-between rounded-[32px] bg-white px-8 py-6 shadow-card_shadow">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#7A6B44]">
@@ -651,7 +757,16 @@ export function VendorProductComposerView() {
           Open catalog
         </Link>
       </div>
-      <MultiStep />
+
+      {/* ── 8-step enterprise builder ── */}
+      <div className="rounded-[32px] bg-white p-8 shadow-card_shadow">
+        <ProductBuilderProvider
+          vendorId={vendorId}
+          onSubmit={handleBuilderSubmit}
+        >
+          <ProductBuilder />
+        </ProductBuilderProvider>
+      </div>
     </div>
   );
 }

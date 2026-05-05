@@ -48,6 +48,12 @@ import {
   unwrapApiData,
   unwrapResults,
 } from "@/core/api/response";
+import { readAccessToken } from "@/features/auth/lib/auth-session.client";
+import {
+  anonymousSessionHeaders,
+  anonymousSessionPayload,
+  getFashionistarSessionKey,
+} from "@/features/cart/lib/anonymous-session";
 import {
   parseApiResponse,
   PaginatedProductListSchema,
@@ -56,7 +62,7 @@ import {
   ProductDetailBundleSchema,
   PaginatedReviewsSchema,
   ProductReviewSchema,
-  WishlistItemSchema,
+  PaginatedWishlistSchema,
   WishlistToggleResultSchema,
   WishlistBulkStatusSchema,
   CouponSchema,
@@ -73,7 +79,6 @@ import type {
   ProductDetailBundle,
   ProductListItem,
   ProductReview,
-  WishlistItem,
   WishlistToggleResult,
   WishlistBulkStatus,
   Coupon,
@@ -87,6 +92,17 @@ import type {
   CouponValidateInput,
   ProductFilterParams,
 } from "../types/product.types";
+
+function guestOptions() {
+  if (readAccessToken()) return {};
+  return {
+    headers: anonymousSessionHeaders(),
+  };
+}
+
+function guestPayload() {
+  return readAccessToken() ? {} : anonymousSessionPayload();
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PUBLIC CATALOG READS  (apiAsync → Ninja)
@@ -121,7 +137,7 @@ export async function fetchProducts(
     PaginatedProductListSchema,
     unwrapApiData(raw),
     "fetchProducts",
-  );
+  ) as PaginatedProductList;
 }
 
 /**
@@ -134,7 +150,7 @@ export async function fetchProductDetail(slug: string): Promise<ProductDetail> {
     ProductDetailSchema,
     unwrapApiData(raw),
     "fetchProductDetail",
-  );
+  ) as ProductDetail;
 }
 
 /**
@@ -150,7 +166,7 @@ export async function fetchProductBundle(
     ProductDetailBundleSchema,
     unwrapApiData(raw),
     "fetchProductBundle",
-  );
+  ) as ProductDetailBundle;
 }
 
 /**
@@ -160,7 +176,7 @@ export async function fetchProductBundle(
 export async function fetchFeaturedProducts(): Promise<ProductListItem[]> {
   const raw = await apiAsync.get("products/featured/").json();
   return unwrapResults(raw).map((item) =>
-    parseApiResponse(ProductListItemSchema, item, "fetchFeaturedProducts"),
+    parseApiResponse(ProductListItemSchema, item, "fetchFeaturedProducts") as ProductListItem,
   );
 }
 
@@ -193,7 +209,7 @@ export async function fetchProductReviews(
     PaginatedReviewsSchema,
     unwrapApiData(raw),
     "fetchProductReviews",
-  );
+  ) as PaginatedReviews;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -205,13 +221,21 @@ export async function fetchProductReviews(
  * Endpoint: GET /api/v1/ninja/products/wishlist/
  */
 export async function fetchWishlist(page = 1): Promise<PaginatedWishlist> {
-  const raw = await apiAsync.get(`products/wishlist/?page=${page}`).json();
+  const sessionKey = readAccessToken() ? undefined : getFashionistarSessionKey();
+  const raw = await apiAsync
+    .get("products/wishlist/", {
+      ...guestOptions(),
+      searchParams: {
+        page,
+        ...(sessionKey ? { session_key: sessionKey } : {}),
+      },
+    })
+    .json();
   return parseApiResponse(
-    // Inline paginated wishlist schema
-    PaginatedProductListSchema as any,
+    PaginatedWishlistSchema,
     unwrapApiData(raw),
     "fetchWishlist",
-  );
+  ) as PaginatedWishlist;
 }
 
 /**
@@ -245,12 +269,14 @@ export async function toggleWishlist(
 ): Promise<WishlistToggleResult> {
   const { data } = await apiSync.post<WishlistToggleResult>(
     `/products/${slug}/wishlist/toggle/`,
+    guestPayload(),
+    guestOptions(),
   );
   return parseApiResponse(
     WishlistToggleResultSchema,
     data,
     "toggleWishlist",
-  );
+  ) as WishlistToggleResult;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -320,7 +346,7 @@ export async function createProduct(
     "/products/vendor/",
     input,
   );
-  return parseApiResponse(ProductDetailSchema, data, "createProduct");
+  return parseApiResponse(ProductDetailSchema, data, "createProduct") as ProductDetail;
 }
 
 /**
@@ -335,7 +361,7 @@ export async function updateProduct(
     `/products/vendor/${slug}/`,
     input,
   );
-  return parseApiResponse(ProductDetailSchema, data, "updateProduct");
+  return parseApiResponse(ProductDetailSchema, data, "updateProduct") as ProductDetail;
 }
 
 /**
@@ -346,7 +372,7 @@ export async function publishProduct(slug: string): Promise<ProductDetail> {
   const { data } = await apiSync.post<ProductDetail>(
     `/products/vendor/${slug}/publish/`,
   );
-  return parseApiResponse(ProductDetailSchema, data, "publishProduct");
+  return parseApiResponse(ProductDetailSchema, data, "publishProduct") as ProductDetail;
 }
 
 /**
@@ -376,7 +402,7 @@ export async function fetchInventoryLogs(
     PaginatedInventoryLogsSchema,
     unwrapApiData(raw),
     "fetchInventoryLogs",
-  );
+  ) as unknown as PaginatedInventoryLogs;
 }
 
 /**
@@ -396,7 +422,7 @@ export async function adjustInventory(
     ProductInventoryLogSchema,
     data,
     "adjustInventory",
-  );
+  ) as ProductInventoryLog;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -416,7 +442,7 @@ export async function createProductReview(
     `/products/${slug}/reviews/`,
     input,
   );
-  return parseApiResponse(ProductReviewSchema, data, "createProductReview");
+  return parseApiResponse(ProductReviewSchema, data, "createProductReview") as ProductReview;
 }
 
 /**
@@ -431,7 +457,7 @@ export async function replyToReview(
     `/products/reviews/${reviewId}/reply/`,
     input,
   );
-  return parseApiResponse(ProductReviewSchema, data, "replyToReview");
+  return parseApiResponse(ProductReviewSchema, data, "replyToReview") as ProductReview;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -450,5 +476,5 @@ export async function updateProductStatus(
     `/products/admin/${slug}/status/`,
     payload,
   );
-  return parseApiResponse(ProductDetailSchema, data, "updateProductStatus");
+  return parseApiResponse(ProductDetailSchema, data, "updateProductStatus") as ProductDetail;
 }
