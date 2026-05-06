@@ -1,6 +1,10 @@
 /**
  * @file index.ts
  * @description Public API for the `features/cart` canonical FSD slice.
+ *
+ * Dual-Engine Strategy:
+ *  - DRF (sync)   → /v1/cart/ (item add/update/remove, coupon, checkout submit)
+ *  - Ninja (async) → /ninja/cart/ (read cart — high-concurrency, anonymous + auth)
  */
 
 // ── Types ──────────────────────────────────────────────────────────────────

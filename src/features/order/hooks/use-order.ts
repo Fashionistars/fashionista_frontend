@@ -1,6 +1,13 @@
 /**
  * @file use-order.ts
  * @description TanStack Query v5 hooks for the Order domain.
+ *
+ * Hook Tiers:
+ *  - DRF sync hooks (mutations): useCancelOrder, useConfirmDelivery,
+ *    useUpdateVendorProductionStatus, useUpdateAdminDeliveryStatus
+ *  - Ninja async hooks (reads): useClientOrders, useOrderDetail, useVendorOrders,
+ *    useAdminOrders, useNinjaClientOrderCounts, useNinjaVendorOrderCounts,
+ *    useNinjaVendorFinancialSummary
  */
 "use client";
 
@@ -15,12 +22,19 @@ import {
   updateVendorProductionStatus,
   fetchAdminOrders,
   updateAdminDeliveryStatus,
+  getNinjaClientOrderCounts,
+  getNinjaVendorOrderCounts,
+  getNinjaVendorFinancialSummary,
 } from "../api/order.api";
 import type {
   CancelOrderInput,
   VendorProductionStatusInput,
   AdminDeliveryStatusInput,
 } from "../types/order.types";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// QUERY KEY FACTORY
+// ─────────────────────────────────────────────────────────────────────────────
 
 export const orderKeys = {
   all: ["order"] as const,
@@ -31,6 +45,13 @@ export const orderKeys = {
   vendorList: (page: number) => [...orderKeys.vendorLists(), page] as const,
   adminLists: () => [...orderKeys.all, "admin", "list"] as const,
   adminList: (page: number) => [...orderKeys.adminLists(), page] as const,
+  /** Ninja: per-status badge counts for client */
+  clientCounts: () => [...orderKeys.all, "ninja", "client", "counts"] as const,
+  /** Ninja: per-status badge counts for vendor */
+  vendorCounts: () => [...orderKeys.all, "ninja", "vendor", "counts"] as const,
+  /** Ninja: vendor financial summary (revenue/commission/payout/order_count) */
+  vendorFinancials: () =>
+    [...orderKeys.all, "ninja", "vendor", "financials"] as const,
 } as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -57,11 +78,17 @@ export function useOrderDetail(orderId: string) {
 export function useCancelOrder() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ orderId, input }: { orderId: string; input: CancelOrderInput }) =>
-      cancelOrder(orderId, input),
+    mutationFn: ({
+      orderId,
+      input,
+    }: {
+      orderId: string;
+      input: CancelOrderInput;
+    }) => cancelOrder(orderId, input),
     onSuccess: (order) => {
       void qc.setQueryData(orderKeys.detail(order.id), order);
       void qc.invalidateQueries({ queryKey: orderKeys.clientLists() });
+      void qc.invalidateQueries({ queryKey: orderKeys.clientCounts() });
       toast.success("Order cancelled successfully.");
     },
     onError: () => {
@@ -77,6 +104,7 @@ export function useConfirmDelivery() {
     onSuccess: (order) => {
       void qc.setQueryData(orderKeys.detail(order.id), order);
       void qc.invalidateQueries({ queryKey: orderKeys.clientLists() });
+      void qc.invalidateQueries({ queryKey: orderKeys.clientCounts() });
       toast.success("Delivery confirmed! Payment released to vendor.");
     },
     onError: () => {
@@ -110,6 +138,8 @@ export function useUpdateVendorProductionStatus() {
     onSuccess: (order) => {
       void qc.setQueryData(orderKeys.detail(order.id), order);
       void qc.invalidateQueries({ queryKey: orderKeys.vendorLists() });
+      void qc.invalidateQueries({ queryKey: orderKeys.vendorCounts() });
+      void qc.invalidateQueries({ queryKey: orderKeys.vendorFinancials() });
       toast.success("Order status updated.");
     },
   });
@@ -142,5 +172,49 @@ export function useUpdateAdminDeliveryStatus() {
       void qc.invalidateQueries({ queryKey: orderKeys.adminLists() });
       toast.success("Delivery status updated.");
     },
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// NINJA ASYNC HOOKS — Badge Counts & Financial Aggregates
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * useNinjaClientOrderCounts
+ * Source: GET /ninja/orders/counts/ → single GROUP BY query.
+ * Used for: navigation badge on "My Orders" pages.
+ */
+export function useNinjaClientOrderCounts() {
+  return useQuery({
+    queryKey: orderKeys.clientCounts(),
+    queryFn: getNinjaClientOrderCounts,
+    staleTime: 60_000,
+  });
+}
+
+/**
+ * useNinjaVendorOrderCounts
+ * Source: GET /ninja/orders/vendor/counts/ → single GROUP BY query.
+ * Used for: vendor dashboard sidebar badges.
+ */
+export function useNinjaVendorOrderCounts() {
+  return useQuery({
+    queryKey: orderKeys.vendorCounts(),
+    queryFn: getNinjaVendorOrderCounts,
+    staleTime: 60_000,
+  });
+}
+
+/**
+ * useNinjaVendorFinancialSummary
+ * Source: GET /ninja/orders/vendor/financial-summary/
+ * Delegates to aget_order_financial_summary_for_vendor() — single aaggregate().
+ * Returns: { total_revenue, total_commission, total_payout, order_count }
+ */
+export function useNinjaVendorFinancialSummary() {
+  return useQuery({
+    queryKey: orderKeys.vendorFinancials(),
+    queryFn: getNinjaVendorFinancialSummary,
+    staleTime: 60_000,
   });
 }

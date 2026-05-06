@@ -1,7 +1,10 @@
 /**
  * @file order.api.ts
  * @description Order domain API client — Fashionistar frontend.
- * Reads use `apiAsync` (Ky → Ninja); writes use `apiSync` (Axios → DRF).
+ *
+ * Endpoint Routing:
+ *  - DRF sync  → /v1/orders/ (mutations: cancel, confirm-delivery, status updates)
+ *  - Ninja async → /ninja/orders/ (reads: list, detail, counts, vendor financials)
  */
 import { apiAsync } from "@/core/api/client.async";
 import { apiSync } from "@/core/api/client.sync";
@@ -18,6 +21,17 @@ import type {
   VendorProductionStatusInput,
   AdminDeliveryStatusInput,
 } from "../types/order.types";
+
+// Status count types — returned by Ninja /counts/ endpoints
+export type OrderStatusCounts = Record<string, number>;
+
+// Vendor financial summary — returned by Ninja /vendor/financial-summary/
+export interface VendorOrderFinancialSummary {
+  total_revenue: number;
+  total_commission: number;
+  total_payout: number;
+  order_count: number;
+}
 
 const BASE = "/orders";
 
@@ -151,4 +165,47 @@ export async function updateAdminDeliveryStatus(
     data,
     "updateAdminDeliveryStatus",
   ) as OrderDetail;
+}
+
+// ── Ninja Async Reads (status counts + financials) ───────────────────────────
+
+/**
+ * GET /ninja/orders/counts/
+ * Returns per-status order counts for the authenticated client.
+ * Single GROUP BY query — sub-ms latency.
+ */
+export async function getNinjaClientOrderCounts(): Promise<OrderStatusCounts> {
+  const envelope = await apiAsync
+    .get("ninja/orders/counts/")
+    .json<{ status: string; data: OrderStatusCounts }>();
+  return (envelope?.data ?? {}) as OrderStatusCounts;
+}
+
+/**
+ * GET /ninja/orders/vendor/counts/
+ * Returns per-status order counts for the authenticated vendor.
+ * Single GROUP BY query — used for badge rendering on the vendor dashboard.
+ */
+export async function getNinjaVendorOrderCounts(): Promise<OrderStatusCounts> {
+  const envelope = await apiAsync
+    .get("ninja/orders/vendor/counts/")
+    .json<{ status: string; data: OrderStatusCounts }>();
+  return (envelope?.data ?? {}) as OrderStatusCounts;
+}
+
+/**
+ * GET /ninja/orders/vendor/financial-summary/
+ * Returns: total_revenue, total_commission, total_payout, order_count.
+ * Single aaggregate() DB call — used for vendor financial dashboard widget.
+ */
+export async function getNinjaVendorFinancialSummary(): Promise<VendorOrderFinancialSummary> {
+  const envelope = await apiAsync
+    .get("ninja/orders/vendor/financial-summary/")
+    .json<{ status: string; data: VendorOrderFinancialSummary }>();
+  return (envelope?.data ?? {
+    total_revenue: 0,
+    total_commission: 0,
+    total_payout: 0,
+    order_count: 0,
+  }) as VendorOrderFinancialSummary;
 }
