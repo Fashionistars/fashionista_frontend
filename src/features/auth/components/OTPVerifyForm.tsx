@@ -21,6 +21,7 @@ import { verifyOTP, resendOTP } from "@/features/auth/services/auth.service";
 import { getPostAuthRedirectPath } from "@/features/auth/lib/auth-routing";
 import { normalizeAuthUser } from "@/features/auth/lib/normalize-auth-user";
 import { useAuthStore } from "@/features/auth/store/auth.store";
+import { mergeAnonymousCommerce } from "@/features/cart";
 import { RichErrorMessage } from "@/components/shared/feedback/RichErrorMessage";
 import { parseApiError } from "@/lib/api/parseApiError";
 
@@ -55,7 +56,7 @@ export function OTPVerifyForm() {
         email: pendingOTPEmail,
         phone: pendingOTPPhone,
       }),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       setVerifyError(null);
       setTokens(data.access ?? "", data.refresh ?? "");
       setUser(normalizeAuthUser(data));
@@ -65,6 +66,12 @@ export function OTPVerifyForm() {
         description: `Welcome to Fashionistar, ${displayName}! 🎉`,
         duration: 4000,
       });
+
+      try {
+        await mergeAnonymousCommerce();
+      } catch {
+        // Checkout submit repeats the idempotent merge before order creation.
+      }
 
       router.push(
         getPostAuthRedirectPath({

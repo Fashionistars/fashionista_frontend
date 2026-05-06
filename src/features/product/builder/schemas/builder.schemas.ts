@@ -8,7 +8,7 @@
  *
  * ────────────────────────────────────────────────────────────────────────────
  * Step map:
- *   Step 1 – BasicInformation   (title, description, condition, category, brand)
+ *   Step 1 – BasicInformation   (title, description, condition, capped categories)
  *   Step 2 – Pricing & Stock    (price, old_price, currency, stock_qty, shipping)
  *   Step 3 – Gallery            (cover image + up-to-12 gallery media)
  *   Step 4 – Sizes & Colors     (multiselect sizes + colors from catalog)
@@ -78,14 +78,23 @@ export const Step1Schema = z.object({
     required_error: "Select a product condition",
   }),
 
-  /** Catalog category UUID — required for taxonomy and search facets. */
-  category_id: z.string().uuid("Select a valid category"),
+  /**
+   * Canonical catalog categories.
+   *
+   * Mirrors the backend Product.categories M2M contract:
+   * one selection is required, five is the hard cap for SEO/ranking quality.
+   */
+  category_ids: z
+    .array(z.string().uuid("Select a valid category"))
+    .min(1, "Select at least one category")
+    .max(5, "You can select up to 5 categories")
+    .default([]),
 
-  /** Catalog sub-category UUID — optional deeper taxonomy level. */
-  sub_category_id: FKIdSchema,
-
-  /** Brand UUID — optional; vendor may not belong to a known brand. */
-  brand_id: FKIdSchema,
+  /** Optional deeper discovery facets. Also capped at five backend-side. */
+  sub_category_ids: z
+    .array(z.string().uuid("Select a valid sub-category"))
+    .max(5, "You can select up to 5 sub-categories")
+    .default([]),
 
   /** Comma-separated tag UUIDs — multi-select from ProductTag catalog. */
   tag_ids: z.array(z.string().uuid()).max(10, "You can add up to 10 tags").default([]),
@@ -428,7 +437,7 @@ export interface StepMeta {
 }
 
 export const BUILDER_STEPS: StepMeta[] = [
-  { step: 1, label: "Basic Info",       icon: "Info",         description: "Product title, description, category, brand" },
+  { step: 1, label: "Basic Info",       icon: "Info",         description: "Product title, description, and category facets" },
   { step: 2, label: "Pricing & Stock",  icon: "DollarSign",   description: "Set pricing, currency, stock and shipping" },
   { step: 3, label: "Gallery",          icon: "Image",        description: "Upload cover image and media gallery" },
   { step: 4, label: "Sizes & Colors",   icon: "Palette",      description: "Select available sizes and colours" },

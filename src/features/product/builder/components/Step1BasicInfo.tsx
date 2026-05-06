@@ -5,9 +5,9 @@
  * @description Step 1 — Basic Information
  *
  * Fields: title, description (rich-text), short_description, condition,
- *         category_id, sub_category_id, brand_id, tag_ids
+ *         category_ids, sub_category_ids, tag_ids
  *
- * The category and brand lists are fetched from the catalog API on mount.
+ * The category list is fetched from the catalog API on mount.
  * Tags use a combobox multi-select with search debounce.
  */
 
@@ -57,23 +57,22 @@ export function Step1BasicInfo() {
   // ── Catalog data ───────────────────────────────────────────────────────────
   const [categories, setCategories] = useState<SelectOption[]>([]);
   const [subCategories, setSubCategories] = useState<SelectOption[]>([]);
-  const [brands, setBrands] = useState<SelectOption[]>([]);
   const [tags, setTags] = useState<SelectOption[]>([]);
   const [loadingCatalog, setLoadingCatalog] = useState(true);
 
-  const selectedCategoryId = form.watch("category_id");
+  const selectedCategoryIds = form.watch("category_ids") ?? [];
+  const selectedSubCategoryIds = form.watch("sub_category_ids") ?? [];
+  const selectedPrimaryCategoryId = selectedCategoryIds[0];
   const selectedTagIds = form.watch("tag_ids") ?? [];
 
   useEffect(() => {
     async function loadCatalog() {
       try {
-        const [catRes, brandRes, tagRes] = await Promise.all([
+        const [catRes, tagRes] = await Promise.all([
           fetch("/api/catalog/categories/?page_size=100").then((r) => r.json()),
-          fetch("/api/catalog/brands/?page_size=100").then((r) => r.json()),
           fetch("/api/product/tags/?page_size=100").then((r) => r.json()),
         ]);
         setCategories(catRes.results ?? []);
-        setBrands(brandRes.results ?? []);
         setTags(tagRes.results ?? []);
       } catch {
         // Non-critical — vendor can type manually
@@ -86,15 +85,38 @@ export function Step1BasicInfo() {
 
   // Load sub-categories when category changes
   useEffect(() => {
-    if (!selectedCategoryId) {
+    if (!selectedPrimaryCategoryId) {
       setSubCategories([]);
       return;
     }
-    fetch(`/api/catalog/categories/${selectedCategoryId}/children/?page_size=50`)
+    fetch(`/api/catalog/categories/${selectedPrimaryCategoryId}/children/?page_size=50`)
       .then((r) => r.json())
       .then((data) => setSubCategories(data.results ?? []))
       .catch(() => setSubCategories([]));
-  }, [selectedCategoryId]);
+  }, [selectedPrimaryCategoryId]);
+
+  const addCategory = (categoryId: string) => {
+    const current = form.getValues("category_ids") ?? [];
+    if (!current.includes(categoryId) && current.length < 5) {
+      form.setValue("category_ids", [...current, categoryId], { shouldValidate: true });
+      if (current.length === 0) {
+        // Sub-categories are loaded from the first selected category only.
+        form.setValue("sub_category_ids", [], { shouldValidate: true });
+      }
+    }
+  };
+
+  const removeCategory = (categoryId: string) => {
+    const current = form.getValues("category_ids") ?? [];
+    form.setValue(
+      "category_ids",
+      current.filter((id) => id !== categoryId),
+      { shouldValidate: true },
+    );
+    if (categoryId === current[0]) {
+      form.setValue("sub_category_ids", [], { shouldValidate: true });
+    }
+  };
 
   // ── Tag helpers ────────────────────────────────────────────────────────────
   const addTag = (tagId: string) => {
@@ -226,36 +248,64 @@ export function Step1BasicInfo() {
         )}
       />
 
-      {/* ── Category + Sub-Category ── */}
+      {/* ── Categories + Sub-Category ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormField
           control={form.control}
-          name="category_id"
-          render={({ field }) => (
+          name="category_ids"
+          render={() => (
             <FormItem>
               <FormLabel className="text-white/90 font-semibold">
-                Category <span className="text-fuchsia-400">*</span>
+                Categories <span className="text-fuchsia-400">*</span>
               </FormLabel>
               <Select
-                onValueChange={(v) => {
-                  field.onChange(v);
-                  form.setValue("sub_category_id", null); // Reset sub on change
-                }}
-                value={field.value ?? ""}
+                onValueChange={addCategory}
+                disabled={selectedCategoryIds.length >= 5}
               >
                 <FormControl>
                   <SelectTrigger className="bg-white/5 border-white/10 text-white focus:border-violet-500">
-                    <SelectValue placeholder="Select category" />
+                    <SelectValue placeholder="Add category" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent className="bg-zinc-900 border-white/10 max-h-60 overflow-y-auto">
-                  {categories.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </SelectItem>
-                  ))}
+                  {categories
+                    .filter((cat) => !selectedCategoryIds.includes(cat.id))
+                    .map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
+              <FormDescription className="text-white/40 text-xs">
+                Select 1 to 5 categories for search, SEO, and recommendations.
+              </FormDescription>
+              {selectedCategoryIds.length > 0 && (
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {selectedCategoryIds.map((categoryId) => {
+                    const category = categories.find((cat) => cat.id === categoryId);
+                    return (
+                      <Badge
+                        key={categoryId}
+                        variant="secondary"
+                        className="bg-violet-500/20 text-violet-300 border-violet-500/30 pl-3 pr-1 gap-1"
+                      >
+                        {category?.name ?? categoryId}
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeCategory(categoryId)}
+                          className="h-4 w-4 p-0 text-violet-400 hover:text-red-400 hover:bg-transparent"
+                          aria-label={`Remove ${category?.name ?? "category"}`}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </Badge>
+                    );
+                  })}
+                </div>
+              )}
               <FormMessage />
             </FormItem>
           )}
@@ -263,15 +313,15 @@ export function Step1BasicInfo() {
 
         <FormField
           control={form.control}
-          name="sub_category_id"
+          name="sub_category_ids"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-white/90 font-semibold">
                 Sub-Category
               </FormLabel>
               <Select
-                onValueChange={field.onChange}
-                value={field.value ?? ""}
+                onValueChange={(value) => field.onChange(value ? [value] : [])}
+                value={selectedSubCategoryIds[0] ?? ""}
                 disabled={subCategories.length === 0}
               >
                 <FormControl>
@@ -292,33 +342,6 @@ export function Step1BasicInfo() {
           )}
         />
       </div>
-
-      {/* ── Brand ── */}
-      <FormField
-        control={form.control}
-        name="brand_id"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="text-white/90 font-semibold">Brand</FormLabel>
-            <Select onValueChange={field.onChange} value={field.value ?? ""}>
-              <FormControl>
-                <SelectTrigger className="bg-white/5 border-white/10 text-white focus:border-violet-500">
-                  <SelectValue placeholder="Select a brand (optional)" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent className="bg-zinc-900 border-white/10 max-h-60 overflow-y-auto">
-                <SelectItem value="">— No brand —</SelectItem>
-                {brands.map((brand) => (
-                  <SelectItem key={brand.id} value={brand.id}>
-                    {brand.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
 
       {/* ── Tags ── */}
       <FormField

@@ -42,6 +42,16 @@ export function getFashionistarSessionKey(): string {
   return next;
 }
 
+export function peekFashionistarSessionKey(): string {
+  if (typeof window === "undefined") return "";
+
+  const existing = window.localStorage.getItem(STORAGE_KEY) ?? "";
+  if (existing) {
+    writeCookie(existing);
+  }
+  return existing;
+}
+
 export function anonymousSessionHeaders(): Record<string, string> {
   const sessionKey = getFashionistarSessionKey();
   return sessionKey ? { "X-Fashionistar-Session-Key": sessionKey } : {};

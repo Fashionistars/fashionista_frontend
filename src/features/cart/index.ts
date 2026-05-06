@@ -39,6 +39,7 @@ export {
   removeCartItem,
   applyCoupon,
   removeCoupon,
+  mergeAnonymousCommerce,
   prepareCheckout,
   submitCheckout,
 } from "./api/cart.api";

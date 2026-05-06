@@ -13,6 +13,7 @@ import {
   anonymousSessionHeaders,
   anonymousSessionPayload,
   getFashionistarSessionKey,
+  peekFashionistarSessionKey,
 } from "../lib/anonymous-session";
 import {
   parseCartResponse,
@@ -42,6 +43,35 @@ function guestOptions() {
 
 function guestPayload() {
   return readAccessToken() ? {} : anonymousSessionPayload();
+}
+
+async function mergeEndpoint(path: string, sessionKey: string): Promise<void> {
+  await apiSync.post(
+    path,
+    { session_key: sessionKey },
+    { headers: { "X-Fashionistar-Session-Key": sessionKey } },
+  );
+}
+
+/**
+ * Merge anonymous cart and wishlist rows into the newly authenticated account.
+ *
+ * This is intentionally safe to call after login and again before checkout:
+ * backend services lock rows and deduplicate existing user-owned items.
+ */
+export async function mergeAnonymousCommerce(): Promise<void> {
+  const sessionKey = peekFashionistarSessionKey();
+  if (!sessionKey || !readAccessToken()) return;
+
+  const results = await Promise.allSettled([
+    mergeEndpoint(`${BASE}/merge/`, sessionKey),
+    mergeEndpoint("/products/wishlist/merge/", sessionKey),
+  ]);
+
+  const failed = results.find((result) => result.status === "rejected");
+  if (failed) {
+    throw new Error("Anonymous commerce merge failed.");
+  }
 }
 
 // ── CART ─────────────────────────────────────────────────────────────────────
@@ -133,6 +163,8 @@ export async function prepareCheckout(
 export async function submitCheckout(
   input: SubmitCheckoutInput,
 ): Promise<SubmitCheckoutResponse> {
+  await mergeAnonymousCommerce();
+
   const { data } = await apiSync.post<unknown>(
     `${BASE}/checkout/submit/`,
     input,

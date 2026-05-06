@@ -16,7 +16,7 @@ export {
   Step6Schema as SpecificationSchema,
 } from "./builder.schemas";
 
-// CategorySchema — Step 1 already includes category_id; expose Step1Schema for it
+// CategorySchema — Step 1 owns category_ids/sub_category_ids; expose Step1Schema for it.
 export { Step1Schema as CategorySchema } from "./builder.schemas";
 
 // Re-export everything else for completeness

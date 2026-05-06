@@ -30,6 +30,7 @@ import { PhoneInputField } from "@/components/shared/forms/PhoneInputField";
 import { GoogleSignInButton } from "@/features/auth/components/GoogleSignInButton";
 import { getPostAuthRedirectPath } from "@/features/auth/lib/auth-routing";
 import { normalizeAuthUser } from "@/features/auth/lib/normalize-auth-user";
+import { mergeAnonymousCommerce } from "@/features/cart";
 import { RichErrorMessage, FieldError } from "@/components/shared/feedback/RichErrorMessage";
 import { parseApiError } from "@/lib/api/parseApiError";
 
@@ -111,7 +112,7 @@ export function RegisterForm({ role = "client" }: RegisterFormProps) {
   };
 
   // Helper for Google Auth success — with smart role-based redirect
-  const handleGoogleSuccess = (data: LoginResponse) => {
+  const handleGoogleSuccess = async (data: LoginResponse) => {
     setTokens(data.access ?? "", data.refresh ?? "");
     setUser(normalizeAuthUser(data));
 
@@ -120,6 +121,12 @@ export function RegisterForm({ role = "client" }: RegisterFormProps) {
       description: `Welcome, ${displayName}!`,
       duration: 3000,
     });
+
+    try {
+      await mergeAnonymousCommerce();
+    } catch {
+      // Checkout submit performs the same idempotent merge before placing an order.
+    }
 
     router.push(
       getPostAuthRedirectPath({

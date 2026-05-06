@@ -334,9 +334,8 @@ export interface CreateProductInput {
   shipping_amount?: string;
   stock_qty: number;
   max_stock?: number | null;
-  category_id?: string;
-  sub_category_id?: string;
-  brand_id?: string;
+  category_ids: string[];
+  sub_category_ids?: string[];
   size_ids?: string[];
   color_ids?: string[];
   tag_ids?: string[];

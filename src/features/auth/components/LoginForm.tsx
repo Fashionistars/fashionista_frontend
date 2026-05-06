@@ -28,6 +28,7 @@ import { PhoneInputField } from "@/components/shared/forms/PhoneInputField";
 import { RichErrorMessage, FieldError } from "@/components/shared/feedback/RichErrorMessage";
 import { AuthAlert } from "@/components/shared/feedback/AuthAlert";
 import { GoogleSignInButton } from "@/features/auth/components/GoogleSignInButton";
+import { mergeAnonymousCommerce } from "@/features/cart";
 import { parseApiError } from "@/lib/api/parseApiError";
 
 
@@ -46,6 +47,14 @@ export function LoginForm() {
 
   // returnUrl — where to send the user after successful auth
   const returnUrl = searchParams.get("returnUrl") ?? "";
+
+  async function mergeCommerceBeforeRedirect() {
+    try {
+      await mergeAnonymousCommerce();
+    } catch {
+      // Checkout submit retries the same idempotent merge, so login redirect can continue.
+    }
+  }
 
   const {
     register,
@@ -94,7 +103,7 @@ export function LoginForm() {
   // ── Google auth success handler (shared between login + register) ──────────
   // NOTE: All auth endpoints (Login, VerifyOTP, Google) now return user_id (not id)
   // for uniform API contract. AuthUser store uses .id — we bridge here.
-  function handleGoogleSuccess(data: LoginResponse) {
+  async function handleGoogleSuccess(data: LoginResponse) {
     setGoogleError(null);
     setGoogleSuccess("Google sign-in successful! Redirecting…");
     setTokens(data.access ?? "", data.refresh ?? "");
@@ -129,6 +138,7 @@ export function LoginForm() {
       description: `Welcome, ${data.user?.first_name ?? "User"}! 🎉`,
       duration: 3000,
     });
+    await mergeCommerceBeforeRedirect();
     setTimeout(() => {
       handlePostAuthRedirect(
         data.role ?? data.user?.role,
@@ -141,7 +151,7 @@ export function LoginForm() {
 
   const { mutate, isPending } = useMutation({
     mutationFn: login,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       setApiError(null);
 
       if (data.requires_otp) {
@@ -192,6 +202,7 @@ export function LoginForm() {
         duration: 3000,
       });
 
+      await mergeCommerceBeforeRedirect();
       handlePostAuthRedirect(
         data.role ?? data.user?.role,
         data.has_vendor_profile,
