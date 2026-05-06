@@ -52,3 +52,6 @@ export {
 // ── Components ─────────────────────────────────────────────────────────────
 export * from "./components/TransactionTable";
 export * from "./components/TransactionViews";
+export * from "./components/ClientTransactionsView";
+export * from "./components/VendorTransactionsView";
+export * from "./components/AdminTransactionsView";

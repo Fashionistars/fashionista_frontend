@@ -4,7 +4,7 @@
  *
  * Endpoint Routing:
  *  - DRF sync  → /v1/orders/ (mutations: cancel, confirm-delivery, status updates)
- *  - Ninja async → /ninja/orders/ (reads: list, detail, counts, vendor financials)
+ *  - Ninja async → /orders/ through apiAsync prefix /api/v1/ninja
  */
 import { apiAsync } from "@/core/api/client.async";
 import { apiSync } from "@/core/api/client.sync";
@@ -170,37 +170,37 @@ export async function updateAdminDeliveryStatus(
 // ── Ninja Async Reads (status counts + financials) ───────────────────────────
 
 /**
- * GET /ninja/orders/counts/
+ * GET /api/v1/ninja/orders/counts/
  * Returns per-status order counts for the authenticated client.
  * Single GROUP BY query — sub-ms latency.
  */
 export async function getNinjaClientOrderCounts(): Promise<OrderStatusCounts> {
   const envelope = await apiAsync
-    .get("ninja/orders/counts/")
+    .get("orders/counts/")
     .json<{ status: string; data: OrderStatusCounts }>();
   return (envelope?.data ?? {}) as OrderStatusCounts;
 }
 
 /**
- * GET /ninja/orders/vendor/counts/
+ * GET /api/v1/ninja/orders/vendor/counts/
  * Returns per-status order counts for the authenticated vendor.
  * Single GROUP BY query — used for badge rendering on the vendor dashboard.
  */
 export async function getNinjaVendorOrderCounts(): Promise<OrderStatusCounts> {
   const envelope = await apiAsync
-    .get("ninja/orders/vendor/counts/")
+    .get("orders/vendor/counts/")
     .json<{ status: string; data: OrderStatusCounts }>();
   return (envelope?.data ?? {}) as OrderStatusCounts;
 }
 
 /**
- * GET /ninja/orders/vendor/financial-summary/
+ * GET /api/v1/ninja/orders/vendor/financial-summary/
  * Returns: total_revenue, total_commission, total_payout, order_count.
  * Single aaggregate() DB call — used for vendor financial dashboard widget.
  */
 export async function getNinjaVendorFinancialSummary(): Promise<VendorOrderFinancialSummary> {
   const envelope = await apiAsync
-    .get("ninja/orders/vendor/financial-summary/")
+    .get("orders/vendor/financial-summary/")
     .json<{ status: string; data: VendorOrderFinancialSummary }>();
   return (envelope?.data ?? {
     total_revenue: 0,

@@ -4,7 +4,7 @@
  *
  * Endpoint Routing:
  *  - DRF sync  → /v1/kyc/ (status, submit — CustomJSONRenderer)
- *  - Ninja async → /ninja/kyc/ (status summary, documents — Ky client)
+ *  - Ninja async → /kyc/ through apiAsync prefix /api/v1/ninja
  */
 import { apiSync } from "@/core/api/client.sync";
 import { apiAsync } from "@/core/api/client.async";
@@ -43,13 +43,13 @@ export async function submitKyc(input: KycSubmitInput): Promise<KycSubmission> {
 // ─── Ninja Async Endpoints ────────────────────────────────────────────────────
 
 /**
- * GET /ninja/kyc/status/
+ * GET /api/v1/ninja/kyc/status/
  * Returns: NinjaKycStatusSummary (status + document_count + timestamps)
  * Delegates to KycSubmission.aget_status_summary()
  */
 export async function getNinjaKycStatus(): Promise<NinjaKycStatusSummary> {
   const envelope = await apiAsync
-    .get("ninja/kyc/status/")
+    .get("kyc/status/")
     .json<{ status: string; data: unknown }>();
   return parseKycResponse(
     NinjaKycStatusSchema,
@@ -59,13 +59,13 @@ export async function getNinjaKycStatus(): Promise<NinjaKycStatusSummary> {
 }
 
 /**
- * GET /ninja/kyc/documents/
+ * GET /api/v1/ninja/kyc/documents/
  * Returns: NinjaKycWithDocuments (submission + all document records)
  * Delegates to KycSubmission.aget_with_documents()
  */
 export async function getNinjaKycDocuments(): Promise<NinjaKycWithDocuments> {
   const envelope = await apiAsync
-    .get("ninja/kyc/documents/")
+    .get("kyc/documents/")
     .json<{ status: string; data: unknown }>();
   return parseKycResponse(
     NinjaKycWithDocumentsSchema,

@@ -4,7 +4,7 @@
  *
  * Endpoint Routing:
  *  - DRF sync  → /v1/payment/ (initialize, verify, bank list, transfer recipient)
- *  - Ninja async → /ninja/payments/ (dashboard, summary, history — Ky client)
+ *  - Ninja async → /payments/ through apiAsync prefix /api/v1/ninja
  */
 import { z } from "zod";
 import { apiSync } from "@/core/api/client.sync";
@@ -63,13 +63,13 @@ export async function createTransferRecipient(input: TransferRecipientInput): Pr
 // ─── Ninja Async Endpoints ────────────────────────────────────────────────────
 
 /**
- * GET /ninja/payments/dashboard/
+ * GET /api/v1/ninja/payments/dashboard/
  * Returns: PaymentDashboard (summary stats + 5 recent intents)
  * Delegates to PaymentIntent.aget_full_dashboard_data()
  */
 export async function getNinjaPaymentDashboard(): Promise<PaymentDashboard> {
   const envelope = await apiAsync
-    .get("ninja/payments/dashboard/")
+    .get("payments/dashboard/")
     .json<{ status: string; data: unknown }>();
   return parsePaymentResponse(
     PaymentDashboardSchema,
@@ -79,12 +79,12 @@ export async function getNinjaPaymentDashboard(): Promise<PaymentDashboard> {
 }
 
 /**
- * GET /ninja/payments/summary/
+ * GET /api/v1/ninja/payments/summary/
  * Returns: PaymentSummary (total_count, pending_count, succeeded_total)
  */
 export async function getNinjaPaymentSummary(): Promise<PaymentSummary> {
   const envelope = await apiAsync
-    .get("ninja/payments/summary/")
+    .get("payments/summary/")
     .json<{ status: string; data: unknown }>();
   return parsePaymentResponse(
     PaymentSummarySchema,
@@ -94,12 +94,12 @@ export async function getNinjaPaymentSummary(): Promise<PaymentSummary> {
 }
 
 /**
- * GET /ninja/payments/history/?limit=N
+ * GET /api/v1/ninja/payments/history/?limit=N
  * Returns: NinjaPaymentHistory (list of recent payment intents)
  */
 export async function getNinjaPaymentHistory(limit = 10): Promise<NinjaPaymentHistory> {
   const envelope = await apiAsync
-    .get(`ninja/payments/history/?limit=${limit}`)
+    .get(`payments/history/?limit=${limit}`)
     .json<{ status: string; data: unknown[]; count: number }>();
   return parsePaymentResponse(
     NinjaPaymentHistorySchema,

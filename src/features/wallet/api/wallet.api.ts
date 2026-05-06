@@ -4,7 +4,7 @@
  *
  * Endpoint Routing:
  *  - DRF sync  → /v1/wallet/  (reads + PIN writes, CustomJSONRenderer)
- *  - Ninja async → /ninja/wallet/  (dashboard snapshot, future real-time)
+ *  - Ninja async → /wallet/ through apiAsync prefix /api/v1/ninja
  */
 import { apiSync } from "@/core/api/client.sync";
 import { apiAsync } from "@/core/api/client.async";
@@ -58,15 +58,16 @@ export async function changeWalletPin(payload: ChangePinPayload): Promise<Wallet
 // ─── Ninja Async Endpoints ────────────────────────────────────────────────────
 
 /**
- * GET /ninja/wallet/dashboard/
+ * GET /api/v1/ninja/wallet/dashboard/
  * Returns: WalletDashboardData (balance + hold stats) from Wallet.aget_full_dashboard_data()
  */
 export async function getNinjaWalletDashboard(): Promise<WalletDashboardData> {
-  const data = await apiAsync.get("ninja/wallet/dashboard/").json<unknown>();
+  const envelope = await apiAsync
+    .get("wallet/dashboard/")
+    .json<{ status?: string; data?: unknown } | unknown>();
   return parseWalletResponse(
     WalletDashboardSchema,
-    data,
+    unwrapApiData(envelope),
     "getNinjaWalletDashboard",
   ) as WalletDashboardData;
 }
-

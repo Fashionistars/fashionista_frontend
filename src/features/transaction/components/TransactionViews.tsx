@@ -67,15 +67,3 @@ function SummaryCard({ title, value }: { title: string; value: string }) {
     </div>
   );
 }
-
-export function ClientTransactionsView() {
-  return <TransactionDashboardView audience="client" />;
-}
-
-export function VendorTransactionsView() {
-  return <TransactionDashboardView audience="vendor" />;
-}
-
-export function AdminTransactionsView() {
-  return <TransactionDashboardView audience="admin" />;
-}

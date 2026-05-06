@@ -4,7 +4,7 @@
  *
  * Endpoint Routing:
  *  - DRF sync  → /v1/transactions/ (reads + writes, CustomJSONRenderer)
- *  - Ninja async → /ninja/transactions/ (dashboard, summary, recent — Ky client)
+ *  - Ninja async → /transactions/ through apiAsync prefix /api/v1/ninja
  */
 import { apiSync } from "@/core/api/client.sync";
 import { apiAsync } from "@/core/api/client.async";
@@ -57,13 +57,13 @@ export async function fetchTransactionSummary(): Promise<TransactionSummary> {
 // ─── Ninja Async Endpoints ────────────────────────────────────────────────────
 
 /**
- * GET /ninja/transactions/dashboard/
+ * GET /api/v1/ninja/transactions/dashboard/
  * Returns: TransactionDashboard (inflow/outflow + breakdown + recent 5)
  * Delegates to Transaction.aget_full_dashboard_data()
  */
 export async function getNinjaTransactionDashboard(): Promise<TransactionDashboard> {
   const envelope = await apiAsync
-    .get("ninja/transactions/dashboard/")
+    .get("transactions/dashboard/")
     .json<{ status: string; data: unknown }>();
   return parseTransactionResponse(
     TransactionDashboardSchema,
@@ -73,12 +73,12 @@ export async function getNinjaTransactionDashboard(): Promise<TransactionDashboa
 }
 
 /**
- * GET /ninja/transactions/summary/
+ * GET /api/v1/ninja/transactions/summary/
  * Returns: TransactionSummary (inflow/outflow/net/count)
  */
 export async function getNinjaTransactionSummary(): Promise<TransactionSummary> {
   const envelope = await apiAsync
-    .get("ninja/transactions/summary/")
+    .get("transactions/summary/")
     .json<{ status: string; data: unknown }>();
   return parseTransactionResponse(
     TransactionSummarySchema,
@@ -88,12 +88,12 @@ export async function getNinjaTransactionSummary(): Promise<TransactionSummary> 
 }
 
 /**
- * GET /ninja/transactions/recent/?limit=N
+ * GET /api/v1/ninja/transactions/recent/?limit=N
  * Returns: NinjaRecentTransactions
  */
 export async function getNinjaRecentTransactions(limit = 10): Promise<NinjaRecentTransactions> {
   const envelope = await apiAsync
-    .get(`ninja/transactions/recent/?limit=${limit}`)
+    .get(`transactions/recent/?limit=${limit}`)
     .json<{ status: string; data: unknown[]; count: number }>();
   return parseTransactionResponse(
     NinjaRecentTransactionsSchema,
