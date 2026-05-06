@@ -43,3 +43,27 @@ export interface PaginatedTransactions {
   previous: string | null;
   results: TransactionRecord[];
 }
+
+// ── Ninja Async Dashboard Types ───────────────────────────────────────────────
+
+/** Status → count map from Ninja /transactions/dashboard/ */
+export type TransactionStatusBreakdown = Partial<Record<TransactionStatus, number>>;
+
+/**
+ * Full dashboard response from GET /api/v1/ninja/transactions/dashboard/
+ * Combines inflow/outflow aggregate + status breakdown + 5 recent transactions.
+ */
+export interface TransactionDashboard extends TransactionSummary {
+  status_breakdown: TransactionStatusBreakdown;
+  recent_transactions: TransactionRecord[];
+}
+
+/**
+ * Response envelope for Ninja async recent transactions list.
+ * GET /api/v1/ninja/transactions/recent/
+ */
+export interface NinjaRecentTransactions {
+  data: TransactionRecord[];
+  count: number;
+}
+

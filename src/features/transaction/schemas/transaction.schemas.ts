@@ -57,3 +57,22 @@ export function parseTransactionResponse<T>(
   }
   return result.data;
 }
+
+// ── Ninja Async Dashboard Schemas ─────────────────────────────────────────────
+
+/** Validates full dashboard response from GET /ninja/transactions/dashboard/ */
+export const TransactionDashboardSchema = z.object({
+  inflow: z.union([z.string(), z.number()]).transform(String),
+  outflow: z.union([z.string(), z.number()]).transform(String),
+  net: z.union([z.string(), z.number()]).transform(String),
+  count: z.number().int().min(0).default(0),
+  status_breakdown: z.record(z.string(), z.number()).default({}),
+  recent_transactions: z.array(TransactionRecordSchema).default([]),
+});
+
+/** Validates response from GET /ninja/transactions/recent/ */
+export const NinjaRecentTransactionsSchema = z.object({
+  data: z.array(TransactionRecordSchema).default([]),
+  count: z.number().int().min(0).default(0),
+});
+

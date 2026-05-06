@@ -43,3 +43,24 @@ export function parsePaymentResponse<T>(schema: z.ZodType<T>, data: unknown, ctx
   }
   return result.data;
 }
+
+// ── Ninja Async Dashboard Schemas ─────────────────────────────────────────────
+
+/** Validates /ninja/payments/summary/ response */
+export const PaymentSummarySchema = z.object({
+  total_count: z.number().int().min(0).default(0),
+  pending_count: z.number().int().min(0).default(0),
+  succeeded_total: z.union([z.string(), z.number()]).transform(String),
+});
+
+/** Validates /ninja/payments/dashboard/ response */
+export const PaymentDashboardSchema = PaymentSummarySchema.extend({
+  recent_intents: z.array(PaymentIntentSchema).default([]),
+});
+
+/** Validates /ninja/payments/history/ response */
+export const NinjaPaymentHistorySchema = z.object({
+  data: z.array(PaymentIntentSchema).default([]),
+  count: z.number().int().min(0).default(0),
+});
+

@@ -35,3 +35,36 @@ export interface KycSubmitInput {
   provider_reference?: string;
   metadata?: Record<string, unknown>;
 }
+
+// ── Ninja Async Dashboard Types ───────────────────────────────────────────────
+
+/**
+ * Full KYC status summary from GET /api/v1/ninja/kyc/status/
+ * Includes document_count aggregated at DB level.
+ */
+export interface NinjaKycStatusSummary {
+  id?: string;
+  status: KycStatus | "not_started";
+  is_approved: boolean;
+  is_pending?: boolean;
+  document_count: number;
+  submitted_at: string | null;
+  reviewed_at: string | null;
+  review_notes: string;
+  provider_reference: string;
+}
+
+/**
+ * Full submission + documents from GET /api/v1/ninja/kyc/documents/
+ */
+export interface NinjaKycWithDocuments {
+  id?: string;
+  status: KycStatus | "not_started";
+  is_approved: boolean;
+  review_notes: string;
+  provider_reference: string;
+  submitted_at: string | null;
+  reviewed_at: string | null;
+  documents: KycDocument[];
+}
+

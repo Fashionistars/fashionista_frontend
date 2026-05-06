@@ -50,3 +50,32 @@ export interface TransferRecipientInput {
   bank_code: string;
   account_name?: string;
 }
+
+// ── Ninja Async Dashboard Types ───────────────────────────────────────────────
+
+/**
+ * Aggregate stats from GET /api/v1/ninja/payments/summary/
+ * Delegates to PaymentIntent.aget_summary_for_user()
+ */
+export interface PaymentSummary {
+  total_count: number;
+  pending_count: number;
+  succeeded_total: string;
+}
+
+/**
+ * Full dashboard from GET /api/v1/ninja/payments/dashboard/
+ * Combines summary stats + 5 most recent payment intents.
+ */
+export interface PaymentDashboard extends PaymentSummary {
+  recent_intents: PaymentIntent[];
+}
+
+/**
+ * Payment history list from GET /api/v1/ninja/payments/history/?limit=N
+ */
+export interface NinjaPaymentHistory {
+  data: PaymentIntent[];
+  count: number;
+}
+

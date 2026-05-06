@@ -27,3 +27,38 @@ export function parseKycResponse<T>(schema: z.ZodType<T>, data: unknown, ctx: st
   }
   return result.data;
 }
+
+// ── Ninja Async Dashboard Schemas ─────────────────────────────────────────────
+
+/** Validates /ninja/kyc/status/ response */
+export const NinjaKycStatusSchema = z.object({
+  id: z.string().optional(),
+  status: z.enum(["pending", "in_review", "approved", "rejected", "resubmit", "not_started"]),
+  is_approved: z.boolean().default(false),
+  is_pending: z.boolean().optional(),
+  document_count: z.number().int().min(0).default(0),
+  submitted_at: z.string().nullable().optional().default(null),
+  reviewed_at: z.string().nullable().optional().default(null),
+  review_notes: z.string().optional().default(""),
+  provider_reference: z.string().optional().default(""),
+});
+
+/** Validates /ninja/kyc/documents/ response */
+export const KycDocumentSchema = z.object({
+  id: z.string(),
+  document_type: z.string(),
+  secure_url: z.string().optional().default(""),
+  uploaded_at: z.string().optional().default(""),
+});
+
+export const NinjaKycWithDocumentsSchema = z.object({
+  id: z.string().optional(),
+  status: z.enum(["pending", "in_review", "approved", "rejected", "resubmit", "not_started"]),
+  is_approved: z.boolean().default(false),
+  review_notes: z.string().optional().default(""),
+  provider_reference: z.string().optional().default(""),
+  submitted_at: z.string().nullable().optional().default(null),
+  reviewed_at: z.string().nullable().optional().default(null),
+  documents: z.array(KycDocumentSchema).default([]),
+});
+
