@@ -1,12 +1,27 @@
 /**
  * @file wallet.api.ts
- * @description Wallet API client. Reads and PIN writes use DRF sync endpoints
- * until the backend exposes a dedicated Ninja read surface.
+ * @description Wallet API client.
+ *
+ * Endpoint Routing:
+ *  - DRF sync  → /v1/wallet/  (reads + PIN writes, CustomJSONRenderer)
+ *  - Ninja async → /ninja/wallet/  (dashboard snapshot, future real-time)
  */
 import { apiSync } from "@/core/api/client.sync";
+import { apiAsync } from "@/core/api/client.async";
 import { unwrapApiData } from "@/core/api/response";
-import { WalletSchema, parseWalletResponse } from "../schemas/wallet.schemas";
-import type { ChangePinPayload, PinPayload, WalletAccount } from "../types/wallet.types";
+import {
+  WalletDashboardSchema,
+  WalletSchema,
+  parseWalletResponse,
+} from "../schemas/wallet.schemas";
+import type {
+  ChangePinPayload,
+  PinPayload,
+  WalletAccount,
+  WalletDashboardData,
+} from "../types/wallet.types";
+
+// ─── DRF Sync Endpoints ───────────────────────────────────────────────────────
 
 export async function fetchWallet(): Promise<WalletAccount> {
   const { data } = await apiSync.get<unknown>("/v1/wallet/me/");
@@ -39,3 +54,19 @@ export async function changeWalletPin(payload: ChangePinPayload): Promise<Wallet
     "changeWalletPin",
   ) as WalletAccount;
 }
+
+// ─── Ninja Async Endpoints ────────────────────────────────────────────────────
+
+/**
+ * GET /ninja/wallet/dashboard/
+ * Returns: WalletDashboardData (balance + hold stats) from Wallet.aget_full_dashboard_data()
+ */
+export async function getNinjaWalletDashboard(): Promise<WalletDashboardData> {
+  const data = await apiAsync.get("ninja/wallet/dashboard/").json<unknown>();
+  return parseWalletResponse(
+    WalletDashboardSchema,
+    data,
+    "getNinjaWalletDashboard",
+  ) as WalletDashboardData;
+}
+

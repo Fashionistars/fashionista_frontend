@@ -27,6 +27,32 @@ export const WalletSchema = z.object({
   ]),
 });
 
+// ─── Ninja Async Dashboard Schemas ───────────────────────────────────────────
+
+export const WalletBalanceSnapshotSchema = z.object({
+  id: z.union([z.string(), z.number()]).transform(String).optional(),
+  name: z.string().optional(),
+  account_number: z.string().optional().default(""),
+  account_name: z.string().optional().default(""),
+  bank_name: z.string().optional().default("Fashionistar Wallet"),
+  provider: z.string().optional().default("internal"),
+  balance: z.union([z.string(), z.number()]).transform(String),
+  available_balance: z.union([z.string(), z.number()]).transform(String),
+  pending_balance: z.union([z.string(), z.number()]).transform(String),
+  escrow_balance: z.union([z.string(), z.number()]).transform(String),
+  status: z.enum(["active", "inactive", "frozen", "suspended", "closed"]).default("active"),
+  has_pin: z.boolean().default(false),
+  currency_code: z.string().default("NGN"),
+  currency_symbol: z.string().optional(),
+});
+
+export const WalletHoldStatsSchema = z.object({
+  active_holds_count: z.number().default(0),
+  total_held_amount: z.union([z.string(), z.number()]).transform(String),
+});
+
+export const WalletDashboardSchema = WalletBalanceSnapshotSchema.merge(WalletHoldStatsSchema);
+
 export function parseWalletResponse<T>(schema: z.ZodType<T>, data: unknown, ctx: string): T {
   const result = schema.safeParse(data);
   if (!result.success) {
@@ -40,3 +66,4 @@ export function parseWalletResponse<T>(schema: z.ZodType<T>, data: unknown, ctx:
   }
   return result.data;
 }
+
