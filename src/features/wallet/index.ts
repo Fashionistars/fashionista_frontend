@@ -46,3 +46,4 @@ export {
 
 // ── Components ─────────────────────────────────────────────────────────────
 export * from "./components/WalletOverviewView";
+export * from "./components/WalletDashboardView";

@@ -1,5 +1,5 @@
-import { ClientOrdersView } from "@/features/client";
+import { ClientOrderList } from "@/features/order";
 
 export default function ClientOrdersPage() {
-  return <ClientOrdersView />;
+  return <ClientOrderList />;
 }

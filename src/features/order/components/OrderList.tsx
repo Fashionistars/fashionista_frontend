@@ -99,7 +99,7 @@ const OrderList = () => {
           return (
             <Link
               key={value}
-              href={value ? `/admin-dashboard?order-status=${value}` : "/admin-dashboard"}
+              href={value ? `/admin-dashboard/orders?order-status=${value}` : "/admin-dashboard/orders"}
               className={`text-[10px] leading-none md:text-sm py-2 px-3 md:py-2.5 md:px-5
                           rounded-xl md:rounded-full whitespace-nowrap transition-all duration-150
                           ${isActive

@@ -38,6 +38,8 @@ export {
 export {
   fetchClientOrders,
   fetchOrderDetail,
+  fetchVendorOrderDetail,
+  fetchAdminOrderDetail,
   cancelOrder,
   confirmDelivery,
   fetchVendorOrders,
@@ -56,6 +58,8 @@ export {
   // List & detail
   useClientOrders,
   useOrderDetail,
+  useVendorOrderDetail,
+  useAdminOrderDetail,
   // DRF mutations
   useCancelOrder,
   useConfirmDelivery,
@@ -77,4 +81,4 @@ export {
 } from "./api/order.server-actions";
 
 // ── Components ─────────────────────────────────────────────────────────────
-export { OrderTable, OrderList } from "./components";
+export { OrderTable, OrderList, ClientOrderList, OrderDetailView } from "./components";

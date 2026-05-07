@@ -1,5 +1,5 @@
-import { WalletOverviewView } from "@/features/wallet";
+import { WalletDashboardView } from "@/features/wallet";
 
 export default function VendorWalletPage() {
-  return <WalletOverviewView title="Vendor Wallet" />;
+  return <WalletDashboardView title="Vendor Wallet" />;
 }

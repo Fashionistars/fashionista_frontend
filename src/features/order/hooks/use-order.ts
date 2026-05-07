@@ -16,6 +16,8 @@ import { toast } from "sonner";
 import {
   fetchClientOrders,
   fetchOrderDetail,
+  fetchVendorOrderDetail,
+  fetchAdminOrderDetail,
   cancelOrder,
   confirmDelivery,
   fetchVendorOrders,
@@ -41,6 +43,8 @@ export const orderKeys = {
   clientLists: () => [...orderKeys.all, "client", "list"] as const,
   clientList: (page: number) => [...orderKeys.clientLists(), page] as const,
   detail: (id: string) => [...orderKeys.all, "detail", id] as const,
+  vendorDetail: (id: string) => [...orderKeys.all, "vendor", "detail", id] as const,
+  adminDetail: (id: string) => [...orderKeys.all, "admin", "detail", id] as const,
   vendorLists: () => [...orderKeys.all, "vendor", "list"] as const,
   vendorList: (page: number) => [...orderKeys.vendorLists(), page] as const,
   adminLists: () => [...orderKeys.all, "admin", "list"] as const,
@@ -66,12 +70,30 @@ export function useClientOrders(page = 1) {
   });
 }
 
-export function useOrderDetail(orderId: string) {
+export function useOrderDetail(orderId: string, enabled = true) {
   return useQuery({
     queryKey: orderKeys.detail(orderId),
     queryFn: () => fetchOrderDetail(orderId),
     staleTime: 30_000,
-    enabled: !!orderId,
+    enabled: enabled && !!orderId,
+  });
+}
+
+export function useVendorOrderDetail(orderId: string, enabled = true) {
+  return useQuery({
+    queryKey: orderKeys.vendorDetail(orderId),
+    queryFn: () => fetchVendorOrderDetail(orderId),
+    staleTime: 30_000,
+    enabled: enabled && !!orderId,
+  });
+}
+
+export function useAdminOrderDetail(orderId: string, enabled = true) {
+  return useQuery({
+    queryKey: orderKeys.adminDetail(orderId),
+    queryFn: () => fetchAdminOrderDetail(orderId),
+    staleTime: 30_000,
+    enabled: enabled && !!orderId,
   });
 }
 

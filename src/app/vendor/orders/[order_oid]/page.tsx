@@ -1,4 +1,4 @@
-import { VendorOrderDetailView } from "@/features/vendor";
+import { OrderDetailView } from "@/features/order";
 
 export default async function VendorOrderDetailPage({
   params,
@@ -6,5 +6,5 @@ export default async function VendorOrderDetailPage({
   params: Promise<{ order_oid: string }>;
 }) {
   const { order_oid } = await params;
-  return <VendorOrderDetailView orderOid={order_oid} />;
+  return <OrderDetailView orderId={order_oid} scope="vendor" />;
 }

@@ -90,13 +90,37 @@ export async function fetchOrderDetail(orderId: string): Promise<OrderDetail> {
   ) as OrderDetail;
 }
 
+/** Fetch single order detail for the authenticated vendor. */
+export async function fetchVendorOrderDetail(orderId: string): Promise<OrderDetail> {
+  const data = await apiAsync.get(`orders/vendor/${orderId}/`).json();
+  return parseOrderResponse(
+    OrderDetailSchema,
+    unwrapApiData(data),
+    "fetchVendorOrderDetail",
+  ) as OrderDetail;
+}
+
+/** Fetch single order detail for admin/staff review. */
+export async function fetchAdminOrderDetail(orderId: string): Promise<OrderDetail> {
+  const data = await apiAsync.get(`orders/admin/${orderId}/`).json();
+  return parseOrderResponse(
+    OrderDetailSchema,
+    unwrapApiData(data),
+    "fetchAdminOrderDetail",
+  ) as OrderDetail;
+}
+
 /** Cancel an order (client — owner, allowed statuses only). */
 export async function cancelOrder(
   orderId: string,
   input: CancelOrderInput,
 ): Promise<OrderDetail> {
   const { data } = await apiSync.post<unknown>(`${BASE}/${orderId}/cancel/`, input);
-  return parseOrderResponse(OrderDetailSchema, data, "cancelOrder") as OrderDetail;
+  return parseOrderResponse(
+    OrderDetailSchema,
+    unwrapApiData(data),
+    "cancelOrder",
+  ) as OrderDetail;
 }
 
 /** Confirm delivery and trigger escrow release (client — owner). */
@@ -104,7 +128,11 @@ export async function confirmDelivery(orderId: string): Promise<OrderDetail> {
   const { data } = await apiSync.post<unknown>(
     `${BASE}/${orderId}/confirm-delivery/`,
   );
-  return parseOrderResponse(OrderDetailSchema, data, "confirmDelivery") as OrderDetail;
+  return parseOrderResponse(
+    OrderDetailSchema,
+    unwrapApiData(data),
+    "confirmDelivery",
+  ) as OrderDetail;
 }
 
 // ── VENDOR ────────────────────────────────────────────────────────────────────
@@ -132,7 +160,7 @@ export async function updateVendorProductionStatus(
   );
   return parseOrderResponse(
     OrderDetailSchema,
-    data,
+    unwrapApiData(data),
     "updateVendorProductionStatus",
   ) as OrderDetail;
 }
@@ -162,7 +190,7 @@ export async function updateAdminDeliveryStatus(
   );
   return parseOrderResponse(
     OrderDetailSchema,
-    data,
+    unwrapApiData(data),
     "updateAdminDeliveryStatus",
   ) as OrderDetail;
 }
