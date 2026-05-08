@@ -7,12 +7,12 @@ const Slider = () => {
   const [current, setCurrent] = useState(0);
   const slides = [
     {
-      text: " Your Style with the Latest Fashion Trends.",
+      text: "Discover Your Style with the Latest Fashion Trends.",
       image: "/couple_assets.svg",
       highlight: "Style",
     },
     {
-      text: "  We offer amazing discounts on first order.",
+      text: "Get amazing discounts on your first order.",
       image: "/man2_asset.svg",
       highlight: "discounts",
     },

@@ -17,11 +17,36 @@ import Link from "next/link";
  *   3. Bottom copyright bar (from Footer + NewFooter social icons)
  */
 
-const NewFooter = () => {
+const EMAIL_ADDRESS = "[support@fashionistar.net]";
+const PHONE_NUMBER = "+2349137654300";
+const LOCATION = "A3, OKIGWE ROAD, UMUAHIA, ABIA  STATE..";
+
+interface NewFooterProps {
+  /** Optional override for contact address. */
+  address?: string;
+  /** Optional override for contact phone. */
+  phone?: string;
+  /** Optional override for contact email. */
+  email?: string;
+}
+
+/**
+ * Fallback footer with hardcoded Nigerian contact info and links.
+ * Only used when an app-level default footer is missing or unset.
+ *
+ * @param props Optional overrides for address, phone, email.
+ */
+
+const NewFooter = ({
+  address = LOCATION,
+  phone = PHONE_NUMBER,
+  email = EMAIL_ADDRESS,
+}: NewFooterProps) => {
   const year = new Date().getFullYear();
 
+  console.log(email, phone, address)
   return (
-    <footer>
+    <footer className="text-[#141414]">
       {/* ─── 1. Newsletter Band (white) ──────────────────────── */}
       <div
         style={{ boxShadow: "0px 4px 20px 0px #00000026" }}
@@ -116,26 +141,26 @@ const NewFooter = () => {
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fillRule="evenodd" clipRule="evenodd" d="M7.41 17.57L7.46 17.61L7.46 17.61C8.3 18.41 9.11 18.96 10.02 18.95C10.94 18.94 11.75 18.38 12.58 17.57C13.73 16.45 15.21 14.96 16.28 13.18C17.36 11.4 18.05 9.27 17.53 6.95C15.77 -0.92 4.24 -0.93 2.47 6.94C1.96 9.2 2.6 11.27 3.63 13.02C4.64 14.77 6.07 16.25 7.21 17.37C7.28 17.44 7.34 17.5 7.41 17.57ZM10 5.21C8.5 5.21 7.29 6.42 7.29 7.92C7.29 9.41 8.5 10.63 10 10.63C11.5 10.63 12.71 9.41 12.71 7.92C12.71 6.42 11.5 5.21 10 5.21Z" fill="white" />
               </svg>
-              <strong>Address:</strong> 507a, Festac W, Ikate, Lagos State.
+              <strong>Address:</strong> {address}.
             </p>
 
             {/* Phone */}
-            <p className="font-satoshi text-[15px] md:text-lg leading-6 text-white flex items-center gap-2">
+            <a href="tel:+2349137654300" className="font-satoshi text-[15px] md:text-lg leading-6 text-white flex items-center gap-2">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M12.5 10C12.5 9.08 13.25 8.33 14.17 8.33C16.01 8.33 17.5 9.83 17.5 11.67C17.5 13.51 16.01 15 14.17 15C13.25 15 12.5 14.25 12.5 13.33V10Z" stroke="white" strokeWidth="1.5" />
                 <path d="M7.5 10C7.5 9.08 6.75 8.33 5.83 8.33C3.99 8.33 2.5 9.83 2.5 11.67C2.5 13.51 3.99 15 5.83 15C6.75 15 7.5 14.25 7.5 13.33V10Z" stroke="white" strokeWidth="1.5" />
                 <path d="M2.5 11.67V9.17C2.5 5.02 5.86 1.67 10 1.67C14.14 1.67 17.5 5.02 17.5 9.17V13.21C17.5 14.88 17.5 15.72 17.21 16.37C16.87 17.11 16.28 17.71 15.53 18.04C14.88 18.33 14.05 18.33 12.37 18.33H10" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <strong>Call Us On:</strong> +234 90 0000 000
-            </p>
+              <strong>Call Us On:</strong><a href="tel:+2349137654300">{phone}</a>
+            </a>
 
             {/* Email */}
-            <p className="font-satoshi text-[15px] md:text-lg leading-6 text-white flex items-center gap-2">
+            <a href="mailto:[EMAIL_ADDRESS]" className="font-satoshi text-[15px] md:text-lg leading-6 text-white flex items-center gap-2">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M17.5 6.67L14.53 8.32C12.88 9.23 12.05 9.69 11.18 9.87C10.4 10.03 9.6 10.03 8.82 9.87C7.95 9.69 7.12 9.23 5.47 8.32L2.5 6.67M5.17 15.83H14.83C15.77 15.83 16.23 15.83 16.59 15.65C16.9 15.49 17.16 15.24 17.32 14.92C17.5 14.57 17.5 14.1 17.5 13.17V6.83C17.5 5.9 17.5 5.43 17.32 5.08C17.16 4.76 16.9 4.51 16.59 4.35C16.23 4.17 15.77 4.17 14.83 4.17H5.17C4.23 4.17 3.77 4.17 3.41 4.35C3.1 4.51 2.84 4.76 2.68 5.08C2.5 5.43 2.5 5.9 2.5 6.83V13.17C2.5 14.1 2.5 14.57 2.68 14.92C2.84 15.24 3.1 15.49 3.41 15.65C3.77 15.83 4.23 15.83 5.17 15.83Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <strong>Email:</strong> fashionista@gmail.com
-            </p>
+              <strong>Email:</strong><a href="mailto:[EMAIL_ADDRESS]">{email}</a>
+            </a>
           </div>
 
           {/* Center — Account links */}
