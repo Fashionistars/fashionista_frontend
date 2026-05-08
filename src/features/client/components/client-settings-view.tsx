@@ -10,6 +10,13 @@ import {
   RadioCard, PinInput, SaveBar, SessionCard, DangerZone, SettingSection,
 } from "@/components/settings/settings-ui";
 import { useClientProfile } from "@/features/client/hooks/use-client-profile";
+import {
+  useMeasurementProfiles,
+  useCreateMeasurementProfile,
+  useUpdateMeasurementProfile,
+} from "@/features/measurements/hooks/use-measurements";
+import type { MeasurementUnit, CreateMeasurementProfileInput } from "@/features/measurements/types/measurements.types";
+import { useEffect } from "react";
 
 type TabId = "profile" | "security" | "notifications" | "privacy" | "wallet" | "measurements" | "appearance";
 
@@ -332,12 +339,35 @@ function WalletPinTab() {
 
 /* ── Measurements Tab ────────────────────────────────────────────────────────── */
 function MeasurementsTab() {
-  const [unit, setUnit] = useState("cm");
+  const { data: profiles, isLoading } = useMeasurementProfiles();
+  const createMutation = useCreateMeasurementProfile();
+  
+  // Use the default profile if it exists, otherwise the first one.
+  const profile = profiles?.find((p) => p.is_default) || profiles?.[0];
+  const updateMutation = useUpdateMeasurementProfile(profile?.id ?? "");
+
+  const [unit, setUnit] = useState<MeasurementUnit>("cm");
   const [measurements, setMeasurements] = useState({
     chest: "", waist: "", hips: "", shoulder: "",
     sleeve: "", inseam: "", neck: "", thigh: "",
   });
-  const [saving, setSaving] = useState(false);
+
+  // Sync state when profile loads
+  useEffect(() => {
+    if (profile) {
+      setUnit(profile.unit);
+      setMeasurements({
+        chest: profile.chest?.toString() || "",
+        waist: profile.waist?.toString() || "",
+        hips: profile.hips?.toString() || "",
+        shoulder: profile.shoulder_width?.toString() || "",
+        sleeve: profile.sleeve_length?.toString() || "",
+        inseam: profile.inseam?.toString() || "",
+        neck: profile.neck?.toString() || "",
+        thigh: profile.thigh?.toString() || "",
+      });
+    }
+  }, [profile]);
 
   const fields: { key: keyof typeof measurements; label: string }[] = [
     { key: "chest", label: "Chest" }, { key: "waist", label: "Waist" },
@@ -346,16 +376,40 @@ function MeasurementsTab() {
     { key: "neck", label: "Neck" }, { key: "thigh", label: "Thigh" },
   ];
 
+  const handleSave = async () => {
+    const payload: CreateMeasurementProfileInput = {
+      name: "My Measurements",
+      unit: unit,
+      chest: measurements.chest || undefined,
+      waist: measurements.waist || undefined,
+      hips: measurements.hips || undefined,
+      shoulder_width: measurements.shoulder || undefined,
+      sleeve_length: measurements.sleeve || undefined,
+      inseam: measurements.inseam || undefined,
+      neck: measurements.neck || undefined,
+      thigh: measurements.thigh || undefined,
+      is_default: true,
+    };
+
+    if (profile) {
+      await updateMutation.mutateAsync(payload);
+    } else {
+      await createMutation.mutateAsync(payload);
+    }
+  };
+
+  const saving = createMutation.isPending || updateMutation.isPending;
+
   return (
     <div className="space-y-0">
       <SettingSection title="Body measurements" badge="Used for custom orders"
         description="Accurate measurements help vendors produce perfectly fitting garments for you.">
         <div className="flex flex-col gap-4">
           <div className="flex gap-2">
-            {(["cm", "inches"] as const).map((u) => (
+            {(["cm", "inch"] as const).map((u) => (
               <button key={u} type="button" onClick={() => setUnit(u)}
                 className={`rounded-full px-4 py-2 text-sm font-semibold transition ${unit === u ? "bg-[#FDA600] text-black" : "border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"}`}>
-                {u}
+                {u === "inch" ? "inches" : u}
               </button>
             ))}
           </div>
@@ -363,12 +417,13 @@ function MeasurementsTab() {
             {fields.map(({ key, label }) => (
               <DashInput key={key} label={label} id={`m_${key}`} type="number"
                 value={measurements[key]}
+                disabled={isLoading}
                 onChange={(e) => setMeasurements((m) => ({ ...m, [key]: e.target.value }))}
                 placeholder={`e.g. 92 ${unit}`}
                 suffix={<span className="text-xs text-[hsl(var(--muted-foreground))]">{unit}</span>} />
             ))}
           </div>
-          <SaveBar onSave={async () => { setSaving(true); await new Promise((r) => setTimeout(r, 700)); setSaving(false); }} loading={saving} />
+          <SaveBar onSave={handleSave} loading={saving} />
         </div>
       </SettingSection>
     </div>

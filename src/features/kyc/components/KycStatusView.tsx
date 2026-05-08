@@ -3,9 +3,10 @@
 /**
  * @file KycStatusView.tsx
  * @description KYC status surface for client, vendor, and admin routes.
+ * Updated to use the high-performance async Ninja endpoint.
  */
 import { ShieldCheck } from "lucide-react";
-import { useKycStatus } from "../hooks/use-kyc";
+import { useNinjaKycStatus } from "../hooks/use-kyc";
 
 const copy = {
   client: "Verify identity before high-trust wallet payments and custom measurement sharing.",
@@ -18,7 +19,7 @@ export function KycStatusView({
 }: {
   audience?: keyof typeof copy;
 }) {
-  const { data, isError, isLoading } = useKycStatus();
+  const { data, isError, isLoading } = useNinjaKycStatus();
 
   return (
     <div className="flex flex-col gap-8 py-4">
@@ -35,13 +36,17 @@ export function KycStatusView({
             <ShieldCheck />
           </div>
           <div>
-            <p className="text-lg font-semibold text-black">
+            <p className="text-lg font-semibold text-black capitalize">
               {isLoading ? "Checking status..." : data?.status ?? "Not started"}
             </p>
             <p className="mt-1 text-sm text-[#5A6465]">
               {isError
-                ? "Backend KYC routes are still scaffolded. This frontend slice is ready for activation."
-                : data?.review_notes || "Upload identity documents through the secure Cloudinary flow when the KYC API is mounted."}
+                ? "Backend KYC routes are offline. Check connection."
+                : data?.status === "approved"
+                  ? "Identity verified. All high-trust actions are enabled."
+                  : data?.document_count
+                    ? `Verification pending review. ${data.document_count} document(s) uploaded.`
+                    : "Upload identity documents through the secure Cloudinary flow to begin."}
             </p>
           </div>
         </div>
@@ -49,3 +54,4 @@ export function KycStatusView({
     </div>
   );
 }
+
