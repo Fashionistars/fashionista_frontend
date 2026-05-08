@@ -3,16 +3,17 @@
  * @description Measurements domain API client.
  */
 import { apiSync } from "@/core/api/client.sync";
+import { apiAsync } from "@/core/api/client.async";
 import type {
   MeasurementProfile,
   CreateMeasurementProfileInput,
 } from "../types/measurements.types";
 
-const BASE = "/measurements";
+const BASE = "/v1/measurements";
 
 export async function fetchMeasurementProfiles(): Promise<MeasurementProfile[]> {
-  const { data } = await apiSync.get<{ results: MeasurementProfile[] }>(`${BASE}/profiles/`);
-  return data.results ?? [];
+  const envelope = await apiAsync.get("measurements/").json<{ data: MeasurementProfile[] }>();
+  return envelope?.data ?? [];
 }
 
 export async function createMeasurementProfile(

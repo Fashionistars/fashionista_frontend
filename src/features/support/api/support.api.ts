@@ -2,10 +2,12 @@
  * features/support/api/support.api.ts
  *
  * REST API client for the Support domain.
- * DRF sync endpoints: /api/v1/support/
+ * DRF sync endpoints: /v1/support/
+ * Ninja async endpoints: /api/v1/ninja/support/
  */
 
 import { apiSync } from "@/core/api/client.sync";
+import { apiAsync } from "@/core/api/client.async";
 import type {
   SupportTicket,
   SupportTicketListItem,
@@ -18,7 +20,7 @@ import type {
   TicketListFilters,
 } from "../types/support.types";
 
-const BASE = "/support";
+const BASE = "/v1/support";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // USER ENDPOINTS
@@ -27,20 +29,19 @@ const BASE = "/support";
 export async function fetchMyTickets(
   filters?: TicketListFilters
 ): Promise<SupportTicketListItem[]> {
-  const { data } = await apiSync.get<SupportTicketListItem[]>(
-    `${BASE}/tickets/`,
-    { params: filters }
-  );
-  return data;
+  const envelope = await apiAsync
+    .get("support/tickets/", { searchParams: filters as any })
+    .json<{ data?: { tickets: SupportTicketListItem[] }, tickets?: SupportTicketListItem[] }>();
+  return envelope?.data?.tickets ?? envelope?.tickets ?? [];
 }
 
 export async function fetchTicketDetail(
   ticketId: string
 ): Promise<SupportTicket> {
-  const { data } = await apiSync.get<SupportTicket>(
-    `${BASE}/tickets/${ticketId}/`
-  );
-  return data;
+  const envelope = await apiAsync
+    .get(`support/tickets/${ticketId}/`)
+    .json<{ data?: SupportTicket } & SupportTicket>();
+  return envelope?.data ?? (envelope as SupportTicket);
 }
 
 export async function createTicket(
@@ -93,9 +94,8 @@ export async function escalateTicket(
 export async function fetchAdminQueue(
   filters?: TicketListFilters
 ): Promise<SupportTicketListItem[]> {
-  const { data } = await apiSync.get<SupportTicketListItem[]>(
-    `${BASE}/admin/queue/`,
-    { params: filters }
-  );
-  return data;
+  const envelope = await apiAsync
+    .get("support/admin/queue/", { searchParams: filters as any })
+    .json<{ data?: { tickets: SupportTicketListItem[] }, tickets?: SupportTicketListItem[] }>();
+  return envelope?.data?.tickets ?? envelope?.tickets ?? [];
 }
